@@ -12244,7 +12244,7 @@ local function ProshlyapationLittleWigs(self, event, arg1, arg2)
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
 		if message:find("EblanDetect") then
-		--	SendChatMessage("[OchkenProshlyapDetect v2] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
+			SendChatMessage("[OchkenProshlyapDetect v2] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
 			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
 		elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
 		--	SendChatMessage([DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "RAID")
