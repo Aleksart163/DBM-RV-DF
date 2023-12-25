@@ -6,7 +6,7 @@ mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
@@ -35,6 +35,7 @@ local warnHeroism					= mod:NewSpellAnnounce(32182, 1) --Героизм
 local warnBloodlust					= mod:NewSpellAnnounce(2825, 1) --Кровожадность
 local warnHysteria					= mod:NewSpellAnnounce(90355, 1) --Древняя истерия
 local warnNetherwinds				= mod:NewSpellAnnounce(160452, 1) --Ветер пустоты
+local warnPrimalRage				= mod:NewSpellAnnounce(264667, 1) --Исступление
 
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
@@ -95,7 +96,7 @@ mod:AddBoolOption("YellOnBank", true) --банк
 mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnPylon", true) --пилон
 mod:AddBoolOption("YellOnToys", true) --игрушки
-mod:AddBoolOption("AutoSpirit", true)
+mod:AddBoolOption("AutoSpirit", false)
 
 local typeInstance = nil
 local DbmRV = "[DBM RV v2.5] "
@@ -117,6 +118,7 @@ local premsg_values = {
 	["premsg_Spells_massres4_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_massres5_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_massres6_rw"] = {0, L.HeroismYell, nil, "rw"},
+	["premsg_Spells_primalRage"] = {0, L.HeroismYell},
 	["premsg_Spells_timeWarp"] = {0, L.HeroismYell},
 	["premsg_Spells_furyAspects"] = {0, L.HeroismYell},
 	["premsg_Spells_heroism"] = {0, L.HeroismYell},
@@ -288,6 +290,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_timeWarp", spellId, sourceName)
+		end
+	elseif spellId == 264667 then --Исступление
+		if self:AntiSpam(5, "bloodlust") then
+			warnPrimalRage:Show(sourceName)
+		end
+		if self.Options.YellOnHeroism then
+	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
+			prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
 		end
 	elseif spellId == 390386 then --Ярость Аспектов
 		if self:AntiSpam(5, "bloodlust") then
