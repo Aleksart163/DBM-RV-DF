@@ -6,7 +6,7 @@ mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
@@ -173,7 +173,8 @@ local premsg_values = {
 --	["premsg_Spells_innervate"] = {0, L.SoulstoneYell, true}, --Озарение
 	["premsg_Spells_rebirth1"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth2"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
-	["premsg_Spells_rebirth3"] = {0, L.SoulstoneYell, true} --Воскрешение камнем души
+	["premsg_Spells_rebirth3"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
+	["premsg_Spells_rebirth4"] = {0, L.SoulstoneYell, true} --Тангенциальный корректор жизненной силы
 }
 local playerOnlyName = UnitName("player")
 
@@ -483,18 +484,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.YellOnRaidCooldown then
 			prepareMessage(self, "premsg_Spells_rewind", spellId, sourceName)
 		end
-	elseif spellId == 95750 then --Воскрешение камнем души
-		if self.Options.YellOnResurrect then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
-			prepareMessage(self, "premsg_Spells_rebirth3", spellId, sourceName, destName)
-		end
-		if args:IsPlayer() then
-			specWarnRebirth:Show()
-			specWarnRebirth:Play("targetyou")
-		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-		--		smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
-		--	end
-		end
 	elseif spellId == 20484 then --Возрождение
 		if self.Options.YellOnResurrect then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
@@ -507,7 +496,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--		smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
 		--	end
 		end
-	elseif spellId == 61999 and self:AntiSpam(2.5, "rebirth") then --Воскрешение союзника
+	elseif spellId == 61999 and self:AntiSpam(2, "rebirth") then --Воскрешение союзника
 		if self.Options.YellOnResurrect then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
 			prepareMessage(self, "premsg_Spells_rebirth2", spellId, sourceName, destName)
@@ -515,9 +504,24 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if args:IsPlayer() then
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
-		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-		--		smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
-		--	end
+		end
+	elseif spellId == 95750 then --Воскрешение камнем души
+		if self.Options.YellOnResurrect then
+	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
+			prepareMessage(self, "premsg_Spells_rebirth3", spellId, sourceName, destName)
+		end
+		if args:IsPlayer() then
+			specWarnRebirth:Show()
+			specWarnRebirth:Play("targetyou")
+		end
+	elseif spellId == 385403 then --Тангенциальный корректор жизненной силы
+		if self.Options.YellOnResurrect then
+	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
+			prepareMessage(self, "premsg_Spells_rebirth4", spellId, sourceName, destName)
+		end
+		if args:IsPlayer() then
+			specWarnRebirth:Show()
+			specWarnRebirth:Play("targetyou")
 		end
 	end
 end
