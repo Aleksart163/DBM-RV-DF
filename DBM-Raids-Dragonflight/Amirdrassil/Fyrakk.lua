@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2519, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231222010126")
+mod:SetRevision("20231225015325")
 mod:SetCreatureID(204931)
 
 mod:SetEncounterID(2677)
@@ -372,7 +372,11 @@ function mod:SPELL_CAST_START(args)
 				self:Schedule(29, blazeLoop, self)
 			end
 		else
-			specWarnIncarnate:Play("mobsoon")--Stage 2, he's lifting off for big adds
+			if self.vb.incarnCount == 3 then--only two sets of adds, 3rd one is only a knockback cause he's going dragon again
+				specWarnIncarnate:Play("carefly")
+			else
+				specWarnIncarnate:Play("mobsoon")--Stage 2, he's lifting off for big adds
+			end
 			local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.incarnCount+1)
 			if timer then
 				timerIncarnateCD:Start(timer, self.vb.incarnCount+1)

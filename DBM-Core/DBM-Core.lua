@@ -73,17 +73,17 @@ local function showRealDate(curseDate)
 end
 
 local DBM = {
-	Revision = parseCurseDate("20231223050000"),
+	Revision = parseCurseDate("20231227225350"),
 }
 _G.DBM = DBM
 
-local fakeBWVersion, fakeBWHash = 309, "9218174"--309.1
+local fakeBWVersion, fakeBWHash = 310, "b22ecb9"--310.2
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
 	DBM.DisplayVersion = "10.2.13"
-	DBM.ReleaseRevision = releaseDate(2023, 12, 23) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2023, 12, 27) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 8--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
 	DBM.DisplayVersion = "1.15.6 alpha"
@@ -11465,9 +11465,9 @@ function bossModPrototype:AddPrivateAuraSoundOption(auraspellId, default, groupS
 	self.Options["PrivateAuraSound"..auraspellId.."SWSound"] = defaultSound or 1
 	self.localization.options["PrivateAuraSound"..auraspellId] = L.AUTO_PRIVATEAURA_OPTION_TEXT:format(auraspellId)
 	if not DBM.Options.GroupOptionsExcludePAura then
-		self:GroupSpells(groupSpellId or auraspellId, "PrivateAuraSound"..auraspellId)
+		self:GroupSpellsPA(groupSpellId or auraspellId, "PrivateAuraSound"..auraspellId)
 	end
-	self:SetOptionCategory("PrivateAuraSound"..auraspellId, "paura")
+	self:SetOptionCategory("PrivateAuraSound"..auraspellId, "paura", nil, nil, true)
 end
 
 --Function to actually register specific media to specific auras
@@ -11833,6 +11833,29 @@ function bossModPrototype:GroupWASpells(customName, ...)
 	end
 end
 
+--Duplicate function just for private auras to do literally same thing as GroupSpells without ability to pass extra arg
+function bossModPrototype:GroupSpellsPA(...)
+	local spells = {...}
+	local catSpell = tostring(tremove(spells, 1))
+	if not self.groupSpells[catSpell] then
+		self.groupSpells[catSpell] = {}
+	end
+	for _, spell in ipairs(spells) do
+		local sSpell = tostring(spell)
+		self.groupSpells[sSpell] = catSpell
+		if sSpell ~= catSpell and self.groupOptions[sSpell] then
+			if not self.groupOptions[catSpell] then
+				self.groupOptions[catSpell] = {}
+				self.groupOptions[catSpell].hasPrivate = true--This single line is basically why GroupSpellsPA had to duplicate GroupSpells
+			end
+			for _, spell2 in ipairs(self.groupOptions[sSpell]) do
+				tinsert(self.groupOptions[catSpell], spell2)
+			end
+			self.groupOptions[sSpell] = nil
+		end
+	end
+end
+
 function bossModPrototype:GroupSpells(...)
 	local spells = {...}
 	local catSpell = tostring(tremove(spells, 1))
@@ -11854,7 +11877,7 @@ function bossModPrototype:GroupSpells(...)
 	end
 end
 
-function bossModPrototype:SetOptionCategory(name, cat, optionType, waCustomName)
+function bossModPrototype:SetOptionCategory(name, cat, optionType, waCustomName, hasPrivate)
 	optionType = optionType or ""
 	for _, options in pairs(self.optionCategories) do
 		removeEntry(options, name)
@@ -11866,6 +11889,9 @@ function bossModPrototype:SetOptionCategory(name, cat, optionType, waCustomName)
 		end
 		if waCustomName and not self.groupOptions[sSpell].title then
 			self.groupOptions[sSpell].title = waCustomName
+		end
+		if hasPrivate and not self.groupOptions[sSpell].hasPrivate then
+			self.groupOptions[sSpell].hasPrivate = true
 		end
 		tinsert(self.groupOptions[sSpell], name)
 	else
@@ -12198,7 +12224,7 @@ function replaceSpellLinks(id)
     return ("|cff71d5ff|Hspell:%d:0|h[%s]|h|r"):format(spellId, spellName)
 end
 
-function smartChat(msg, arg, target)
+function SmartAss(msg, arg, target)
 	if not msg then return end
     if arg == "rw" and IsInRaid() and DBM:GetRaidRank() > 0 then
         SendChatMessage(msg, "RAID_WARNING")

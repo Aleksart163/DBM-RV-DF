@@ -426,9 +426,12 @@ function DBM_GUI:CreateBossModPanel(mod)
 				panel:CreateLine(options)
 			else
 				local title, desc, _, icon
-				local usedSpellID
+				local usedSpellID, hasPrivate
 				if mod.groupOptions[spellID] and mod.groupOptions[spellID].customKeys then
 					usedSpellID = mod.groupOptions[spellID].customKeys--Color coding would be done in customKeys, not here
+				end
+				if mod.groupOptions[spellID] and mod.groupOptions[spellID].hasPrivate then
+					hasPrivate = true
 				end
 				if mod.groupOptions[spellID].title then--Custom title, it's a bogus spellId, so we completely ignore it and bundle with localized custom title
 					title, desc, icon = mod.groupOptions[spellID].title, L.CustomOptions, 136116
@@ -456,7 +459,7 @@ function DBM_GUI:CreateBossModPanel(mod)
 				if not usedSpellID then
 					usedSpellID = "|Hgarrmission:DBM:wacopy:"..spellID.."|h|cff69ccf0"..spellID.."|r|h"
 				end
-				local catpanel = panel:CreateAbility(title, icon, usedSpellID)
+				local catpanel = panel:CreateAbility(title, icon, usedSpellID, hasPrivate)
 				if desc then
 					catpanel:CreateSpellDesc(desc)
 				end
@@ -858,7 +861,7 @@ do
 
 			for _, mod in ipairs(DBM.Mods) do
 				if mod.modId == addon.modId then
-					if not mod.panel and (not addon.subTabs or (addon.subPanels and addon.subPanels[mod.subTab])) then
+					if not mod.panel and (not addon.subTabs or (addon.subPanels and (addon.subPanels[mod.subTab] or mod.subTab == 0))) then
 						if addon.subTabs and addon.subPanels[mod.subTab] then
 							mod.panel = addon.subPanels[mod.subTab]:CreateNewPanel(mod.id or "Error: DBM.Mods", addon.optionsTab, nil, nil, mod.localization.general.name)
 						else
