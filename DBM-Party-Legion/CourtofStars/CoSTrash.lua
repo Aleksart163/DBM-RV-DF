@@ -605,9 +605,9 @@ do
 			if self.Options.SpyHelper and self.Options.SendToChat2 and target == UnitName("player") then
 				local text = L.SpyFoundP
 				if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-					SendChatMessage("DBM: "..text, "INSTANCE_CHAT")
+					SendChatMessage("DBM RV: "..text, "INSTANCE_CHAT")
 				elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-					SendChatMessage("DBM: "..text, "PARTY")
+					SendChatMessage("DBM RV: "..text, "PARTY")
 				end
 			end
 		end
@@ -632,9 +632,9 @@ do
 					if self.Options.SendToChat2 then
 						local text = hintTranslations[clue]
 						if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-							SendChatMessage("DBM: "..text, "INSTANCE_CHAT")
+							SendChatMessage("DBM RV: "..text, "INSTANCE_CHAT")
 						elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-							SendChatMessage("DBM: "..text, "PARTY")
+							SendChatMessage("DBM RV: "..text, "PARTY")
 						end
 					end
 					hints[clue] = true
