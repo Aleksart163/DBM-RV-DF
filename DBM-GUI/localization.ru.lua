@@ -3,7 +3,6 @@ if GetLocale() ~= "ruRU" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-L.MainFrame = "Deadly Boss Mods"
 
 -- Missing phrases. Start ..
 L.Core_GUI 					= "Ядро и графический интерфейс"
@@ -166,9 +165,9 @@ L.ShowWAKeys						= "Показывать ключи WeakAuras рядом с и�
 L.CustomOptions						= "Эта категория содержит настраиваемые параметры для способности или события, у которых нет собственного идентификатора заклинания или журнала. Эти параметры были сгруппированы вместе с использованием пользовательского идентификатора вручную для простоты создания WeakAuras"
 -- Missing phrases. End ..
 
-L.TranslationByPrefix		= "Перевод на русский язык - "
-L.TranslationBy 			= "Swix, TOM_RUS, Hollicsh"
-L.Website					= "Посетите наш дискорд: |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Подпишитесь на твиттер: |cFF73C2FB@deadlybossmods или @MysticalOS|r"
+L.TranslationByPrefix		= "Адаптация под firestorm - Aleksart163. "
+L.TranslationBy 			= "Перевод на русский язык - Swix, TOM_RUS, Hollicsh"
+L.Website					= "Посетите наш дискорд: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r. Подпишитесь на твиттер: |cFF73C2FB@deadlybossmods или @MysticalOS|r"
 L.WebsiteButton				= "Форумы"
 
 L.OTabBosses				= "Боссы"

@@ -9100,7 +9100,7 @@ do
 					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:EJ_GetSectionInfo(spellId) or CL.UNKNOWN)
 				else
 				--	displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:GetSpellInfo(spellId) or CL.UNKNOWN)
-					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(replaceSpellLinks(spellId) or CL.UNKNOWN)
+					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(SpellLinks(spellId) or CL.UNKNOWN)
 				end
 			else
 				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(CL.UNKNOWN)
@@ -12102,16 +12102,19 @@ function bossModPrototype:GroupInCombat()
 	--Any Boss engaged
 	if IsEncounterInProgress() then
 		combatFound = true
+	--	DBM:Debug("Combat found", 2)
 	end
 	--Self in Combat
 	if InCombatLockdown() or UnitAffectingCombat("player") then
 		combatFound = true
+	--	DBM:Debug("Combat found", 2)
 	end
 	--Any Other group member in combat
 	if not combatFound then
 		for uId in DBM:GetGroupMembers() do
 			if UnitAffectingCombat(uId) and not UnitIsDeadOrGhost(uId) then
 				combatFound = true
+			--	DBM:Debug("Combat found", 2)
 				break
 			end
 		end
@@ -12214,7 +12217,7 @@ end
 --------------------
 -- Proshlyapation --
 --------------------
-function replaceSpellLinks(id)
+function SpellLinks(id)
     local spellId = tonumber(id)
     local spellName = DBM:GetSpellInfo(spellId)
     if not spellName then
@@ -12224,7 +12227,7 @@ function replaceSpellLinks(id)
     return ("|cff71d5ff|Hspell:%d:0|h[%s]|h|r"):format(spellId, spellName)
 end
 
-function SmartAss(msg, arg, target)
+function smartAss(msg, arg, target)
 	if not msg then return end
     if arg == "rw" and IsInRaid() and DBM:GetRaidRank() > 0 then
         SendChatMessage(msg, "RAID_WARNING")
@@ -12242,8 +12245,8 @@ function SmartAss(msg, arg, target)
             SendChatMessage(msg, "INSTANCE_CHAT")
         elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
             SendChatMessage(msg, "PARTY")
-		elseif IsMythicPlus() then
-			SendChatMessage(msg, "PARTY")
+	--	elseif difficultyIndex == 8 or difficultyIndex == 23 then
+	--		SendChatMessage(msg, "PARTY")
         end
     end
 end
@@ -12258,22 +12261,22 @@ local function ProshlyapationLittleWigs(self, event, arg1, arg2)
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "PARTY")
 			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-		elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "PARTY")
+	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
+			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "PARTY")]]
 		end
 	elseif event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER" then
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "INSTANCE_CHAT")
 			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-		elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "INSTANCE_CHAT")
+	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
+			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "INSTANCE_CHAT")]]
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
 			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-		elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-		--	SendChatMessage([DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "RAID")
+	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
+			SendChatMessage([DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "RAID")]]
 		end
 	end
 end

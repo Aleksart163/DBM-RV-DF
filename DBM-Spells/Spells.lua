@@ -6,8 +6,8 @@ mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
-	"SPELL_AURA_APPLIED 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060",
+	"SPELL_CAST_SUCCESS 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_AURA_APPLIED 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
 	"SPELL_CREATE 698 188036 201352 201351 185709 88304 61031 49844",
@@ -18,12 +18,12 @@ mod:RegisterEvents(
 )
 
 --Прошляпанное очко Мурчаля Прошляпенко на рейдовых спеллах [✔]
-local warnMassres1					= mod:NewCastAnnounce(212040, 2) --Ободрение (друид) --
-local warnMassres2					= mod:NewCastAnnounce(212056, 2) --Отпущение (пал) --
-local warnMassres3					= mod:NewCastAnnounce(212036, 2) --Массовое воскрешение (прист) --
-local warnMassres4					= mod:NewCastAnnounce(212048, 2) --Древнее видение (шаман) --
-local warnMassres5					= mod:NewCastAnnounce(212051, 2) --Повторное пробуждение (монк) --
-local warnMassres6					= mod:NewCastAnnounce(361178, 2) --Массовое возвращение (драктир) --
+local warnMassres1					= mod:NewCastAnnounce(212040, 1) --Ободрение (друид) --
+local warnMassres2					= mod:NewCastAnnounce(212056, 1) --Отпущение (пал) --
+local warnMassres3					= mod:NewCastAnnounce(212036, 1) --Массовое воскрешение (прист) --
+local warnMassres4					= mod:NewCastAnnounce(212048, 1) --Древнее видение (шаман) --
+local warnMassres5					= mod:NewCastAnnounce(212051, 1) --Повторное пробуждение (монк) --
+local warnMassres6					= mod:NewCastAnnounce(361178, 1) --Массовое возвращение (драктир) --
 --инженерия
 --local warnPylon						= mod:NewSpellAnnounce(199115, 1) --Пилон
 local warnJeeves					= mod:NewSpellAnnounce(67826, 1) --Дживс
@@ -37,6 +37,7 @@ local warnHysteria					= mod:NewSpellAnnounce(90355, 1) --Древняя ист�
 local warnNetherwinds				= mod:NewSpellAnnounce(160452, 1) --Ветер пустоты
 local warnPrimalRage				= mod:NewSpellAnnounce(264667, 1) --Исступление
 local warnSated						= mod:NewSpellAnnounce(57724, 1) --Пресыщение
+local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступление
 
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
@@ -58,6 +59,10 @@ local warnSymbolHope				= mod:NewSpellAnnounce(64901, 1, nil, "Healer") --Сим
 
 local specWarnSoulstone				= mod:NewSpecialWarningYou(20707, nil, nil, nil, 1, 2) --Камень души
 
+local specWarnBlessingSpellwarding	= mod:NewSpecialWarningYou(204018, nil, nil, nil, 1, 2) --Благословение защиты от заклинаний
+local specWarnBlessingSacrifice		= mod:NewSpecialWarningYou(6940, nil, nil, nil, 1, 2) --Жертвенное благословение
+local specWarnSourceofMagic			= mod:NewSpecialWarningYou(369459, nil, nil, nil, 1, 2) --Магический источник
+local specWarnPrimalRage			= mod:NewSpecialWarningYou(264667, nil, nil, nil, 1, 2) --Исступление
 local specWarnPowerInfusion			= mod:NewSpecialWarningYou(10060, nil, nil, nil, 1, 2) --Придание сил
 local specWarnGuardianSpirit		= mod:NewSpecialWarningYou(47788, nil, nil, nil, 1, 2) --Оберегающий дух
 local specWarnTimeDilation			= mod:NewSpecialWarningYou(357170, nil, nil, nil, 1, 2) --Растяжение времени
@@ -98,9 +103,12 @@ mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnPylon", true) --пилон
 mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
-
+--эластичной 120
+--толстой 10
+--крепкой 20
+--Pussymoon-Valdrakken
 local typeInstance = nil
-local DbmRV = "[DBM RV v2.5] "
+local DbmRV = "[DBM RV v2.5]: "
 
 local function UnitInYourParty(sourceName)
 	if GetNumGroupMembers() > 0 and (UnitInParty(sourceName) or UnitPlayerOrPetInParty(sourceName) or UnitInRaid(sourceName) or UnitInBattleground(sourceName)) then
@@ -120,6 +128,7 @@ local premsg_values = {
 	["premsg_Spells_massres5_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_massres6_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_primalRage"] = {0, L.HeroismYell},
+	["premsg_Spells_primalRage2"] = {0, L.HeroismYell},
 	["premsg_Spells_sated"] = {0, L.HeroismYell},
 	["premsg_Spells_timeWarp"] = {0, L.HeroismYell},
 	["premsg_Spells_furyAspects"] = {0, L.HeroismYell},
@@ -175,10 +184,12 @@ local premsg_values = {
 	["premsg_Spells_tranquility"] = {0, L.HeroismYell}, --Спокойствие
 	["premsg_Spells_rewind"] = {0, L.HeroismYell}, --Перемотка
 --	["premsg_Spells_innervate"] = {0, L.SoulstoneYell, true}, --Озарение
+	["premsg_Spells_sourceMagic"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth1"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth2"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
-	["premsg_Spells_rebirth3"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
-	["premsg_Spells_rebirth4"] = {0, L.SoulstoneYell, true} --Тангенциальный корректор жизненной силы
+	["premsg_Spells_rebirth3"] = {0, L.SoulstoneYell, true}, --Воскрешение камнем души
+	["premsg_Spells_rebirth4"] = {0, L.SoulstoneYell, true}, --Заступничество
+	["premsg_Spells_rebirth5"] = {0, L.SoulstoneYell, true} --Тангенциальный корректор жизненной силы
 }
 local playerOnlyName = UnitName("player")
 
@@ -190,7 +201,7 @@ local function sendAnnounce(self, spellId, sourceName, destName)
 				DBM:Debug('[sendAnnounce] spellId: ' .. tostring(spellId) .. ', sourceName: ' .. tostring(sourceName) .. ', destName: ' .. tostring(destName))
 				return
 			end
-			smartChat(v[2]:format(DbmRV, sourceName, replaceSpellLinks(spellId), destName), v[4])
+			smartAss(v[2]:format(DbmRV, sourceName, SpellLinks(spellId), destName), v[4])
 		end
 	end
 end
@@ -272,7 +283,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.YellOnSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSummoning then
 			if args:IsPlayerSource() then
-				smartChat(L.SummonYell:format(DbmRV, sourceName, replaceSpellLinks(spellId), UnitName("target")))
+				smartAss(L.SummonYell:format(DbmRV, sourceName, SpellLinks(spellId), UnitName("target")))
 			end
 		end
 	end
@@ -294,29 +305,95 @@ function mod:SPELL_CAST_SUCCESS(args)
 			prepareMessage(self, "premsg_Spells_timeWarp", spellId, sourceName)
 		end
 	elseif spellId == 264667 then --Исступление
+--[[		local petGUID = UnitGUID("pet")
+		if petGUID then
+			local petOwner = nil
+			local petOwnerName = nil
+			for i = 1, GetNumBattlefieldScores() do
+				petOwner = GetBattlefieldScore(i)
+            
+				if petOwner and petOwner.guid == petGUID then
+					petOwnerName = petOwner.name
+					break
+				end
+			end
+		end
 		if self:AntiSpam(5, "bloodlust") then
 			warnPrimalRage:Show(sourceName)
+			specWarnPrimalRage:Show()
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-			prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
+		--	prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
+			prepareMessage(self, "premsg_Spells_primalRage", spellId, petOwnerName)
+		end]]
+	--	specWarnPrimalRage:Show()
+		if args:IsPetSource() then
+			local playerClass = select(2, UnitClass("player"))
+			if playerClass == "HUNTER" then
+				local player = GetUnitName("player")
+			end
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_primalRage", spellId, player)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
+--[[		else
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
+			end
+			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage1)", 2)]]
+		end
+	elseif spellId == 272678 then --Исступление
+	--	specWarnPrimalRage:Show()
+		if args:IsPetSource() then
+			local playerClass = select(2, UnitClass("player"))
+			if playerClass == "HUNTER" then
+				local player = GetUnitName("player")
+			end
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_primalRage2", spellId, player)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
+--[[		else
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_primalRage2", spellId, sourceName)
+			end
+			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage2)", 2)]]
 		end
 	elseif spellId == 57724 then --Пресыщение
-		if self:AntiSpam(5, "bloodlust") then
+--[[		if self:AntiSpam(5, "bloodlust") then
 			warnSated:Show(sourceName)
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_sated", spellId, sourceName)
+		end]]
+	--	specWarnPrimalRage:Show()
+		if args:IsPetSource() then
+			local playerClass = select(2, UnitClass("player"))
+			if playerClass == "HUNTER" then
+				local player = GetUnitName("player")
+			end
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_sated", spellId, player)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ' ', 2)
+		else
+			if self.Options.YellOnHeroism then
+		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_sated", spellId, sourceName)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 		end
 	elseif spellId == 390386 then --Ярость Аспектов
 		if self:AntiSpam(5, "bloodlust") then
-			warnFuryoftheAspects:Show(sourceName)
+			warnFuryoftheAspects:Show()
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_furyAspects", spellId, sourceName)
 		end
+		DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 	elseif spellId == 32182 then --Героизм
 		if self:AntiSpam(5, "bloodlust") then
 			warnHeroism:Show(sourceName)
@@ -325,6 +402,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_heroism", spellId, sourceName)
 		end
+		DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 	elseif spellId == 2825 then --Кровожадность
 		if self:AntiSpam(5, "bloodlust") then
 			warnBloodlust:Show(sourceName)
@@ -333,21 +411,56 @@ function mod:SPELL_CAST_SUCCESS(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_bloodlust", spellId, sourceName)
 		end
+		DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 	elseif spellId == 90355 then --Древняя истерия (пет ханта)
-		if self:AntiSpam(5, "bloodlust") then
+--[[		if self:AntiSpam(5, "bloodlust") then
 			warnHysteria:Show(sourceName)
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_hysteria", spellId, sourceName)
+		end]]
+	--	specWarnPrimalRage:Show()
+		if args:IsPetSource() then
+			local playerClass = select(2, UnitClass("player"))
+			if playerClass == "HUNTER" then
+				local player = GetUnitName("player")
+			end
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_hysteria", spellId, player)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal1 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
+		else
+			if self.Options.YellOnHeroism then
+		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_hysteria", spellId, sourceName)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal2 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 		end
 	elseif spellId == 160452 then --Ветер пустоты (пет ханта)
-		if self:AntiSpam(5, "bloodlust") then
+--[[		if self:AntiSpam(5, "bloodlust") then
 			warnNetherwinds:Show(sourceName)
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_winds", spellId, sourceName)
+		end]]
+	--	specWarnPrimalRage:Show()
+		if args:IsPetSource() then
+			local playerClass = select(2, UnitClass("player"))
+			if playerClass == "HUNTER" then
+				local player = GetUnitName("player")
+			end
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_winds", spellId, player)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal1 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
+		else
+			if self.Options.YellOnHeroism then
+		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_winds", spellId, sourceName)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal2 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 		end
 --[[	elseif spellId == 10059 then --Штормград
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnPortal then
@@ -445,7 +558,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellSymbolHope:Yell(replaceSpellLinks(spellId))
+			yellSymbolHope:Yell(SpellLinks(spellId))
 		end
 		if self.Options.YellOnRaidCooldown then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
@@ -455,7 +568,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellRallyingCry:Yell(replaceSpellLinks(spellId))
+			yellRallyingCry:Yell(SpellLinks(spellId))
 		else
 			warnRallyingCry:Show()
 		end
@@ -467,7 +580,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellPowerWordBarrier:Yell(replaceSpellLinks(spellId))
+			yellPowerWordBarrier:Yell(SpellLinks(spellId))
 		else
 			warnPowerWordBarrier:Show()
 		end
@@ -479,7 +592,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellTranquility:Yell(replaceSpellLinks(spellId))
+			yellTranquility:Yell(SpellLinks(spellId))
 		end
 		if self.Options.YellOnRaidCooldown then
 			prepareMessage(self, "premsg_Spells_tranquility", spellId, sourceName)
@@ -488,7 +601,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellDivineHymn:Yell(replaceSpellLinks(spellId))
+			yellDivineHymn:Yell(SpellLinks(spellId))
 		end
 		if self.Options.YellOnRaidCooldown then
 			prepareMessage(self, "premsg_Spells_divineHymn", spellId, sourceName)
@@ -497,7 +610,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellRewind:Yell(replaceSpellLinks(spellId))
+			yellRewind:Yell(SpellLinks(spellId))
 		else
 			warnRewind:Show()
 		end
@@ -513,7 +626,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
 		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-		--		smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
+		--		smartAss(L.WhisperThanks:format(DbmRV, SpellLinks(spellId)), "whisper", sourceName)
 		--	end
 		end
 	elseif spellId == 61999 and self:AntiSpam(2, "rebirth") then --Воскрешение союзника
@@ -535,6 +648,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnRebirth:Play("targetyou")
 		end
 	elseif spellId == 385403 then --Тангенциальный корректор жизненной силы
+		if self.Options.YellOnResurrect then
+	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
+			prepareMessage(self, "premsg_Spells_rebirth5", spellId, sourceName, destName)
+		end
+		if args:IsPlayer() then
+			specWarnRebirth:Show()
+			specWarnRebirth:Play("targetyou")
+		end
+	elseif spellId == 391054 then --Заступничество
 		if self.Options.YellOnResurrect then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnResurrect then
 			prepareMessage(self, "premsg_Spells_rebirth4", spellId, sourceName, destName)
@@ -619,6 +741,30 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPowerInfusion:Show()
 			specWarnPowerInfusion:Play("targetyou")
 		end
+	elseif spellId == 369459 and self:AntiSpam(5, "SourceofMagic") then --Магический источник
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		if args:IsPlayer() then
+			specWarnSourceofMagic:Show()
+			specWarnSourceofMagic:Play("targetyou")
+		end
+		if self.Options.YellOnRaidCooldown then
+			prepareMessage(self, "premsg_Spells_sourceMagic", spellId, sourceName, destName)
+		end
+	elseif spellId == 204018 then --Благословение защиты от заклинаний
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		if args:IsPlayer() then
+			specWarnBlessingSpellwarding:Show()
+			specWarnBlessingSpellwarding:Play("targetyou")
+		end
+	elseif spellId == 6940 then --Жертвенное благословение
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		if args:IsPlayer() then
+			specWarnBlessingSacrifice:Show()
+			specWarnBlessingSacrifice:Play("targetyou")
+		end
 	elseif spellId == 102342 then --Железная кора
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
@@ -626,7 +772,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnIronbark:Show()
 			specWarnIronbark:Play("targetyou")
 		--[[	if not args:IsPlayerSource() and not DBM.Options.IgnoreRaidAnnounce3 then
-				smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
+				smartAss(L.WhisperThanks:format(DbmRV, SpellLinks(spellId)), "whisper", sourceName)
 			end]]
 		end
 	--[[	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
@@ -744,7 +890,7 @@ function mod:SPELL_SUMMON(args)
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellAncestralProtectionTotem:Yell(replaceSpellLinks(spellId))
+			yellAncestralProtectionTotem:Yell(SpellLinks(spellId))
 		end
 		if self.Options.YellOnRaidCooldown then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
@@ -769,7 +915,7 @@ function mod:SPELL_RESURRECT(args)
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
 		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-				smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
+				smartAss(L.WhisperThanks:format(DbmRV, SpellLinks(spellId)), "whisper", sourceName)
 			end
 		end
 	elseif spellId == 20484 then --Возрождение
@@ -781,7 +927,7 @@ function mod:SPELL_RESURRECT(args)
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
 		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-				smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
+				smartAss(L.WhisperThanks:format(DbmRV, SpellLinks(spellId)), "whisper", sourceName)
 			end
 		end
 	elseif spellId == 61999 and self:AntiSpam(2.5, "rebirth") then --Воскрешение союзника
@@ -793,12 +939,12 @@ function mod:SPELL_RESURRECT(args)
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
 		--	if not DBM.Options.IgnoreRaidAnnounce3 then
-				smartChat(L.WhisperThanks:format(DbmRV, replaceSpellLinks(spellId)), "whisper", sourceName)
+				smartAss(L.WhisperThanks:format(DbmRV, SpellLinks(spellId)), "whisper", sourceName)
 			end
 		end
 	end
 end]]
-
+--[[
 function mod:GOSSIP_SHOW()
 	if not self.Options.Enabled then return end
 	local guid = UnitGUID("npc")
@@ -809,7 +955,7 @@ function mod:GOSSIP_SHOW()
 			SelectGossipOption(1, "", true)
 		end
 	end
-end
+end]]
 
 function mod:PLAYER_DEAD()
 	if not self.Options.Enabled then return end

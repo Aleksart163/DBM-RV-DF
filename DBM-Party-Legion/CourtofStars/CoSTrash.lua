@@ -605,9 +605,17 @@ do
 			if self.Options.SpyHelper and self.Options.SendToChat2 and target == UnitName("player") then
 				local text = L.SpyFoundP
 				if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+					DBM:Debug("INSTANCE_CHAT (LE_PARTY_CATEGORY_INSTANCE) "..text)
 					SendChatMessage("DBM RV: "..text, "INSTANCE_CHAT")
 				elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-					SendChatMessage("DBM RV: "..text, "PARTY")
+					DBM:Debug("PARTY (LE_PARTY_CATEGORY_HOME) "..text)
+					SendChatMessage("[DBM RV v2.5]: "..text, "PARTY")
+				elseif IsInRaid() then
+					DBM:Debug("RAID "..text)
+					SendChatMessage("[DBM RV v2.5]: "..text, "RAID")
+				elseif IsInGroup() then
+					DBM:Debug("PARTY "..text)
+					SendChatMessage("[DBM RV v2.5]: "..text, "PARTY")
 				end
 			end
 		end

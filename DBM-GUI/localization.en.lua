@@ -2,7 +2,7 @@ DBM_GUI_L = {}
 
 local L = DBM_GUI_L
 
-L.MainFrame							= "Deadly Boss Mods"
+L.MainFrame							= "Dungeon Boss Master"
 
 L.TranslationByPrefix				= "Translated by "
 L.TranslationBy 					= nil -- your name here, localizers!

@@ -287,7 +287,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Found		= "Теперь, давайте не будем торопиться",
+	Found		= "зачем же так спешить",
 	CluesFound	= "Найдено подсказок: %d/5",
 	ClueShort	= "Подсказка %d/5: %s",
 	Gloves		= "Носит перчатки / Wears gloves",
