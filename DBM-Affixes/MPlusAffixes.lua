@@ -48,7 +48,7 @@ local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
-local yellMarkWind							= mod:NewFadesYell(401401, nil, nil, nil, "YELL") --Метка ветра
+local yellMarkWind							= mod:NewFadesYell(396364, nil, nil, nil, "YELL") --Метка ветра
 
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 
