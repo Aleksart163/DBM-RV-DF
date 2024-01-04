@@ -40,15 +40,15 @@ local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", ni
 local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 --
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
-local timerMarkLightning					= mod:NewBuffActiveTimer(15, 396369, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON) --Метка молнии
-local timerMarkWind							= mod:NewBuffActiveTimer(15, 396364, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON) --Метка ветра
-local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Землетрясение
+local timerMarkLightning					= mod:NewBuffActiveTimer(15, 396369, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка молнии
+local timerMarkWind							= mod:NewBuffActiveTimer(15, 396364, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка ветра
+local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 2.5) --Землетрясение
 local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Некротическая язва
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
-local yellMarkLightning						= mod:NewShortFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
-local yellMarkWind							= mod:NewShortFadesYell(401401, nil, nil, nil, "YELL") --Метка ветра
+local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
+local yellMarkWind							= mod:NewFadesYell(401401, nil, nil, nil, "YELL") --Метка ветра
 
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 
@@ -69,10 +69,18 @@ local MarkWind = SpellLinks(396364) --Метка ветра
 local function ProshlyapationOfMurchal(self) --Изначальная перегрузка
 	if Lightning then
 		yellPrimalOverload:Yell(6, MarkLightning, 6)
-		self:Schedule(3, ProshlyapationOfMurchal, self)
+		self:Schedule(4, ProshlyapationOfMurchal, self)
 	elseif Wind then
 		yellPrimalOverload:Yell(7, MarkWind, 7)
-		self:Schedule(3, ProshlyapationOfMurchal, self)
+		self:Schedule(4, ProshlyapationOfMurchal, self)
+	end
+end
+
+local function CheckProshlyapationOfMurchal(self)
+	if Lightning and timerMarkLightning:GetTime() == 3 then
+		yellPrimalOverload:Cancel()
+	elseif Wind and timerMarkWind:GetTime() == 3 then
+		yellPrimalOverload:Cancel()
 	end
 end
 
@@ -276,6 +284,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellMarkLightning:Countdown(spellId, 3)
 				timerMarkLightning:Start(args.destName)
 				self:Schedule(4, ProshlyapationOfMurchal, self)
+			--	self:Schedule(12, CheckProshlyapationOfMurchal, self)
 			end
 		elseif spellId == 396364 then --Метка ветра
 			if args:IsPlayer() then
@@ -286,6 +295,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellMarkWind:Countdown(spellId, 3)
 				timerMarkWind:Start(args.destName)
 				self:Schedule(4, ProshlyapationOfMurchal, self)
+			--	self:Schedule(12, CheckProshlyapationOfMurchal, self)
 			end
 		end
 	end
@@ -312,7 +322,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			Lightning = false
 			specWarnMarkLightning2:Show()
 			specWarnMarkLightning2:Play("end")
-			self:Unschedule(MarkLightningOnPlayer)
+			self:Unschedule(ProshlyapationOfMurchal)
 			yellMarkLightning:Cancel()
 			timerMarkLightning:Cancel(args.destName)
 		end
@@ -321,7 +331,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			Wind = false
 			specWarnMarkWind2:Show()
 			specWarnMarkWind2:Play("end")
-			self:Unschedule(MarkWindOnPlayer)
+			self:Unschedule(ProshlyapationOfMurchal)
 			yellMarkWind:Cancel()
 			timerMarkWind:Cancel(args.destName)
 		end
