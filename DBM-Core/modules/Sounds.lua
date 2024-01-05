@@ -44,6 +44,7 @@ do
 	local victory = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
+		{text = "Alarak Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
 		{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
 		{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
 	}
@@ -75,6 +76,7 @@ do
 		defeat = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
+			{text = "Alarak: Shameful death",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_Shameful_Death.ogg", length=4},
 			{text = "Alizabal: Incompetent Raiders",value = 572130, length=4},--"Sound\\Creature\\ALIZABAL\\VO_BH_ALIZABAL_RESET_01.ogg"
 			{text = "Bwonsamdi: Over Your Head",value = 2016732, length=4},--"Sound\\Creature\\bwonsamdi\\vo_801_bwonsamdi_35_m.ogg"
 			{text = "Bwonsamdi: Pour Little Thing",value = 2016734, length=4},--"Sound\\Creature\\bwonsamdi\\vo_801_bwonsamdi_37_m.ogg"
