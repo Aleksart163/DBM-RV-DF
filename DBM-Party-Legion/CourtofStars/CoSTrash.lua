@@ -606,7 +606,7 @@ do
 				local text = L.SpyFoundP
 				if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
 					DBM:Debug("INSTANCE_CHAT (LE_PARTY_CATEGORY_INSTANCE) "..text)
-					SendChatMessage("DBM RV: "..text, "INSTANCE_CHAT")
+					SendChatMessage("[DBM RV v2.5]: "..text, "INSTANCE_CHAT")
 				elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
 					DBM:Debug("PARTY (LE_PARTY_CATEGORY_HOME) "..text)
 					SendChatMessage("[DBM RV v2.5]: "..text, "PARTY")
@@ -640,9 +640,9 @@ do
 					if self.Options.SendToChat2 then
 						local text = hintTranslations[clue]
 						if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-							SendChatMessage("DBM RV: "..text, "INSTANCE_CHAT")
+							SendChatMessage("[DBM RV v2.5]: "..text, "INSTANCE_CHAT")
 						elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-							SendChatMessage("DBM RV: "..text, "PARTY")
+							SendChatMessage("[DBM RV v2.5]: "..text, "PARTY")
 						end
 					end
 					hints[clue] = true

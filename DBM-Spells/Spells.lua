@@ -396,7 +396,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 	elseif spellId == 32182 then --Героизм
 		if self:AntiSpam(5, "bloodlust") then
-			warnHeroism:Show(sourceName)
+			warnHeroism:Show()
 		end
 		if self.Options.YellOnHeroism then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
