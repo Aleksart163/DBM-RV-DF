@@ -26,8 +26,8 @@ local warnSpitefulFixate					= mod:NewYouAnnounce(350209, 4) --Злобное с
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
-local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 3, 2) --Метка молнии
-local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 3, 2) --Метка ветра
+local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
+local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
 local specWarnMarkWind2						= mod:NewSpecialWarningEnd(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnNecroticWound					= mod:NewSpecialWarningStack(209858, nil, 10, nil, nil, 1, 3) --Некротическая язва
@@ -55,6 +55,7 @@ mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 local dota5s = false
 local Lightning = false
 local Wind = false
+local checkMarks = false
 --
 local overloadCounting = false
 local overloadDetected = false
@@ -66,6 +67,8 @@ local afflictedDetected = false
 local MarkLightning = SpellLinks(396369) --Метка молнии
 local MarkWind = SpellLinks(396364) --Метка ветра
 
+mod.vb.murchalsPointSign = 0
+
 local function ProshlyapationOfMurchal(self) --Изначальная перегрузка
 	if Lightning then
 		yellPrimalOverload:Yell(6, MarkLightning, 6)
@@ -76,11 +79,11 @@ local function ProshlyapationOfMurchal(self) --Изначальная перег
 	end
 end
 
-local function CheckProshlyapationOfMurchal(self)
-	if Lightning and timerMarkLightning:GetTime() == 3 then
+local function checkProshlyapationOfMurchal(self)
+	if Wind then
 		yellPrimalOverload:Cancel()
-	elseif Wind and timerMarkWind:GetTime() == 3 then
-		yellPrimalOverload:Cancel()
+		yellMarkWind:Cancel()
+		self:Unschedule(ProshlyapationOfMurchal)
 	end
 end
 
@@ -193,21 +196,6 @@ local function checkForCombat(self)
 	self:Schedule(0.25, checkForCombat, self)
 end
 
---[[
-local function MarkLightningOnPlayer(self) --Метка молнии
---	if UnitDebuff("player", 396369) then
-	yellPrimalOverload:Yell(6, MarkLightning, 6)
-	self:Schedule(3, MarkLightningOnPlayer, self)
---	end
-end
-
-local function MarkWindOnPlayer(self) --Метка ветра
---	if UnitDebuff("player", 396364) then
-	yellPrimalOverload:Yell(6, MarkWind, 6)
-	self:Schedule(3, MarkWindOnPlayer, self)
---	end
-end]]
-
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -274,28 +262,36 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnBurst:Play("stackhigh")
 			end
 		end
-	elseif spellId == 396364 or spellId == 396369 then --Изначальная перегрузка
-		if spellId == 396369 then --Метка молнии
-			if args:IsPlayer() then
-				Lightning = true
-				specWarnMarkLightning:Show()
-				specWarnMarkLightning:Play("gathershare")
-				yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
-				yellMarkLightning:Countdown(spellId, 3)
-				timerMarkLightning:Start(args.destName)
-				self:Schedule(4, ProshlyapationOfMurchal, self)
-			--	self:Schedule(12, CheckProshlyapationOfMurchal, self)
+	elseif spellId == 396369 then --Метка молнии
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
+		if args:IsPlayer() then
+			Lightning = true
+			specWarnMarkLightning:Show()
+			specWarnMarkLightning:Play("gathershare")
+			yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
+			yellMarkLightning:Countdown(spellId, 3)
+			timerMarkLightning:Start(args.destName)
+			self:Schedule(4, ProshlyapationOfMurchal, self)
+		end
+		if self.vb.murchalsPointSign == 5 then
+			if not checkMarks then
+				checkMarks = true
 			end
-		elseif spellId == 396364 then --Метка ветра
-			if args:IsPlayer() then
-				Wind = true
-				specWarnMarkWind:Show()
-				specWarnMarkWind:Play("gathershare")
-				yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
-				yellMarkWind:Countdown(spellId, 3)
-				timerMarkWind:Start(args.destName)
-				self:Schedule(4, ProshlyapationOfMurchal, self)
-			--	self:Schedule(12, CheckProshlyapationOfMurchal, self)
+		end
+	elseif spellId == 396364 then --Метка ветра
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
+		if args:IsPlayer() then
+			Wind = true
+			specWarnMarkWind:Show()
+			specWarnMarkWind:Play("gathershare")
+			yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
+			yellMarkWind:Countdown(spellId, 3)
+			timerMarkWind:Start(args.destName)
+			self:Schedule(4, ProshlyapationOfMurchal, self)
+		end
+		if self.vb.murchalsPointSign == 5 then
+			if not checkMarks then
+				checkMarks = true
 			end
 		end
 	end
@@ -318,6 +314,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerBurst:Cancel(args.destName)
 		end
 	elseif spellId == 396369 then --Метка молнии
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
 		if args:IsPlayer() then
 			Lightning = false
 			specWarnMarkLightning2:Show()
@@ -326,7 +323,16 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellMarkLightning:Cancel()
 			timerMarkLightning:Cancel(args.destName)
 		end
+		if checkMarks then
+			if self.vb.murchalsPointSign == 1 then
+				self:Schedule(0.5, checkProshlyapationOfMurchal, self)
+			elseif self.vb.murchalsPointSign == 0 then
+				checkMarks = false
+				self:Unschedule(checkProshlyapationOfMurchal)
+			end
+		end
 	elseif spellId == 396364 then --Метка ветра
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
 		if args:IsPlayer() then
 			Wind = false
 			specWarnMarkWind2:Show()
@@ -334,6 +340,14 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:Unschedule(ProshlyapationOfMurchal)
 			yellMarkWind:Cancel()
 			timerMarkWind:Cancel(args.destName)
+		end
+		if checkMarks then
+			if self.vb.murchalsPointSign == 1 then
+				self:Schedule(0.5, checkProshlyapationOfMurchal, self)
+			elseif self.vb.murchalsPointSign == 0 then
+				checkMarks = false
+				self:Unschedule(checkProshlyapationOfMurchal)
+			end
 		end
 	end
 end
@@ -361,9 +375,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		end
 		self:Unschedule(checkForCombat)
 		checkForCombat(self)
---		self:Unschedule(checkForCombatRas)
---		checkForCombatRas(self)
---		self:SendSync("MurchalProshlyapation")
 	end
 end
 
