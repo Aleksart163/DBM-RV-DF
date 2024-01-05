@@ -5,7 +5,9 @@ local L = DBM_GUI_L
 local Sounds = DBM_GUI:MixinSharedMedia3("sound", {
 	{
 		text	= L.NoSound,
-		value	= "None"
+		value	= "None",
+		text	= "Alarak",
+		value	= "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_battle_start.ogg"
 	}
 })
 
