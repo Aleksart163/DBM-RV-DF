@@ -67,8 +67,7 @@ local afflictedDetected = false
 local MarkLightning = SpellLinks(396369) --Метка молнии
 local MarkWind = SpellLinks(396364) --Метка ветра
 
---mod.vb.murchalsPointSign = 0
-mod.vb.marksWindCount = 0
+mod.vb.murchalsPointSign = 0
 
 local function ProshlyapationOfMurchal(self) --Изначальная перегрузка
 	if Lightning then
@@ -264,7 +263,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 396369 then --Метка молнии
-	--	self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
 		if args:IsPlayer() then
 			Lightning = true
 			specWarnMarkLightning:Show()
@@ -274,14 +273,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerMarkLightning:Start(args.destName)
 			self:Schedule(4, ProshlyapationOfMurchal, self)
 		end
-	--[[	if self.vb.murchalsPointSign == 5 then
+		if self.vb.murchalsPointSign == 5 then
 			if not checkMarks then
 				checkMarks = true
+				DBM:Debug("murchalsPointSign == 5 (checkMarks = true)", 2)
 			end
-		end]]
+		end
 	elseif spellId == 396364 then --Метка ветра
-	--	self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
-		self.vb.marksWindCount = self.vb.marksWindCount + 1
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign + 1
 		if args:IsPlayer() then
 			Wind = true
 			specWarnMarkWind:Show()
@@ -291,10 +290,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerMarkWind:Start(args.destName)
 			self:Schedule(4, ProshlyapationOfMurchal, self)
 		end
-		if self.vb.marksWindCount == 3 then
-	--	if self.vb.murchalsPointSign == 5 then
+		if self.vb.murchalsPointSign == 5 then
 			if not checkMarks then
 				checkMarks = true
+				DBM:Debug("murchalsPointSign == 5 (checkMarks = true)", 2)
 			end
 		end
 	end
@@ -317,7 +316,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerBurst:Cancel(args.destName)
 		end
 	elseif spellId == 396369 then --Метка молнии
-	--	self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
 		if args:IsPlayer() then
 			Lightning = false
 			specWarnMarkLightning2:Show()
@@ -326,17 +325,18 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellMarkLightning:Cancel()
 			timerMarkLightning:Cancel(args.destName)
 		end
-	--[[	if checkMarks then
+		if checkMarks then
 			if self.vb.murchalsPointSign == 1 then
 				self:Schedule(0.5, checkProshlyapationOfMurchal, self)
+				DBM:Debug("murchalsPointSign == 1 (checkProshlyapationOfMurchal = on)", 2)
 			elseif self.vb.murchalsPointSign == 0 then
 				checkMarks = false
 				self:Unschedule(checkProshlyapationOfMurchal)
+				DBM:Debug("murchalsPointSign == 0 (checkMarks = false)", 2)
 			end
-		end]]
+		end
 	elseif spellId == 396364 then --Метка ветра
-	--	self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
-		self.vb.marksWindCount = self.vb.marksWindCount - 1
+		self.vb.murchalsPointSign = self.vb.murchalsPointSign - 1
 		if args:IsPlayer() then
 			Wind = false
 			specWarnMarkWind2:Show()
@@ -346,12 +346,13 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerMarkWind:Cancel(args.destName)
 		end
 		if checkMarks then
-		--	if self.vb.murchalsPointSign == 1 then
-			if self.vb.marksWindCount == 1 then
+			if self.vb.murchalsPointSign == 1 then
 				self:Schedule(0.5, checkProshlyapationOfMurchal, self)
-			elseif self.vb.marksWindCount == 0 then
+				DBM:Debug("murchalsPointSign == 1 (checkProshlyapationOfMurchal = on)", 2)
+			elseif self.vb.murchalsPointSign == 0 then
 				checkMarks = false
 				self:Unschedule(checkProshlyapationOfMurchal)
+				DBM:Debug("murchalsPointSign == 0 (checkMarks = false)", 2)
 			end
 		end
 	end
