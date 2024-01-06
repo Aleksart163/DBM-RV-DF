@@ -287,10 +287,8 @@ do
 		[105249] = { -- Nightshade Refreshments
 			["name"] = L.Nightshade,
 			["buffid"] = 211102,
-			["raceids"] = {
-				[24] = true,--Pandaren (Neutral). DoubleAgent may find a way to get here?
-				[25] = true,--Pandaren (Alliance)
-				[26] = true--Pandaren (Horde)
+			["races"] = {
+				["Pandaren"] = true
 			},
 			["professionicons"] = {
 --				[133971] = 800,--Cooking (old)
@@ -327,9 +325,10 @@ do
 			["class"] = {
 				["MAGE"] = true
 			},
-			["raceids"] = {
-				[4] = true,--Night Elf
-				[10] = true--Blood Elf
+			["races"] = {
+				["BloodElf"] = true,
+				["NightElf"] = true,
+				["Dracthyr"] = true
 			},
 			["professionicons"] = {
 --				[136244] = 800,--Enchanting (Old)
@@ -370,9 +369,9 @@ do
 		},
 		[105157] = {-- Arcane Power Conduit
 			["name"] = DBM:GetSpellInfo(210466),
-			["raceids"] = {
-				[7] = true,--Gnome
-				[9] = true--Goblin
+			["races"] = {
+				["Gnome"] = true,
+				["Goblin"] = true
 			},
 			["professionicons"] = {
 --				[136243] = 800, -- Engineering (old)
@@ -426,13 +425,12 @@ do
 	}
 
 	local raceIcons = {
-		[4] = "|T236449:0|t",
-		[7] = "|T236445:0|t",
-		[9] = "|T632354:0|t",
-		[10] = "|T236439:0|t",
-		[24] = "|T626190:0|t",
-		[25] = "|T626190:0|t",
-		[26] = "|T626190:0|t"
+		["NightElf"] = "|T236449:0|t",
+		["Gnome"] = "|T236445:0|t",
+		["Goblin"] = "|T632354:0|t",
+		["BloodElf"] = "|T236439:0|t",
+		["Pandaren"] = "|T626190:0|t",
+		["Dracthyr"] = "|T4696175:0|t"
 	}
 
 	local function getClassIcon(class)
@@ -463,11 +461,11 @@ do
 				icons[#icons+1] = getIconById(profIcon)
 			end
 		end
-		if item.raceids then
-			for race, _ in pairs(item.raceids) do
+		if item.races then
+			for race, _ in pairs(item.races) do
 				for unit in DBM:GetGroupMembers() do
-					local _, _, unitRaceID = UnitRace(unit)
-					if unitRaceID == race then
+					local _, _, unitRace = UnitRace(unit)
+					if unitRace == race then
 						players[DBM:GetUnitFullName(unit)] = true
 					end
 				end
@@ -613,9 +611,6 @@ do
 				elseif IsInRaid() then
 					DBM:Debug("RAID "..text)
 					SendChatMessage("[DBM RV v2.5]: "..text, "RAID")
-				elseif IsInGroup() then
-					DBM:Debug("PARTY "..text)
-					SendChatMessage("[DBM RV v2.5]: "..text, "PARTY")
 				end
 			end
 		end
