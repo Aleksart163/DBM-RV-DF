@@ -11,6 +11,6 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
-	RasAffix1 = "Стихии подчиняются мне!",
-	RasAffix2 = "Молния оставит свой след!"
+	AfRaszageth1 = "Стихии подчиняются мне!",
+	AfRaszageth2 = "Молния оставит свой след!"
 })
