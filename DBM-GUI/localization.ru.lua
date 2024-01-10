@@ -3,6 +3,7 @@ if GetLocale() ~= "ruRU" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
+--L.MainFrame = "Deadly Boss Mods"
 
 -- Missing phrases. Start ..
 L.Core_GUI 					= "Ядро и графический интерфейс"
@@ -23,7 +24,6 @@ L.Editbox_WindowWidth		= "Ширина окна"
 L.Editbox_WindowHeight		= "Высота окна"
 L.UIGroupingOptions			= "Параметры группировки пользовательского интерфейса (изменение этих параметров требует перезагрузки пользовательского интерфейса для любого уже загруженного мода)"
 L.GroupOptionsExcludeIcon	= "Исключить параметры 'Установить иконку на' из группировки по заклинаниям (вместо этого они будут сгруппированы в отдельной категории 'Иконки')"
-L.GroupOptionsExcludePAura	= "Исключить параметры 'Воспроизвести звук приватной ауры' из группировки по заклинаниям (вместо этого они будут сгруппированы в отдельной категории 'Приватные ауры')"
 L.AutoExpandSpellGroups		= "Автоматическое расширение опций, сгруппированных по заклинаниям"
 L.NoDescription				= "У этой способности нет описания"
 L.TabCategory_Alerts	 	= "Оповещения"
@@ -157,12 +157,20 @@ L.ReceivingFooter2					= "Если Вы включите эти параметр
 L.ReceivingFooter3					= "Если Вы включите 'заменить конфигурацию моего мода', Ваши исходные настройки будут потеряны при переопределении"--Ещё не реализовано
 
 L.Panel_AutoLogging					= "Автоматическое ведение журнала"
-L.Panel_PullBreakCombat				= "Пулл, Перерыв, Бой"
+L.Panel_PullBreakCombat				= "Пулл & Перерыв"
 L.Area_SoundOptions					= "Параметры звука"
 
 L.TabFooter							= "Все параметры на этой панели работают только в том случае, если Вы являетесь лидером группы, не относящейся к подземелью или LFR"
 L.ShowWAKeys						= "Показывать ключи WeakAuras рядом с именами заклинаний, чтобы помочь в написании WeakAuras с использованием триггеров Boss Mod."
 L.CustomOptions						= "Эта категория содержит настраиваемые параметры для способности или события, у которых нет собственного идентификатора заклинания или журнала. Эти параметры были сгруппированы вместе с использованием пользовательского идентификатора вручную для простоты создания WeakAuras"
+
+L.SelectChatFrameArea				= "Параметры чата"
+L.SelectChatFrameButton				= "Выбрать фрейм чата"
+L.SelectChatFrameInfoIdle			= "Сообщения отображаются в %s."
+L.SelectChatFrameDefaultName		= "фрейм чата по умолчанию"
+L.SelectChatFrameInfoDone			= "Сообщения будут отображаться в этом фрейме чата."
+L.SelectChatFrameInfoSelect			= "Нажмите на фрейм чата, чтобы выбрать его."
+L.SelectChatFrameInfoSelectNow		= "Нажмите, чтобы выбрать %s."
 -- Missing phrases. End ..
 
 L.TranslationByPrefix		= "Адаптация под firestorm - Aleksart163. "
@@ -171,13 +179,15 @@ L.Website					= "Посетите наш дискорд: |cFF73C2FBhttps://githu
 L.WebsiteButton				= "Форумы"
 
 L.OTabBosses				= "Боссы"
-L.OTabRaids					= "Рейд"
-L.OTabDungeons				= "Группа/Соло"
-L.OTabPlugins				= "Основные плагины"
+L.OTabRaids					= "Рейды"
+L.OTabDungeons				= "Подземелья"
+L.OTabPlugins				= "Другое"
 L.OTabOptions				= "Настройки"
 
+L.TabCategory_CURRENT_SEASON		= "Текущий сезон"
+
 L.TabCategory_Options	 	= "Общие параметры"
-L.TabCategory_OTHER 		= "Другие боссы"
+L.TabCategory_OTHER 		= "Другие моды"
 L.TabCategory_AFFIXES		= "Аффиксы"
 
 L.BossModLoaded 			= "%s - статистика"
@@ -192,7 +202,7 @@ L.MoveMe 					= "Передвинь меня"
 L.Button_OK 				= "OK"
 L.Button_Cancel 			= "Отмена"
 L.Button_LoadMod			= "Загрузить модуль"
-L.Mod_Enabled				= "Включить модуль"
+L.Mod_Enabled				= "Включить: %s"
 L.Mod_Reset					= "Сброс настроек"
 L.Reset 					= "Сброс"
 L.Import					= "Импорт"
@@ -258,7 +268,7 @@ L.MonochromeThickOutline	= "Монохромный толстый контур"
 L.RaidWarnSound				= "Звук рейд-предупреждения"
 
 -- Tab: Generalwarnings
-L.Tab_GeneralMessages 		= "Общие сообщения"
+L.Tab_GeneralMessages 		= "Сообщения чата"
 L.CoreMessages				= "Параметры общих сообщений"
 L.ShowPizzaMessage 			= "Показывать сообщения транслируемых таймеров в окне чата"
 L.ShowAllVersions	 		= "Показывать версии босс мода для всех членов группы в окне чата"
@@ -437,13 +447,13 @@ L.FilterTankSpec			= "Фильтровать предупреждения для
 L.FilterDispels				= "Фильтровать предупреждения для рассеиваемых заклинаний, если Ваш диспел в кулдауне"
 L.FilterTrashWarnings		= "Фильтровать предупреждения для трэша в обычных и героических подземельях"
 
-L.Area_PullTimer			= "Параметры фильтра таймеров пулла/боя/пользов."
+L.Area_PullTimer			= "Параметры фильтра таймеров пулла/перерыва/пользов."
 L.DontShowPTNoID			= "Блокировать таймер пулла, отправленный из другой зоны"
 L.DontShowPT				= "Не отображать индикатор таймера пулла"
 L.DontShowPTText			= "Не отображать текст объявления для таймера пулла"
 L.DontShowPTCountdownText	= "Не отображать текст отсчета таймера пулла"
-L.DontPlayPTCountdown		= "Не воспроизводить звук отсчета таймера пулла/боя/пользов."
-L.PT_Threshold				= "Не отображать текст отсчета таймера пулла/боя/пользов. больше: %d"
+L.DontPlayPTCountdown		= "Совсем не воспроизводить звук отсчета таймера пулла/перерыва/пользов."
+L.PT_Threshold				= "Не воспроизводить звук отсчета таймера пулла/перерыва/пользов. более: %d"
 
 L.Panel_HideBlizzard		= "Блокировка функций Blizzard"
 L.Area_HideBlizzard			= "Отключить и скрыть функции Blizzard"

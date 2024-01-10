@@ -2,6 +2,7 @@ if GetLocale() ~= "frFR" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
+--L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traduit par "
 L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre/Leybola@EU-Sargeras/Noleen@EU-Hyjal" -- your name here, localizers!
@@ -29,7 +30,7 @@ L.MoveMe 					= "Déplacez-moi"
 L.Button_OK 				= "OK"
 L.Button_Cancel 			= "Annuler"
 L.Button_LoadMod 			= "Charger le module"
-L.Mod_Enabled				= "Activer ce module"
+L.Mod_Enabled				= "Activer: %s"
 L.Mod_Reset					= "Charger les options par défaut"
 L.Reset 					= "Réinit."
 L.Import					= "Importer"
@@ -408,13 +409,13 @@ L.FilterInterruptNoteName	= "Filtrer les alertes des sorts interruptibles (avec 
 L.FilterDispels				= "Filtrer les alertes de dissipations si votre sort de dissipation est en recharge"
 L.FilterTrashWarnings		= "Filtrer toutes les annonces liées aux trash dans les donjons normaux &amp; héroïques"
 
-L.Area_PullTimer			= "Options du filtre des décomptes de pull, pause, combat, & personnalisé"
+L.Area_PullTimer			= "Options du filtre des décomptes de pull, pause, & personnalisé"
 L.DontShowPTNoID			= "Bloquer les décomptes de pull envoyés depuis une zone différente de la vôtre (ne bloquera jamais les décomptes BigWigs envoyés sans ID de zone)"
 L.DontShowPT				= "Ne pas afficher la barre de pull/pause"
 L.DontShowPTText			= "Ne pas afficher le texte d'alerte du décompte de pull/pause"
 L.DontShowPTCountdownText	= "Ne pas afficher le texte du décompte de pull"
-L.DontPlayPTCountdown		= "Ne jouer aucun son de décompte de pull/pause/combat/perso"
-L.PT_Threshold				= "Pas de son du décompte de pull/pause/combat/perso au delà de : %d"
+L.DontPlayPTCountdown		= "Ne jouer aucun son de décompte de pull/pause/perso"
+L.PT_Threshold				= "Pas de son du décompte de pull/pause/perso au delà de : %d"
 
 -- Panel: Blizzard Features
 L.Panel_HideBlizzard		= "Désactivation Blizzard"

@@ -8,6 +8,7 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
+--L.MainFrame 				= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
@@ -36,7 +37,7 @@ L.MoveMe 					= "移动我"
 L.Button_OK 				= "确定"
 L.Button_Cancel 			= "取消"
 L.Button_LoadMod 			= "加载模块"
-L.Mod_Enabled				= "开启模块"
+L.Mod_Enabled				= "使能够: %s"
 L.Mod_Reset					= "恢复默认设置"
 L.Reset 					= "重置"
 L.Import					= "导入"

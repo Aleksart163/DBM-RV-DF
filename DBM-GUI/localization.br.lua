@@ -4,14 +4,26 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
+--L.MainFrame = "Deadly Boss Mods"
 
-L.TranslationBy 			= "GlitterStorm @ Azralon"
+--L.TranslationByPrefix			= "Translated by "
+L.TranslationBy 				= "GlitterStorm @ Azralon" -- your name here, localizers!
+--L.Website						= "Visit us on discord at |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Follow on most socials @deadlybossmods or @mysticalos"
+--L.WebsiteButton				= "Website"
 
 L.OTabBosses	= "Chefes"
+--L.OTabRaids					= "Raids"--Just pve raids
+--L.OTabDungeons				= "Dungeons"--Just dungeons
+--L.OTabWorld					= "World Bosses"--Since there are so many world mods, enough to get their own tab
+--L.OTabScenarios				= "Scenarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
+--L.OTabPlugins					= "Other"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions	= "Opções"
+--L.OTabAbout					= "About"
 
-L.TabCategory_Options		= "Opções Gerais"
+--L.TabCategory_CURRENT_SEASON	= "Current Season"
+
 L.TabCategory_OTHER			= "Outros módulos"
+--L.TabCategory_AFFIXES		= "Affixes"
 
 L.BossModLoaded 			= "%s estatísticas"
 L.BossModLoad_now 			= [[Esse módulo não está carregado.
@@ -25,9 +37,10 @@ L.MoveMe 					= "Mova-me"
 L.Button_OK 				= "OK"
 L.Button_Cancel 			= "Cancelar"
 L.Button_LoadMod 			= "Carregar AddOn"
-L.Mod_Enabled				= "Habilitar módulo"
+L.Mod_Enabled				= "Habilitar: %s"
 L.Mod_Reset					= "Carregar opções padrão"
 L.Reset 					= "Resetar"
+--L.Import					= "Import"
 
 L.Enable					= "Habilitar"
 L.Disable					= "Desabilitar"
@@ -43,17 +56,27 @@ L.Statistic_Wipes			= "Derrotas:"
 L.Statistic_Incompletes		= "Incompletos:"--Para cenários, TODO, encontrar um jeito limpo de substituir derrotas por estatística incompleto para mods de cenário
 L.Statistic_BestKill		= "Melhor tempo:"
 
--- Tab: General Core Options
+-- Tab: General Options
+L.TabCategory_Options		= "Opções Gerais"
+--L.Area_BasicSetup			= "Initial DBM Setup Tips"
+--L.Area_ModulesForYou		= "What DBM modules are right for you?"
+--L.Area_ProfilesSetup		= "DBM Profiles usage guide"
+-- Panel: Core & GUI
+--L.Core_GUI 				= "Core & GUI"
 L.General 					= "Opções gerais do DBM"
 L.EnableMiniMapIcon			= "Exibir botão no mini-mapa"
-L.UseMasterVolume			= "Utilizar canal principal de áudio para reproduzir arquivos de som."
+--L.UseSoundChannel			= "Set audio channel used by DBM to play alert sounds"
+L.UseMasterVolume			= "Utilizar canal principal de áudio para reproduzir arquivos de som."--Update
+--L.UseDialogChannel		= "Dialog audio channel."
+--L.UseSFXChannel			= "Sound Effects (SFX) audio channel."
 L.Latency_Text				= "Definir latência máxima de sincronização: %d"
--- Tab: General Timer Options
-L.TimerGeneral 				= "Opções gerais do temporizador do DBM"
-L.SKT_Enabled				= "Sempre mostrar um temporizador de sua vitória recorde (Sobrepõe a opção do chefe específico)"
-L.ChallengeTimerOptions		= "Colocar opção para temporizador de melhor tempo em modo desafio"
-L.ChallengeTimerPersonal	= "Pessoal"
-L.ChallengeTimerRealm		= "Reino"
+
+L.Button_RangeFrame			= "Exibir/esconder quadro de distância"
+L.Button_RangeRadar			= "Exibir/esconder radar de distância" -- Não existe no en.lua
+L.Button_InfoFrame			= "Exibir/esconder quadro de informações"
+L.Button_TestBars			= "Iniciar barras de teste"
+--L.Button_MoveBars			= "Move bars"
+--L.Button_ResetInfoRange	= "Reset Info/Range frames"
 
 L.ModelOptions				= "Opções do Visualizador de Modelos 3D"
 L.EnableModels				= "Habilitar modelos 3D nas opções de chefe"
@@ -61,10 +84,26 @@ L.ModelSoundOptions			= "Definir opção de som para o visualizador de modelos"
 L.ModelSoundShort			= "Curto"
 L.ModelSoundLong			= "Longo"
 
-L.Button_RangeFrame			= "Exibir/esconder quadro de distância"
-L.Button_RangeRadar			= "Exibir/esconder radar de distância" -- Não existe no en.lua
-L.Button_InfoFrame			= "Exibir/esconder quadro de informações"
-L.Button_TestBars			= "Iniciar barras de teste"
+--L.ResizeOptions			= "Resize Options"
+--L.ResizeInfo				= "You can resize the GUI by clicking the bottom-right corner, and dragging."
+--L.Button_ResetWindowSize	= "Reset GUI window size"
+--L.Editbox_WindowWidth		= "GUI window width"
+--L.Editbox_WindowHeight	= "GUI window height"
+
+--L.UIGroupingOptions					= "UI Grouping Options (changing these require UI reload for any mod that's already loaded)"
+--L.GroupOptionsExcludeIcon			= "Exclude 'Set Icon on' options from getting grouped by spell (they will be grouped together in their own 'Icons' category instead)"
+--L.AutoExpandSpellGroups				= "Auto expand options that are grouped by spell"
+--L.ShowWAKeys						= "Show WeakAuras keys next to spell names to assist in writing WeakAuras using Boss Mod triggers."
+--L.ShowSpellDescWhenExpanded	= "Continue showing spell description when groups are expanded"--Might not be used
+--L.NoDescription						= "This ability has no description"
+--L.CustomOptions						= "This category contains custom options for an ability or event that has no spell or journal ID of it's own. These options have been grouped together using a custom manual ID for the ease of creating WeakAuras"
+
+-- Tab: General Timer Options
+L.TimerGeneral 				= "Opções gerais do temporizador do DBM"
+L.SKT_Enabled				= "Sempre mostrar um temporizador de sua vitória recorde (Sobrepõe a opção do chefe específico)"
+L.ChallengeTimerOptions		= "Colocar opção para temporizador de melhor tempo em modo desafio"
+L.ChallengeTimerPersonal	= "Pessoal"
+L.ChallengeTimerRealm		= "Reino"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "Avisos de Raid"
@@ -194,13 +233,13 @@ L.FilterTankSpec			= "Filtrar mensagens designadas para tank role quando não fo
 L.FilterInterrupts			= "Filtrar avisos para habilidades passivas de cortes ( interrupts ) se o alvo não for o seu target ou focus ( Não se aplica para magias criticas que resultaram em derrota caso não seja interrompida)"
 L.FilterDispels				= "Filtrar avisos para magias dissipáveis se a seu dissipar estiver em recarga."
 
-L.Area_PullTimer			= "Opções de Filtros de Puxada, pausa, Combate, & Temporizador customizados"
+L.Area_PullTimer			= "Opções de Filtros de Puxada, pausa, & Temporizador customizados"
 L.DontShowPTNoID			= "Bloquear o temporizador de Puxada se não foi enviado na mesma zona que você"
 L.DontShowPT				= "Não exibir a barra de puxada"
 L.DontShowPTText			= "Não exibir texto de anúncio do temporizador de puxada"
-L.DontPlayPTCountdown		= "Não tocar o áudio da contagem regressiva de puxada/combate/customizado"
-L.DontShowPTCountdownText	= "Não exibir o texto da contagem regressiva de puxada/combate/customizado"
-L.PT_Threshold				= "Não exibir o texto da contagem regressiva de puxada/combate/customizado acima de: %d"
+L.DontPlayPTCountdown		= "Não tocar o áudio da contagem regressiva de puxada/customizado"
+L.DontShowPTCountdownText	= "Não exibir o texto da contagem regressiva de puxada/customizado"
+L.PT_Threshold				= "Não exibir o texto da contagem regressiva de puxada/customizado acima de: %d"
 
 L.Panel_HideBlizzard		= "Esconder Blizzard"
 L.Area_HideBlizzard			= "Esconder Opções da Blizzard"

@@ -6,15 +6,19 @@ L.MainFrame							= "Dungeon Boss Master"
 
 L.TranslationByPrefix				= "Translated by "
 L.TranslationBy 					= nil -- your name here, localizers!
-L.Website							= "Visit us on discord at |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Follow on twitter @deadlybossmods or @MysticalOS"
+L.Website							= "Visit us on discord at |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Follow on most socials @deadlybossmods or @mysticalos"
 L.WebsiteButton						= "Website"
 
 L.OTabBosses						= "Boss Options"--Deprecated and will be deleted once tabs no longer use this
-L.OTabRaids							= "Raid"--Raids & PVP
-L.OTabDungeons						= "Party/Solo"--1-5 person content (Dungeons, MoP Scenarios, World Events, Brawlers, Proving Grounds, Visions, Torghast, etc)
-L.OTabPlugins						= "Core Plugins"
+L.OTabRaids							= "Raids"--Just pve raids
+L.OTabDungeons						= "Dungeons"--Just dungeons
+L.OTabWorld							= "World Bosses"--Since there are so many world mods, enough to get their own tab
+L.OTabScenarios						= "Scenarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
+L.OTabPlugins						= "Other"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions						= "Core Options"
 L.OTabAbout							= "About"
+
+L.TabCategory_CURRENT_SEASON		= "Current Season"
 
 L.TabCategory_OTHER					= "Other Mods"
 L.TabCategory_AFFIXES				= "Affixes"
@@ -31,7 +35,7 @@ L.MoveMe 							= "Move me"
 L.Button_OK 						= "OK"
 L.Button_Cancel 					= "Cancel"
 L.Button_LoadMod 					= "Load AddOn"
-L.Mod_Enabled						= "Enable boss mod"
+L.Mod_Enabled						= "Enable: %s"
 L.Mod_Reset							= "Load default options"
 L.Reset 							= "Reset"
 L.Import							= "Import"
@@ -86,7 +90,6 @@ L.Editbox_WindowHeight				= "GUI window height"
 
 L.UIGroupingOptions					= "UI Grouping Options (changing these require UI reload for any mod that's already loaded)"
 L.GroupOptionsExcludeIcon			= "Exclude 'Set Icon on' options from getting grouped by spell (they will be grouped together in their own 'Icons' category instead)"
-L.GroupOptionsExcludePAura			= "Exclude 'Play Private Aura Sound' options from getting grouped by spell (they will be grouped together in their own 'Private Auras' category instead)"
 L.AutoExpandSpellGroups				= "Auto expand options that are grouped by spell"
 L.ShowWAKeys						= "Show WeakAuras keys next to spell names to assist in writing WeakAuras using Boss Mod triggers."
 --L.ShowSpellDescWhenExpanded	= "Continue showing spell description when groups are expanded"--Might not be used
@@ -227,7 +230,14 @@ L.SpecialWarnHeader4				= "Type 4: Set options for HIGH priority run away specia
 L.SpecialWarnHeader5				= "Type 5: Set options for announcements with notes containing your player name"
 
 -- Panel: Generalwarnings
-L.Tab_GeneralMessages 				= "Chatframe Messages"
+L.Tab_GeneralMessages 				= "Chat Frame Messages"
+L.SelectChatFrameArea				= "Chat Frame Options"
+L.SelectChatFrameButton				= "Select chat frame"
+L.SelectChatFrameInfoIdle			= "Messages are shown in %s."
+L.SelectChatFrameDefaultName		= "the default chat frame"
+L.SelectChatFrameInfoDone			= "Messages will be shown in this chat frame."
+L.SelectChatFrameInfoSelect			= "Click on a chat frame to select it."
+L.SelectChatFrameInfoSelectNow		= "Click to select %s."
 L.CoreMessages						= "Core Message Options"
 L.ShowPizzaMessage 					= "Show timer broadcast messages in chat frame"
 L.ShowAllVersions	 				= "Show boss mod versions for all group members in chat frame when doing a version check. (If disabled, still does out of date/current summery)"
@@ -388,7 +398,7 @@ L.FadeBar							= "Fade timers for out of range abilities"
 L.BarSkin							= "Bar skin"
 
 -- Panel: Pull, Break, Combat
-L.Panel_PullBreakCombat				= "Pull, Break, Combat"
+L.Panel_PullBreakCombat				= "Pull & Break"
 
 L.Area_SoundOptions					= "Sound Options"
 
@@ -432,13 +442,13 @@ L.Area_Restore						= "DBM Restore Options (Whether DBM restores previous user s
 L.SpamBlockNoIconRestore			= "Do not save icon states and restore them on combat end"
 L.SpamBlockNoRangeRestore			= "Do not restore range frame to previous state when mods call 'hide'"
 
-L.Area_PullTimer					= "Pull, Break, Combat, & Custom Timer Filter Options"
+L.Area_PullTimer					= "Pull, Break, & Custom Timer Filter Options"
 L.DontShowPTNoID					= "Block DBM Pull Timers if not sent from same zone as you (will never block BigWigs timers that are sent with no zone ID)"
 L.DontShowPT						= "Do not show Pull/Break Timer bar"
 L.DontShowPTText					= "Do not show announce text for Pull/Break Timer"
 L.DontShowPTCountdownText			= "Do not show Pull countdown text"
-L.DontPlayPTCountdown				= "Do not play Pull/Break/Combat/Custom Timer countdown audio at all"
-L.PT_Threshold						= "Do not play Pull/Break/Combat/Custom Timer countdown audio above: %d"
+L.DontPlayPTCountdown				= "Do not play Pull/Break/Custom Timer countdown audio at all"
+L.PT_Threshold						= "Do not play Pull/Break/Custom Timer countdown audio above: %d"
 
 -- Panel: Reduce Information
 L.Panel_ReducedInformation			= "Reduce Information"
@@ -553,6 +563,8 @@ L.NPIcon_BarOffSetX 				= "Icon Offset X: %d"
 L.NPIcon_BarOffSetY 				= "Icon Offset Y: %d"
 L.NPIcon_GrowthDirection 			= "Icon Growth Direction"
 L.NPDemo							= "Test (Be near nameplates)"
+
+L.TabCategory_Plugins				= "Plugins"
 
 -- Misc
 L.Area_General						= "General"
