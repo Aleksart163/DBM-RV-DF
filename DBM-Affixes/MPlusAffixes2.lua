@@ -1,4 +1,4 @@
-local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
+--[[local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20240106073327")
@@ -14,12 +14,7 @@ mod:RegisterEvents(
 )
 
 --TODO, fine tune tank stacks/throttle?
---[[
-(ability.id = 240446 or ability.id = 409492) and type = "begincast"
- or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
- or type = "dungeonencounterstart" or type = "dungeonencounterend"
- or (source.type = "NPC" and source.firstSeen = timestamp) and (source.name = "Afflicted Soul") or (target.type = "NPC" and target.firstSeen = timestamp) and (target.name = "Afflicted Soul")
---]]
+
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4)
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
@@ -210,7 +205,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
 	end
 end
---]]
+--
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -285,4 +280,4 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 --]]
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
---<614.44 01:20:38> [CLEU] SPELL_AURA_APPLIED#Creature-0-3023-1477-12533-199388-00007705B2#Raszageth#Player-3726-0C073FB8#Onlysummonz-Khaz'goroth#396364#Mark of Wind#DEBUFF#nil", -- [3912]
+--<614.44 01:20:38> [CLEU] SPELL_AURA_APPLIED#Creature-0-3023-1477-12533-199388-00007705B2#Raszageth#Player-3726-0C073FB8#Onlysummonz-Khaz'goroth#396364#Mark of Wind#DEBUFF#nil", -- [3912]]]
