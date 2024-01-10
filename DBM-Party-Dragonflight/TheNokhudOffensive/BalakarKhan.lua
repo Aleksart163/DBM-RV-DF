@@ -38,7 +38,7 @@ local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, 
 local yellIronSpear								= mod:NewYell(376634)
 local yellIronSpearFades						= mod:NewShortFadesYell(376634)
 local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2)
-local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 1, 2)
+local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 3, 2)
 
 local timerIronSpearCD							= mod:NewCDTimer(37, 376634, nil, nil, nil, 3)--Need more data
 local timerUpheavalCD							= mod:NewCDTimer(37, 375943, nil, nil, nil, 3)--Need data at all
@@ -60,8 +60,8 @@ local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil,
 local yellStaticSpear							= mod:NewYell(376864)
 local yellStaticSpearFades						= mod:NewShortFadesYell(376864)
 local specWarnCracklingUpheaval					= mod:NewSpecialWarningDodge(376892, nil, nil, nil, 2, 2)
-local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 1, 2)
-local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 1, 2)
+local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 3, 2)
+local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 3, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376899, nil, nil, nil, 1, 8)
 
 local timerStaticSpearCD						= mod:NewCDTimer(38.3, 376864, nil, nil, nil, 3)
@@ -159,9 +159,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnStaticSpear:Show(args.destName)
 		end
-	elseif spellId == 376827 and self:CheckDispelFilter("magic") then
-		specWarnConductiveStrikeDispel:Show(args.destName)
-		specWarnConductiveStrikeDispel:Play("helpdispel")
+	elseif spellId == 376827 then
+		if self:CheckDispelFilter("magic") then
+			specWarnConductiveStrikeDispel:Show(args.destName)
+			specWarnConductiveStrikeDispel:Play("helpdispel")
+		end
 	end
 end
 

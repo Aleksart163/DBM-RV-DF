@@ -63,6 +63,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 384978 then
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnDragonStrike:Show()
+			specWarnDragonStrike:Play("defensive")
+		end
 		timerDragonStrikeCD:Start()
 	elseif spellId == 385399 or spellId == 388804 then--Easy, Hard
 		self.vb.unleashedCast = self.vb.unleashedCast + 1
@@ -87,10 +91,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 384978 then
-		if args:IsPlayer() then
-			specWarnDragonStrike:Show()
-			specWarnDragonStrike:Play("defensive")
-		elseif self:CheckDispelFilter("magic") then
+		if self:CheckDispelFilter("magic") then
 			specWarnDragonStrikeDebuff:Show(args.destName)
 			specWarnDragonStrikeDebuff:Play("helpdispel")
 		end
