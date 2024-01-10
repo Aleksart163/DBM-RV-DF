@@ -1,5 +1,5 @@
 ## Interface: 100107
-## Version: 10.2.13
+## Version: 10.2.14
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (DF)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Jefes de Mundo (DF)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Jefes de Mundo (DF)|r
@@ -14,7 +14,7 @@
 ## SavedVariablesPerCharacter: DBMDragonIsles_SavedStats
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
-## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Type: WORLDBOSS
 ## X-DBM-Mod-Category: DRAGONFLIGHT
 ## X-DBM-StatTypes: normal
 ## X-DBM-Mod-Name: World Bosses (DF)

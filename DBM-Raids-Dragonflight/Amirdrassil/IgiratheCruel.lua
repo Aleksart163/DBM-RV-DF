@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2554, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231227225050")
+mod:SetRevision("20240107210621")
 mod:SetCreatureID(200926)
 mod:SetEncounterID(2709)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -41,6 +41,7 @@ local warnHeartstopperSoon							= mod:NewSoonAnnounce(415623, 2)--Knife Stance
 local warnUmbralDestructionSoon						= mod:NewSoonAnnounce(416048, 2)--Axe Stance
 --local warnSmashingViscera							= mod:NewTargetNoFilterAnnounce(424456, 3)--Re-add if it gets put back in combat log
 local warnHeartStopper								= mod:NewTargetCountAnnounce(415623, 3, nil, nil, nil, nil, nil, nil, true)
+local warnFleshMortification						= mod:NewYouAnnounce(419462, 4)
 
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2)
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2)
@@ -49,7 +50,6 @@ local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, false)
 local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2)--Shorttext "Chains"
 local yellBlisteringTorment							= mod:NewShortYell(414770, 184656)
 local specWarnTwistingBlade							= mod:NewSpecialWarningDodgeCount(416996, nil, 138737, nil, 2, 2)
-local specWarnFleshMortification					= mod:NewSpecialWarningYou(419462, nil, nil, nil, 1, 2)
 local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2)
 --Torments
 local specWarnUmbralDestruction						= mod:NewSpecialWarningCount(416048, nil, nil, nil, 2, 2)
@@ -76,7 +76,7 @@ mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, false, {1, 2, 3,
 
 local blisteringMythicTimers = {14, 32.1, 35.1, 20.2}
 local blisteringHeroicTimers = {14, 23.0, 23.0, 22.5, 20.2}
-local blisteringEasyTimers = {14, 30.3, 40.0, 20.6}
+local blisteringEasyTimers = {14, 30.3, 38.9, 20.6}
 
 mod.vb.spearCount = 0--used for sequencing
 mod.vb.spearTotal = 0--Used for timer text
@@ -108,7 +108,7 @@ function mod:OnCombatStart(delay)
 	else
 		timerBlisteringSpearCD:Start(10.6-delay, 1)
 		timerTwistingBladeCD:Start(4.5-delay, 1)
-		timerMarkedforTormentCD:Start(45-delay, 1)
+		timerMarkedforTormentCD:Start(44.7-delay, 1)
 		berserkTimer:Start(600-delay)
 	end
 end
@@ -216,8 +216,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 414367 and args:IsPlayer() then
 		warnGatheringTorment:Show()
 	elseif spellId == 419462 and args:IsPlayer() then
-		specWarnFleshMortification:Show()
-		specWarnFleshMortification:Play("otherout")--Still reviewing best sound for this or if new one needed
+		warnFleshMortification:Show()
 	elseif spellId == 415623 then
 		if self:AntiSpam(8, 1) then
 			self.vb.heartCount = self.vb.heartCount + 1

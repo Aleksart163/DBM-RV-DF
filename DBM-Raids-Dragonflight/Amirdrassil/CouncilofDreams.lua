@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2555, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231225030756")
+mod:SetRevision("20240105092549")
 mod:SetCreatureID(208363, 208365, 208367)--Urctos, Aerwynn, Pip
 mod:SetEncounterID(2728)
 mod:SetUsedIcons(1, 2, 3, 4)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20231202000000)
+mod:SetHotfixNoticeRev(20240104000000)
 mod:SetMinSyncRevision(20231129000000)
 mod.respawnTime = 29
 
@@ -119,10 +119,10 @@ local nextSpecial = 0
 local playerpreWarned = false
 
 local function castBeforeSpecial(self, cooldown)
-	if nextSpecial > 0 and ((nextSpecial - GetTime()) < cooldown) then
-		return false
+	if (nextSpecial - GetTime()) > cooldown then
+		return true
 	end
-	return true
+	return false
 end
 
 local function specialInterrupted(self, spellId)
@@ -177,31 +177,32 @@ local function specialInterrupted(self, spellId)
 		end
 		DBM:Debug("All specials have ended, restarting all non special timers")
 
-		nextSpecial = GetTime() + 56
+		local specialTimer = self:IsLFR() and 74.6 or 56
+		nextSpecial = GetTime() + specialTimer
 		if self:IsMythic() then
 			--Hard coded rotation for mythic
 			if self.vb.nextSpecial % 3 == 2 or self.vb.nextSpecial % 3 == 1 then -- 1, 2
-				timerConstrictingThicketCD:Start(56, self.vb.vinesCount+1)
+				timerConstrictingThicketCD:Start(specialTimer, self.vb.vinesCount+1)
 				self.vb.vinesNext = true
 			end
 			if self.vb.nextSpecial % 3 == 2 or self.vb.nextSpecial % 3 == 0 then -- 2, 3
-				timerSongoftheDragonCD:Start(56, self.vb.songCount+1)
+				timerSongoftheDragonCD:Start(specialTimer, self.vb.songCount+1)
 				self.vb.songNext = true
 			end
 			if self.vb.nextSpecial % 3 == 0 or self.vb.nextSpecial % 3 == 1 then -- 1, 3
-				timerBlindingRageCD:Start(56, self.vb.rageCount+1)
+				timerBlindingRageCD:Start(specialTimer, self.vb.rageCount+1)
 				self.vb.rageNext = true
 			end
 		else
 			--Standard order rotation for non mythic
 			if spellId == 418757 then--blinding rage interrupted
 				self.vb.vinesNext = true
-				timerConstrictingThicketCD:Start(self:IsLFR() and 74.6 or 56, self.vb.vinesCount+1)
+				timerConstrictingThicketCD:Start(specialTimer, self.vb.vinesCount+1)
 			elseif spellId == 421292 then--Constricting Thicket interrupted
-				timerSongoftheDragonCD:Start(self:IsLFR() and 74.6 or 56, self.vb.songCount+1)
+				timerSongoftheDragonCD:Start(specialTimer, self.vb.songCount+1)
 				self.vb.songNext = true
 			else--Song of dragon interrupted
-				timerBlindingRageCD:Start(self:IsLFR() and 74.6 or 56, self.vb.rageCount+1)
+				timerBlindingRageCD:Start(specialTimer, self.vb.rageCount+1)
 				self.vb.rageNext = true
 			end
 		end
@@ -265,7 +266,7 @@ function mod:OnCombatStart(delay)
 	--Still register private auras on pull until first RAID_BOSS_WHISPER detected, since we still want this mod to work if blizzard ever decides to fix bug that was reported many months ago on PTR
 	self:EnablePrivateAuraSound(418589, "bombyou", 2)
 	self:EnablePrivateAuraSound(429123, "bombyou", 2, 418589)--Register secondary private aura (different ID for differentn difficulty?)
-	nextSpecial = GetTime() + 55.8
+	nextSpecial = GetTime() + (self:IsLFR() and 74.6 or 55.8)
 	playerpreWarned = false
 end
 
@@ -295,16 +296,10 @@ function mod:SPELL_CAST_START(args)
 		self.vb.chargeCount = self.vb.chargeCount + 1
 		--No specials active, normal behavior
 		if self.vb.specialsActive == 0 then
-			if self:IsLFR() then--Special snowflake because charge is never cast twice unless vines next
-				if self.vb.vinesNext then--No need to check special Cd, if it was cast not during a special it's the only cast of it
-					timerBarrelingChargeCD:Start(40, self.vb.chargeCount+1)
-				end
-			else
-				if castBeforeSpecial(self, 25) then
-					timerBarrelingChargeCD:Start(20, self.vb.chargeCount+1)
-				elseif self.vb.vinesNext then--If next special is soon, and it is vines, schedule a 3rd charge timer that overlaps with vines
-					timerBarrelingChargeCD:Start(self:IsEasy() and 30 or 26, self.vb.chargeCount+1)
-				end
+			if not self:IsEasy() and castBeforeSpecial(self, 25) then--Only cast twice per cycle on heroic and mythic
+				timerBarrelingChargeCD:Start(20, self.vb.chargeCount+1)
+			elseif self.vb.vinesNext then--If next special is soon, and it is vines, schedule a 2nd (easy) or 3rd (hard) charge timer that overlaps with vines
+				timerBarrelingChargeCD:Start(self:IsLFR() and 39.9 or self:IsNormal() and 30 or 26, self.vb.chargeCount+1)
 			end
 		else
 			--Cast during a special, it has to be constricting and it'll loop in 8 seconds

@@ -1,18 +1,18 @@
 local mod	= DBM:NewMod(2565, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231213200048")
+mod:SetRevision("20240108022526")
 mod:SetCreatureID(209090)--Primary ID
 mod:SetEncounterID(2786)
 mod:SetUsedIcons(1, 2, 3, 4)
-mod:SetHotfixNoticeRev(20231122000000)
+mod:SetHotfixNoticeRev(20240104000000)
 mod:SetMinSyncRevision(20231115000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 423260 426669 424581 420236 424495 421398 426016 424140 423265 421636",
+	"SPELL_CAST_START 423260 426669 424581 420236 424495 421398 426016 424140 423265 421636 429169",
 	"SPELL_CAST_SUCCESS 424495",
 	"SPELL_AURA_APPLIED 422000 424581 424495 420540 425582 424258 422115 424579 424665 424180 422509 424582 424140 421603",--424580 426686 420238
 	"SPELL_AURA_APPLIED_DOSE 422000 424258 424665 424582",
@@ -22,7 +22,7 @@ mod:RegisterEventsInCombat(
 )
 
 --[[
-(ability.id = 423260 or ability.id = 426669 or ability.id = 424581 or ability.id = 420236 or ability.id = 421398 or ability.id = 421603 or ability.id = 426016 or ability.id = 424140 or ability.id = 423265) and type = "begincast"
+(ability.id = 429169 or ability.id = 425576 or ability.id = 423260 or ability.id = 426669 or ability.id = 424581 or ability.id = 420236 or ability.id = 421398 or ability.id = 421603 or ability.id = 426016 or ability.id = 424140 or ability.id = 423265) and type = "begincast"
  or ability.id = 424495 and type = "cast"
  or (ability.id = 424180 or ability.id = 420540 or ability.id = 422115 or ability.id = 425582 or ability.id = 424140) and (type = "applybuff" or type = "removebuff" or type = "applydebuff" or type = "removedebuff")
  or ability.id = 421603
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
 --TODO, https://www.wowhead.com/ptr-2/spell=425888/igniting-growth ?
 --TODO, review dream essence for spam
 --General
-local warnPhase										= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(423649, nil, nil, nil, 1, 8)
 
@@ -44,7 +44,7 @@ local warnSearingWrath								= mod:NewStackAnnounce(422000, 2, nil, "Tank|Heale
 local warnBlazingMushroom							= mod:NewCountAnnounce(423260, 3, nil, nil, nil, nil, nil, 2)
 local warnFieryGrowth								= mod:NewTargetCountAnnounce(424581, 3)
 local warnLingeringCinder							= mod:NewCountAnnounce(424582, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424582))
-local warnIncarnationOwl							= mod:NewCountAnnounce(425582, 4, nil, nil, 302954)
+local warnIncarnationOwl							= mod:NewCountAnnounce(425576, 4)
 
 local specWarnSearingWrath							= mod:NewSpecialWarningTaunt(422000, nil, nil, nil, 1, 2)
 local specWarnFieryGrowth							= mod:NewSpecialWarningMoveAway(424581, nil, nil, nil, 1, 2)
@@ -56,7 +56,7 @@ local timerBlazingMushroomCD						= mod:NewNextCountTimer(49, 423260, nil, nil, 
 local timerFieryGrowthCD							= mod:NewNextCountTimer(49, 424581, DBM_COMMON_L.DISPELS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerFallingStarsCD							= mod:NewNextCountTimer(49, 420236, nil, nil, nil, 3)
 local timerMassEntanglementCD						= mod:NewNextCountTimer(49, 424495, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3)
-local timerOwlCD									= mod:NewNextCountTimer(20, 425582, 302954, nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Short name "Feathers"
+local timerOwlCD									= mod:NewNextCountTimer(20, 425576, L.Feathers.." (%s)", nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Short name "Feathers"
 
 mod:AddSetIconOption("SetIconOnFieryGrowth", 424581, true, false, {1, 2, 3, 4})
 ----Moonkin of the Flame
@@ -91,7 +91,7 @@ local specWarnFlamingGermination					= mod:NewSpecialWarningCount(423265, nil, 9
 
 local timerTreeofFlameCD							= mod:NewNextCountTimer(20, 422115, L.TreeForm.." (%s)", false, nil, 6)--Kinda redundant, ability has own timer
 local timerFlamingGerminationCD						= mod:NewNextCountTimer(20, 423265, 99727, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Short name "Flame Seeds"
-local timerSuperNovaCD								= mod:NewNextCountTimer(20, 424140, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerSuperNovaCD								= mod:NewNextTimer(20, 424140, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 --base abilities
 mod.vb.shroomCount = 0
@@ -253,13 +253,17 @@ local allTimers = {
 			[422115] = {36.0, 35.0, 47.0, 43.0, 51.0},
 			--Fire Beam
 			[421398] = {31.0, 63.0, 49.0, 46.1, 19.0},
-			--Flaming Germination
+			--Flaming Germination (Seeds)
 			[423265] = {37.0, 35.0, 47.0, 43.0, 51.0},
 			--Owl Form (mythic)
 			[425582] = {22.0, 40.0, 48.0, 42.0, 47.0},
 		},
 	},
 }
+
+local function delaySuperNova(self)
+	timerSuperNovaCD:Start(self:IsEasy() and 387 or 249)--Blizzard energy, so ~3
+end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -355,9 +359,8 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerFirebeamCD:Start(timer, self.vb.beamCount+1)
 		end
-	elseif spellId == 426016 or spellId == 424140 then
+	elseif spellId == 426016 or spellId == 424140 or spellId == 429169 then
 		warnSuperNova:Show()
-		timerSupernova:Start()
 	elseif spellId == 423265 then
 		self.vb.tranqCount = self.vb.tranqCount + 1
 		specWarnFlamingGermination:Show(self.vb.tranqCount)
@@ -454,17 +457,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMassEntanglementCD:Stop()
 		timerTyphoon:Start()--5.5
 		if self:GetStage(1) then
---			self:SetStage(1.5)
+			self:SetStage(1.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 			warnPhase:Play("phasechange")
 			timerPhaseCD:Start(41.2, 2)
 		else
---			self:SetStage(2.5)
+			self:SetStage(2.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2.5))
 			warnPhase:Play("phasechange")
 			timerPhaseCD:Start(28.1, 3)--28.1-34
 		end
-	elseif spellId == 424180 or spellId == 424140 then
+	elseif spellId == 424180 or spellId == 424140 then--424140 intermission, 424180 unknown
+		timerSupernova:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
@@ -556,7 +560,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerMoonkinCD:Start(50, 1)
 				timerFirebeamCD:Start(52, 1)
 			end
-			timerSuperNovaCD:Start(269)--Blizzard energy, so ~3
+			self:Schedule(20, delaySuperNova, self)--So the cd bar is only shown after the existing cast bar is gone (2 supernova bars confusing some users)
 		end
 	elseif spellId == 424579 then
 		warnSupressiveEmber:CombinedShow(0.3, args.destName)

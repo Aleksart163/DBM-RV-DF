@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2519, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231225015325")
+mod:SetRevision("20240107070259")
 mod:SetCreatureID(204931)
 
 mod:SetEncounterID(2677)
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 419506 420422 417455 417431 412761 428963 428400 428971 428968 428965 419123 422837 410223 425492 422518 419144",
-	"SPELL_CAST_SUCCESS 428954 422935 422524 426368",--414186
+	"SPELL_CAST_SUCCESS 430441 422935 422524 426368",
 	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517",
 	"SPELL_AURA_APPLIED_DOSE 417807 417443 429866 425494",
 	"SPELL_AURA_REMOVED 419144",
@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 
 --[[
 (ability.id = 419506 or ability.id = 420422 or ability.id = 417455 or ability.id = 417431 or ability.id = 419144 or ability.id = 412761 or ability.id = 428963 or ability.id = 428400 or ability.id = 428971 or ability.id = 428968 or ability.id = 428965 or ability.id = 419123 or ability.id = 422837 or ability.id = 410223 or ability.id = 425492 or ability.id = 422518) and type = "begincast"
- or (ability.id = 428954 or ability.id = 414186 or ability.id = 421937 or ability.id = 422935 or ability.id = 429875 or ability.id = 429876 or ability.id = 422524 or ability.id = 426368) and type = "cast"
+ or (ability.id = 430441 or ability.id = 414186 or ability.id = 421937 or ability.id = 422935 or ability.id = 429875 or ability.id = 429876 or ability.id = 422524 or ability.id = 426368) and type = "cast"
  or ability.id = 419144 and (type = "applybuff" or type = "removebuff")
  or (ability.id = 414187 or ability.id = 425525 or ability.id = 428988 or ability.id = 428970) and type = "applydebuff"
  or ability.id = 422517 and type = "applybuff"
@@ -35,7 +35,7 @@ mod:RegisterEventsInCombat(
 --TODO, tank swap stacks/when to taunt in stage 3, or maybe periods of time it shoudln't happen on mythic (if holding seed and shit going on, don't distract with taunt warning type deal)
 --TODO, more common locals/short names applied to mod?
 --General
-local warnPhase										= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(419504, nil, nil, nil, 1, 8)
 
@@ -43,10 +43,10 @@ local timerPhaseCD									= mod:NewStageTimer(60, 408330)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Stage One: The Dream Render
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26666))
-local warnDarkflameShades							= mod:NewCountAnnounce(428954, 2)
+local warnDarkflameShades							= mod:NewCountAnnounce(430441, 2, nil, false)
 local warnDarkflameCleave							= mod:NewCountAnnounce(426368, 4, nil, nil, 845)
-local warnFirestorm									= mod:NewCountAnnounce(419506, 4, nil, nil, nil, nil, nil, nil, 2)
-local warnBlaze										= mod:NewCountAnnounce(414186, 3, nil, nil, nil, nil, nil, nil, 2)
+local warnFirestorm									= mod:NewCountAnnounce(419506, 4, nil, nil, nil, nil, nil, 2)--icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter
+local warnBlaze										= mod:NewCountAnnounce(414186, 3, nil, nil, nil, nil, nil, 2)
 local warnAflame									= mod:NewCountAnnounce(417807, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(417807))--Player
 local warnFyralathsMark								= mod:NewStackAnnounce(417443, 3, nil, "Tank|Healer")
 
@@ -55,7 +55,7 @@ local specWarnDreamRend								= mod:NewSpecialWarningRunCount(417455, nil, nil,
 local specWarnFyralathsBite							= mod:NewSpecialWarningDefensive(417431, nil, nil, nil, 1, 2)
 local specWarnFyralathsMark							= mod:NewSpecialWarningTaunt(417443, nil, 37454, nil, 1, 2)
 
-local timerDarkflameShadesCD						= mod:NewCDCountTimer(49, 428954, nil, false, nil, 3, nil, DBM_CORE_L.MYTHIC_ICON)
+local timerDarkflameShadesCD						= mod:NewCDCountTimer(49, 430441, nil, false, nil, 3, nil, DBM_CORE_L.MYTHIC_ICON)
 local timerDarkflameCleaveCD						= mod:NewCDCountTimer(49, 426368, 845, nil, nil, 3, nil, DBM_CORE_L.MYTHIC_ICON)--Shortname "Cleave"
 local timerDarkflameCleave							= mod:NewCastCountTimer(4, 426368, 845, nil, nil, 5, nil, DBM_CORE_L.MYTHIC_ICON)
 local timerFirestormCD								= mod:NewCDCountTimer(49, 419506, nil, nil, nil, 3)
@@ -451,19 +451,12 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 428954 then--Not verified yet
+	if spellId == 430441 then
 		warnDarkflameShades:Show(self.vb.tankCount+1)
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.tankCount+2)
 		if timer then
 			timerDarkflameShadesCD:Start(timer, self.vb.tankCount+2)
 		end
---	elseif spellId == 414186 then--Not verified yet
---		self.vb.blazeCount = self.vb.blazeCount + 1
---		warnBlaze:Show(self.vb.blazeCount)
---		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.blazeCount+1)
---		if timer then
---			timerBlazeCD:Start(timer, self.vb.blazeCount+1)
---		end
 	elseif spellId == 422524 then
 		self.vb.shadowflameDevastation = self.vb.shadowflameDevastation + 1
 		specWarnShadowflameDevastation:Show(self.vb.shadowflameDevastation)
@@ -555,17 +548,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 425494 then
 		local amount = args.amount or 1
-		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		local remaining
-		if expireTime then
-			remaining = expireTime-GetTime()
-		end
-		local timer = (self:GetFromTimersTable(allTimers, false, false, 425492, self.vb.tankCount+1) or 3) - 5
-		if not args:IsPlayer() and amount >= 4 and (not remaining or remaining and remaining < timer) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-			specWarnInfernalMawTaunt:Show(args.destName)
-			specWarnInfernalMawTaunt:Play("tauntboss")
-		else
-			warnInfernalMaw:Show(args.destName, amount)
+		if amount % 4 == 0 then--if amount >= 4 and (amount % 2 == 0) then (maybe use this instead of every 4 feels too infrequent)
+			if not args:IsPlayer() then
+				specWarnInfernalMawTaunt:Show(args.destName)
+				specWarnInfernalMawTaunt:Play("tauntboss")
+			else
+				warnInfernalMaw:Show(args.destName, amount)
+			end
 		end
 	elseif spellId == 423717 and args:IsPlayer() then
 		warnBloom:Show()

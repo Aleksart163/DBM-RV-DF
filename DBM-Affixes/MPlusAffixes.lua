@@ -20,7 +20,7 @@ mod:RegisterEvents(
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
-local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, nil, nil, nil, 14) --Крик изнемогающей души spellId, color, castTime, icon, optionDefault, optionName, _, soundOption
+local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
 local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false) --Дестабилизация
 local warnSpitefulFixate					= mod:NewYouAnnounce(350209, 4) --Злобное сосредоточение
 --
@@ -45,6 +45,11 @@ local timerMarkWind							= mod:NewBuffActiveTimer(15, 396364, nil, nil, nil, 7,
 local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 2.5) --Землетрясение
 local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Некротическая язва
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
+--
+local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3)
+local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true)
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
+local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
@@ -158,7 +163,7 @@ local function checkForCombat(self)
 			if incorpRemaining and incorpRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
 				self:Unschedule(checkIncorp)
 				self:Schedule(incorpRemaining+10, checkIncorp, self)
-				DBM:Debug("Experimental reschedule of checkIncorp running because you're in debug mode")
+				DBM:Debug("Experimental reschedule of checkIncorp running")
 			end
 		elseif not combatFound and incorporealCounting then
 			incorporealCounting = false
@@ -174,7 +179,7 @@ local function checkForCombat(self)
 			if afflictRemaining and afflictRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
 				self:Unschedule(checkAfflicted)
 				self:Schedule(afflictRemaining+10, checkAfflicted, self)
-				DBM:Debug("Experimental reschedule of checkAfflicted running because you're in debug mode")
+				DBM:Debug("Experimental reschedule of checkAfflicted running")
 			end
 		elseif not combatFound and afflictedCounting then
 			afflictedCounting = false
@@ -227,13 +232,17 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 240447 then --Землетрясение
-		if args:IsPlayer() then
+		if self:AntiSpam(3, "aff5") then
+			timerQuakingCD:Start()
+		end
+		if self:IsSpellCaster() then
 			specWarnQuake:Show()
 			specWarnQuake:Play("runaway")
+		elseif self:IsMelee() then
 			specWarnQuake2:Show()
-			specWarnQuake2:Play("runaway")
-			timerQuake:Start()
+			specWarnQuake2:Play("range5")
 		end
+		timerQuake:Start()
 	elseif spellId == 240559 then --Тяжкая рана
 		local amount = args.amount or 1
 		if args:IsPlayer() then
