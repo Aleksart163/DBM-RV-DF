@@ -36,8 +36,6 @@ local specWarnGrievousWound					= mod:NewSpecialWarningStack(240559, nil, 4, nil
 local specWarnSanguineIchor					= mod:NewSpecialWarningMove(226512, nil, nil, nil, 1, 2) --Кровавый гной
 local specWarnQuake							= mod:NewSpecialWarningCast(240447, "SpellCaster", nil, nil, 1, 2) --Землетрясение
 local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", nil, nil, 1, 2) --Землетрясение
-
-local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 --
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
 local timerMarkLightning					= mod:NewBuffActiveTimer(15, 396369, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка молнии
