@@ -93,7 +93,6 @@ do
 		defeat = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "Alarak: Shameful death",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_Shameful_Death.ogg", length=4},
 			{text = "Kologarn: You Fail",value = 553345, length=4},--"Sound\\Creature\\Kologarn\\UR_Kologarn_Slay02.ogg"
 			{text = "Hodir: Tragic",value = 552023, length=4},--"Sound\\Creature\\Hodir\\UR_Hodir_Slay01.ogg"
 			{text = "Thorim: Failures",value = 562111, length=4},--"Sound\\Creature\\Thorim\\UR_Thorim_P1Wipe01.ogg"
@@ -137,15 +136,15 @@ do
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
 			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-			{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
 			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+			{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
+		--	{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 			{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
 		}
 	elseif isWrath then
 		dungeonMusic = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
 			{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
 		}
 	else
@@ -194,8 +193,6 @@ do
 		battleMusic = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 			{text = "Bronze Jam",value = 350021, length=116},--"Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3" Soundkit: 118800
 --			{text = "Invincible",value = 1100052, length=197},--"Sound\\Music\\Draenor\\MUS_Invincible.mp3" Soundkit: 49536 (Double check this)
 		}
@@ -233,11 +230,12 @@ do
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
 		{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
+		{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 		{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
 		{text = "Anduin Part 2 B",value = 1417248, length=111},--"sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3" Soundkit: 68230
 		{text = "Bronze Jam",value = 350021, length=116},--"Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3" Soundkit: 118800
 		{text = "Invincible",value = 1100052, length=197},--"Sound\\Music\\Draenor\\MUS_Invincible.mp3" Soundkit: 49536
-		{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+	--	{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 		{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
 	}
 	local hasCached = false
