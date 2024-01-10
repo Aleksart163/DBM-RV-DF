@@ -28,8 +28,8 @@ mod:RegisterEventsInCombat(
 --]]
 local warnArcaneEruption						= mod:NewSpellAnnounce(385075, 3)
 
-local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 1, 2)
-local specWarnDragonStrikeDebuff				= mod:NewSpecialWarningDispel(384978, "RemoveMagic", nil, nil, 1, 2)
+local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 3, 2)
+local specWarnDragonStrikeDebuff				= mod:NewSpecialWarningDispel(384978, "RemoveMagic", nil, nil, 3, 2)
 local specWarnCrystallineRoar					= mod:NewSpecialWarningDodge(384699, nil, nil, nil, 3, 2)
 local specWarnUnleashedDestruction				= mod:NewSpecialWarningSpell(385399, nil, nil, nil, 2, 2)
 
@@ -63,10 +63,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 384978 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnDragonStrike:Show()
-			specWarnDragonStrike:Play("defensive")
-		end
 		timerDragonStrikeCD:Start()
 	elseif spellId == 385399 or spellId == 388804 then--Easy, Hard
 		self.vb.unleashedCast = self.vb.unleashedCast + 1
@@ -91,8 +87,10 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 384978 then
-		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsTanking(uId) and self:CheckDispelFilter("magic") then
+		if args:IsPlayer() then
+			specWarnDragonStrike:Show()
+			specWarnDragonStrike:Play("defensive")
+		elseif self:CheckDispelFilter("magic") then
 			specWarnDragonStrikeDebuff:Show(args.destName)
 			specWarnDragonStrikeDebuff:Play("helpdispel")
 		end
