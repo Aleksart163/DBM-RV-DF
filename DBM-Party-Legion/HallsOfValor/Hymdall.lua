@@ -27,7 +27,7 @@ local warnSweep						= mod:NewSpellAnnounce(193092, 2, nil, "Tank")
 
 local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2)
 local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
-local specWarnDancingBlade2			= mod:NewSpecialWarningMoveAway(193235, nil, nil, nil, 3, 6) --Танцующий клинок
+local specWarnDancingBlade2			= mod:NewSpecialWarningYou(193235, nil, nil, nil, 3, 6) --Танцующий клинок
 local specWarnDancingBlade3			= mod:NewSpecialWarningClose(193235, nil, nil, nil, 2, 3) --Танцующий клинок
 --local yellDancingBlade				= mod:NewYell(193235)
 
