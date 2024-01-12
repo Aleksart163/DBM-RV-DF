@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20230504231118")
 mod:SetCreatureID(94960)
 mod:SetEncounterID(1805)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20221127000000)
 mod.sendMainBossGUID = true
 
@@ -21,11 +22,13 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnBreath					= mod:NewCountAnnounce(188404, 4)
-local warnDancingBlade				= mod:NewCountAnnounce(193235, 3)
+local warnDancingBlade				= mod:NewTargetAnnounce(193235, 3)
 local warnSweep						= mod:NewSpellAnnounce(193092, 2, nil, "Tank")
 
-local specWarnHornOfValor			= mod:NewSpecialWarningSpell(191284, nil, nil, nil, 2, 2)
-local specWarnDancingBlade			= mod:NewSpecialWarningGTFO(193235, nil, nil, nil, 1, 8)
+local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2)
+local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
+local specWarnDancingBlade2			= mod:NewSpecialWarningMoveAway(193235, nil, nil, nil, 3, 6) --Танцующий клинок
+local specWarnDancingBlade3			= mod:NewSpecialWarningClose(193235, nil, nil, nil, 2, 3) --Танцующий клинок
 --local yellDancingBlade				= mod:NewYell(193235)
 
 local timerSweepCD					= mod:NewCDTimer(16.9, 193092, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -33,8 +36,29 @@ local timerDancingBladeCD			= mod:NewCDTimer(10, 193235, nil, nil, nil, 3)
 local timerHornCD					= mod:NewCDTimer(43.8, 191284, nil, nil, nil, 2)
 local timerBreathCast				= mod:NewCastCountTimer(43.8, 188404, nil, nil, nil, 3)
 
+local yellDancingBlade				= mod:NewYell(193235, nil, nil, nil, "YELL")
+
+mod:AddSetIconOption("SetIconOnDancingBlade", 193235, true, 0, {8})
+
 mod.vb.bladeCount = 0
 mod.vb.breathCount = 0
+
+function mod:DancingBladeTarget(targetname, uId) --Танцующий клинок [✔] прошляпанного очка Мурчаля Прошляпенко
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnDancingBlade2:Show()
+		specWarnDancingBlade2:Play("runout")
+		yellDancingBlade:Yell()
+	elseif self:CheckNearby(10, targetname) then
+		specWarnDancingBlade3:Show(targetname)
+		specWarnDancingBlade3:Play("runaway")
+	else
+		warnDancingBlade:Show(targetname)
+	end
+	if self.Options.SetIconOnDancingBlade then
+		self:SetIcon(targetname, 8, 5)
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.bladeCount = 0
@@ -48,13 +72,13 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 191284 then
 		self.vb.breathCount = 0
 		specWarnHornOfValor:Show()
-		specWarnHornOfValor:Play("breathsoon")
+		specWarnHornOfValor:Play("defensive")
 		timerBreathCast:Start(8, 1)
 		timerHornCD:Start()
 	elseif spellId == 193235 then
 		self.vb.bladeCount = self.vb.bladeCount + 1
-		warnDancingBlade:Show(self.vb.bladeCount)
-		--self:BossTargetScanner(94960, "BladeTarget", 0.1, 20, true, nil, nil, nil, true)
+	--	warnDancingBlade:Show(self.vb.bladeCount)
+		self:BossTargetScanner(args.sourceGUID, "DancingBladeTarget", 0.1, 20, true, nil, nil, nil, true)
 		if self.vb.bladeCount % 2 == 0 then
 			timerDancingBladeCD:Start(11.2)
 		else
