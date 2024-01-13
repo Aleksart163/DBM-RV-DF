@@ -2,7 +2,8 @@ local mod	= DBM:NewMod("Spells", "DBM-Spells")
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20231212201653")
-mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
+mod:SetZone()
+--mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
@@ -103,12 +104,9 @@ mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnPylon", true) --пилон
 mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
---эластичной 120
---толстой 10
---крепкой 20
---Pussymoon-Valdrakken
+
 local typeInstance = nil
-local DbmRV = "[DBM RV v2.5]: "
+local DbmRV = "[DBM RV v2.5] "
 
 local function UnitInYourParty(sourceName)
 	if GetNumGroupMembers() > 0 and (UnitInParty(sourceName) or UnitPlayerOrPetInParty(sourceName) or UnitInRaid(sourceName) or UnitInBattleground(sourceName)) then

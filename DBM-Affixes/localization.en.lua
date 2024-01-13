@@ -10,6 +10,6 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
---	RasAffix1 = "The elements answer to me!",
---	RasAffix2 = "The might of the storm falls upon you!"
+	AfRaszageth1 = "The elements answer to me!",
+	AfRaszageth2 = "Marked by lightning!"
 })

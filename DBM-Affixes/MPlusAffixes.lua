@@ -384,7 +384,8 @@ function mod:OnSync(msg)
 	end
 end]]
 
---[[local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
+--[[
+local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20240106073327")
@@ -399,22 +400,12 @@ mod:RegisterEvents(
 	"LOADING_SCREEN_DISABLED"
 )
 
---TODO, fine tune tank stacks/throttle?
-(ability.id = 240446 or ability.id = 409492) and type = "begincast"
- or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
- or type = "dungeonencounterstart" or type = "dungeonencounterend"
- or (source.type = "NPC" and source.firstSeen = timestamp) and (source.name = "Afflicted Soul") or (target.type = "NPC" and target.firstSeen = timestamp) and (target.name = "Afflicted Soul")
---
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4)
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
 local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false)
 local warnSpitefulFixate					= mod:NewYouAnnounce(350209, 4)
 
-local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
-local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
-local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
-local specWarnMarkWind2						= mod:NewSpecialWarningEnd(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnQuake							= mod:NewSpecialWarningMoveAway(240447, nil, nil, nil, 1, 2)
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, false, nil, 2, 1, 2)
 local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 14)
@@ -426,10 +417,6 @@ local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 39634
 local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
 local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 
-local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
-local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
-local yellMarkWind							= mod:NewFadesYell(396364, nil, nil, nil, "YELL") --Метка ветра
-
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 gtfo, 8 personal aggregated alert
@@ -438,36 +425,6 @@ local incorporealCounting = false
 local incorpDetected = false
 local afflictedCounting = false
 local afflictedDetected = false
-local Lightning = false
-local Wind = false
-local overloadCounting = false
-local overloadDetected = false
-local MarkLightning = SpellLinks(396369) --Метка молнии
-local MarkWind = SpellLinks(396364) --Метка ветра
-
-mod.vb.murchalsProshlyapCount = 0
-
-local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
-	if Lightning then
-		yellPrimalOverload:Yell(6, MarkLightning, 6)
-		self:Schedule(4, startProshlyapationOfMurchal, self)
-	elseif Wind then
-		yellPrimalOverload:Yell(7, MarkWind, 7)
-		self:Schedule(4, startProshlyapationOfMurchal, self)
-	end
-end
-
-local function stopProshlyapationOfMurchal(self)
-	yellPrimalOverload:Cancel()
-	yellMarkWind:Cancel()
-	timerMarkWind:Cancel()
-	self:Unschedule(startProshlyapationOfMurchal)
-end
-
-local function ProshlyapationOfMurchal(self)
-	self.vb.murchalsProshlyapCount = 0
-	DBM:Debug("murchalsProshlyapCount = 0", 2)
-end
 
 local function checkEntangled(self)
 	if timerEntangledCD:GetRemaining() > 0 then
@@ -494,15 +451,6 @@ local function checkIncorp(self)
 	end
 	timerIncorporealCD:Start(35)
 	self:Schedule(45, checkIncorp, self)
-end
-
-local function checkPrimalOverload(self)
-	if timerPrimalOverloadCD:GetRemaining() > 0 then
-		--Timer exists, do nothing
-		return
-	end
-	timerPrimalOverloadCD:Start(60)
-	self:Schedule(70, checkPrimalOverload, self)
 end
 
 --UGLY function to detect this because there isn't a good API for this.
@@ -542,22 +490,6 @@ local function checkForCombat(self)
 			self:Unschedule(checkAfflicted)--Soon as a pause happens this can no longer be trusted
 		end
 	end
-	if overloadDetected then
-		if combatFound and not overloadCounting then
-			overloadCounting = true
-			timerPrimalOverloadCD:Resume()
-			local overloadRemaining = timerPrimalOverloadCD:GetRemaining()
-			if overloadRemaining and overloadRemaining > 0 then
-				self:Unschedule(checkPrimalOverload)
-				self:Schedule(overloadRemaining+10, checkPrimalOverload, self)
-				DBM:Debug("overloadDetected")
-			end
-		elseif not combatFound and overloadCounting then
-			overloadCounting = false
-			timerPrimalOverloadCD:Pause()
-			self:Unschedule(checkPrimalOverload)
-		end
-	end
 	self:Schedule(0.25, checkForCombat, self)
 end
 
@@ -584,9 +516,9 @@ do
 			self:RegisterShortTermEvents(
 				"SPELL_CAST_START 240446 409492 408805",
 			--	"SPELL_CAST_SUCCESS",
-				"SPELL_AURA_APPLIED 240447 226510 226512 350209 408556 408801 396369 396364",
+				"SPELL_AURA_APPLIED 240447 226510 226512 350209 408556 408801",
 			--	"SPELL_AURA_APPLIED_DOSE",
-				"SPELL_AURA_REMOVED 226510 396369 396364",
+				"SPELL_AURA_REMOVED 226510",
 --				"SPELL_DAMAGE 209862",
 --				"SPELL_MISSED 209862",
 				"CHALLENGE_MODE_COMPLETED"
@@ -599,15 +531,12 @@ do
 			eventsRegistered = false
 			afflictedCounting = false
 			incorporealCounting = false
-			overloadCounting = false
 			incorpDetected = false
-			overloadDetected = false
 			afflictedDetected = false
 			self:UnregisterShortTermEvents()
 			self:Unschedule(checkForCombat)
 			self:Unschedule(checkEntangled)
 			self:Unschedule(checkAfflicted)
-			self:Unschedule(checkPrimalOverload)
 			self:Stop()
 			if self.Options.NPSanguine then
 				DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
@@ -654,14 +583,13 @@ function mod:SPELL_CAST_START(args)
 end
 
 
-function mod:SPELL_CAST_SUCCESS(args)
-	if not self.Options.Enabled then return end
-	local spellId = args.spellId
-	if spellId == 373370 then
-		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
-	end
-end
-
+--function mod:SPELL_CAST_SUCCESS(args)
+--	if not self.Options.Enabled then return end
+--	local spellId = args.spellId
+--	if spellId == 373370 then
+--		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
+--	end
+--end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -711,28 +639,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:Unschedule(checkIncorp)
 		checkForCombat(self)
 		self:Schedule(50, checkIncorp, self)
-	elseif spellId == 396369 then --Метка молнии
-		overloadCounting = true
-		if args:IsPlayer() then
-			Lightning = true
-			specWarnMarkLightning:Show()
-			specWarnMarkLightning:Play("gathershare")
-			yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
-			yellMarkLightning:Countdown(spellId, 3)
-			timerMarkLightning:Start(args.destName)
-			self:Schedule(4, startProshlyapationOfMurchal, self)
-		end
-	elseif spellId == 396364 then --Метка ветра
-		overloadCounting = true
-		if args:IsPlayer() then
-			Wind = true
-			specWarnMarkWind:Show()
-			specWarnMarkWind:Play("gathershare")
-			yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
-			yellMarkWind:Countdown(spellId, 3)
-			timerMarkWind:Start(args.destName)
-			self:Schedule(4, startProshlyapationOfMurchal, self)
-		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -744,55 +650,17 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.NPSanguine then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
-	elseif spellId == 396369 then --Метка молнии
-		if args:IsPlayer() then
-			Lightning = false
-			specWarnMarkLightning2:Show()
-			specWarnMarkLightning2:Play("end")
-			self:Unschedule(startProshlyapationOfMurchal)
-			yellMarkLightning:Cancel()
-			timerMarkLightning:Cancel(args.destName)
-		end
-	elseif spellId == 396364 then --Метка ветра
-		self.vb.murchalsProshlyapCount = self.vb.murchalsProshlyapCount - 1
-		if args:IsPlayer() then
-			Wind = false
-			specWarnMarkWind2:Show()
-			specWarnMarkWind2:Play("end")
-			self:Unschedule(startProshlyapationOfMurchal)
-			yellMarkWind:Cancel()
-			timerMarkWind:Cancel(args.destName)
-		end
-		if self.vb.murchalsProshlyapCount == 1 then
-			self:Schedule(0.2, stopProshlyapationOfMurchal, self)
-			DBM:Debug("murchalsProshlyapCount == 1", 2)
-		end
-	end
-end
-
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.AfRaszageth1 or msg == L.AfRaszageth2 then
-		self.vb.murchalsProshlyapCount = 3
-		DBM:Debug("murchalsProshlyapCount = 3")
-		self:Schedule(18.5, ProshlyapationOfMurchal, self)
-		if not overloadDetected then
-			overloadDetected = true
-		end
-		self:Unschedule(checkForCombat)
-		checkForCombat(self)
-		self:Unschedule(checkPrimalOverload)
-		self:Schedule(70, checkPrimalOverload, self)
 	end
 end
 
 
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
-		specWarnGTFO:Show(spellName)
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_MISSED = mod.SPELL_DAMAGE
+--function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+--	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
+--		specWarnGTFO:Show(spellName)
+--		specWarnGTFO:Play("watchfeet")
+--	end
+--end
+--mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
