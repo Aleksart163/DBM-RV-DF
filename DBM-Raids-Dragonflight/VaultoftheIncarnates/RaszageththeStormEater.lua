@@ -692,7 +692,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount or UnitGetTotalAbsorbs("boss1"), "boss1")
 		end
-	elseif args:IsSpellID(391990, 394574, 394576) then--All variants of positive
+	elseif spellId == 391990 or spellId == 394574 or spellId == 394576 then--All variants of positive
 		if args:IsPlayer() then
 			specWarnPositiveCharge:Show()
 			specWarnPositiveCharge:Play("positive")
@@ -701,7 +701,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellRepeater(self, 6, 0)
 			playerPolarity = 1--Positive
 		end
-	elseif args:IsSpellID(391991, 394579, 394575) then--All variants of positive
+	elseif spellId == 391991 or spellId == 394579 or spellId == 394575 then--All variants of positive
 		if args:IsPlayer() then
 			specWarnNegativeCharge:Show()
 			specWarnNegativeCharge:Play("negative")
