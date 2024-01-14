@@ -51,7 +51,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25244))
 local warnStaticCharge							= mod:NewTargetNoFilterAnnounce(381615, 3)
 local warnLightningStrike						= mod:NewSpellAnnounce(376126, 3)
 
-local specWarnHurricaneWing						= mod:NewSpecialWarningCount(377612, nil, nil, nil, 2, 13)
+local specWarnHurricaneWing						= mod:NewSpecialWarningMoveTo(377612, nil, nil, nil, 4, 13)
 local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 37859, nil, 1, 2)
 local yellStaticCharge							= mod:NewShortPosYell(381615, 37859)
 local yellStaticChargeFades						= mod:NewIconFadesYell(381615, 37859)
@@ -161,6 +161,7 @@ local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, 309024, "Tank|
 mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
 mod:GroupSpells(386410, 391285)--Thunderous Blast and associated melted armor debuff
 
+local StaticField = DBM:GetSpellInfo(377662) 
 --P1
 mod.vb.energyCount = 0--Reused for the 100 energy special in stage 1/2 and mythic storm eater mechanic in stage 3
 mod.vb.chargeCount = 0--Static Charge/Fulminating Charge
@@ -387,7 +388,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 377612 then
 		self.vb.energyCount = self.vb.energyCount + 1
-		specWarnHurricaneWing:Show(self.vb.energyCount)
+		specWarnHurricaneWing:Show(StaticField)
 		specWarnHurricaneWing:Play("pushbackincoming")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.energyCount+1) or 35
 		if timer then
