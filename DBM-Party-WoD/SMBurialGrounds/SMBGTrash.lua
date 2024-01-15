@@ -25,8 +25,8 @@ local warnBodySlam							= mod:NewCastAnnounce(153395, 4)
 
 --local yellConcentrateAnima				= mod:NewYell(339525)
 --local yellConcentrateAnimaFades			= mod:NewShortFadesYell(339525)
-local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 2)
-local specWarnShadowWordFrailtyDispel		= mod:NewSpecialWarningDispel(152819, "RemoveMagic", nil, nil, 3, 2)
+local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 2) --Слово Тьмы: Хрупкость
+local specWarnShadowWordFrailtyDispel		= mod:NewSpecialWarningDispel(152819, "RemoveMagic", nil, nil, 3, 2) --Слово Тьмы: Хрупкость
 local specWarnShadowMend					= mod:NewSpecialWarningInterrupt(152818, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDeathblast					= mod:NewSpecialWarningInterrupt(398206, "HasInterrupt", nil, nil, 1, 2)
 local specWarnNecroticBurst					= mod:NewSpecialWarningInterrupt(156718, "HasInterrupt", nil, nil, 1, 2)
@@ -38,6 +38,8 @@ local timerVoidSlashCD						= mod:NewCDNPTimer(10.9, 164907, nil, "Tank|Healer",
 local timerVoidEruptionsCD					= mod:NewCDNPTimer(19.4, 394512, nil, nil, nil, 3, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellShadowWordFrailty					= mod:NewYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
 
 --local playerName = UnitName("player")
 
@@ -101,6 +103,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnShadowWordFrailty:Show()
 			specWarnShadowWordFrailty:Play("targetyou")
+			yellShadowWordFrailty:Yell()
 		elseif self:CheckDispelFilter("magic") then
 			specWarnShadowWordFrailtyDispel:Show(args.destName)
 			specWarnShadowWordFrailtyDispel:Play("helpdispel")

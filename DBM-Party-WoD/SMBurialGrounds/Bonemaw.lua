@@ -35,7 +35,7 @@ local warnSubmerge				= mod:NewSpellAnnounce(177694, 1)
 local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1)
 
 local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 2)
-local specWarnInhale			= mod:NewSpecialWarningRun(153804, nil, nil, 2, 4, 12)
+local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13)
 local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8)
 
 local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3)--34
@@ -45,6 +45,7 @@ local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false, nil, 5)--32-
 --local timerSubmergeCD			= mod:NewCDTimer(80, 177694, nil, nil, nil, 6)
 
 mod.vb.inhaleActive = false
+local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
 
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false
@@ -97,7 +98,7 @@ end
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg:find("spell:153804") then--Slightly faster than combat log (~2)
 		self.vb.inhaleActive = true
-		specWarnInhale:Show()
+		specWarnInhale:Show(Pitch)
 		specWarnInhale:Play("inhalegetinpuddle")
 		timerInhaleCD:Start()
 	end
