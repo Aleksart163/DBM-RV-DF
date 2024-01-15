@@ -8,7 +8,7 @@ mod:SetZone()
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
 	"SPELL_CAST_SUCCESS 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
-	"SPELL_AURA_APPLIED 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
+	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
 	"SPELL_CREATE 698 188036 201352 201351 185709 88304 61031 49844",
@@ -87,7 +87,10 @@ local yellRallyingCry				= mod:NewYell(97462, L.SpellNameYell, nil, nil, "YELL")
 local yellPowerWordBarrier			= mod:NewYell(62618, L.SpellNameYell, nil, nil, "YELL") --Слово силы: Барьер
 local yellAncestralProtectionTotem	= mod:NewYell(207399, L.SpellNameYell, nil, nil, "YELL") --Тотем защиты Предков
 local yellSymbolHope				= mod:NewYell(64901, L.SpellNameYell, nil, nil, "YELL") --Символ надежды
+local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell, nil, nil, "YELL") --Маленькие хитрости
+local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell, nil, nil, "YELL") --Перенаправление
 
+mod:AddBoolOption("YellOnNapull", true) --напулл
 mod:AddBoolOption("YellOnRaidCooldown", true) --рейд кд
 mod:AddBoolOption("YellOnResurrect", true) --бр
 mod:AddBoolOption("YellOnMassRes", true) --масс рес
@@ -182,6 +185,8 @@ local premsg_values = {
 	["premsg_Spells_tranquility"] = {0, L.HeroismYell}, --Спокойствие
 	["premsg_Spells_rewind"] = {0, L.HeroismYell}, --Перемотка
 --	["premsg_Spells_innervate"] = {0, L.SoulstoneYell, true}, --Озарение
+	["premsg_Spells_tricks"] = {0, L.SoulstoneYell, true}, --Маленькие хитрости
+	["premsg_Spells_misdirection"] = {0, L.SoulstoneYell, true}, --Перенаправление
 	["premsg_Spells_sourceMagic"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth1"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth2"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
@@ -281,7 +286,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.YellOnSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSummoning then
 			if args:IsPlayerSource() then
-				smartAss(L.SummonYell:format(DbmRV, sourceName, SpellLinks(spellId), UnitName("target")))
+				smartAss(L.SoulstoneYell:format(DbmRV, sourceName, SpellLinks(spellId), UnitName("target")))
 			end
 		end
 	end
@@ -665,7 +670,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	end
 end
-
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -776,6 +780,24 @@ function mod:SPELL_AURA_APPLIED(args)
 	--[[	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
 			prepareMessage(self, "premsg_Spells_ironbark", spellId, sourceName, destName)
 		end]]
+	elseif spellId == 57934 and self:AntiSpam(5, "TrickTheTrade") then --Маленькие хитрости
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		if args:IsPlayerSource() then
+			yellTricksTheTrade:Yell(SpellLinks(spellId))
+		end
+		if self.Options.YellOnNapull then
+			prepareMessage(self, "premsg_Spells_tricks", spellId, sourceName, destName)
+		end
+	elseif spellId == 34477 and self:AntiSpam(5, "Misdirection") then --Перенаправление
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		if args:IsPlayerSource() then
+			yellMisdirection:Yell(SpellLinks(spellId))
+		end
+		if self.Options.YellOnNapull then
+			prepareMessage(self, "premsg_Spells_misdirection", spellId, sourceName, destName)
+		end
 	end
 end
 
