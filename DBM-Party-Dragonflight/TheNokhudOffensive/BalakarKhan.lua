@@ -68,6 +68,8 @@ local timerStaticSpearCD						= mod:NewCDTimer(38.3, 376864, nil, nil, nil, 3)
 local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3)
 local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--CD used for both Condutive and Thunder
 
+local yellConductiveStrike						= mod:NewYell(376827, nil, nil, nil, "YELL")
+
 mod.vb.addsLeft = 0
 mod.vb.comboCount = 0
 
@@ -108,6 +110,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnConductiveStrike:Show()
 			specWarnConductiveStrike:Play("defensive")
+			yellConductiveStrike:Yell()
 		end
 		local timer = (self.vb.comboCount % 2 == 0) and 17 or 22
 		timerConductiveStrikeCD:Start(timer, self.vb.comboCount+1)

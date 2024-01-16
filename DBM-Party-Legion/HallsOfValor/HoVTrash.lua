@@ -9,6 +9,7 @@ mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 199805 192563 199726 191508 199210 198892 198934 215433 210875 192158 200901 198595 192288",
+	"SPELL_CAST_SUCCESS 200901",
 	"SPELL_AURA_APPLIED 215430",
 	"SPELL_AURA_REMOVED 215430",
 	"UNIT_DIED",
@@ -28,6 +29,7 @@ local specWarnPenetratingShot		= mod:NewSpecialWarningDodge(199210, nil, nil, ni
 local specWarnChargePulse			= mod:NewSpecialWarningDodge(210875, nil, nil, nil, 2, 2)
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2, 5)
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
+local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
 local specWarnCrackle				= mod:NewSpecialWarningYou(199805, nil, nil, nil, 1, 2)
 local yellCrackle					= mod:NewShortYell(199805)
 local specWarnCracklingStorm		= mod:NewSpecialWarningYou(198892, nil, nil, nil, 1, 2)
@@ -144,8 +146,10 @@ function mod:SPELL_CAST_START(args)
 		timerSanctifyCD:Start(nil, args.sourceGUID)
 	--2/22 01:53:53.948  SPELL_CAST_START,Creature-0-3019-1477-12381-97219-000075B856,"Solsten",0x10a48,0x0,0000000000000000,nil,0x80000000,0x80000000,200901,"Eye of the Storm",0x8
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 97219 then
-		specWarnEyeofStorm:Show(eyeShortName)
-		specWarnEyeofStorm:Play("findshelter")
+		if self:AntiSpam(2, "EyeofStorm") then
+			specWarnEyeofStorm:Show(eyeShortName)
+			specWarnEyeofStorm:Play("findshelter")
+		end
 		timerEyeofStormCD:Start(nil, args.sourceGUID)
 	elseif spellId == 192288 then
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
@@ -162,9 +166,19 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
+	local spellId = args.spellId
+	if spellId == 200901 then
+		specWarnEyeofStorm2:Show()
+		specWarnEyeofStorm2:Play("defensive")
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
-	if args.spellId == 215430 then
+	local spellId = args.spellId
+	if spellId == 215430 then
 		if args:IsPlayer() then
 			specWarnThunderstrike:Show()
 			specWarnThunderstrike:Play("scatter")
@@ -179,7 +193,8 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if not self.Options.Enabled then return end
-	if args.spellId == 215430 and args:IsPlayer() then
+	local spellId = args.spellId
+	if spellId == 215430 and args:IsPlayer() then
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end

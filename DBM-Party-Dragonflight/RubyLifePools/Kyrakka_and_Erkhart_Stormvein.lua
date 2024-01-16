@@ -40,13 +40,15 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25369))
 local warnWindsofChange							= mod:NewCountAnnounce(381517, 3, nil, nil, 227878)--Not actually a count timer, but has best localized text
 local warnCloudburst							= mod:NewSpellAnnounce(385558, 3)
 
-local specWarnStormslam							= mod:NewSpecialWarningDefensive(381512, nil, nil, nil, 1, 2)
-local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381512, "RemoveMagic", nil, nil, 1, 2)
+local specWarnStormslam							= mod:NewSpecialWarningDefensive(381512, nil, nil, nil, 3, 2)
+local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381512, "RemoveMagic", nil, nil, 3, 2)
 local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 4)
 
 local timerWindsofChangeCD						= mod:NewCDCountTimer(19.3, 381517, 227878, nil, nil, 3)--Not actually a count timer, but has best localized text
 local timerStormslamCD							= mod:NewCDTimer(17, 381512, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
 local timerCloudburstCD							= mod:NewCDTimer(19.3, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
+
+local yellStormslam								= mod:NewYell(381512, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(381862, false)--Infernocore
 
@@ -117,6 +119,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then--Using GUID check because might be boss1 or boss2
 			specWarnStormslam:Show()
 			specWarnStormslam:Play("defensive")
+			yellStormslam:Yell()
 		end
 		timerStormslamCD:Start(nil, args.sourceGUID)--self:GetStage(1) and 10 or 14
 	elseif spellId == 385558 or spellId == 381516 then
@@ -143,9 +146,11 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 381515 and self:CheckDispelFilter("magic") then
-		specWarnStormslamDispel:Show(args.destName)
-		specWarnStormslamDispel:Play("helpdispel")
+	if spellId == 381515 then
+		if self:CheckDispelFilter("magic") then
+			specWarnStormslamDispel:Show(args.destName)
+			specWarnStormslamDispel:Play("helpdispel")
+		end
 	elseif spellId == 181089 then
 		self:SetStage(2)
 		--Timers reset by staging

@@ -28,7 +28,6 @@ local warnSweep						= mod:NewSpellAnnounce(193092, 2, nil, "Tank")
 local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2)
 local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
 local specWarnDancingBlade2			= mod:NewSpecialWarningYou(193235, nil, nil, nil, 3, 6) --Танцующий клинок
-local specWarnDancingBlade3			= mod:NewSpecialWarningClose(193235, nil, nil, nil, 2, 3) --Танцующий клинок
 --local yellDancingBlade				= mod:NewYell(193235)
 
 local timerSweepCD					= mod:NewCDTimer(16.9, 193092, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -49,9 +48,6 @@ function mod:DancingBladeTarget(targetname, uId) --Танцующий клино
 		specWarnDancingBlade2:Show()
 		specWarnDancingBlade2:Play("runout")
 		yellDancingBlade:Yell()
-	elseif self:CheckNearby(10, targetname) then
-		specWarnDancingBlade3:Show(targetname)
-		specWarnDancingBlade3:Play("runaway")
 	else
 		warnDancingBlade:Show(targetname)
 	end

@@ -12,8 +12,9 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 192018 192307 200901",
-	"SPELL_CAST_SUCCESS 192044",
-	"SPELL_AURA_APPLIED 192048 192133 192132",
+	"SPELL_CAST_SUCCESS 192044 200901",
+	"SPELL_AURA_APPLIED 192048 192133 192132 192133 192132",
+	"SPELL_AURA_APPLIED_DOSE 192133 192132",
 	"SPELL_AURA_REMOVED 192048"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -29,17 +30,19 @@ mod:RegisterEventsInCombat(
  or ability.id = 192044 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+local warnMysticEmpowermentHoly		= mod:NewStackAnnounce(192133, 4, nil, nil, 2) --Мистическое усиление: Свет
+local warnMysticEmpowermentThunder	= mod:NewStackAnnounce(192132, 4, nil, nil, 2) --Мистическое усиление: гром
 local warnExpelLight				= mod:NewTargetAnnounce(192048, 3)
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, "Tank", nil, nil, 3, 2)--Journal lies, this is NOT dodgable
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192307, nil, nil, nil, 2, 5)
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
+local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
 local specWarnExpelLight			= mod:NewSpecialWarningMoveAway(192048, nil, nil, nil, 2, 2)
 local yellExpelLight				= mod:NewYell(192048)
 
 local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2, 4)--26.6-34
-local timerSpecialCD				= mod:NewCDSpecialTimer(30, nil, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)--Shared timer by eye of storm and Sanctify
+local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)--Shared timer by eye of storm and Sanctify
 local timerExpelLightCD				= mod:NewCDTimer(23, 192048, nil, nil, nil, 3)--May be lower but almost always delayed by spell queue ICDs
 
 mod:AddRangeFrameOption(8, 192048)
@@ -70,7 +73,6 @@ local function updateAllTimers(self, ICD)
 end
 
 function mod:OnCombatStart(delay)
---	self:SetStage(1)
 	timerSpecialCD:Start(8.5)
 	timerShieldOfLightCD:Start(24)
 	timerExpelLightCD:Start(32.5)
@@ -95,8 +97,10 @@ function mod:SPELL_CAST_START(args)
 		timerShieldOfLightCD:Start()
 		updateAllTimers(self, 6)
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 95833 then
-		specWarnEyeofStorm:Show(eyeShortName)
-		specWarnEyeofStorm:Play("findshelter")
+		if self:AntiSpam(2, "EyeofStorm") then
+			specWarnEyeofStorm:Show(eyeShortName)
+			specWarnEyeofStorm:Play("findshelter")
+		end
 		timerSpecialCD:Start()
 		updateAllTimers(self, 15.5)
 	end
@@ -107,6 +111,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 192044 then
 		timerExpelLightCD:Start()
 		updateAllTimers(self, 3.6)
+	elseif spellId == 200901 then
+		specWarnEyeofStorm2:Show()
+		specWarnEyeofStorm2:Play("defensive")
 	end
 end
 
@@ -123,8 +130,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnExpelLight:Show(args.destName)
 		end
+	elseif spellId == 192133 then --Мистическое усиление: Свет
+		local amount = args.amount or 1
+		if amount >= 4 and amount % 2 == 0 then
+			warnMysticEmpowermentHoly:Show(args.destName, amount)
+		end
+	elseif spellId == 192132 then --Мистическое усиление: гром
+		local amount = args.amount or 1
+		if amount >= 4 and amount % 2 == 0 then
+			warnMysticEmpowermentThunder:Show(args.destName, amount)
+		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -132,16 +150,3 @@ function mod:SPELL_AURA_REMOVED(args)
 		DBM.RangeCheck:Hide()
 	end
 end
-
---[[
---Might be needed again for classic legion if that happens otherwise this is retired as of blizz moving encounter start from two adds to phase 2
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 192130 then--Actual boss engaging after 2 adds dying
---		self:SetStage(2)
---		warnPhase2:Show()
---		warnPhase2:Play("ptwo")
---		timerSpecialCD:Start(8.5)
---		timerShieldOfLightCD:Start(24)
-	end
-end
---]]
