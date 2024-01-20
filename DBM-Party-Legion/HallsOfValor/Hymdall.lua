@@ -42,7 +42,7 @@ mod:AddSetIconOption("SetIconOnDancingBlade", 193235, true, 0, {8})
 mod.vb.bladeCount = 0
 mod.vb.breathCount = 0
 
-function mod:DancingBladeTarget(targetname, uId) --Танцующий клинок [✔] прошляпанного очка Мурчаля Прошляпенко
+function mod:DancingBladeTarget(targetname) --Танцующий клинок [✔] прошляпанного очка Мурчаля Прошляпенко
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnDancingBlade2:Show()
@@ -74,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 193235 then
 		self.vb.bladeCount = self.vb.bladeCount + 1
 	--	warnDancingBlade:Show(self.vb.bladeCount)
-		self:BossTargetScanner(args.sourceGUID, "DancingBladeTarget", 0.1, 20, true, nil, nil, nil, true)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "DancingBladeTarget", 0.1, 8)
 		if self.vb.bladeCount % 2 == 0 then
 			timerDancingBladeCD:Start(11.2)
 		else
