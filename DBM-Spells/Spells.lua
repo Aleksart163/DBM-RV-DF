@@ -7,7 +7,7 @@ mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
@@ -30,6 +30,7 @@ local warnMassres6					= mod:NewCastAnnounce(361178, 1) --Массовое во�
 local warnJeeves					= mod:NewSpellAnnounce(67826, 1) --Дживс
 local warnAutoHammer				= mod:NewSpellAnnounce(199109, 1) --Автоматический молот
 --героизм
+local warnFeralHideDrums			= mod:NewSpellAnnounce(381301, 1) --Барабаны из дикой шкуры
 local warnTimeWarp					= mod:NewSpellAnnounce(80353, 1) --Искажение времени
 local warnFuryoftheAspects			= mod:NewSpellAnnounce(390386, 1) --Ярость Аспектов
 local warnHeroism					= mod:NewSpellAnnounce(32182, 1) --Героизм
@@ -128,6 +129,7 @@ local premsg_values = {
 	["premsg_Spells_massres4_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_massres5_rw"] = {0, L.HeroismYell, nil, "rw"},
 	["premsg_Spells_massres6_rw"] = {0, L.HeroismYell, nil, "rw"},
+	["premsg_Spells_feralHideDrums"] = {0, L.HeroismYell},
 	["premsg_Spells_primalRage"] = {0, L.HeroismYell},
 	["premsg_Spells_primalRage2"] = {0, L.HeroismYell},
 	["premsg_Spells_sated"] = {0, L.HeroismYell},
@@ -137,7 +139,6 @@ local premsg_values = {
 	["premsg_Spells_bloodlust"] = {0, L.HeroismYell},
 	["premsg_Spells_hysteria"] = {0, L.HeroismYell},
 	["premsg_Spells_winds"] = {0, L.HeroismYell},
-	["premsg_Spells_drums"] = {0, L.HeroismYell},
 	["premsg_Spells_stormwind"] = {0, L.PortalYell},
 	["premsg_Spells_ironforge"] = {0, L.PortalYell},
 	["premsg_Spells_darnassus"] = {0, L.PortalYell},
@@ -299,7 +300,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local destName = args.destName
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
-	if spellId == 80353 then --Искажение времени
+	if spellId == 381301 then --Барабаны из дикой шкуры
+		if self:AntiSpam(5, "bloodlust") then
+			warnFeralHideDrums:Show(sourceName)
+		end
+		if self.Options.YellOnHeroism then
+	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
+			prepareMessage(self, "premsg_Spells_feralHideDrums", spellId, sourceName)
+		end
+	elseif spellId == 80353 then --Искажение времени
 		if self:AntiSpam(5, "bloodlust") then
 			warnTimeWarp:Show(sourceName)
 		end
@@ -345,6 +354,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
 			end
 			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage1)", 2)]]
+		else
+			if self.Options.YellOnHeroism then
+				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
+			end
+			DBM:Debug('Checking proshlyapation of Murchal2 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 		end
 	elseif spellId == 272678 then --Исступление
 	--	specWarnPrimalRage:Show()
@@ -386,7 +400,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 				prepareMessage(self, "premsg_Spells_sated", spellId, sourceName)
 			end
-			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
+			DBM:Debug('Checking proshlyapation of Murchal2 spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 		end
 	elseif spellId == 390386 then --Ярость Аспектов
 		if self:AntiSpam(5, "bloodlust") then
@@ -744,7 +758,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPowerInfusion:Play("targetyou")
 		end
 	elseif spellId == 369459 and self:AntiSpam(5, "SourceofMagic") then --Магический источник
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if typeInstance ~= "party" then return end
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnSourceofMagic:Show()
