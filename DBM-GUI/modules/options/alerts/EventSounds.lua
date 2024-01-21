@@ -12,9 +12,7 @@ local Sounds = DBM_GUI:MixinSharedMedia3("sound", {
 if isRetail then
 	table.insert(Sounds, {
 		text	= "Muradin: Charge",
-		value	= 555967, -- "Sound\\Creature\\MuradinBronzebeard\\IC_Muradin_Saurfang02.ogg"
-		text	= "Alarak",
-		value	= "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_battle_start.ogg"
+		value	= 555967 -- "Sound\\Creature\\MuradinBronzebeard\\IC_Muradin_Saurfang02.ogg"
 	})
 end
 

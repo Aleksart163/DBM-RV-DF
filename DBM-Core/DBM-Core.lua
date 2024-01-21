@@ -156,7 +156,7 @@ DBM.DefaultOptions = {
 	SpecialWarningSound5 = 554236,--"Sound\\Creature\\Loathstare\\Loa_Naxx_Aggro02.ogg"
 	ModelSoundValue = "Short",
 	CountdownVoice = "Alarak",
-	CountdownVoice2 = "Kolt",
+	CountdownVoice2 = "Artanis",
 	CountdownVoice3 = "Smooth",
 	PullVoice = "Alarak",
 	ChosenVoicePack2 = (GetLocale() == "enUS" or GetLocale() == "enGB") and "VEM" or "None",

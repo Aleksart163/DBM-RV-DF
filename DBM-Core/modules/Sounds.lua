@@ -11,6 +11,7 @@ local DBM = DBM
 do
 	local counts = {
 		{	text	= "Alarak",value 	= "Alarak", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Alarak\\", max = 5},
+		{	text	= "Artanis",value 	= "Artanis", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Artanis\\", max = 5},
 		{	text	= "Corsica",value 	= "Corsica", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Corsica\\", max = 10},
 		{	text	= "Koltrane",value 	= "Kolt", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kolt\\", max = 10},
 		{	text	= "Smooth",value 	= "Smooth", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Smooth\\", max = 10},
@@ -48,8 +49,8 @@ do
 	local victory = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
-		{text = "Alarak: Shameful death",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_Shameful_Death.ogg", length=4},
 		{text = "Alarak Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
+		{text = "Artanis Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Artanis_Win.ogg", length=4},
 		{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
 		{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
 	}

@@ -106,6 +106,8 @@ do
 			local LSM = LibStub("LibSharedMedia-3.0")
 			soundsRegistered = true
 			-- Embedded Sound Clip media
+			LSM:Register("sound", "Alarak", "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_battle_start.ogg")
+			LSM:Register("sound", "Artanis", "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Artanis_En_Taro_Zeratul.ogg")
 			LSM:Register("sound", "AirHorn (DBM)", [[Interface\AddOns\DBM-Core\sounds\AirHorn.ogg]])
 			LSM:Register("sound", "Jaina: Beware", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware.ogg]])
 			LSM:Register("sound", "Jaina: Beware (reverb)", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware_with_reverb.ogg]])
