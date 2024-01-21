@@ -22,10 +22,10 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
 local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false) --Дестабилизация
-local warnSpitefulFixate					= mod:NewYouAnnounce(350209, 4) --Злобное сосредоточение
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
+local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, 2, 1, 2) --Злобное преследование
 local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
 local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
@@ -293,6 +293,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerMarkWind:Start(args.destName)
 			self:Schedule(4, startProshlyapationOfMurchal, self)
 		end
+	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
+		specWarnSpitefulFixate:Show()
+		specWarnSpitefulFixate:Play("targetyou")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -332,7 +335,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerMarkWind:Cancel(args.destName)
 		end
 		if self.vb.murchalsProshlyapCount == 1 then
-			self:Schedule(0.2, stopProshlyapationOfMurchal, self)
+			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
 			DBM:Debug("murchalsProshlyapCount == 1", 2)
 		end
 	end
