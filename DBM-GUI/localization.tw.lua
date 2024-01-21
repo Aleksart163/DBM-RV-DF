@@ -2,7 +2,6 @@ if GetLocale() ~= "zhTW" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
---L.MainFrame	= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "三皈依@暗影之月 & Imbav@聖光之願"
@@ -15,9 +14,10 @@ L.OTabDungeons				= "隊伍/單獨"
 L.OTabWorld					= "世界首領"
 L.OTabScenarios				= "事件"
 L.OTabPlugins				= "其他"
-L.OTabPlugins				= "核心插件"
 L.OTabOptions				= "核心選項"
 L.OTabAbout					= "關於"
+
+L.FOLLOWER					= "追隨者"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
 L.TabCategory_CURRENT_SEASON		= "當前賽季"
 
@@ -65,6 +65,7 @@ L.Area_ProfilesSetup		= "DBM配置檔使用指南"
 L.Core_GUI 					= "核心 & 圖形界面"
 L.General 					= "一般DBM核心選項"
 L.EnableMiniMapIcon			= "顯示小地圖圖示"
+--L.EnableCompartmentIcon	= "Show compartment button"
 L.UseSoundChannel			= "設置DBM警告的音效頻道"
 L.UseMasterChannel			= "主聲道"
 L.UseDialogChannel			= "對話聲道"
@@ -433,7 +434,6 @@ L.SpamBlockNoSetIcon				= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame				= "不顯示距離框架"
 L.SpamBlockNoInfoFrame				= "不顯示訊息框架"
 L.SpamBlockNoHudMap					= "不要顯示HudMap"
-
 L.SpamBlockNoYells					= "不送出大喊至頻道"
 L.SpamBlockNoNoteSync				= "不接受註記分享"
 L.SpamBlockAutoGossip				= "不要自動處理對話內容"
@@ -454,7 +454,6 @@ L.PT_Threshold						= "不要播放高於%d秒以上的休息/開戰/自訂倒�
 L.Panel_ReducedInformation			= "減少訊息"
 
 L.Area_SpamFilter_Anounces			= "全局警告禁用及過濾選項"
-L.SpamBlockNoShowAnnounce			= "不顯示任何提示文字或播放警告音效"
 L.SpamBlockNoShowTgtAnnounce		= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
 L.SpamBlockNoTrivialSpecWarnSound	= "如果相對你等級是不重要的內容則不要播放特別提示音效 (播放使用者選擇的標準提示音效替代)"
 
@@ -562,6 +561,7 @@ L.NPAuraSize				= "光環像素大小 (平方): %d"
 L.NPIcon_BarOffSetX 		= "圖示水平偏移：%d"
 L.NPIcon_BarOffSetY 		= "圖示垂直偏移：%d"
 L.NPIcon_GrowthDirection 	= "圖示增長方向"
+L.NPDemo					= "測試 (靠近名條)"
 
 -- Misc
 L.Area_General				= "一般"

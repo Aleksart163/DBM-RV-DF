@@ -2,7 +2,6 @@ if GetLocale() ~= "itIT" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
---L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Tradotto da "
 L.TranslationBy 			= "Kaliad, Mattmagic @ Pozzo dell'Eternità"
@@ -11,6 +10,8 @@ L.WebsiteButton				= "Sito Web"
 
 L.OTabBosses	= "Boss"
 L.OTabOptions	= "Opzioni"
+
+--L.FOLLOWER								= "Follower"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
 L.TabCategory_Options	 	= "Opzioni Generali"
 L.TabCategory_OTHER			= "Altre Mod"
@@ -49,6 +50,7 @@ L.Statistic_BestRank		= "Migliore Grado:"--Maybe not get used, not sure yet, loc
 -- Tab: General Core Options
 L.General 					= "Impostazioni Generali DBM"
 L.EnableMiniMapIcon			= "Mostra pulsante minimappa"
+--L.EnableCompartmentIcon	= "Show compartment button"
 L.UseSoundChannel			= "Imposta canale audio usato da DBM per gli avvisi sonori."
 L.UseMasterChannel			= "Canale audio Principale."
 L.UseDialogChannel			= "Canale audio Dialoghi."

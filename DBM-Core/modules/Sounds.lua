@@ -5,6 +5,9 @@ local tinsert, unpack = table.insert, unpack
 
 local CL = DBM_COMMON_L
 
+---@class DBM
+local DBM = DBM
+
 do
 	local counts = {
 		{	text	= "Alarak",value 	= "Alarak", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Alarak\\", max = 5},
@@ -20,7 +23,8 @@ do
 	}
 	local hasCached = false
 	local cachedTable
-	DBM.Counts = counts -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.Counts = counts
 
 	function DBM:GetCountSounds()
 		if not hasCached then
@@ -44,13 +48,15 @@ do
 	local victory = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
+		{text = "Alarak: Shameful death",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_Shameful_Death.ogg", length=4},
 		{text = "Alarak Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
 		{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
 		{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
 	}
 	local hasCached = false
 	local cachedTable
-	DBM.Victory = victory -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.Victory = victory
 
 	function DBM:GetVictorySounds()
 		if not hasCached then
@@ -108,7 +114,8 @@ do
 
 	local hasCached = false
 	local cachedTable
-	DBM.Defeat = defeat -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.Defeat = defeat
 
 	function DBM:GetDefeatSounds()
 		if not hasCached then
@@ -136,7 +143,7 @@ do
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
 			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 			{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
 		--	{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 			{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
@@ -156,7 +163,8 @@ do
 
 	local hasCached = false
 	local cachedTable
-	DBM.DungeonMusic = dungeonMusic -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.DungeonMusic = dungeonMusic
 
 	function DBM:GetDungeonMusic()
 		if not hasCached then
@@ -205,7 +213,8 @@ do
 
 	local hasCached = false
 	local cachedTable
-	DBM.BattleMusic = battleMusic -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.BattleMusic = battleMusic
 
 	function DBM:GetBattleMusic()
 		if not hasCached then
@@ -230,7 +239,7 @@ do
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
 		{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-		{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+		{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 		{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
 		{text = "Anduin Part 2 B",value = 1417248, length=111},--"sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3" Soundkit: 68230
 		{text = "Bronze Jam",value = 350021, length=116},--"Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3" Soundkit: 118800
@@ -240,7 +249,8 @@ do
 	}
 	local hasCached = false
 	local cachedTable
-	DBM.Music = music -- @Deprecated: Use new utility functions
+	---@deprecated Use new utility functions
+	DBM.Music = music
 
 	function DBM:GetMusic()
 		if not hasCached then

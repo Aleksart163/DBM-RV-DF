@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2557, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240103055958")
+mod:SetRevision("20240110082433")
 mod:SetCreatureID(208478)
 mod:SetEncounterID(2737)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -85,7 +85,7 @@ local allTimers = {
 	--Volcanic Disgorge
 	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0},
 	--Scorchtail Crash
-	[420421] = {19.9, 20, 20, 30, 7.5, 7.4, 10, 7.3, 27.5, 10, 7.5, 7.5, 10, 27, 19.9, 20}
+	[420421] = {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 19.9, 20}
 }
 
 function mod:DisgorgeTarget(targetname, uId)

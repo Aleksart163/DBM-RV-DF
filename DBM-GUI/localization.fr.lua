@@ -2,7 +2,6 @@ if GetLocale() ~= "frFR" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
---L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traduit par "
 L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre/Leybola@EU-Sargeras/Noleen@EU-Hyjal" -- your name here, localizers!
@@ -15,6 +14,8 @@ L.OTabDungeons	= "Groupe/Solo"--1-5 person content (Dungeons, MoP Scenarios, Wor
 L.OTabPlugins	= "Core Plugins"
 L.OTabOptions	= GAMEOPTIONS_MENU
 L.OTabAbout		= "À propos"
+
+--L.FOLLOWER								= "Follower"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
 L.TabCategory_OTHER			= "Autres modules"
 
@@ -59,6 +60,7 @@ L.Area_ProfilesSetup		= "Guide d'utilisation des profiles DBM"
 L.Core_GUI 					= "Core & Interface"
 L.General 					= "Options générales de DBM core"
 L.EnableMiniMapIcon			= "Afficher l'icône de la minicarte"
+--L.EnableCompartmentIcon	= "Show compartment button"
 L.UseSoundChannel			= "Configurer le canal audio utilisé par DBM pour jouer les sons d'alerte"
 L.UseMasterChannel			= "Canal audio Principal"
 L.UseDialogChannel			= "Canal audio Discussion"

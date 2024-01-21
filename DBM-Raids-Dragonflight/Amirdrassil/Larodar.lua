@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2553, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231231044144")
+mod:SetRevision("20240112060931")
 mod:SetCreatureID(208445)
 mod:SetEncounterID(2731)
 mod:SetUsedIcons(6, 7, 8)
@@ -267,7 +267,7 @@ function mod:OnCombatStart(delay)
 		timerBlazingThornsCD:Start(30.7-delay, 1)
 		timerScorchingRootsCD:Start(37.3-delay, 1)
 	end
-	timerRagingInfernoCD:Start(90.5-delay, 1)
+	timerRagingInfernoCD:Start(90.3-delay, 1)
 end
 
 function mod:OnTimerRecovery()
