@@ -29,16 +29,18 @@ mod:RegisterEventsInCombat(
 
 --local specWarnInfusedStrikes					= mod:NewSpecialWarningStack(361966, nil, 8, nil, nil, 1, 6)
 local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2)
-local yellFrostBomb								= mod:NewYell(386781)
-local yellFrostBombFades						= mod:NewShortFadesYell(386781)
 local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 1, 2)
-local yellIcyDevastator							= mod:NewYell(387151)
 local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, nil, 3, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(387150, nil, nil, nil, 1, 8)
 
 local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3)--15-24 (mod should account for two  mechanics that cause these delays)
 local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3)
-local timerAbsoluteZeroCD						= mod:NewNextTimer(60, 388008, nil, nil, nil, 2)
+local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5)
+local timerAbsoluteZeroCD						= mod:NewNextTimer(60, 388008, nil, nil, nil, 7, nil, nil, nil, 2, 5)
+
+local yellFrostBomb								= mod:NewYell(386781, nil, nil, nil, "YELL")
+local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL")
+local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(8, 387151)
 
@@ -86,6 +88,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 388008 then
 		specWarAbsoluteZero:Show(vaultRuin)
 		specWarAbsoluteZero:Play("findshelter")
+		timerAbsoluteZero:Start()
 		timerAbsoluteZeroCD:Start()
 		timerFrostBombCD:Restart(12.2)
 		timerIcyDevastatorCD:Restart(self:IsMythicPlus() and 19.6 or 23.2)
