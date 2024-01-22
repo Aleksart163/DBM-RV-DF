@@ -12365,7 +12365,7 @@ function smartAss(msg, arg, target)
     end
 end
 
-local function ProshlyapationLittleWigs(self, event, arg1, arg2)
+local function startProshlyapationRinaBaka(self, event, arg1, arg2)
 	local message = arg1
 	local sender = arg2
 	if string.find(arg2, "-") then
@@ -12403,7 +12403,53 @@ frame:RegisterEvent("CHAT_MSG_INSTANCE_CHAT")
 frame:RegisterEvent("CHAT_MSG_INSTANCE_CHAT_LEADER")
 frame:RegisterEvent("CHAT_MSG_RAID")
 frame:RegisterEvent("CHAT_MSG_RAID_LEADER")
-frame:SetScript("OnEvent", ProshlyapationLittleWigs)
+frame:SetScript("OnEvent", startProshlyapationRinaBaka)
+
+local function proshlyapSoulburnin(self, event, msg)
+	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
+			startProshlyapationOfMurchal(true)
+		end
+	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
+			startProshlyapationOfMurchal(true, true)
+		end
+	elseif event == "CHAT_MSG_GUILD" then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOPG") then
+			startProshlyapationOfMurchal(true, true, true)
+		end
+    end
+end
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("CHAT_MSG_PARTY")
+f:RegisterEvent("CHAT_MSG_PARTY_LEADER")
+f:RegisterEvent("CHAT_MSG_RAID")
+f:RegisterEvent("CHAT_MSG_RAID_LEADER")
+f:RegisterEvent("CHAT_MSG_GUILD")
+
+f:SetScript("OnEvent", proshlyapSoulburnin)
+
+function startProshlyapationOfMurchal(force, raid, guild) --Прошляпанное очко Мурчаля Прошляпенко [✔]
+	for bag = 0, NUM_BAG_SLOTS do
+		local numSlots = C_Container.GetContainerNumSlots(bag)
+		local proshlyapOchkaMurchalya = nil
+		for slot = 1, numSlots do
+			if C_Container.GetContainerItemID(bag, slot) == 180653 then
+				proshlyapOchkaMurchalya = C_Container.GetContainerItemLink(bag, slot)
+				if force then
+					if guild then
+						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "GUILD")
+					elseif raid then
+						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "RAID")
+					else
+						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "PARTY")
+					end
+				end
+			end
+		end
+	end
+end
 
 -----------------
 --  Scheduler  --
