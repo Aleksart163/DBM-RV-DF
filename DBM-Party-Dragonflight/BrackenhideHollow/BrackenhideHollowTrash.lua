@@ -102,7 +102,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnRagestorm:Show()
 		specWarnRagestorm:Play("justrun")
 	elseif spellId == 367500 then
-		if self.Options.SpecWarn367500interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnHidiousCackle:Show(args.sourceName)
 			specWarnHidiousCackle:Play("kickcast")
 		elseif self:AntiSpam(3, 7) then
@@ -145,14 +145,14 @@ function mod:SPELL_CAST_START(args)
 			warnDecayClaws:Show()
 		end
 	elseif spellId == 374544 then
-		if self.Options.SpecWarn374544interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnBurstofDecay:Show(args.sourceName)
 			specWarnBurstofDecay:Play("kickcast")
 		elseif self:AntiSpam(3, 7) then
 			warnBurstofDecay:Show()
 		end
 	elseif spellId == 385029 then
-		if self.Options.SpecWarn385029interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnScreech:Show(args.sourceName)
 			specWarnScreech:Play("kickcast")
 		elseif self:AntiSpam(3, 7) then
