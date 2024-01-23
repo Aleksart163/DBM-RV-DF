@@ -74,7 +74,7 @@ end
 
 ---@class DBM
 local DBM = {
-	Revision = parseCurseDate("20240117213246"),
+	Revision = parseCurseDate("20240120180000"),
 }
 _G.DBM = DBM
 
@@ -84,7 +84,7 @@ local PForceDisable
 -- The string that is shown as version
 if isRetail then
 	DBM.DisplayVersion = "10.2.18"
-	DBM.ReleaseRevision = releaseDate(2024, 1, 17) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2024, 1, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 9--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
 	DBM.DisplayVersion = "1.15.9 alpha"
