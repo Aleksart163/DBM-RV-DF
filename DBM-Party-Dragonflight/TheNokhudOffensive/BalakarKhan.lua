@@ -68,7 +68,7 @@ local timerStaticSpearCD						= mod:NewCDTimer(38.3, 376864, nil, nil, nil, 3)
 local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3)
 local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--CD used for both Condutive and Thunder
 
-local yellConductiveStrike						= mod:NewYell(376827, nil, nil, nil, "YELL")
+local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL")
 
 mod.vb.addsLeft = 0
 mod.vb.comboCount = 0
@@ -163,7 +163,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnStaticSpear:Show(args.destName)
 		end
 	elseif spellId == 376827 then
-		if self:CheckDispelFilter("magic") then
+		if self:IsSpellCaster() then
 			specWarnConductiveStrikeDispel:Show(args.destName)
 			specWarnConductiveStrikeDispel:Play("helpdispel")
 		end

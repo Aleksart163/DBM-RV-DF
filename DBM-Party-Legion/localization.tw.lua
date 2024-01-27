@@ -132,7 +132,6 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
-	SkovaldRP		= "我是神御之王斯寇瓦德",
 	SkovaldRPTwo	= "我就只好從他們的屍體上搶了！"
 })
 
@@ -150,8 +149,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		="不是耀眼風暴循環: %s。8秒後重新檢查。",
-	OdynRP					= "了不起！"
+	tempestModeMessage		="不是耀眼風暴循環: %s。8秒後重新檢查。"
 })
 
 -----------------------
@@ -166,6 +164,14 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	AGSkovaldTrash	= "當與斯寇瓦德之前的四王互動時，自動選擇對話開始戰鬥。",
 	AGStartOdyn		= "當與歐丁互動時自動選擇對話開始戰鬥"
+})
+
+L:SetMiscLocalization({
+	RPSolsten	= "凡人，你們的出現玷汙了這場儀式！",
+	RPSolsten2 	= "海爾珈…風暴之怒任憑你操控！",
+	RPOlmyr 	= "不許你妨礙海爾珈的晉升！",
+	RPOlmyr2 	= "海爾珈，聖光之力永遠與你同在！",
+	RPOdyn 		= "了不起！我從沒想過有人能抵抗華爾拉亞的力量…而那個人現在就站在這裡。"
 })
 
 -----------------------

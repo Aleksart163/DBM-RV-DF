@@ -20,7 +20,7 @@ local warnBreath					= mod:NewCountAnnounce(188404, 4)
 local warnDancingBlade				= mod:NewTargetAnnounce(193235, 3) --Танцующий клинок
 
 local specWarnSweep					= mod:NewSpecialWarningDefensive(193092, "Tank", nil, nil, 3, 2) --Рог доблести
-local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, "-Tank", nil, nil, 3, 2) --Рог доблести
+local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2) --Рог доблести
 local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
 local specWarnDancingBlade2			= mod:NewSpecialWarningYou(193235, nil, nil, nil, 3, 2) --Танцующий клинок
 

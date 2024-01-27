@@ -29,7 +29,6 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25365))
 local warnFlamespit								= mod:NewTargetNoFilterAnnounce(381605, 3)
 local warnInfernoCore							= mod:NewYouAnnounce(381862, 4)
 
-local yellFlamespit								= mod:NewYell(381605)
 local specWarnInfernoCore						= mod:NewSpecialWarningMoveAway(381862, nil, nil, nil, 1, 2)
 local specWarnRoaringFirebreath					= mod:NewSpecialWarningDodge(381525, nil, nil, nil, 2, 2)
 
@@ -48,7 +47,8 @@ local timerWindsofChangeCD						= mod:NewCDCountTimer(19.3, 381517, 227878, nil,
 local timerStormslamCD							= mod:NewCDTimer(17, 381512, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
 local timerCloudburstCD							= mod:NewCDTimer(19.3, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
 
-local yellStormslam								= mod:NewYell(381512, nil, nil, nil, "YELL")
+local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
+local yellStormslam								= mod:NewShortYell(381512, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(381862, false)--Infernocore
 
@@ -147,9 +147,11 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 381515 then
-		if self:CheckDispelFilter("magic") then
-			specWarnStormslamDispel:Show(args.destName)
-			specWarnStormslamDispel:Play("helpdispel")
+		if not args:IsPlayer() then
+			if self:IsSpellCaster() then
+				specWarnStormslamDispel:Show(args.destName)
+				specWarnStormslamDispel:Play("helpdispel")
+			end
 		end
 	elseif spellId == 181089 then
 		self:SetStage(2)

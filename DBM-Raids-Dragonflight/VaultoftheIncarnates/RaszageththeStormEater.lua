@@ -56,15 +56,16 @@ local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 37859
 local yellStaticCharge							= mod:NewShortPosYell(381615, 37859)
 local yellStaticChargeFades						= mod:NewIconFadesYell(381615, 37859)
 local specWarnVolatileCurrent					= mod:NewSpecialWarningMoveAwayCount(388643, nil, 384738, nil, 2, 2)--"Sparks"
-local specWarnElectrifiedJaws					= mod:NewSpecialWarningDefensive(395906, nil, nil, nil, 3, 2)
-local specWarnElectrifiedJawsOther				= mod:NewSpecialWarningTaunt(395906, nil, nil, nil, 1, 2)
+local specWarnElectrifiedJaws					= mod:NewSpecialWarningDefensive(395906, nil, nil, nil, 3, 2) --Электрические челюсти
+local specWarnElectrifiedJawsOther				= mod:NewSpecialWarningTaunt(395906, nil, nil, nil, 1, 2) --Электрические челюсти
 local specWarnLightingBreath					= mod:NewSpecialWarningDodgeCount(377594, nil, 18357, nil, 2, 2)
 
 local timerHurricaneWingCD						= mod:NewCDCountTimer(35, 377612, nil, nil, nil, 2)
+local timerHurricaneWing						= mod:NewCastTimer(6, 377612, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3)
 local timerStaticChargeCD						= mod:NewCDCountTimer(35, 381615, 167180, nil, nil, 3)--"Bombs"
 local timerStaticCharge							= mod:NewCastTimer(35, 381615, 167180, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--"Bombs"
 local timerVolatileCurrentCD					= mod:NewCDCountTimer(47, 388643, 384738, nil, nil, 3)
-local timerElectrifiedJawsCD					= mod:NewCDCountTimer(25, 395906, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerElectrifiedJawsCD					= mod:NewCDCountTimer(25, 395906, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Электрические челюсти
 local timerLightningBreathCD					= mod:NewCDCountTimer(35, 377594, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
 mod:AddSetIconOption("SetIconOnStaticCharge", 381615, true, 0, {1, 2, 3})
@@ -298,6 +299,14 @@ local allTimers = {
 	},
 }
 
+function mod:ElectrifiedJawsTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnElectrifiedJaws:Show()
+		specWarnElectrifiedJaws:Play("defensive")
+	end
+end
+
 local function breathCorrect(self)
 	DBM:Debug("Boss skipped a breath, scheduling next one")
 	self:Unschedule(breathCorrect)
@@ -394,6 +403,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurricaneWingCD:Start(timer, self.vb.energyCount+1)
 		end
+		timerHurricaneWing:Start()
 	elseif spellId == 388643 then
 		self.vb.currentCount = self.vb.currentCount + 1
 		specWarnVolatileCurrent:Show(self.vb.currentCount)
@@ -404,10 +414,11 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 377658 then
 		self.vb.tankCount = self.vb.tankCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+--[[		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnElectrifiedJaws:Show()
 			specWarnElectrifiedJaws:Play("defensive")
-		end
+		end]]
+		self:BossTargetScanner(args.sourceGUID, "ElectrifiedJawsTarget", 0.1, 2)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
 		if timer then
 			timerElectrifiedJawsCD:Start(timer, self.vb.tankCount+1)

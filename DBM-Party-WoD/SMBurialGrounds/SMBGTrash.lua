@@ -39,7 +39,7 @@ local timerVoidEruptionsCD					= mod:NewCDNPTimer(19.4, 394512, nil, nil, nil, 3
 local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-local yellShadowWordFrailty					= mod:NewYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
+local yellShadowWordFrailty					= mod:NewShortYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
 
 --local playerName = UnitName("player")
 
@@ -104,13 +104,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnShadowWordFrailty:Show()
 			specWarnShadowWordFrailty:Play("targetyou")
 			yellShadowWordFrailty:Yell()
-		elseif self:CheckDispelFilter("magic") then
-			specWarnShadowWordFrailtyDispel:Show(args.destName)
-			specWarnShadowWordFrailtyDispel:Play("helpdispel")
+		else
+			if self:IsSpellCaster() then
+				specWarnShadowWordFrailtyDispel:Show(args.destName)
+				specWarnShadowWordFrailtyDispel:Play("helpdispel")
+			end
 		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 --[[
 function mod:SPELL_AURA_REMOVED(args)

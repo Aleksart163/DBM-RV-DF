@@ -149,6 +149,14 @@ L:SetGeneralLocalization({
 	name =	"Halls of Valor Trash"
 })
 
+L:SetMiscLocalization({
+	RPSolsten 	= "State profanando il rituale con la vostra presenza, mortali!",
+	RPSolsten2 	= "Hyrja... la furia della tempesta è al tuo comando!",
+	RPOlmyr 	= "Non fermerete l'ascensione di Hyrja!",
+	RPOlmyr2 	= "La Luce brilla in eterno dentro di te, Hyrja!",
+	RPOdyn 		= "Davvero impressionante! Non avrei mai pensato di incontrare qualcuno con la stessa forza dei Valarjar... Eppure, eccovi qui."
+})
+
 -----------------------
 -- <<<Neltharion's Lair>>> --
 -----------------------

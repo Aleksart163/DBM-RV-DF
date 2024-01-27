@@ -132,7 +132,6 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
-	SkovaldRP		= "안 돼! 나도 내 가치를 증명했다, 오딘. 나는 신왕 스코발드다! 나의 아이기스에 어찌 감히 필멸자가 손을 댄단 말이냐!",
 	SkovaldRPTwo	= "이 가짜 용사들이 아이기스를 포기하지 않는다면... 목숨을 포기해야 할 거다!"
 })
 
@@ -150,8 +149,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		=	"폭풍우 시퀀스 아님: %s. 8초 후 다시 검사합니다.",
-	OdynRP					= "정말 놀랍군! 발라리아르의 힘에 견줄 만큼 강력한 자를 보게 될 줄은 몰랐거늘, 이렇게 너희가 나타나다니."
+	tempestModeMessage		=	"폭풍우 시퀀스 아님: %s. 8초 후 다시 검사합니다."
 })
 
 -----------------------
@@ -166,6 +164,14 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	AGSkovaldTrash	= "스코발드 앞 정예 4마리에 말을 걸면 전투 시작 대화 자동 선택",
 	AGStartOdyn		= "오딘에 말을 걸면 전투 시작 대화 자동 선택"
+})
+
+L:SetMiscLocalization({
+	RPSolsten 	= "의식에 방해만 되는 것들 같으니라고!",
+	RPSolsten2 	= "히리아... 이제 폭풍의 격노를 부릴 수 있게 되었다!",
+	RPOlmyr 	= "히리아의 승천을 막을 순 없다!",
+	RPOlmyr2 	= "히리아, 빛이 네 안에서 영원히 빛나리라!",
+	RPOdyn 		= "정말 놀랍군! 발라리아르의 힘에 견줄 만큼 강력한 자를 보게 될 줄은 몰랐거늘, 이렇게 너희가 나타나다니."
 })
 
 -----------------------

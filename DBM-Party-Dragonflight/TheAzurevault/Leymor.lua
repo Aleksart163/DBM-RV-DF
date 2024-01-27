@@ -27,7 +27,6 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnLeylineSprouts						= mod:NewSpellAnnounce(374364, 3)
-local warnExplosiveEruption						= mod:NewTargetNoFilterAnnounce(374567, 4)
 
 local specWarnExplosiveEruption					= mod:NewSpecialWarningYouPos(374567, nil, nil, nil, 1, 2)
 local yellExplosiveEruption						= mod:NewShortPosYell(374567)
@@ -59,7 +58,7 @@ function mod:OnCombatStart(delay)
 	timerInfusedStrikeCD:Start(10.1-delay)
 	timerEruptingFissureCD:Start(20.2-delay)
 	timerExplosiveEruptionCD:Start(30.7-delay)
-	timerConsumingStompCD:Start(45.3-delay)
+	timerConsumingStompCD:Start(45-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -105,8 +104,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnExplosiveEruption:Play("mm"..icon)
 			yellExplosiveEruption:Yell(icon, icon)
 			yellExplosiveEruptionFades:Countdown(spellId, nil, icon)
-		else
-			warnExplosiveEruption:CombinedShow(0.5, args.destName)
 		end
 		self.vb.DebuffIcon = self.vb.DebuffIcon + 1
 	end

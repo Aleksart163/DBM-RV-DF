@@ -32,7 +32,6 @@ local warnFelblazeRush				= mod:NewTargetNoFilterAnnounce(193659, 2)
 local warnClaimAegis				= mod:NewSpellAnnounce(194112, 2)
 
 local specWarnFelRush				= mod:NewSpecialWarningYou(193659, nil, nil, nil, 1, 2)
-local yellFelblazeRush				= mod:NewYell(193659)
 local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil, nil, 1, 2)
 local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2)
 local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
@@ -41,6 +40,8 @@ local timerRP						= mod:NewRPTimer(34.4)
 local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
 local timerSavageBladeCD			= mod:NewCDTimer(19, 193668, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--23 unless delayed by claim aegis or ragnarok
 local timerRagnarokCD				= mod:NewCDTimer(63.1, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+
+local yellFelblazeRush				= mod:NewYell(193659, nil, nil, nil, "YELL")
 
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end
@@ -99,7 +100,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 193783 and args:IsDestTypePlayer() then
+	if spellId == 193783 and args:IsDestTypePlayer() and self:AntiSpam(2, 2) then
 		warnAegis:Show(args.destName)
 	end
 end
@@ -113,9 +114,7 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
-	if (msg == L.SkovaldRP or msg:find(L.SkovaldRP)) then--Pre hotfix original start point
-		self:SendSync("SkovaldRP")--Syncing to help unlocalized clients
-	elseif (msg == L.SkovaldRPTwo or msg:find(L.SkovaldRPTwo)) then--Post hotfix, this is only line he does
+	if (msg == L.SkovaldRPTwo or msg:find(L.SkovaldRPTwo)) then--Post hotfix, this is only line he does
 		self:SendSync("SkovaldRPTwo")--Syncing to help unlocalized clients
 	end
 end
@@ -123,9 +122,7 @@ end
 --"<5.00 03:10:33> [CHAT_MSG_MONSTER_YELL] If these false champions will not yield the aegis by choice... then they will surrender it in death!#God-King Skovald###Omegal##0#0##
 --"<15.54 03:10:43> [ENCOUNTER_START] 1808#God-King Skovald#8#5", -- [22]
 function mod:OnSync(msg, targetname)
-	if msg == "SkovaldRP" and self:AntiSpam(10, 2) then
-		timerRP:Start()
-	elseif msg == "SkovaldRPTwo" and self:AntiSpam(10, 2) then
+	if msg == "SkovaldRPTwo" and self:AntiSpam(10, 2) then
 		timerRP:Stop()
 		timerRP:Start(10)
 	end

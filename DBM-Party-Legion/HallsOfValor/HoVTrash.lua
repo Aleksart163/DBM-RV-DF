@@ -13,6 +13,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 215430",
 	"SPELL_AURA_REMOVED 215430",
 	"UNIT_DIED",
+	"CHAT_MSG_MONSTER_YELL",
 	"GOSSIP_SHOW"
 )
 
@@ -31,11 +32,8 @@ local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2,
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
 local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
 local specWarnCrackle				= mod:NewSpecialWarningYou(199805, nil, nil, nil, 1, 2)
-local yellCrackle					= mod:NewShortYell(199805)
 local specWarnCracklingStorm		= mod:NewSpecialWarningYou(198892, nil, nil, nil, 1, 2)
-local yellCracklingStorm			= mod:NewShortYell(198892)
 local specWarnThunderstrike			= mod:NewSpecialWarningMoveAway(215430, nil, nil, nil, 1, 2)
-local yellThunderstrike				= mod:NewShortYell(215430)
 local specWarnThunderousBolt		= mod:NewSpecialWarningInterrupt(198595, "HasInterrupt", nil, nil, 1, 2)
 local specWarnHolyRadiance			= mod:NewSpecialWarningInterrupt(215433, "HasInterrupt", nil, nil, 1, 2)
 local specWarnRuneOfHealing			= mod:NewSpecialWarningInterrupt(198934, false, nil, nil, 1, 2)--Mob can be moved out of it so Holy more important spell to kick
@@ -50,6 +48,11 @@ local timerCleansingFlameCD			= mod:NewCDNPTimer(6.1, 192563, nil, nil, nil, 4, 
 local timerBlastofLightCD			= mod:NewCDNPTimer(18, 191508, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--May be lower
 local timerEyeofStormCD				= mod:NewCDNPTimer(25, 200901, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3)--25-30 based on searing light casts since searing light has 6sec ICD lockout
+local timerRP						= mod:NewRPTimer(28.5)
+
+local yellCrackle					= mod:NewShortYell(199805)
+local yellCracklingStorm			= mod:NewShortYell(198892)
+local yellThunderstrike				= mod:NewShortYell(215430)
 
 mod:AddBoolOption("AGSkovaldTrash", true)
 mod:AddBoolOption("AGStartOdyn", true)
@@ -146,11 +149,12 @@ function mod:SPELL_CAST_START(args)
 		timerSanctifyCD:Start(nil, args.sourceGUID)
 	--2/22 01:53:53.948  SPELL_CAST_START,Creature-0-3019-1477-12381-97219-000075B856,"Solsten",0x10a48,0x0,0000000000000000,nil,0x80000000,0x80000000,200901,"Eye of the Storm",0x8
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 97219 then
-		if self:AntiSpam(2, "EyeofStorm") then
+--[[		if self:AntiSpam(2, "EyeofStorm") then
 			specWarnEyeofStorm:Show(eyeShortName)
 			specWarnEyeofStorm:Play("findshelter")
-		end
+		end]]
 		timerEyeofStormCD:Start(nil, args.sourceGUID)
+		self:SendSync("EyeofStorm1")
 	elseif spellId == 192288 then
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnSearingLight:Show(args.sourceName)
@@ -170,8 +174,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 200901 then
-		specWarnEyeofStorm2:Show()
-		specWarnEyeofStorm2:Play("defensive")
+		self:SendSync("EyeofStorm2")
 	end
 end
 
@@ -226,6 +229,42 @@ function mod:GOSSIP_SHOW()
 			self:SelectGossip(gossipOptionID)
 		elseif self.Options.AGStartOdyn and gossipOptionID == 44910 then -- Odyn
 			self:SelectGossip(gossipOptionID, true)
+			self:SendSync("RPOdyn2")
+		end
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.RPOdyn then
+		self:SendSync("RPOdyn1")
+	elseif msg == L.RPSolsten then
+		self:SendSync("RPSolsten1")
+	elseif msg == L.RPSolsten2 then
+		self:SendSync("RPSolsten2")
+		timerEyeofStormCD:Stop(args.destGUID)
+	elseif msg == L.RPOlmyr then
+		timerSanctifyCD:Start(9)
+	elseif msg == L.RPOlmyr2 then
+		timerSanctifyCD:Stop(args.destGUID)
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "RPOdyn2" then
+		timerRP:Start(3)
+	elseif msg == "RPOdyn1" and self:AntiSpam(10, 2) then
+		timerRP:Start(10.5)
+	elseif msg == "RPSolsten1" then
+		timerEyeofStormCD:Start(11)
+	elseif msg == "RPSolsten2" then
+		timerEyeofStormCD:Stop()
+	elseif msg == "EyeofStorm1" and self:AntiSpam(2, 2) then
+		specWarnEyeofStorm:Show(eyeShortName)
+		specWarnEyeofStorm:Play("findshelter")
+	elseif msg == "EyeofStorm2" then
+		if not UnitIsDeadOrGhost("player") then
+			specWarnEyeofStorm2:Show()
+			specWarnEyeofStorm2:Play("defensive")
 		end
 	end
 end

@@ -131,7 +131,6 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
-	SkovaldRP		= "No! I, too, have proved my worth, Odyn. I am God-King Skovald! These mortals dare not challenge my claim to the aegis!",--Keeping around in case it's still there in non M+
 	SkovaldRPTwo	= "If these false champions will not yield the aegis by choice... then they will surrender it in death!"
 })
 
@@ -149,8 +148,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		= "Not tempest sequence: %s. Rechecking in 8 seconds.",
-	OdynRP					= "Most impressive! I never thought I would meet anyone who could match the Valarjar's strength... and yet here you stand."
+	tempestModeMessage		= "Not tempest sequence: %s. Rechecking in 8 seconds."
 })
 
 -----------------------
@@ -165,6 +163,14 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	AGSkovaldTrash	= "Auto select gossip to start fight when interacting with 4 elites before Skovald",
 	AGStartOdyn		= "Auto select gossip to start fight when interacting with Odyn"
+})
+
+L:SetMiscLocalization({
+	RPSolsten 	= "You sully this ritual with your presence, mortals!",
+	RPSolsten2 	= "Hyrja... the fury of the storm is yours to command!",
+	RPOlmyr 	= "You will not deny Hyrja's ascendance!",
+	RPOlmyr2 	= "The Light shines eternal in you, Hyrja!",
+	RPOdyn 		= "Most impressive! I never thought I would meet anyone who could match the Valarjar's strength... and yet here you stand."
 })
 
 -----------------------

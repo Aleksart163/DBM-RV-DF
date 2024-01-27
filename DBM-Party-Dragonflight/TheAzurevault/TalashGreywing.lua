@@ -29,20 +29,20 @@ mod:RegisterEventsInCombat(
 
 --local specWarnInfusedStrikes					= mod:NewSpecialWarningStack(361966, nil, 8, nil, nil, 1, 6)
 local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2)
-local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 1, 2)
-local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, nil, 3, 2)
+local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 4, 2) --Морозный опустошитель
+local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, nil, 3, 2) --Абсолютный нуль
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(387150, nil, nil, nil, 1, 8)
 
 local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3)--15-24 (mod should account for two  mechanics that cause these delays)
-local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3)
-local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5)
-local timerAbsoluteZeroCD						= mod:NewNextTimer(60, 388008, nil, nil, nil, 7, nil, nil, nil, 2, 5)
+local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3) --Морозный опустошитель
+local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Абсолютный нуль
+local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Абсолютный нуль
 
 local yellFrostBomb								= mod:NewYell(386781, nil, nil, nil, "YELL")
 local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL")
-local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL")
+local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
 
-mod:AddRangeFrameOption(8, 387151)
+mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
 
 
 local vaultRuin = DBM:GetSpellInfo(388072)
@@ -58,8 +58,8 @@ end
 
 function mod:OnCombatStart(delay)
 	timerFrostBombCD:Start(3.6-delay)
-	timerIcyDevastatorCD:Start(10-delay)--14.7 now?
-	timerAbsoluteZeroCD:Start(21.8-delay)
+	timerIcyDevastatorCD:Start(15-delay) --Морозный опустошитель 14.7 now?
+	timerAbsoluteZeroCD:Start(26.7-delay) --Абсолютный нуль
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -90,8 +90,8 @@ function mod:SPELL_CAST_START(args)
 		specWarAbsoluteZero:Play("findshelter")
 		timerAbsoluteZero:Start()
 		timerAbsoluteZeroCD:Start()
-		timerFrostBombCD:Restart(12.2)
-		timerIcyDevastatorCD:Restart(self:IsMythicPlus() and 19.6 or 23.2)
+		timerFrostBombCD:Restart(14)
+		timerIcyDevastatorCD:Restart(self:IsMythicPlus() and 24.6 or 23.2)
 	end
 end
 

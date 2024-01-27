@@ -149,6 +149,24 @@ L:SetGeneralLocalization({
 	name =	"Enemigos menores"
 })
 
+if GetLocale() == "esES" then
+L:SetMiscLocalization({
+	RPSolsten 	= "¡Vuestra presencia mancilla el ritual, mortales!",
+	RPSolsten2 	= "Hyrja... ¡la furia de la tormenta está a tus órdenes!",
+	RPOlmyr 	= "¡No impediréis la ascensión de Hyrja!",
+	RPOlmyr2 	= "Hyrja, ¡la Luz brilla eternamente en ti!",
+	RPOdyn 		= "Impresionante. Nunca pensé que encontraría a alguien capaz de igualar la fuerza de los Valarjar... pero aquí estáis."
+})
+else
+L:SetMiscLocalization({
+	RPSolsten 	= "¡Ensucian el ritual con su presencia, mortales!",
+	RPSolsten2 	= "Hyrja... ¡la furia de las tormentas está bajo tus órdenes!",
+	RPOlmyr 	= "¡No negarás la ascensión de Hyrja!",
+	RPOlmyr2 	= "¡La Luz brilla eternamente en ti, Hyrja!",
+	RPOdyn 		= "¡Qué impresionante! Nunca imaginé conocer a alguien que pudiera igualar la fuerza de Valarjar... y entonces, apareces tú."
+})
+end
+
 ---------------------------
 -- Guarida de Neltharion --
 ---------------------------

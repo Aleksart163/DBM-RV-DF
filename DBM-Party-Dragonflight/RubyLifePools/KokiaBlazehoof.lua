@@ -34,9 +34,8 @@ local warnInferno								= mod:NewCastAnnounce(384823, 3)
 local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8)
 local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8)
 
-local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 1, 2)
+local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 3, 2)
 local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
-local yellMoltenBoulder							= mod:NewYell(372107)
 local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitch(372863, nil, nil, nil, 1, 2)
 local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, 2, 1, 2)
 local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2)
@@ -45,6 +44,8 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 
 local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerMoltenBoulderCD						= mod:NewCDTimer(16.9, 372107, nil, nil, nil, 3)
 local timerRitualofBlazebindingCD				= mod:NewCDTimer(33.9, 372863, nil, nil, nil, 1)
+
+local yellMoltenBoulder							= mod:NewYell(372107)
 
 local castsPerGUID = {}
 

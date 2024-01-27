@@ -45,10 +45,10 @@ function mod:OrbTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
-	timerSummonDraconicImageCD:Start(3.5-delay)
-	timerArcaneCleaveCD:Start(5-delay)
-	timerAncientOrbCD:Start(10.1-delay)
-	timerOverwhelmingenergyCD:Start(38.7-delay)
+	timerSummonDraconicImageCD:Start(3-delay)
+	timerArcaneCleaveCD:Start(6-delay)
+	timerAncientOrbCD:Start(11-delay)
+	timerOverwhelmingenergyCD:Start(33-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -83,8 +83,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 384132 then--Overwhelming Energy
 		timerSummonDraconicImageCD:Start(4.7)--4.7-5.7
-		timerArcaneCleaveCD:Start(7.1)--7.1-8.1
-		timerAncientOrbCD:Start(12)--12-13
-		timerOverwhelmingenergyCD:Start(70)
+		timerArcaneCleaveCD:Start(8)--7.1-8.1
+		timerAncientOrbCD:Start(13)--12-13
+		timerOverwhelmingenergyCD:Start(64.5)
 	end
 end
