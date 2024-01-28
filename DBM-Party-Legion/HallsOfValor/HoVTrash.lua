@@ -146,14 +146,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 192158 then--P1 2 adds
 		specWarnSanctify:Show()
 		specWarnSanctify:Play("watchorb")
-		timerSanctifyCD:Start(nil, args.sourceGUID)
+		timerSanctifyCD:Start()
 	--2/22 01:53:53.948  SPELL_CAST_START,Creature-0-3019-1477-12381-97219-000075B856,"Solsten",0x10a48,0x0,0000000000000000,nil,0x80000000,0x80000000,200901,"Eye of the Storm",0x8
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 97219 then
 --[[		if self:AntiSpam(2, "EyeofStorm") then
 			specWarnEyeofStorm:Show(eyeShortName)
 			specWarnEyeofStorm:Play("findshelter")
 		end]]
-		timerEyeofStormCD:Start(nil, args.sourceGUID)
+		timerEyeofStormCD:Start()
 		self:SendSync("EyeofStorm1")
 	elseif spellId == 192288 then
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
@@ -216,9 +216,9 @@ function mod:UNIT_DIED(args)
 	elseif cid ==  95842 then--Valjar Thundercaller
 		timerThunderousBoltCD:Stop(args.destGUID)
 	elseif cid == 97219 then--Solsten
-		timerEyeofStormCD:Stop(args.destGUID)
+		timerEyeofStormCD:Stop()
 	elseif cid == 97202 then--Olmyr
-		timerSanctifyCD:Stop(args.destGUID)
+		timerSanctifyCD:Stop()
 	end
 end
 
@@ -241,11 +241,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:SendSync("RPSolsten1")
 	elseif msg == L.RPSolsten2 then
 		self:SendSync("RPSolsten2")
-		timerEyeofStormCD:Stop(args.destGUID)
+		timerEyeofStormCD:Stop()
 	elseif msg == L.RPOlmyr then
 		timerSanctifyCD:Start(9)
 	elseif msg == L.RPOlmyr2 then
-		timerSanctifyCD:Stop(args.destGUID)
+		timerSanctifyCD:Stop()
 	end
 end
 
