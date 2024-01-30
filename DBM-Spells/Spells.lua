@@ -978,18 +978,16 @@ function mod:SPELL_RESURRECT(args)
 		end
 	end
 end]]
---[[
+
 function mod:GOSSIP_SHOW()
-	if not self.Options.Enabled then return end
-	local guid = UnitGUID("npc")
-	if not guid then return end
-	local cid = self:GetCIDFromGUID(guid)
-	if cid == 113455 or cid == 113457 or cid == 109409 then -- Жалкие ночнорождённые
-		if select('#', GetGossipOptions()) > 0 then
-			SelectGossipOption(1, "", true)
+	local gossipOptionID = self:GetGossipID()
+	if gossipOptionID then
+		--Гаргток
+		if gossipOptionID == 55252 then
+			self:SelectGossip(gossipOptionID)
 		end
 	end
-end]]
+end
 
 function mod:PLAYER_DEAD()
 	if not self.Options.Enabled then return end
