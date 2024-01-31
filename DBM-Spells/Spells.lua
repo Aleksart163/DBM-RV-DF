@@ -983,7 +983,7 @@ function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
 		--Гаргток
-		if gossipOptionID == 55252 or gossipOptionID == 55251 then
+		if gossipOptionID == 55252 or gossipOptionID == 55251 or gossipOptionID == 106806 then
 			self:SelectGossip(gossipOptionID)
 		end
 	end
