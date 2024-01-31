@@ -73,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 392635 then --Дробящее дыхание
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "PulverizingBreathTarget", 0.1, 8)
 	elseif spellId == 393783 then --Дыхание магмой
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "MagmaBreathTarget", 0.1, 8)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "MagmaBreathTarget", 0.1, 2)
 	elseif spellId == 392280 then --Каменный обстрел
 		specWarnStoneBarrage:Show()
 		specWarnStoneBarrage:Play("defensive")
