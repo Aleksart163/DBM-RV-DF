@@ -38,9 +38,8 @@ local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3)
 local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Абсолютный нуль
 local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Абсолютный нуль
 
-local yellFrostBomb								= mod:NewYell(386781, nil, nil, nil, "YELL")
 local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL")
-local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
+local yellIcyDevastator							= mod:NewShortYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
 
 mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
 
@@ -101,7 +100,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnFrostBomb:Show()
 			specWarnFrostBomb:Play("runout")
-			yellFrostBomb:Yell()
 			yellFrostBombFades:Countdown(spellId)
 		end
 	end
