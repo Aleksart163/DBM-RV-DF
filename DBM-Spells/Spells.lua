@@ -346,7 +346,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				local player = GetUnitName("player")
 			end
 			if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
+				prepareMessage(self, "premsg_Spells_primalRage", spellId, player)
 			end
 			DBM:Debug('Checking proshlyapation of Murchal spell: ' .. tostring(spellId) .. ', name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ' ', 2)
 --[[		else
