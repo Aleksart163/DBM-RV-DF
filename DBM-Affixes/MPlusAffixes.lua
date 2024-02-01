@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231226232556")
+mod:SetRevision("20240201052201")
 mod:SetZone()
 
 mod.noStatistics = true
@@ -220,7 +220,7 @@ function mod:SPELL_CAST_START(args)
 		self:Unschedule(checkForCombat)
 		self:Unschedule(checkAfflicted)
 		checkForCombat(self)
-		self:Schedule(35, checkAfflicted, self)
+		self:Schedule(40, checkAfflicted, self)
 	elseif spellId == 408805 and self:AntiSpam(3, "aff3") then
 		warnDestabalize:Show()
 	end
@@ -378,20 +378,12 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	afflictedDetected = false
 	self:Unschedule(checkForCombat)
 end
-	
---[[
-function mod:OnSync(msg)
-	if msg == "MurchalProshlyapation" then
-		self:Unschedule(checkForCombatRas)
-		checkForCombatRas(self)
-	end
-end]]
 
 --[[
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240106073327")
+mod:SetRevision("20240201052201")
 --mod:SetModelID(47785)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--Stays active in all zones for zone change handlers, but registers events based on dungeon ids
 
@@ -403,6 +395,13 @@ mod:RegisterEvents(
 	"LOADING_SCREEN_DISABLED"
 )
 
+--TODO, fine tune tank stacks/throttle?
+--[[
+(ability.id = 240446 or ability.id = 409492) and type = "begincast"
+ or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
+ or (source.type = "NPC" and source.firstSeen = timestamp) and (source.name = "Afflicted Soul") or (target.type = "NPC" and target.firstSeen = timestamp) and (target.name = "Afflicted Soul")
+--
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4)
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
@@ -506,7 +505,7 @@ do
 		validZones = {[657]=true, [1841]=true, [1754]=true, [1458]=true, [2527]=true, [2519]=true, [2451]=true, [2520]=true}
 	elseif (C_MythicPlus.GetCurrentSeason() or 0) == 12 then--DF Season 4
 		--NOT YET KNOWN, season 3 placeholders
-		validZones = {[657]=true, [1841]=true, [1754]=true, [1458]=true, [2527]=true, [2519]=true, [2451]=true, [2520]=true}
+		validZones = {[2579]=true, [1279]=true, [1501]=true, [1466]=true, [1763]=true, [643]=true, [1862]=true}
 	else--Season 3 (11) (latest LIVE season put in else so if api fails, it just always returns latest)
 		--2579, 1279, 1501, 1466, 1763, 643, 1862
 		validZones = {[2579]=true, [1279]=true, [1501]=true, [1466]=true, [1763]=true, [643]=true, [1862]=true}
@@ -579,20 +578,21 @@ function mod:SPELL_CAST_START(args)
 		self:Unschedule(checkForCombat)
 		self:Unschedule(checkAfflicted)
 		checkForCombat(self)
-		self:Schedule(35, checkAfflicted, self)
+		self:Schedule(40, checkAfflicted, self)
 	elseif spellId == 408805 and self:AntiSpam(3, "aff3") then
 		warnDestabalize:Show()
 	end
 end
 
+--[[
+function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
+	local spellId = args.spellId
+	if spellId == 373370 then
+		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
+	end
+end
 
---function mod:SPELL_CAST_SUCCESS(args)
---	if not self.Options.Enabled then return end
---	local spellId = args.spellId
---	if spellId == 373370 then
---		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
---	end
---end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -656,16 +656,15 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-
---function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
---	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
---		specWarnGTFO:Show(spellName)
---		specWarnGTFO:Play("watchfeet")
---	end
---end
---mod.SPELL_MISSED = mod.SPELL_DAMAGE
-
+--[[
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
+		specWarnGTFO:Show(spellName)
+		specWarnGTFO:Play("watchfeet")
+	end
+end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
+--]]
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
 --<614.44 01:20:38> [CLEU] SPELL_AURA_APPLIED#Creature-0-3023-1477-12533-199388-00007705B2#Raszageth#Player-3726-0C073FB8#Onlysummonz-Khaz'goroth#396364#Mark of Wind#DEBUFF#nil", -- [3912]
-]]
