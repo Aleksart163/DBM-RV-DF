@@ -3,8 +3,6 @@ if GetLocale() ~= "koKR" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
---L.MainFrame							= "Deadly Boss Mods"
-
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
 L.Website					= "디스코드 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. SNS에서 @deadlybossmods 또는 @MysticalOS를 팔로우하세요"
@@ -19,7 +17,7 @@ L.OTabPlugins						= "기타"--Scenarios, PVP, Delves (11.x), Solo/Challenge con
 L.OTabOptions					= "핵심 설정"
 L.OTabAbout						= "소개"
 
---L.FOLLOWER						= "추종자"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
+L.FOLLOWER						= "추종자"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
 L.TabCategory_CURRENT_SEASON		= "현재 시즌"
 
@@ -67,7 +65,7 @@ L.Area_ProfilesSetup		= "DBM 프로필 사용법 가이드"
 L.Core_GUI 					= "핵심 모드와 GUI"
 L.General 					= "일반 설정"
 L.EnableMiniMapIcon			= "미니맵 버튼 표시"
---L.EnableCompartmentIcon	= "Show compartment button"
+L.EnableCompartmentIcon			= "애드온 모음 버튼에 표시"
 L.UseSoundChannel			= "DBM 경고 효과음 재생 채널 선택"
 L.UseMasterChannel			= "주 음량"
 L.UseDialogChannel			= "대화"
@@ -185,6 +183,7 @@ L.TabCategory_Alerts	 	= "경고"
 L.Area_SpecAnnounceConfig	= "특수 경고 외형과 효과음 설정 가이드"
 L.Area_SpecAnnounceNotes	= "특수 경고 메모 기능 가이드"
 L.Area_VoicePackInfo		= "DBM 음성팩 정보"
+
 -- Panel: Raidwarning
 L.Tab_RaidWarning 			= "알림"
 L.RaidWarning_Header		= "알림 설정"
@@ -286,11 +285,8 @@ L.Area_VoicePackAdvOptions	= "음성팩 고급 설정"
 L.SpecWarn_AlwaysVoice		= "모든 음성 경고 재생 (특수 알림을 꺼놔도 재생됩니다. 일부 특수한 상황에 처한 공대장에게 유용하며 그 외에는 권장하지 않습니다)"
 L.VPDontMuteSounds			= "음성팩 사용시 DBM 경고음을 끄지 않음 (두가지 경고음 모두 듣고싶을때만 사용)"
 L.Area_VPLearnMore			= "음성팩에 대한 정보 및 관련 설정 사용법 알아보기"
---L.VPLearnMore						= "|cFF73C2FBhttps://github.com/DeadlyBossMods/DBM-Retail/wiki/%5BGuide%5D-DBM-&-Voicepacks#2022-update|r"
 L.Area_BrowseOtherVP		= "Curse에 올라와있는 다른 음성팩 보기"
---L.BrowseOtherVPs					= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "Curse에 올라와있는 카운트다운 팩 보기"
---L.BrowseOtherCTs					= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+count+pack|r"
 
 -- Panel: Event Sounds
 L.Panel_EventSounds			= "이벤트 효과음 (승리, 전멸, 기타)"
@@ -412,6 +408,7 @@ L.Area_SoundOptions					= "효과음 설정"
 L.TabCategory_Filters	 	= "기능 끄기 및 필터"
 L.Area_DBMFiltersSetup		= "DBM 기능 필터 가이드"
 L.Area_BlizzFiltersSetup	= "블리자드 기능 필터 가이드"
+
 -- Panel: Toggle DBM Features
 L.Panel_SpamFilter			= "DBM 기능 끄기"
 
@@ -420,7 +417,7 @@ L.SpamBlockNoShowAnnounce	= "모든 알림 및 효과음 재생 안함"
 L.SpamBlockNoSpecWarnText	= "특수 알림 텍스트 표시 안함"
 L.SpamBlockNoSpecWarnFlash	= "특수 알림에 화면 점멸 사용 안함"
 L.SpamBlockNoSpecWarnVibrate		= "특수 알림에 컨트롤러 진동 안함"
-L.SpamBlockNoSpecWarnSound	= "특수 알림 효과음 재생 안함 (음성 경고 메뉴에서 설정했다면 음성팩은 계속 작동)"
+L.SpamBlockNoSpecWarnSound	= "특수 알림 효과음 재생 안함 (초읽기와 음성팩 메뉴에서 활성화된 음성팩은 계속 작동)"
 L.SpamBlockNoPrivateAuraSound		= "비공개 오라 효과음 등록 안함"
 
 L.Area_SpamFilter_Timers	= "타이머"
@@ -471,7 +468,8 @@ L.FilterVoidFormSay			= "공허의 형상일땐 공격대 징표나 초읽기를
 L.Area_SpecFilter			= "역할 관련 필터 설정"
 L.FilterTankSpec			= "방어 전담이 아닐땐 방어 전담용 알림 보지 않기 (참고: '도발' 알림은 현재 전부 기본값으로 켜짐 상태이기 때문에 대부분의 이용자는 설정을 끄지 않는 것을 권장합니다.)"
 L.FilterDispels				= "해제 주문이 쿨타임일땐 해제 알림 보지 않기"
-L.FilterTrashWarnings		= "일반, 영웅, 이전 확장팩 던전에선 일반몹 알림 보지 않기"
+L.FilterCrowdControl			= "메즈기가 쿨타임일땐 메즈 기반 차단 알림 보지 않기"
+L.FilterTrashWarnings		= "추종자, 일반, 영웅, 이전 확장팩 던전에선 일반몹 알림 보지 않기"
 
 L.Area_BInterruptFilter				= "보스 차단 알림 필터 설정"
 L.FilterTargetFocus					= "현재 대상/주시 대상/액션 대상(적)이 아니면 알림 표시 안함"
@@ -495,20 +493,30 @@ L.SpamSpecRoleSwitch				= "'대상 변경' &amp; '쫄 등장' 경고 빼기 (텍
 L.SpamSpecRoleGTFO					= "'바닥 피하기' 경고 빼기 (텍스트와 효과음 전부)"
 
 -- Panel: Blizzard Features
-L.Panel_HideBlizzard		= "블리자드 기능 차단"
-L.Area_HideBlizzard			= "블리자드 기능 끄기 및 숨김"
-L.HideBossEmoteFrame		= "보스 전투중 보스 감정표현 숨기기"
-L.HideWatchFrame			= "추적중인 업적이 없고 신화+ 난이도가 아니라면 보스 전투시 퀘스트 추적 프레임을 숨깁니다."
-L.HideGarrisonUpdates		= "보스 전투중 추종자 팝업 알림 숨기기"
-L.HideGuildChallengeUpdates	= "보스 전투중 길드 도전 과제 알림 숨기기"
-L.HideQuestTooltips			= "보스 전투중 툴팁에서 퀘스트 정보 숨기기"
-L.HideTooltips				= "보스 전투중 모든 툴팁 숨기기"
-L.DisableSFX				= "보스 전투중 소리 채널 (효과음) 끄기 (알림: 이 설정을 켜면 효과음을 켜지 않았어도 전투가 끝난 후 자동으로 켜집니다)"
-L.DisableCinematics			= "게임 내 영상 끄기"
-L.OnlyFight					= "전투중일 때 한번만 재생"
-L.AfterFirst				= "인스턴스 던전에 있을 때 한번만 재생"
-L.CombatOnly				= "전투중 차단 (모든 전투)"
-L.RaidCombat				= "전투중 차단 (보스만)"
+L.Panel_HideBlizzard				= "블리자드 기능 차단"
+--Toast
+L.Area_HideToast					= "블리자드 토스트 알림 비활성화 (팝업)"
+L.HideGarrisonUpdates				= "보스 전투중 추종자 토스트 알림 숨기기"
+L.HideGuildChallengeUpdates			= "보스 전투중 길드 도전 과제 토스트 알림 숨기기"
+--L.HideBossKill				= "보스 처치 토스트 알림 숨기기"--NYI
+--L.HideVaultUnlock					= "금고 잠금 해제 토스트 알림 숨기기"--NYI
+--Cut Scenes
+L.Area_Cinematics					= "게임내 시네마틱 재생 차단"
+L.DuringFight						= "보스 전투중 컷신 재생 차단"--uses explicite IsEncounterInProgress check
+L.InstanceAnywhere					= "던전이나 공격대 인스턴스에서 비전투 컷신 재생 차단"
+L.NonInstanceAnywhere				= "위험: 야외 컷신 재생 차단 (권장하지 않음)"
+L.OnlyAfterSeen						= "한번 봤던 컷신만 재생 차단 (강력 권장, 한번은 스토리를 보는게 좋습니다)"
+--Sound
+L.Area_Sound						= "게임내 소리 차단"
+L.DisableSFX					= "보스 전투중 효과 음량 비활성화"
+L.DisableAmbiance					= "보스 전투중 환경 음량 비활성화"
+L.DisableMusic						= "보스 전투중 배경음악 음량 비활성화 (알림: 옵션을 켜면 이벤트 효과음에서 보스 전투 배경음을 설정해도 재생이 되지 않습니다)"
+--Other
+L.Area_HideBlizzard			= "다른 블리자드 성가신 요소 비활성화 및 숨김"
+L.HideBossEmoteFrame		= "보스 전투중 보스 감정표현 프레임 숨기기"
+L.HideWatchFrame			= "추적중인 업적이 없고 신화+ 난이도가 아니라면 보스 전투시 퀘스트 추적 프레임 숨기기"
+L.HideQuestTooltips			= "보스 전투중 툴팁에서 퀘스트 목표 숨기기"--Currently hidden (NYI)
+L.HideTooltips				= "보스 전투중 툴팁 완전히 숨기기"
 
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "공대장 제어 설정"
@@ -580,5 +588,3 @@ L.FontStyle				= "글꼴 속성"
 L.FontColor			= "글꼴 색상"
 L.FontShadow				= "그림자"
 L.FontType				= "글꼴 선택"
-
---L.FontHeight	= 16

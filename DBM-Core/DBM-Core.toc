@@ -1,8 +1,9 @@
-## Interface: 100107
+## Interface: 100205
 ## X-Min-Interface: 100107
 ## X-Min-Interface-Classic: 11500
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30403
+
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Main Core|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0核心|r
@@ -13,6 +14,7 @@
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Noyau|r
+
 ## Notes: Deadly Boss Mods
 ## Dependencies: DBM-StatusBarTimers
 ## OptionalDependencies: LibStub, CallbackHandler-1.0, LibSharedMedia-3.0, LibChatAnims, LibDBIcon-1.0, LibDeflate, LibSerialize, LibSpecialization
@@ -22,7 +24,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 9b420b1
+## Version: 8ead32c
 ## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua
