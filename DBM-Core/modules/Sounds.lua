@@ -12,6 +12,11 @@ do
 	local counts = {
 		{	text	= "Alarak",value 	= "Alarak", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Alarak\\", max = 5},
 		{	text	= "Artanis",value 	= "Artanis", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Artanis\\", max = 5},
+		{	text	= "Kerrigan",value 	= "Kerrigan", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kerrigan\\", max = 5},
+		{	text	= "Raynor",value 	= "Raynor", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Raynor\\", max = 5},
+		{	text	= "Tychus",value 	= "Tychus", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Tychus\\", max = 5},
+		{	text	= "Vorazun",value 	= "Vorazun", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Vorazun\\", max = 5},
+		{	text	= "Gachimuchi",value 	= "Gachimuchi", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Gachimuchi\\", max = 5},
 		{	text	= "Corsica",value 	= "Corsica", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Corsica\\", max = 10},
 		{	text	= "Koltrane",value 	= "Kolt", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kolt\\", max = 10},
 		{	text	= "Smooth",value 	= "Smooth", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Smooth\\", max = 10},
@@ -49,8 +54,11 @@ do
 	local victory = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
-		{text = "Alarak Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
-		{text = "Artanis Victory",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Artanis_Win.ogg", length=4},
+		{text = "Alarak",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
+		{text = "Artanis",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Artanis_Win.ogg", length=4},
+		{text = "Kerrigan",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Kerrigan_Win.ogg", length=4},
+		{text = "Vorazun",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Vorazun_Win.ogg", length=4},
+		{text = "Gachimuchi",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Gachimuchi_Win.ogg", length=4},
 		{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
 		{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
 	}
