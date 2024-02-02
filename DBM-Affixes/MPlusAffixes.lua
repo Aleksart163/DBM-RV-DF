@@ -396,7 +396,6 @@ mod:RegisterEvents(
 )
 
 --TODO, fine tune tank stacks/throttle?
---[[
 (ability.id = 240446 or ability.id = 409492) and type = "begincast"
  or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
@@ -584,7 +583,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
---[[
+
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -656,7 +655,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
---[[
+
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
 		specWarnGTFO:Show(spellName)
