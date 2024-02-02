@@ -22,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_HEALTH boss1",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -51,7 +50,6 @@ local timerPhaseCD								= mod:NewPhaseTimer(30)
 --Stage One: The Winds of Change
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25244))
 local warnStaticCharge							= mod:NewTargetNoFilterAnnounce(381615, 3)
-local warnLightningStrike						= mod:NewSpellAnnounce(376126, 3)
 
 local specWarnHurricaneWing						= mod:NewSpecialWarningMoveTo(377612, nil, nil, nil, 4, 13)
 local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 37859, nil, 1, 2)
@@ -143,13 +141,13 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25477))
 local warnMagneticCharge					= mod:NewTargetNoFilterAnnounce(399713, 3)
 
 local specWarnStormEater					= mod:NewSpecialWarningSpell(395885, nil, nil, nil, 2, 2, 4)
-local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, 309024, nil, 3, 2) --Дуга молнии
+local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, nil, nil, 3, 2)
 local specWarnThunderstruckArmor			= mod:NewSpecialWarningTaunt(391285, nil, nil, nil, 1, 2) --Заряженная молнией броня
 local specWarnMagneticCharge				= mod:NewSpecialWarningYou(399713, nil, nil, nil, 1, 2)
 
 local timerStormEaterCD						= mod:NewCDTimer(35, 395885, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerMagneticChargeCD					= mod:NewCDCountTimer(35, 399713, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, 309024, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 local yellStaticCharge						= mod:NewShortPosYell(381615, 37859, nil, nil, "YELL")
 local yellStaticChargeFades					= mod:NewIconFadesYell(381615, 37859, nil, nil, "YELL")
@@ -161,6 +159,8 @@ local yellFulminatingCharge					= mod:NewShortPosYell(377467, 221175, nil, nil, 
 local yellFulminatingChargeFades			= mod:NewIconFadesYell(377467, 221175, nil, nil, "YELL")--"Charge" shortname
 local yellMagneticCharge					= mod:NewShortYell(399713, nil, nil, nil, "YELL")
 local yellMagneticChargeFades				= mod:NewShortFadesYell(399713, nil, nil, nil, "YELL")
+local yellElectrifiedJaws					= mod:NewShortYell(395906, nil, nil, nil, "YELL") --Электрические челюсти
+local yellThunderousEnergy					= mod:NewShortYell(390763, nil, nil, nil, "YELL") --Дуга молнии
 
 mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
 mod:GroupSpells(386410, 391285)--Thunderous Blast and associated melted armor debuff
@@ -308,6 +308,7 @@ function mod:ElectrifiedJawsTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnElectrifiedJaws:Show()
 		specWarnElectrifiedJaws:Play("defensive")
+		yellElectrifiedJaws:Yell()
 	end
 end
 
@@ -316,6 +317,7 @@ function mod:ThunderousBlastTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnThunderousBlast:Show()
 		specWarnThunderousBlast:Play("defensive")
+		yellThunderousEnergy:Yell()
 	end
 end
 
@@ -793,7 +795,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBallLightningCD:Start(8.4, 1)
 		timerStormBreakCD:Start(21.8, 1)
 	elseif spellId == 391402 then
-		warnLightningStrike:Show()
 		timerLightningStrikeCD:Start(self:IsMythic() and 29.1 or self:IsHeroic() and 31.5 or 32.8)
 	elseif spellId == 389214 then--Overload
 		local cid = self:GetCIDFromGUID(args.destGUID)
@@ -913,10 +914,12 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.MurchalOchkenProshlyapen1 or msg:find(L.MurchalOchkenProshlyapen1) then --Вызов элемов на 2 фазе
-		self:SendSync("OchkenShlyapen1")
-	elseif msg == L.MurchalOchkenProshlyapen2 or msg:find(L.MurchalOchkenProshlyapen2) then --Конец 2 фазы
+	if msg == L.MurchalOchkenProshlyapen or msg:find(L.MurchalOchkenProshlyapen) then --1-ая переходка
+		self:SendSync("OchkenShlyapen")
+	elseif msg == L.MurchalOchkenProshlyapen2 or msg:find(L.MurchalOchkenProshlyapen2) then --Вызов элемов на 2 фазе
 		self:SendSync("OchkenShlyapen2")
+	elseif msg == L.MurchalOchkenProshlyapen3 or msg:find(L.MurchalOchkenProshlyapen3) then --Конец 2 фазы
+		self:SendSync("OchkenShlyapen3")
 	end
 end
 
@@ -952,7 +955,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) -- (всё с офы и �
 end
 
 function mod:OnSync(msg)
-	if msg == "OchkenShlyapen1" then
+	if msg == "OchkenShlyapen" then
+		timerStormNovaCD:Start(8.6)
+		timerHurricaneWingCD:Stop()
+		timerStaticChargeCD:Stop()
+		timerVolatileCurrentCD:Stop()
+		timerElectrifiedJawsCD:Stop()
+		timerLightningBreathCD:Stop()
+	elseif msg == "OchkenShlyapen2" then
 		MurchalProshlyap = true
 		self.vb.breathCount = 0
 		timerPhaseCD:Stop()
@@ -961,13 +971,13 @@ function mod:OnSync(msg)
 		timerTempestWingCD:Stop()
 		timerFulminatingChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
-		timerLightningDevastationCD:Start(26.7)
-	elseif msg == "OchkenShlyapen2" then
+		timerLightningDevastationCD:Start(26.2, self.vb.breathCount+1)
+	elseif msg == "OchkenShlyapen3" then
 		MurchalProshlyap = false
 		timerStormBreakCD:Stop()
 		timerBallLightningCD:Stop()
 		timerLightningStrikeCD:Stop()
 		timerLightningDevastationCD:Stop()
-		timerStormNovaCD:Start(1.8)
+		timerStormNovaCD:Start(2)
 	end
 end

@@ -84,8 +84,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalOchkenProshlyapen1 = "Прислужники бури, услышьте меня!",
-	MurchalOchkenProshlyapen2 = "Конец господству Аспектов! Тюрьма разрушена!",
+	MurchalOchkenProshlyapen = "Думаете, титаны навели в мире порядок? Нет!",
+	MurchalOchkenProshlyapen2 = "Прислужники бури, услышьте меня!",
+	MurchalOchkenProshlyapen3 = "Конец господству Аспектов! Тюрьма разрушена!",
 	negative = "отрицательную",
 	positive = "положительную",
 	BreathEmote	= "Рашагет делает глубокий вдох..."
