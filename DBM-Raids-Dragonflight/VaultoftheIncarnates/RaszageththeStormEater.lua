@@ -348,14 +348,12 @@ end
 
 local function yellRepeater(self, text, repeatTotal, inversion)
 	repeatTotal = repeatTotal + 1
---	if repeatTotal < 3 then
-		if inversion then
-			yellInversion:Yell(text)
-		else
-			yellStormCharged:Yell(text)
-		end
-		self:Schedule(1.5, yellRepeater, self, text, repeatTotal, inversion)
---	end
+	if inversion then
+		yellInversion:Yell(text)
+	else
+		yellStormCharged:Yell(text)
+	end
+	self:Schedule(2, yellRepeater, self, text, repeatTotal, inversion)
 end
 
 function mod:OnCombatStart(delay)

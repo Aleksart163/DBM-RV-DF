@@ -26,12 +26,8 @@ local warnAwakenedEarth							= mod:NewTargetNoFilterAnnounce(381253, 3)
 local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer")
 
 local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 1, 2)
-local yellRockBlast								= mod:NewShortYell(380487, nil, nil, nil, "YELL")
-local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YELL")
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
 local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 2)
-local yellAwakenedEarth							= mod:NewShortPosYell(381253)
-local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253)
 local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2)
 local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2)
 local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2)
@@ -47,6 +43,11 @@ local timerShatteringImpactCD					= mod:NewNextCountTimer(35, 383073, nil, nil, 
 local timerConcussiveSlamCD						= mod:NewNextCountTimer(35, 376279, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2)--Berserk timer basically
 
+local yellInfusedFallout						= mod:NewIconRepeatYell(391592, nil, nil, nil, "YELL")
+local yellRockBlast								= mod:NewShortYell(380487, nil, nil, nil, "YELL")
+local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YELL")
+local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL")
+local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
@@ -60,6 +61,7 @@ mod.vb.slamCount = 0
 mod.vb.impactCount = 0
 mod.vb.infusedCount = 0
 mod.vb.frenziedStarted = false
+local ProshlyapMurchalya = nil
 local difficultyName = "other"
 local allTimers = {
 	["mythic"] = {
@@ -83,7 +85,16 @@ local allTimers = {
 	},
 }
 
+local function yellRepeater(self, text, repeatTotal)
+	repeatTotal = repeatTotal + 1
+	if ProshlyapMurchalya then
+		yellInfusedFallout:Yell(text)
+	end
+	self:Schedule(2, yellRepeater, self, text, repeatTotal)
+end
+
 function mod:OnCombatStart(delay)
+	ProshlyapMurchalya = false
 	self.vb.annihilationCount = 0
 	self.vb.rockCount = 0
 	self.vb.slamCount = 0
@@ -222,6 +233,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnInfusedFallout:Show()
 			specWarnInfusedFallout:Play("targetyou")
+			yellInfusedFallout:Yell(7, "")
+			self:Unschedule(yellRepeater)
+			yellRepeater(self, 7, 0)
+			ProshlyapMurchalya = true
 		end
 	end
 end
@@ -243,6 +258,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if self.Options.SetIconOnAwakenedEarth then
 			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 391592 then
+		if args:IsPlayer() then
+			self:Unschedule(yellRepeater)
+			ProshlyapMurchalya = false
 		end
 	end
 end
