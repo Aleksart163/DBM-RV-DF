@@ -25,7 +25,7 @@ L:SetOptionLocalization({
 	YellOnRitualofSummoning = "Relatar quando alguém usa o feitiço $spell:698",
 	YellOnSummoning 		= "Relatar quando se está a lançar um feitiço $spell:7720",
 	YellOnSpiritCauldron 	= "Relatar quando alguém coloca $spell:188036",
-	YellOnLavish 			= "Relatar quando alguém coloca $spell:201352 ou similar",
+	YellOnLavish 			= "Relatar quando alguém coloca $spell:382423 ou similar",
 	YellOnRepair 			= "Relatar quando alguém coloca $spell:199109 ou similar",
 	YellOnPylon 			= "Relatar quando alguém coloca $spell:199115",
 	YellOnBank 				= "Relatar quando alguém coloca $spell:83958",

@@ -25,7 +25,7 @@ L:SetOptionLocalization({
 	YellOnRitualofSummoning = "Avisar, cuando alguien esta usando hechizo $spell:698",
 	YellOnSummoning 		= "Avisar, cuando lanzas un hechizo $spell:7720",
 	YellOnSpiritCauldron 	= "Avisar, cuando alguien esta poniendo $spell:188036",
-	YellOnLavish 			= "Avisar, cuando alguien esta poniendo $spell:201352 o similar",
+	YellOnLavish 			= "Avisar, cuando alguien esta poniendo $spell:382423 o similar",
 	YellOnRepair 			= "Avisar, cuando alguien esta poniendo $spell:199109 o similar",
 	YellOnPylon 			= "Avisar, cuando alguien esta poniendo $spell:199115",
 	YellOnBank 				= "Avisar, cuando alguien esta poniendo $spell:83958",

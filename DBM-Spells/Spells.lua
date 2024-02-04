@@ -11,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
-	"SPELL_CREATE 698 188036 201352 201351 185709 88304 61031 49844",
+	"SPELL_CREATE 698 188036 201351 185709 88304 61031 49844",
 --	"SPELL_RESURRECT 20484 95750 61999",
 	"PLAYER_DEAD",
 	"GOSSIP_SHOW"--[[,
@@ -42,6 +42,7 @@ local warnSated						= mod:NewSpellAnnounce(57724, 1) --Пресыщение
 local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступление
 
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
+local warnYusasHeartyStew			= mod:NewSpellAnnounce(382423, 1) --Сытная похлебка Юсы
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
 --local warnHearty					= mod:NewSpellAnnounce(201351, 1) --Обильное угощение
 --local warnSugar						= mod:NewSpellAnnounce(185709, 1) --Угощение из засахаренной рыбы
@@ -96,7 +97,7 @@ mod:AddBoolOption("YellOnRaidCooldown", true) --рейд кд
 mod:AddBoolOption("YellOnResurrect", true) --бр
 mod:AddBoolOption("YellOnMassRes", true) --масс рес
 mod:AddBoolOption("YellOnHeroism", true) --героизм
-mod:AddBoolOption("YellOnPortal", true) --порталы
+--mod:AddBoolOption("YellOnPortal", true) --порталы
 mod:AddBoolOption("YellOnSoulwell", true)
 mod:AddBoolOption("YellOnSoulstone", true)
 mod:AddBoolOption("YellOnRitualofSummoning", true)
@@ -162,9 +163,10 @@ local premsg_values = {
 	["premsg_Spells_soulstone"] = {0, L.SoulstoneYell, true},
 	["premsg_Spells_summoning"] = {0, L.SummoningYell},
 	["premsg_Spells_cauldron_rw"] = {0, L.SoulwellYell},
-	["premsg_Spells_lavishSuramar_rw"] = {0, L.SoulwellYell},
-	["premsg_Spells_hearty"] = {0, L.SoulwellYell},
-	["premsg_Spells_sugar"] = {0, L.SoulwellYell},
+	["premsg_Spells_YusasHeartyStew"] = {0, L.SoulwellYell}, --Сытная похлебка Юсы
+--	["premsg_Spells_lavishSuramar_rw"] = {0, L.SoulwellYell},
+--	["premsg_Spells_hearty"] = {0, L.SoulwellYell},
+--	["premsg_Spells_sugar"] = {0, L.SoulwellYell},
 	["premsg_Spells_jeeves_rw"] = {0, L.SoulwellYell},
 	["premsg_Spells_autoHammer_rw"] = {0, L.SoulwellYell},
 	["premsg_Spells_pylon_rw"] = {0, L.SoulwellYell},
@@ -850,6 +852,11 @@ function mod:SPELL_CREATE(args)
 		if self.Options.YellOnRitualofSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRitualofSummoning then
 			prepareMessage(self, "premsg_Spells_summoning", spellId, sourceName)
+		end
+	elseif spellId == 382423 and self:AntiSpam(10, "YusasHeartyStew") then --Сытная похлебка Юсы
+		warnYusasHeartyStew:Show()
+		if self.Options.YellOnLavish then
+			prepareMessage(self, "premsg_Spells_YusasHeartyStew", spellId, sourceName)
 		end
 --[[	elseif spellId == 188036 and self:AntiSpam(10, "cauldron") then --Котел духов
 		warnCauldron:Show(sourceName)

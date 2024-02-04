@@ -25,7 +25,7 @@ L:SetOptionLocalization({
 	YellOnRitualofSummoning = "Signaler quand quelqu'un applique un sort $spell:698",
 	YellOnSummoning 		= "Signaler l'application d'un sort $spell:7720",
 	YellOnSpiritCauldron 	= "Signaler quand quelqu'un met $spell:188036",
-	YellOnLavish 			= "Signaler quand quelqu'un met $spell:201352 ou similaire",
+	YellOnLavish 			= "Signaler quand quelqu'un met $spell:382423 ou similaire",
 	YellOnRepair 			= "Signaler quand quelqu'un met $spell:199109 ou similaire",
 	YellOnPylon 			= "Signaler quand quelqu'un met $spell:199115",
 	YellOnBank 				= "Signaler quand quelqu'un met $spell:83958",
