@@ -11,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
-	"SPELL_CREATE 698 188036 201351 185709 88304 61031 49844",
+	"SPELL_CREATE 698 201351 185709 88304 61031 49844 371515 371519 371521 406963 406964 406965",
 --	"SPELL_RESURRECT 20484 95750 61999",
 	"PLAYER_DEAD",
 	"GOSSIP_SHOW"--[[,
@@ -43,10 +43,11 @@ local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступлен�
 
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
 local warnYusasHeartyStew			= mod:NewSpellAnnounce(382423, 1) --Сытная похлебка Юсы
+local warnPotionCauldronofPower		= mod:NewSpellAnnounce(371515, 1) --Котел с зельями мощи, 371519, 371521
+local warnPotionCauldronofPower2	= mod:NewSpellAnnounce(406963, 1, nil, nil, 370672) --Котел с зельями великой мощи, 406964, 406965
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
 --local warnHearty					= mod:NewSpellAnnounce(201351, 1) --Обильное угощение
 --local warnSugar						= mod:NewSpellAnnounce(185709, 1) --Угощение из засахаренной рыбы
---local warnCauldron					= mod:NewSpellAnnounce(188036, 4) --Котел духов
 local warnSoulstone					= mod:NewTargetAnnounce(20707, 1) --Камень души
 
 local warnRallyingCry				= mod:NewSpellAnnounce(97462, 1) --Ободряющий клич
@@ -102,7 +103,7 @@ mod:AddBoolOption("YellOnSoulwell", true)
 mod:AddBoolOption("YellOnSoulstone", true)
 mod:AddBoolOption("YellOnRitualofSummoning", true)
 mod:AddBoolOption("YellOnSummoning", true)
-mod:AddBoolOption("YellOnSpiritCauldron", true) --котел
+mod:AddBoolOption("YellOnCauldronofPower", true) --Котел с зельями мощи
 mod:AddBoolOption("YellOnLavish", true)
 mod:AddBoolOption("YellOnBank", true) --банк
 mod:AddBoolOption("YellOnRepair", true) --починка
@@ -140,29 +141,11 @@ local premsg_values = {
 	["premsg_Spells_bloodlust"] = {0, L.HeroismYell},
 	["premsg_Spells_hysteria"] = {0, L.HeroismYell},
 	["premsg_Spells_winds"] = {0, L.HeroismYell},
-	["premsg_Spells_stormwind"] = {0, L.PortalYell},
-	["premsg_Spells_ironforge"] = {0, L.PortalYell},
-	["premsg_Spells_darnassus"] = {0, L.PortalYell},
-	["premsg_Spells_exodar"] = {0, L.PortalYell},
-	["premsg_Spells_theramore"] = {0, L.PortalYell},
-	["premsg_Spells_tolBarad1"] = {0, L.PortalYell},
-	["premsg_Spells_valeEternal1"] = {0, L.PortalYell},
-	["premsg_Spells_stormshield"] = {0, L.PortalYell},
-	["premsg_Spells_orgrimmar"] = {0, L.PortalYell},
-	["premsg_Spells_undercity"] = {0, L.PortalYell},
-	["premsg_Spells_thunderBluff"] = {0, L.PortalYell},
-	["premsg_Spells_silvermoon"] = {0, L.PortalYell},
-	["premsg_Spells_stonard"] = {0, L.PortalYell},
-	["premsg_Spells_tolBarad2"] = {0, L.PortalYell},
-	["premsg_Spells_valeEternal2"] = {0, L.PortalYell},
-	["premsg_Spells_warspear"] = {0, L.PortalYell},
-	["premsg_Spells_shattrath"] = {0, L.PortalYell},
-	["premsg_Spells_dalaran1"] = {0, L.PortalYell},
-	["premsg_Spells_dalaran2"] = {0, L.PortalYell},
 	["premsg_Spells_soulwell"] = {0, L.HeroismYell},
 	["premsg_Spells_soulstone"] = {0, L.SoulstoneYell, true},
 	["premsg_Spells_summoning"] = {0, L.SummoningYell},
-	["premsg_Spells_cauldron_rw"] = {0, L.SoulwellYell},
+	["premsg_Spells_CauldronofPower_rw"] = {0, L.SoulwellYell, nil, "rw"}, --Котел с зельями мощи
+	["premsg_Spells_CauldronofPower2_rw"] = {0, L.SoulwellYell, nil, "rw"}, --Котел с зельями великой мощи
 	["premsg_Spells_YusasHeartyStew"] = {0, L.SoulwellYell}, --Сытная похлебка Юсы
 --	["premsg_Spells_lavishSuramar_rw"] = {0, L.SoulwellYell},
 --	["premsg_Spells_hearty"] = {0, L.SoulwellYell},
@@ -847,6 +830,7 @@ function mod:SPELL_CREATE(args)
 	local sourceName = args.sourceName
 	local destName = args.destName
 	if not UnitInYourParty(sourceName) then return end
+	typeInstance = select(2, IsInInstance())
 	if spellId == 698 and self:AntiSpam(10, "summoning") then --Ритуал призыва
 		warnRitualofSummoning:Show(sourceName)
 		if self.Options.YellOnRitualofSummoning then
@@ -859,7 +843,6 @@ function mod:SPELL_CREATE(args)
 			prepareMessage(self, "premsg_Spells_YusasHeartyStew", spellId, sourceName)
 		end
 --[[	elseif spellId == 188036 and self:AntiSpam(10, "cauldron") then --Котел духов
-		warnCauldron:Show(sourceName)
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSpiritCauldron then
 			prepareMessage(self, "premsg_Spells_cauldron_rw", spellId, sourceName)
 		end
@@ -887,6 +870,20 @@ function mod:SPELL_CREATE(args)
 		if self.Options.YellOnToys then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnToys then
 			prepareMessage(self, "premsg_Spells_direbrews", spellId, sourceName)
+		end
+	elseif args:IsSpellID(371515, 371519, 371521) then --Котел с зельями мощи
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		warnPotionCauldronofPower:Show()
+		if self.Options.YellOnCauldronofPower then
+			prepareMessage(self, "premsg_Spells_CauldronofPower_rw", spellId, sourceName)
+		end
+	elseif args:IsSpellID(406963, 406964, 406965) then --Котел с зельями великой мощи
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if DBM:GetNumRealGroupMembers() < 2 then return end
+		warnPotionCauldronofPower2:Show()
+		if self.Options.YellOnCauldronofPower then
+			prepareMessage(self, "premsg_Spells_CauldronofPower2_rw", spellId, sourceName)
 		end
 	end
 end
