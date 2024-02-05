@@ -74,10 +74,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 384978 then
---[[		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnDragonStrike:Show()
-			specWarnDragonStrike:Play("defensive")
-		end]]
 		self:BossTargetScanner(args.sourceGUID, "DragonStrikeTarget", 0.1, 2)
 		timerDragonStrikeCD:Start()
 	elseif spellId == 385399 or spellId == 388804 then--Easy, Hard

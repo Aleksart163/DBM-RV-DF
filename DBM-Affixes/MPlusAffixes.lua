@@ -27,8 +27,8 @@ local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Н
 
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, 2, 1, 2) --Злобное преследование
 local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
-local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
+local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnMarkWind2						= mod:NewSpecialWarningEnd(396364, nil, nil, nil, 1, 2) --Метка ветра
 local specWarnNecroticWound					= mod:NewSpecialWarningStack(209858, nil, 10, nil, nil, 1, 3) --Некротическая язва
 local specWarnBurst							= mod:NewSpecialWarningDefensive(240443, nil, nil, nil, 3, 3) --Взрыв
@@ -40,7 +40,7 @@ local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", ni
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
 local timerMarkLightning					= mod:NewBuffActiveTimer(15, 396369, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка молнии
 local timerMarkWind							= mod:NewBuffActiveTimer(15, 396364, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка ветра
-local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 2.5) --Землетрясение
+local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 2.5) --Землетрясение
 local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Некротическая язва
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 --
@@ -233,10 +233,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(3, "aff5") then
 			timerQuakingCD:Start()
 		end
-		if self:IsSpellCaster() then
+		if self:IsSpellCaster() and self:AntiSpam(2, "Quake") then
 			specWarnQuake:Show()
-			specWarnQuake:Play("runaway")
-		elseif self:IsMelee() then
+			specWarnQuake:Play("stopcast")
+		elseif self:IsMelee() and self:AntiSpam(2, "Quake") then
 			specWarnQuake2:Show()
 			specWarnQuake2:Play("range5")
 		end

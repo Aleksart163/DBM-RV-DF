@@ -38,8 +38,6 @@ local specWarnCrystallineRupture			= mod:NewSpecialWarningDodge(370766, nil, nil
 local specWarnWildEruption					= mod:NewSpecialWarningDodge(375652, nil, nil, nil, 2, 2)
 local specWarnArcaneBash					= mod:NewSpecialWarningDodge(387067, nil, nil, nil, 2, 2)
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 1, 2)
-local yellSplinteringShards					= mod:NewYell(371007)
-local yellErraticGrowth						= mod:NewYell(375596)
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2)
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
@@ -50,6 +48,9 @@ local timerWakingBaneCD						= mod:NewCDNPTimer(20.5, 386546, nil, "HasInterrupt
 local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
 local timerArcaneBashCD						= mod:NewCDNPTimer(18.2, 387067, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
+local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGBook", true)
 
