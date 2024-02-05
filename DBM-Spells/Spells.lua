@@ -986,7 +986,7 @@ end]]
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if gossipOptionID == 55252 or gossipOptionID == 55248 or gossipOptionID == 55251 or gossipOptionID == 106806 or gossipOptionID == 106805 then
+		if gossipOptionID == 55248 or gossipOptionID == 55249 or gossipOptionID == 55251 or gossipOptionID == 55252 or gossipOptionID == 106806 or gossipOptionID == 106805 then
 			self:SelectGossip(gossipOptionID)
 		end
 	end
