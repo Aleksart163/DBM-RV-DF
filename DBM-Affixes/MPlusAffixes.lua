@@ -75,10 +75,10 @@ mod.vb.murchalsProshlyapCount = 0
 local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
 	if Lightning then
 		yellPrimalOverload:Yell(6, MarkLightning, 6)
-		self:Schedule(4, startProshlyapationOfMurchal, self)
+		self:Schedule(3, startProshlyapationOfMurchal, self)
 	elseif Wind then
 		yellPrimalOverload:Yell(7, MarkWind, 7)
-		self:Schedule(4, startProshlyapationOfMurchal, self)
+		self:Schedule(3, startProshlyapationOfMurchal, self)
 	end
 end
 
@@ -232,6 +232,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 240447 then --Землетрясение
 		if self:AntiSpam(3, "aff5") then
 			timerQuakingCD:Start()
+			timerQuake:Start()
 		end
 		if self:IsSpellCaster() and self:AntiSpam(2, "Quake") then
 			specWarnQuake:Show()
@@ -240,7 +241,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnQuake2:Show()
 			specWarnQuake2:Play("range5")
 		end
-		timerQuake:Start()
 	elseif spellId == 240559 then --Тяжкая рана
 		local amount = args.amount or 1
 		if args:IsPlayer() then
@@ -281,7 +281,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
 			yellMarkLightning:Countdown(spellId, 3)
 			timerMarkLightning:Start(args.destName)
-			self:Schedule(4, startProshlyapationOfMurchal, self)
+			self:Schedule(3, startProshlyapationOfMurchal, self)
 		end
 	elseif spellId == 396364 then --Метка ветра
 		if args:IsPlayer() then
@@ -291,7 +291,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
 			yellMarkWind:Countdown(spellId, 3)
 			timerMarkWind:Start(args.destName)
-			self:Schedule(4, startProshlyapationOfMurchal, self)
+			self:Schedule(3, startProshlyapationOfMurchal, self)
 		end
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
 		specWarnSpitefulFixate:Show()
