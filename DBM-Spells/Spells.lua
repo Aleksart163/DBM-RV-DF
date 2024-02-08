@@ -11,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
-	"SPELL_CREATE 698 201351 185709 88304 61031 49844 382423 371515 371519 371521 406963 406964 406965",
+	"SPELL_CREATE 698 201351 185709 88304 61031 49844 382423 371515 371519 371521 406963 406964 406965 383063",
 --	"SPELL_RESURRECT 20484 95750 61999",
 	"PLAYER_DEAD",
 	"GOSSIP_SHOW"--[[,
@@ -43,6 +43,7 @@ local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступлен�
 
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
 local warnYusasHeartyStew			= mod:NewSpellAnnounce(382423, 1) --Сытная похлебка Юсы
+local warnDraconicDelicacies		= mod:NewSpellAnnounce(381420, 1) --Гора драконьих деликатесов
 local warnPotionCauldronofPower		= mod:NewSpellAnnounce(371515, 1) --Котел с зельями мощи, 371519, 371521
 local warnPotionCauldronofPower2	= mod:NewSpellAnnounce(406963, 1, nil, nil, 370672) --Котел с зельями великой мощи, 406964, 406965
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
@@ -104,7 +105,7 @@ mod:AddBoolOption("YellOnSoulstone", true)
 mod:AddBoolOption("YellOnRitualofSummoning", true)
 mod:AddBoolOption("YellOnSummoning", true)
 mod:AddBoolOption("YellOnCauldronofPower", true) --Котел с зельями мощи
-mod:AddBoolOption("YellOnLavish", true)
+mod:AddBoolOption("YellOnLavish", true) --еда
 mod:AddBoolOption("YellOnBank", true) --банк
 mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnPylon", true) --пилон
@@ -145,8 +146,9 @@ local premsg_values = {
 	["premsg_Spells_soulstone"] = {0, L.SoulstoneYell, true},
 	["premsg_Spells_summoning"] = {0, L.SummoningYell},
 	["premsg_Spells_CauldronofPower_rw"] = {0, L.SoulwellYell, nil, "rw"}, --Котел с зельями мощи
-	["premsg_Spells_CauldronofPower2_rw"] = {0, L.SoulwellYell, nil, "rw"}, --Котел с зельями великой мощи
+	["premsg_Spells_CauldronofPower2_rw"] = {0, L.HeroismYell, nil, "rw"}, --Котел с зельями великой мощи
 	["premsg_Spells_YusasHeartyStew"] = {0, L.SoulwellYell}, --Сытная похлебка Юсы
+	["premsg_Spells_DraconicDelicacies"] = {0, L.HeroismYell}, --Гора драконьих деликатесов
 --	["premsg_Spells_lavishSuramar_rw"] = {0, L.SoulwellYell},
 --	["premsg_Spells_hearty"] = {0, L.SoulwellYell},
 --	["premsg_Spells_sugar"] = {0, L.SoulwellYell},
@@ -842,6 +844,11 @@ function mod:SPELL_CREATE(args)
 		if self.Options.YellOnLavish then
 			prepareMessage(self, "premsg_Spells_YusasHeartyStew", spellId, sourceName)
 		end
+	elseif spellId == 383063 and self:AntiSpam(10, "DraconicDelicacies") then --Гора драконьих деликатесов
+		warnDraconicDelicaciesw:Show()
+		if self.Options.YellOnLavish then
+			prepareMessage(self, "premsg_Spells_DraconicDelicacies", spellId, sourceName)
+		end
 --[[	elseif spellId == 188036 and self:AntiSpam(10, "cauldron") then --Котел духов
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSpiritCauldron then
 			prepareMessage(self, "premsg_Spells_cauldron_rw", spellId, sourceName)
@@ -986,7 +993,7 @@ end]]
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if gossipOptionID == 55248 or gossipOptionID == 55249 or gossipOptionID == 55251 or gossipOptionID == 55252 or gossipOptionID == 106806 or gossipOptionID == 106805 then
+		if gossipOptionID == 55248 or gossipOptionID == 55249 or gossipOptionID == 55250 or gossipOptionID == 55251 or gossipOptionID == 55252 or gossipOptionID == 55253 or gossipOptionID == 106806 or gossipOptionID == 106805 then
 			self:SelectGossip(gossipOptionID)
 		end
 	end
