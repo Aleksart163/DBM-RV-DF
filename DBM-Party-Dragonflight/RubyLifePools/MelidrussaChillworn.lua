@@ -28,15 +28,13 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 385518
 --]]
-local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(373022, 4, nil, "Healer")
 local warnChillstorm							= mod:NewTargetNoFilterAnnounce(372851, 3)
 local warnIceBulwark							= mod:NewSpellAnnounce(372988, 4)
 
+local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagic", nil, nil, 3, 2) --Полная заморозка
 local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 8, nil, nil, 1, 6)
 local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
 local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 1, 2)
-local yellChillstorm							= mod:NewYell(372851)
-local yellChillstormFades						= mod:NewShortFadesYell(372851)
 local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, 2, 1, 2, 4)
 local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8)
@@ -44,6 +42,10 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 
 local timerChillstormCD							= mod:NewCDTimer(23, 372851, nil, nil, nil, 3)
 local timerHailbombsCD							= mod:NewCDTimer(23, 396044, nil, nil, nil, 3)
 local timerFrostOverloadCD						= mod:NewCDTimer(8.5, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Cast after each whelps, which is health based
+
+local yellFrozenSolid							= mod:NewShortYell(373022, nil, nil, nil, "YELL") --Полная заморозка
+local yellChillstorm							= mod:NewYell(372851, nil, nil, nil, "YELL")
+local yellChillstormFades						= mod:NewShortFadesYell(372851, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(372682, true)
 
@@ -97,7 +99,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPrimalChill:ScheduleVoice(0.2, "stackhigh")
 		end
 	elseif spellId == 373022 then
-		warnFrozenSolid:CombinedShow(1, args.destName)--Slower aggregation to reduce spam
+		if args:IsPlayer() then
+			yellFrozenSolid:Yell()
+		else
+			specWarnFrozenSolid:CombinedShow(0.5, args.destName)
+			specWarnFrozenSolid:ScheduleVoice(0.5, "helpdispel")
+		end
 	elseif spellId == 373680 then
 		if not self:IsMythic() then--Interruptable at any time on non mythic
 			specWarnFrostOverload:Show(args.destName)
