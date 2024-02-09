@@ -34,20 +34,35 @@ local warnMysticEmpowermentHoly		= mod:NewStackAnnounce(192133, 4, nil, nil, 2) 
 local warnMysticEmpowermentThunder	= mod:NewStackAnnounce(192132, 4, nil, nil, 2) --Мистическое усиление: гром
 local warnExpelLight				= mod:NewTargetAnnounce(192048, 3)
 
-local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, "Tank", nil, nil, 3, 2)--Journal lies, this is NOT dodgable
+local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, nil, nil, nil, 3, 2) --Щит света
+local specWarnShieldOfLight2		= mod:NewSpecialWarningTarget(192018, nil, nil, nil, 2, 2) --Щит света
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192307, nil, nil, nil, 2, 5)
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
 local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
 local specWarnExpelLight			= mod:NewSpecialWarningMoveAway(192048, nil, nil, nil, 2, 2)
-local yellExpelLight				= mod:NewYell(192048)
 
-local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2, 4)--26.6-34
-local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)--Shared timer by eye of storm and Sanctify
+local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 4)--26.6-34
+local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5)--Shared timer by eye of storm and Sanctify
 local timerExpelLightCD				= mod:NewCDTimer(23, 192048, nil, nil, nil, 3)--May be lower but almost always delayed by spell queue ICDs
+
+local yellShieldOfLight				= mod:NewShortYell(192018, nil, nil, nil, "YELL") --Щит света
+local yellExpelLight				= mod:NewShortYell(192048, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(8, 192048)
 
 local eyeShortName = DBM:GetSpellInfo(91320)--Inner Eye
+
+function mod:ShieldOfLightTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnShieldOfLight:Show()
+		specWarnShieldOfLight:Play("defensive")
+		yellShieldOfLight:Yell()
+	else
+		specWarnShieldOfLight2:Show(targetname)
+		specWarnShieldOfLight2:Play("watchfeet")
+	end
+end
 
 local function updateAllTimers(self, ICD)
 	DBM:Debug("updateAllTimers running", 3)
@@ -92,8 +107,7 @@ function mod:SPELL_CAST_START(args)
 		timerSpecialCD:Start()
 		updateAllTimers(self, 15.5)
 	elseif spellId == 192018 then
-		specWarnShieldOfLight:Show()
-		specWarnShieldOfLight:Play("defensive")
+		self:BossTargetScanner(args.sourceGUID, "ShieldOfLightTarget", 0.1, 2)
 		timerShieldOfLightCD:Start()
 		updateAllTimers(self, 6)
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 95833 then
