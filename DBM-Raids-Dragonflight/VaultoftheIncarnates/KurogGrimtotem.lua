@@ -42,17 +42,19 @@ local berserkTimer								= mod:NewBerserkTimer(600)
 
 --Stage One: Elemental Mastery
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25036))
-local warnSunderStrikeDebuff					= mod:NewStackAnnounce(372158, 2, nil, "Tank|Healer")
+local warnSunderStrikeDebuff					= mod:NewStackAnnounce(372158, 2, nil, "Tank|Healer") --Раскалывающий удар
 
-local specWarnSunderStrike						= mod:NewSpecialWarningDefensive(372158, nil, nil, nil, 1, 2)
-local specWarnSunderStrikeDebuff				= mod:NewSpecialWarningTaunt(372158, nil, nil, nil, 1, 2)
+local specWarnSunderStrike						= mod:NewSpecialWarningDefensive(372158, nil, nil, nil, 3, 2) --Раскалывающий удар
+local specWarnSunderStrikeDebuff				= mod:NewSpecialWarningTaunt(372158, nil, nil, nil, 1, 2) --Раскалывающий удар
 
-local timerSunderStrikeCD						= mod:NewCDTimer(19.4, 372158, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+local timerSunderStrikeCD						= mod:NewCDTimer(19.4, 372158, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Раскалывающий удар
 --General timers for handling of bosses ability rotation
 local timerDamageCD								= mod:NewTimer(30, "timerDamageCD", 391096, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391096, nil, nil, "next")--Magma Burst, Biting Chill, Enveloping Earth, Lightning Crash
 local timerAvoidCD								= mod:NewTimer(60, "timerAvoidCD", 391100, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391100, nil, nil, "next")--Molten Rupture, Frigid Torrent, Erupting Bedrock, Shocking Burst
 local timerUltimateCD							= mod:NewTimer(60, "timerUltimateCD", 374680, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 374680, nil, nil, "next")--Searing Carnage, Absolute Zero, Seismic Rupture, Thunder Strike
 local timerAddEnrageCD							= mod:NewTimer(60, "timerAddEnrageCD", 28131, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, nil, nil, 400473, nil, nil, "next")
+
+local yellSunderStrike							= mod:NewShortYell(372158, nil, nil, nil, "YELL") --Раскалывающий удар
 
 --mod:AddInfoFrameOption(361651, true)
 mod:AddNamePlateOption("NPAuraOnSurge", 371971, true)
@@ -79,8 +81,8 @@ local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(372517, 4, nil, fals
 
 local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2)--Cast by boss AND Dominator
 local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 1, 2)
-local yellAbsoluteZero							= mod:NewShortPosYell(372458)
-local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458)
+local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL")
+local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL")
 
 local timerFrostBite							= mod:NewBuffFadesTimer(30, 372514, nil, false, nil, 5)
 
@@ -116,14 +118,15 @@ local warnLightningCrash						= mod:NewTargetNoFilterAnnounce(373487, 4)
 local warnShockingBurst							= mod:NewTargetNoFilterAnnounce(390920, 3)
 
 local specWarnLightningCrash					= mod:NewSpecialWarningMoveAway(373487, nil, nil, nil, 1, 2)
-local yellLightningCrash						= mod:NewShortYell(373487)
 --local yellLightningCrashFades					= mod:NewIconFadesYell(373487)
 --local specWarnLightningCrashStacks			= mod:NewSpecialWarningStack(373535, nil, 8, nil, nil, 1, 6)
 local specWarnShockingBurst						= mod:NewSpecialWarningMoveAway(390920, nil, nil, nil, 1, 2)
-local yellShockingBurst							= mod:NewShortYell(390920)
-local yellShockingBurstFades					= mod:NewShortFadesYell(390920)
 local specWarnThunderStrike						= mod:NewSpecialWarningSoak(374215, nil, nil, nil, 2, 2)--No Debuff
 local specWarnThunderStrikeBad					= mod:NewSpecialWarningDodge(374215, nil, nil, nil, 2, 2)--Debuff
+
+local yellLightningCrash						= mod:NewShortYell(373487, nil, nil, nil, "YELL")
+local yellShockingBurst							= mod:NewShortYell(390920, nil, nil, nil, "YELL")
+local yellShockingBurstFades					= mod:NewShortFadesYell(390920, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnShockingBurst", 390920, false, false, {4, 5})
 --mod:GroupSpells(373487, 373535)--Group Lighting crash source debuff with dest (nearest player) debuff
@@ -145,14 +148,14 @@ local warnBreakingGravel						= mod:NewStackAnnounce(374321, 2, nil, "Tank|Heale
 local warnGroundShatter							= mod:NewTargetNoFilterAnnounce(374427, 3)
 
 local specWarnGroundShatter						= mod:NewSpecialWarningMoveAway(374427, nil, nil, nil, 1, 2)
-local yellGroundShatter							= mod:NewShortYell(374427)
-local yellGroundShatterFades					= mod:NewShortFadesYell(374427)
 local specWarnViolentUpheavel					= mod:NewSpecialWarningDodge(374430, nil, nil, nil, 2, 2)
 
 local timerGroundShatterCD						= mod:NewCDTimer(30.4, 374427, nil, nil, nil, 3)
 local timerViolentUpheavelCD					= mod:NewCDTimer(33.2, 374430, nil, nil, nil, 3)--Sometimess stutter casts
 local timerSeismicRuptureCD						= mod:NewCDTimer(49.4, 374691, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
 
+local yellGroundShatter							= mod:NewShortYell(374427, nil, nil, nil, "YELL")
+local yellGroundShatterFades					= mod:NewShortFadesYell(374427, nil, nil, nil, "YELL")
 ----Frozen Destroyer
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25076))
 local specWarnFrostBinds						= mod:NewSpecialWarningInterrupt(374623, "HasInterrupt", nil, nil, 1, 2)
@@ -171,10 +174,11 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25083))
 local warnStormBreak							= mod:NewSpellAnnounce(374622, 3)
 
 local specWarnLethalCurrent						= mod:NewSpecialWarningYou(391696, nil, nil, nil, 1, 2)
-local yellLethalCurrent							= mod:NewShortYell(391696)
 
 local timerStormBreakCD							= mod:NewCDTimer(20.8, 374622, nil, nil, nil, 2)
 local timerThunderStrikeCD						= mod:NewCDTimer(41, 374215, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
+
+local yellLethalCurrent							= mod:NewShortYell(391696, nil, nil, nil, "YELL")
 
 mod:GroupSpells(374622, 391696)--Storm Break and it's sub debuff Lethal Current
 
@@ -191,6 +195,15 @@ local castsPerGUID = {}
 local groundShatterTargets = {}
 local zeroIcons = {}
 local updateAltar
+
+function mod:SunderStrikeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSunderStrike:Show()
+		specWarnSunderStrike:Play("defensive")
+		yellSunderStrike:Yell()
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -229,10 +242,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 390548 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnSunderStrike:Show()
-			specWarnSunderStrike:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "SunderStrikeTarget", 0.1, 8)
 		timerSunderStrikeCD:Start()
 	elseif spellId == 373678 then
 		self.vb.chillCast = self.vb.chillCast + 1

@@ -35,8 +35,6 @@ local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Tank|Healer
 local warnIronSpear								= mod:NewTargetAnnounce(376634, 2)
 
 local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2)
-local yellIronSpear								= mod:NewYell(376634)
-local yellIronSpearFades						= mod:NewShortFadesYell(376634)
 local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2)
 local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 3, 2)
 
@@ -57,8 +55,6 @@ local warnStaticSpear							= mod:NewTargetAnnounce(376864, 2)
 local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Tank|Healer")
 
 local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil, nil, 1, 2)
-local yellStaticSpear							= mod:NewYell(376864)
-local yellStaticSpearFades						= mod:NewShortFadesYell(376864)
 local specWarnCracklingUpheaval					= mod:NewSpecialWarningDodge(376892, nil, nil, nil, 2, 2)
 local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 3, 2)
 local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 3, 2)
@@ -68,10 +64,31 @@ local timerStaticSpearCD						= mod:NewCDTimer(38.3, 376864, nil, nil, nil, 3)
 local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3)
 local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--CD used for both Condutive and Thunder
 
+local yellIronSpear								= mod:NewYell(376634, nil, nil, nil, "YELL")
+local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YELL")
 local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL")
+local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL")
+local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL")
 
 mod.vb.addsLeft = 0
 mod.vb.comboCount = 0
+
+function mod:RendingStrikeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnRendingStrike:Show()
+		specWarnRendingStrike:Play("defensive")
+	end
+end
+
+function mod:ConductiveStrikeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnConductiveStrike:Show()
+		specWarnConductiveStrike:Play("defensive")
+		yellConductiveStrike:Yell()
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.addsLeft = 0
@@ -98,20 +115,13 @@ function mod:SPELL_CAST_START(args)
 		timerCracklingUpheavalCD:Start()
 	elseif spellId == 375937 then
 		self.vb.comboCount = self.vb.comboCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnRendingStrike:Show()
-			specWarnRendingStrike:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "RendingStrikeTarget", 0.1, 2)
 		--Now alternates again
 		local timer = (self.vb.comboCount % 2 == 0) and 17 or 22
 		timerRendingStrikeCD:Start(timer, self.vb.comboCount+1)
 	elseif spellId == 376827 then
 		self.vb.comboCount = self.vb.comboCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnConductiveStrike:Show()
-			specWarnConductiveStrike:Play("defensive")
-			yellConductiveStrike:Yell()
-		end
+		self:BossTargetScanner(args.sourceGUID, "ConductiveStrikeTarget", 0.1, 2)
 		local timer = (self.vb.comboCount % 2 == 0) and 17 or 22
 		timerConductiveStrikeCD:Start(timer, self.vb.comboCount+1)
 	elseif spellId == 375929 then

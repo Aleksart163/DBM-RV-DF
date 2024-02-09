@@ -46,23 +46,25 @@ local warnCallSpiderlings						= mod:NewCountAnnounce(372238, 2)
 local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2)
 
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
-local yellChillingBlast							= mod:NewYell(371976)
-local yellChillingBlastFades					= mod:NewShortFadesYell(371976)
 local specWarnEnvelopingWebs					= mod:NewSpecialWarningYouPos(372082, nil, nil, nil, 1, 2)
-local yellEnvelopingWebs						= mod:NewShortPosYell(372082)
-local yellEnvelopingWebsFades					= mod:NewIconFadesYell(372082)
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 3, nil, nil, 1, 6)
-local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(373405, nil, nil, nil, 2, 12)
+local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(373405, nil, nil, nil, 4, 12) --Взрыв паутины
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
 local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2)
 
 local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, nil, 3)--18.5-54.5
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3)--24-46.9
-local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 373405, nil, nil, nil, 2)--36.9-67.6
+local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 373405, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
+local timerGossamerBurst						= mod:NewCastTimer(4, 373405, nil, nil, nil, 7, nil, nil, nil, 1, 3)
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1)--17.6-37
 local timerFrostbreathArachnidCD				= mod:NewCDCountTimer(98.9, -24899, nil, nil, nil, 1)
 local timerFreezingBreathCD						= mod:NewCDTimer(11.1, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
+
+local yellChillingBlast							= mod:NewShortYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв
+local yellChillingBlastFades					= mod:NewShortFadesYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв
+local yellEnvelopingWebs						= mod:NewShortPosYell(372082, nil, nil, nil, "YELL") --Опутывающие сети
+local yellEnvelopingWebsFades					= mod:NewIconFadesYell(372082, nil, nil, nil, "YELL") --Опутывающие сети
 
 mod:AddInfoFrameOption(372030, false)--Useful raid leader tool, but not needed by everyone
 mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing with enveloping Webs
@@ -73,12 +75,13 @@ local warnApexofIce									= mod:NewCastAnnounce(372539, 3)
 local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3)
 
 local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 2)
-local yellSuffocatingWebs							= mod:NewShortPosYell(373048)
-local yellSuffocatingWebsFades						= mod:NewIconFadesYell(373048)
 local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, nil, 2, 12)
 
 local timerSuffocatingWebsCD						= mod:NewCDCountTimer(38.8, 373048, nil, nil, nil, 3)--38-46
 local timerRepellingBurstCD							= mod:NewCDCountTimer(33.9, 371983, nil, nil, nil, 2)--33-37 (unknown on normal
+
+local yellSuffocatingWebs							= mod:NewShortPosYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
+local yellSuffocatingWebsFades						= mod:NewIconFadesYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
 
 mod:AddSetIconOption("SetIconOnSufWeb", 373048, true, false, {1, 2, 3})
 
@@ -118,7 +121,7 @@ local allTimers = {
 			--Enveloping Webs
 			[372082] = {18.1, 26.7, 30.5, 43.8, 24.3, 26.6, 38.9, 26.4, 30.4},--likely 26sec cd that rests on encounter events
 			--Gossamer Burst
-			[373405] = {31.4, 37.7, 64.3, 36.5, 59.6, 37.6},--likely 36 sec cd that resets on encounter events
+			[373405] = {31.4, 37.7, 64.3, 36.5, 59.6, 39.1},--likely 36 sec cd that resets on encounter events
 			--Call Spiderlings
 			[372238] = {0, 25.5, 25.5, 26.7, 38.8, 25.5, 25.5, 25.5, 19.4, 26.7, 26.7},--likely 25 sec cd that resets on encounter events
 		},
@@ -245,6 +248,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerGossamerBurstCD:Start(timer, self.vb.burstCount+1)
 		end
+		timerGossamerBurst:Start()
 	elseif spellId == 374112 then
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnFreezingBreath:Show()

@@ -23,32 +23,33 @@ mod:RegisterEventsInCombat(
 --]]
 local warnRockBlast								= mod:NewTargetNoFilterAnnounce(380487, 3)
 local warnAwakenedEarth							= mod:NewTargetNoFilterAnnounce(381253, 3)
-local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer")
+local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer") --Оглушающий удар
 
 local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 1, 2)
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
 local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 2)
 local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2)
 local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2)
-local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2)
-local specWarnConcussiveSlamTaunt				= mod:NewSpecialWarningTaunt(376279, nil, nil, nil, 1, 2)
+local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2) --Оглушающий удар
+local specWarnConcussiveSlamTaunt				= mod:NewSpecialWarningTaunt(376279, nil, nil, nil, 1, 2) --Оглушающий удар
 local specWarnFrenziedDevastation				= mod:NewSpecialWarningSpell(377505, nil, nil, nil, 3, 2)
 local specWarnInfusedFallout					= mod:NewSpecialWarningYou(391592, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(382458, nil, nil, nil, 1, 8)
 
 local timerInfusedFalloutCD						= mod:NewNextCountTimer(35, 391592, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerRockBlastCD							= mod:NewNextCountTimer(35, 380487, nil, nil, nil, 3)
-local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 3)
+local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerResonatingAnnihilation				= mod:NewCastTimer(5.5, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 local timerShatteringImpactCD					= mod:NewNextCountTimer(35, 383073, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerConcussiveSlamCD						= mod:NewNextCountTimer(35, 376279, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+local timerConcussiveSlamCD						= mod:NewNextCountTimer(35, 376279, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар
 local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2)--Berserk timer basically
 
+local yellConcussiveSlam						= mod:NewShortYell(376279, nil, nil, nil, "YELL") --Оглушающий удар
 local yellInfusedFallout						= mod:NewIconRepeatYell(391592, nil, nil, nil, "YELL")
 local yellRockBlast								= mod:NewShortYell(380487, nil, nil, nil, "YELL")
 local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YELL")
 local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL")
 local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
---local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
 mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
@@ -84,6 +85,15 @@ local allTimers = {
 		[383073] = {27.0, 42.0, 54.4, 42.0, 54.4, 42.0, 54.4, 42.0},
 	},
 }
+
+function mod:ConcussiveSlamTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnConcussiveSlam:Show()
+		specWarnConcussiveSlam:Play("defensive")
+		yellConcussiveSlam:Yell()
+	end
+end
 
 local function yellRepeater(self, text, repeatTotal)
 	repeatTotal = repeatTotal + 1
@@ -158,6 +168,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.annihilationCount == 4 then
 			self:UnregisterShortTermEvents()
 		end
+		timerResonatingAnnihilation:Start()
 	elseif spellId == 377505 and not self.vb.frenziedStarted then
 		self.vb.frenziedStarted = true
 		specWarnFrenziedDevastation:Show()
@@ -172,10 +183,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 376279 then
 		self.vb.slamCount = self.vb.slamCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnConcussiveSlam:Show()
-			specWarnConcussiveSlam:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "ConcussiveSlamTarget", 0.1, 2)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.slamCount+1)
 		if timer then
 			timerConcussiveSlamCD:Start(timer, self.vb.slamCount+1)
