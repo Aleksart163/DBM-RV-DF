@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 373059 372315 372394 372322 372056 372027 372279 374038 375331 397134",
 	"SPELL_AURA_APPLIED 391599 371836 371591 386440 371624 386375 372056 374039 372027 386289 386370",
 	"SPELL_AURA_APPLIED_DOSE 391599 371836 372027 372056",
-	"SPELL_AURA_REMOVED 391599 371836 374039",
+	"SPELL_AURA_REMOVED 391599 371836 374039 371624",
 	"SPELL_AURA_REMOVED_DOSE 391599 371836",
 	"SPELL_PERIODIC_DAMAGE 371514",
 	"SPELL_PERIODIC_MISSED 371514"
@@ -49,7 +49,6 @@ local warnStormingConvocation					= mod:NewSpellAnnounce(386375, 4)
 
 local specWarnConductiveMarkSpread				= mod:NewSpecialWarningMoveAway(371624, nil, nil, nil, 2, 2)
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveTo(371624, nil, nil, nil, 1, 13)
-local yellConductiveMark						= mod:NewYell(371624, 28836)
 local specWarnLightningBolt						= mod:NewSpecialWarningInterrupt(372394, "HasInterrupt", nil, nil, 1, 2)
 
 local timerConductiveMarkCD						= mod:NewCDCountTimer(24.4, 371624, nil, nil, nil, 3)
@@ -61,7 +60,7 @@ local warnCrush									= mod:NewStackAnnounce(372056, 2, nil, "Tank|Healer")
 local warnQuakingConvocation					= mod:NewSpellAnnounce(386370, 4)
 
 local specWarnEarthenPillar						= mod:NewSpecialWarningCount(397134, nil, nil, nil, 2, 2)--Warn everyone for now, change if it has emotes or debuff later
-local specWarnCrush								= mod:NewSpecialWarningDefensive(372056, nil, nil, nil, 2, 2)
+local specWarnCrush								= mod:NewSpecialWarningDefensive(372056, nil, nil, nil, 3, 2)
 local specWarnCrushTaunt						= mod:NewSpecialWarningTaunt(372056, nil, nil, nil, 1, 2)
 
 local timerEarthenPillarCD						= mod:NewCDCountTimer(40.8, 397134, nil, nil, nil, 3)--40.8--71
@@ -73,15 +72,19 @@ local warnSlashingBlaze							= mod:NewStackAnnounce(372027, 2, nil, "Tank|Heale
 local warnBurningConvocation					= mod:NewSpellAnnounce(386289, 4)
 
 local specWarnMeteorAxe							= mod:NewSpecialWarningYouPos(374038, nil, nil, nil, 1, 2)
-local yellMeteorAxe								= mod:NewShortPosYell(374038, 374043, nil, nil, "YELL")
-local yellMeteorAxeFades						= mod:NewIconFadesYell(374038, 374043, nil, nil, "YELL")
 local specWarnSlashingBlaze						= mod:NewSpecialWarningDefensive(372027, nil, nil, nil, 2, 2)
 local specWarnSlashingBlazeTaunt				= mod:NewSpecialWarningTaunt(372027, nil, nil, nil, 1, 2)
 
 local timerMeteorAxeCD							= mod:NewCDCountTimer(39.1, 374038, nil, nil, nil, 3)
 local timerSlashingBlazeCD						= mod:NewCDCountTimer(27.7, 372027, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
+local yellCrush									= mod:NewShortYell(372056, nil, nil, nil, "YELL") 
+local yellConductiveMark						= mod:NewShortYell(371624, 28836, nil, nil, "YELL")
+local yellMeteorAxe								= mod:NewShortPosYell(374038, 374043, nil, nil, "YELL")
+local yellMeteorAxeFades						= mod:NewIconFadesYell(374038, 374043, nil, nil, "YELL")
+
 mod:AddSetIconOption("SetIconOnMeteorAxe", 374038, true, 9, {1, 2})
+mod:AddRangeFrameOption(5, 371624)
 
 local blizzardStacks = {}
 local playerBlizzardHigh = false
@@ -120,6 +123,23 @@ local allTimers = {
 		[373059] = {60, 149.6, 133, 133},
 	},
 }
+
+function mod:CrushTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnCrush:Show()
+		specWarnCrush:Play("defensive")
+		yellCrush:Yell()
+	end
+end
+
+function mod:SlashingBlazeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSlashingBlaze:Show()
+		specWarnSlashingBlaze:Play("defensive")
+	end
+end
 
 function mod:OnCombatStart(delay)
 	table.wipe(blizzardStacks)
@@ -217,18 +237,12 @@ function mod:SPELL_CAST_START(args)
 		timerEarthenPillarCD:Start(timer, self.vb.pillarCast+1)
 	elseif spellId == 372056 then
 		self.vb.crushCast = self.vb.crushCast + 1
+		self:BossTargetScanner(args.sourceGUID, "CrushTarget", 0.1, 2)
 		timerCrushCD:Start(nil, self.vb.crushCast+1)
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
-			specWarnCrush:Show()
-			specWarnCrush:Play("defensive")
-		end
 	elseif spellId == 372027 then
 		self.vb.blazeCast = self.vb.blazeCast + 1
+		self:BossTargetScanner(args.sourceGUID, "SlashingBlazeTarget", 0.1, 2)
 		timerSlashingBlazeCD:Start(nil, self.vb.blazeCast+1)
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
-			specWarnSlashingBlaze:Show()
-			specWarnSlashingBlaze:Play("defensive")
-		end
 	elseif spellId == 372279 then
 		timerChainLightningCD:Start()
 	elseif spellId == 374038 then
@@ -271,6 +285,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnConductiveMark:Show(DBM_COMMON_L.PILLAR)
 			specWarnConductiveMark:Play("movetopillar")
 			yellConductiveMark:Yell()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(5)
+			end
 		end
 	elseif spellId == 386375 then
 		warnStormingConvocation:Show()
@@ -354,6 +371,12 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if args:IsPlayer() then
 			yellMeteorAxeFades:Cancel()
+		end
+	elseif spellId == 371624 then
+		if args:IsPlayer() then
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
+			end
 		end
 	end
 end

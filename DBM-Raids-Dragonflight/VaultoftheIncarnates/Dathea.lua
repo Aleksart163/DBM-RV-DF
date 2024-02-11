@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 387857",
 	"SPELL_AURA_APPLIED 391686 375580",
 	"SPELL_AURA_APPLIED_DOSE 375580",
---	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_REMOVED 391686",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
@@ -36,7 +36,6 @@ local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer")
 
 local specWarnCoalescingStorm					= mod:NewSpecialWarningCount(387849, nil, nil, nil, 2, 2)
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2)
-local yellConductiveMark						= mod:NewYell(391686, 28836)--Short text "Mark"
 local specWarnCyclone							= mod:NewSpecialWarningCount(376943, nil, nil, nil, 2, 12)
 local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2)--232722 "Slicing Tornado" better?
 local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 1, 2)
@@ -48,7 +47,7 @@ local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, ni
 local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3)
 local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 2)
 local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3)--232722 "Slicing Tornado" better?
-local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddInfoFrameOption(391686, true)
@@ -62,6 +61,9 @@ local specWarnAerialSlash						= mod:NewSpecialWarningDefensive(385812, nil, nil
 
 local timerAerialSlashCD						= mod:NewCDTimer(12, 385812, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
+local yellConductiveMark						= mod:NewYell(391686, 28836, nil, nil, "YELL")--Short text "Mark"
+
+mod:AddRangeFrameOption(4, 391686)
 mod:AddSetIconOption("SetIconOnVolatileInfuser", "ej25903", true, 5, {8, 7, 6, 5, 4})
 --Thunder Caller
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25958))
@@ -75,6 +77,14 @@ mod.vb.markCount = 0
 mod.vb.cycloneCount = 0
 mod.vb.crosswindCount = 0
 mod.vb.slamCount = 0
+
+function mod:ZephyrSlamTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnZephyrSlam:Show()
+		specWarnZephyrSlam:Play("carefly")
+	end
+end
 
 function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
@@ -159,10 +169,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 375580 then
 		self.vb.slamCount = self.vb.slamCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnZephyrSlam:Show()
-			specWarnZephyrSlam:Play("carefly")
-		end
+		self:BossTargetScanner(args.sourceGUID, "ZephyrSlamTarget", 0.1, 2)
 		timerZephyrSlamCD:Start(nil, self.vb.slamCount+1)
 	elseif spellId == 387943 then
 		if not castsPerGUID[args.sourceGUID] then
@@ -244,6 +251,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnConductiveMark:Show()
 			specWarnConductiveMark:Play("range5")
 			yellConductiveMark:Yell()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(4)
+			end
 		end
 	elseif spellId == 375580 and not args:IsPlayer() then
 		local amount = args.amount or 1
@@ -262,14 +272,16 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
---[[
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 361966 then
-
+	if spellId == 391686 then
+		if args:IsPlayer() then
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
+			end
+		end
 	end
 end
---]]
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

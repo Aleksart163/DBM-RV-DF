@@ -46,11 +46,10 @@ local warnDiurnasGaze							= mod:NewYouAnnounce(390561, 3)
 
 local specWarnGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380175, nil, nil, nil, 2, 2)
 local specWarnGreatstaffsWrath					= mod:NewSpecialWarningYou(375889, nil, nil, nil, 1, 2)
-local yellGreatstaffsWrath						= mod:NewYell(375889)
 local specWarnWildfire							= mod:NewSpecialWarningDodge(375871, nil, nil, nil, 2, 2)
 local specWarnIcyShroud							= mod:NewSpecialWarningCount(388716, nil, nil, nil, 2, 2)
 local specWarnStormFissure						= mod:NewSpecialWarningDodge(396779, nil, nil, nil, 2, 2, 4)
-local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 1, 2)
+local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 3, 2)
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8)
 
@@ -58,7 +57,7 @@ local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1)--Shared CD ability?
 local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3)--21.4-28
 local timerIcyShroudCD							= mod:NewCDCountTimer(39.1, 388716, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
-local timerMortalStoneclawsCD					= mod:NewCDCountTimer(20.2, 375870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Shared CD in P1, 7.3-15 P2
+local timerMortalStoneclawsCD					= mod:NewCDCountTimer(20.2, 375870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)--Shared CD in P1, 7.3-15 P2
 local timerStormFissureCD						= mod:NewCDTimer(24, 396779, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
@@ -80,7 +79,6 @@ local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 
 local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil, nil, 1, 2, 3)
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2)
-local yellIonizingCharge						= mod:NewYell(375630)
 
 local timerPrimalistReinforcementsCD			= mod:NewAddsCustomTimer(60, 257554, nil, nil, nil, 1)
 local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON)
@@ -104,18 +102,22 @@ local warnEGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(380483, 2)
 
 local specWarnEGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380176, nil, nil, nil, 2, 2)
 local specWarnEGreatstaffsWrath					= mod:NewSpecialWarningYou(380483, nil, nil, nil, 1, 2)
-local yellEGreatstaffsWrath						= mod:NewYell(380483)
 local specWarnFrozenShroud						= mod:NewSpecialWarningCount(388918, nil, nil, nil, 2, 2)
 local specWarnMortalStoneSlam					= mod:NewSpecialWarningDefensive(396269, nil, nil, nil, 1, 2, 4)
 local specWarnDetonatingStoneslam				= mod:NewSpecialWarningYou(396264, false, nil, nil, 1, 2, 4)--Bit redundant, so off by default
-local yellDetonatingStoneslam					= mod:NewShortYell(396264, nil, nil, nil, "YELL")
-local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, nil, "YELL")
 local specWarnDetonatingStoneslamTaunt			= mod:NewSpecialWarningTaunt(396264, nil, nil, nil, 1, 2, 4)
 
 local timerBroodkeepersFuryCD					= mod:NewNextCountTimer(30, 375879, nil, nil, nil, 5)--Static CD
 --local timerEGreatstaffoftheBroodkeeperCD		= mod:NewCDCountTimer(17, 380176, L.staff, nil, nil, 5)--Shared CD ability
 local timerFrozenShroudCD						= mod:NewCDCountTimer(40.5, 388918, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
 local timerMortalStoneSlamCD					= mod:NewCDCountTimer(20.7, 396269, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MYTHIC_ICON)
+
+local yellMortalStoneclaws						= mod:NewShortYell(375870, nil, nil, nil, "YELL")
+local yellGreatstaffsWrath						= mod:NewShortYell(375889, nil, nil, nil, "YELL")
+local yellIonizingCharge						= mod:NewShortYell(375630, nil, nil, nil, "YELL")
+local yellEGreatstaffsWrath						= mod:NewShortYell(380483, nil, nil, nil, "YELL")
+local yellDetonatingStoneslam					= mod:NewShortYell(396264, nil, nil, nil, "YELL")
+local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, nil, "YELL")
 
 local castsPerGUID = {}
 mod.vb.staffCount = 0
@@ -144,6 +146,15 @@ Key Notes:
 In stage 1 staff is consistently 24 seconds, whether that's actual CD kind of doesn't matter, since other spells have equal CD it'll queue at 24-27sec regardless
 In stage 2, staff has 20 second cd on easy and 17 seconds on normal (at least based on current data) but it'll rarely ever see it's base CD due to spell queuing/ICD
 --]]
+function mod:MortalStoneclawsTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnMortalStoneclaws:Show()
+		specWarnMortalStoneclaws:Play("defensive")
+		yellMortalStoneclaws:Yell()
+	end
+end
+
 local function updateAllTimers(self, ICD, exclusion)
 	if not self.Options.ExperimentalTimerCorrection then return end
 	DBM:Debug("updateAllTimers running", 3)
@@ -285,10 +296,7 @@ function mod:SPELL_CAST_START(args)
 		timerFrozenShroudCD:Start(nil, self.vb.icyCount+1)--40-45
 		updateAllTimers(self, 2.5)
 	elseif spellId == 375870 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnMortalStoneclaws:Show()
-			specWarnMortalStoneclaws:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "MortalStoneclawsTarget", 0.1, 2)
 		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we do all this
 		if not self.vb.tankComboStarted then
 			self.vb.tankComboStarted = true

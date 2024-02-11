@@ -71,14 +71,19 @@ local MarkLightning = SpellLinks(396369) --Метка молнии
 local MarkWind = SpellLinks(396364) --Метка ветра
 
 mod.vb.murchalsProshlyapCount = 0
+mod.vb.mProshlyapCount = 0
 
 local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
-	if Lightning then
+	self.vb.mProshlyapCount = self.vb.mProshlyapCount + 1
+	if Lightning and self.vb.mProshlyapCount < 4 then
 		yellPrimalOverload:Yell(6, MarkLightning, 6)
 		self:Schedule(3, startProshlyapationOfMurchal, self)
-	elseif Wind then
+	elseif Wind and self.vb.mProshlyapCount < 4 then
 		yellPrimalOverload:Yell(7, MarkWind, 7)
 		self:Schedule(3, startProshlyapationOfMurchal, self)
+	elseif self.vb.mProshlyapCount == 4 then
+		self.vb.mProshlyapCount = 0
+		self:Unschedule(startProshlyapationOfMurchal)
 	end
 end
 
@@ -86,12 +91,12 @@ local function stopProshlyapationOfMurchal(self)
 	yellPrimalOverload:Cancel()
 	yellMarkWind:Cancel()
 	timerMarkWind:Cancel()
+	self.vb.mProshlyapCount = 0
 	self:Unschedule(startProshlyapationOfMurchal)
 end
 
 local function ProshlyapationOfMurchal(self)
 	self.vb.murchalsProshlyapCount = 0
-	DBM:Debug("murchalsProshlyapCount = 0", 2)
 end
 
 local function checkEntangled(self)
@@ -318,6 +323,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 396369 then --Метка молнии
 		if args:IsPlayer() then
 			Lightning = false
+			self.vb.mProshlyapCount = 0
 			specWarnMarkLightning2:Show()
 			specWarnMarkLightning2:Play("end")
 			self:Unschedule(startProshlyapationOfMurchal)
@@ -328,6 +334,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.murchalsProshlyapCount = self.vb.murchalsProshlyapCount - 1
 		if args:IsPlayer() then
 			Wind = false
+			self.vb.mProshlyapCount = 0
 			specWarnMarkWind2:Show()
 			specWarnMarkWind2:Play("end")
 			self:Unschedule(startProshlyapationOfMurchal)
@@ -336,7 +343,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if self.vb.murchalsProshlyapCount == 1 then
 			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
-			DBM:Debug("murchalsProshlyapCount == 1", 2)
 		end
 	end
 end
@@ -359,7 +365,6 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.AfRaszageth1 or msg == L.AfRaszageth2 then
 		self.vb.murchalsProshlyapCount = 3
-		DBM:Debug("murchalsProshlyapCount = 3")
 		self:Schedule(18.5, ProshlyapationOfMurchal, self)
 		if not overloadDetected then
 			overloadDetected = true

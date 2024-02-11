@@ -7,7 +7,7 @@ mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 61994 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
@@ -19,6 +19,8 @@ mod:RegisterEvents(
 )
 
 --Прошляпанное очко Мурчаля Прошляпенко на рейдовых спеллах [✔]
+local warnMisdirection				= mod:NewYouAnnounce(34477, 1) --Перенаправление
+local warnTricksTheTrade			= mod:NewYouAnnounce(57934, 1) --Маленькие хитрости
 local warnMassres1					= mod:NewCastAnnounce(212040, 1) --Ободрение (друид) --
 local warnMassres2					= mod:NewCastAnnounce(212056, 1) --Отпущение (пал) --
 local warnMassres3					= mod:NewCastAnnounce(212036, 1) --Массовое воскрешение (прист) --
@@ -270,13 +272,13 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres6_rw", spellId, sourceName)
 		end
-	elseif spellId == 7720 then --Ритуал призыва
+--[[	elseif spellId == 7720 then --Ритуал призыва
 		if self.Options.YellOnSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSummoning then
 			if args:IsPlayerSource() then
 				smartAss(L.SoulstoneYell:format(DbmRV, sourceName, SpellLinks(spellId), UnitName("target")))
 			end
-		end
+		end]]
 	end
 end
 
@@ -669,6 +671,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnRebirth:Show()
 			specWarnRebirth:Play("targetyou")
 		end
+	elseif spellId == 61994 then --Ритуал призыва
+		if self.Options.YellOnSummoning then
+			if args:IsPlayerSource() then
+				smartAss(L.SoulstoneYell:format(DbmRV, sourceName, SpellLinks(7720), UnitName("target")))
+			end
+		end
 	end
 end
 function mod:SPELL_AURA_APPLIED(args)
@@ -786,6 +794,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
 			yellTricksTheTrade:Yell(SpellLinks(spellId))
+		elseif args:IsPlayer() then
+			warnTricksTheTrade:Show()
 		end
 		if self.Options.YellOnNapull then
 			prepareMessage(self, "premsg_Spells_tricks", spellId, sourceName, destName)
@@ -795,6 +805,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
 			yellMisdirection:Yell(SpellLinks(spellId))
+		elseif args:IsPlayer() then
+			warnMisdirection:Show()
 		end
 		if self.Options.YellOnNapull then
 			prepareMessage(self, "premsg_Spells_misdirection", spellId, sourceName, destName)
