@@ -40,6 +40,7 @@ local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt",
 --local timerRP						= mod:NewRPTimer(28.5)
 --local timerSpearCD					= mod:NewCDTimer(8, 198077, nil, nil, nil, 3)--More data needed
 local timerTempestCD				= mod:NewCDCountTimer(56, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--More data needed
+local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 3)
 local timerShatterSpearsCD			= mod:NewCDTimer(56, 198077, nil, nil, nil, 2)
 local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 3)
 local timerAddCD					= mod:NewCDTimer(54, 201221, nil, nil, nil, 1, 201215)--54-58
@@ -91,6 +92,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTempest:Show(self.vb.tempestCount)
 		specWarnTempest:Play("runout")
 		timerTempestCD:Start(55, self.vb.tempestCount+1)
+		timerTempest:Start()
 --		timerSpearCD:Start(12)
 --		local timers = tempestTimers[self.vb.temptestMode]
 --		if timers then
