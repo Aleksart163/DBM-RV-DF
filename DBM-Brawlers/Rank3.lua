@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201102223314")
+mod:SetRevision("20240203201001")
 --mod:SetModelID(28649)
 mod:SetUsedIcons(8)
 
@@ -78,5 +78,5 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
-mod.SPELL_AURA_REMOVED = mod.SPELL_AURA_APPLIED_DOSE
-mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_APPLIED_DOSE
+mod.SPELL_AURA_REMOVED = mod.SPELL_AURA_APPLIED
+mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_APPLIED

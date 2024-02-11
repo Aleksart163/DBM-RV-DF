@@ -357,18 +357,25 @@ L.CBTRole							= "Specific Role Spell"
 L.CBTPhase							= "Phase Change"
 L.CBTImportant						= "User Important Spell"
 --Dropdown Options
-L.ColorDropGeneric					= "Generic (Original)"
-L.ColorDrop1						= "Color 1"
-L.ColorDrop2						= "Color 2"
-L.ColorDrop3						= "Color 3"
-L.ColorDrop4						= "Color 4"
-L.ColorDrop5						= "Color 5"
-L.ColorDrop6						= "Color 6"
-L.CDDImportant1						= "Important 1"
-L.CDDImportant2						= "Important 2"
-L.CVoiceOne							= "Count Voice 1"
-L.CVoiceTwo							= "Count Voice 2"
-L.CVoiceThree						= "Count Voice 3"
+--Special Announce Dropdowns
+L.SAOne								= "Global Sound 1 (Personal)"
+L.SATwo								= "Global Sound 2 (Everyone)"
+L.SAThree							= "Global Sound 3 (High Priority Action)"
+L.SAFour							= "Global Sound 4 (High Priority Run Away)"
+--Timer Dropdowns
+L.ColorDropGeneric					= "Generic (Default: Untyped)"
+L.ColorDrop1						= "Color 1 (Default: Add)"
+L.ColorDrop2						= "Color 2 (Default: AOE)"
+L.ColorDrop3						= "Color 3 (Default: Targeted)"
+L.ColorDrop4						= "Color 4 (Default: Interrupt)"
+L.ColorDrop5						= "Color 5 (Default: Role)"
+L.ColorDrop6						= "Color 6 (Default: Stage)"
+L.CDDImportant1						= "Important 1 (Non-Defaulted)"
+L.CDDImportant2						= "Important 2 (Non-Defaulted)"
+--Countdown Dropdowns
+L.CVoiceOne							= "Global Countdown 1"
+L.CVoiceTwo							= "Global Countdown 2"
+L.CVoiceThree						= "Global Countdown 3"
 
 -- Panel: Bar Appearance
 L.Panel_Appearance	 				= "Bar Appearance"
@@ -507,7 +514,7 @@ L.Area_Cinematics					= "Block in-game cinematics"
 L.DuringFight						= "Block in combat cut scenes during boss encounters"--uses explicite IsEncounterInProgress check
 L.InstanceAnywhere					= "Block non combat cut scenes anywhere inside a dungeon or raid instance"
 L.NonInstanceAnywhere				= "DANGER: Block cut scenes in outdoor open world (NOT recommended)"
-L.OnlyAfterSeen						= "Only block cut scenes after they have been seen at least once (STRONGLY recommended, to experience story as intended at least once)"
+L.OnlyAfterSeen						= "Only block cut scenes, you selected to block, after they have been seen at least once. (To experience story as intended at least once, this option is strongly recommended)"
 --Sound
 L.Area_Sound						= "Block in-game sounds"
 L.DisableSFX						= "Disable sound effects channel during boss fights"
@@ -523,7 +530,7 @@ L.HideTooltips						= "Completely hide tooltips during boss fights"
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "Raid Leader Controls"
 L.Area_FeatureOverrides				= "Feature Override Options"
-L.OverrideIcons 					= "Disable icon marking for all users in raid, including your own (Use override instead of disable if you want DBM to do marking under your terms)"
+L.OverrideIcons 					= "Disable icon marking for all users in raid, including your own"-- (Use override instead of disable if you want DBM to do marking under your terms)
 L.OverrideSay						= "Disable chat bubble/SAY messages for all users in the raid, including your own"
 L.DisableStatusWhisperShort			= "Disable status/reply whispers for the entire group"--Duplicated from privacy but makes sense to include option in both panels
 L.DisableGuildStatusShort			= "Disable progression messages from being synced to guild for the entire group"--Duplicated from privacy but makes sense to include option in both panels

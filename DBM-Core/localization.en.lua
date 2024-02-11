@@ -5,13 +5,14 @@ local L = DBM_CORE_L
 L.DEADLY_BOSS_MODS						= "Dungeon Boss Master" -- NO TRANSLATE
 L.DBM									= "DBM RV" -- NO TRANSLATE
 
+DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL	= "https://github.com/Aleksart163/DBM-RV-DF"
+
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
 	L.DEADLY_BOSS_MODS					= "Bigwigs"
 	L.DBM								= "BW"
 end
 
-DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL	= "https://github.com/Aleksart163/DBM-RV-DF"
 L.HOW_TO_USE_MOD						= "Welcome to " .. L.DBM .. ". Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. " .. L.DBM .. " will setup defaults for your spec, but you may want to fine tune these."
 L.SILENT_REMINDER						= "Reminder: " .. L.DBM .. " is still in silent mode."
 L.NEWS_UPDATE							= "|h|c11ff1111News|r|h: This update is basically a re-release of 9.1.9 to clear a false malware detection on the hash of the previous file release. Read more about it |Hgarrmission:DBM:news|h|cff3588ff[here]|r|h"

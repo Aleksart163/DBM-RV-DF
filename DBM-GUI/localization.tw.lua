@@ -2,7 +2,6 @@ if GetLocale() ~= "zhTW" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "三皈依@暗影之月 & Imbav@聖光之願"
 L.Website					= "拜訪討論/支援論壇:|cFF73C2Fhttps://discord.gg/deadlybossmods|r. 請在推特上關注@deadlybossmods或@MysticalOS"
@@ -353,6 +352,10 @@ L.CBTRole					= "角色類型法術"
 L.CBTPhase					= "階段轉換"
 L.CBTImportant				= "使用者重要法術"
 --Dropdown Options
+L.SAOne						= "通用音效 1 (個人)"
+L.SATwo						= "通用音效 2 (全部人)"
+L.SAThree					= "通用音效 3 (高優先動作)"
+L.SAFour					= "通用音效 4 (高優先跑開)"
 L.ColorDropGeneric			= "通用 (原始)"
 L.ColorDrop1				= "顏色 1"
 L.ColorDrop2				= "顏色 2"
@@ -503,7 +506,7 @@ L.Area_Cinematics					= "阻擋遊戲中的動畫"
 L.DuringFight						= "首領戰鬥時阻擋戰鬥過場動畫"--uses explicite IsEncounterInProgress check
 L.InstanceAnywhere					= "在地下城或團隊副本中的任何地方阻擋非戰鬥過場動畫"
 L.NonInstanceAnywhere				= "危險: 在室外開放世界阻擋過場動畫 (不建議)"
-L.OnlyAfterSeen						= "只在每次動畫播放一次之後阻擋 (強烈建議，至少體驗一次劇情)"
+L.OnlyAfterSeen						= "只有阻擋過場動畫，至少播放一次之後您選擇阻擋 (至少體驗一次劇情，強烈建議此選項)"
 --Sound
 L.Area_Sound						= "阻擋遊戲中聲音"
 L.DisableSFX						= "首領戰鬥時停用音效頻道"
@@ -519,7 +522,7 @@ L.HideTooltips						= "首領戰鬥時隱藏完全隱藏提示"
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "團隊領隊控制項"
 L.Area_FeatureOverrides				= "功能覆蓋選項"
-L.OverrideIcons 					= "禁用團隊中所有玩家的圖示標記，包括我自己 (如果您希望DBM按您的原則進行標記，請使用覆蓋而不是禁用)"
+L.OverrideIcons 					= "禁用團隊中所有玩家的圖示標記，包括我自己" --(如果您希望DBM按您的原則進行標記，請使用覆蓋而不是禁用)
 L.OverrideSay						= "禁用團隊中所有玩家的聊天泡泡/說訊息，包含我自己"
 L.DisableStatusWhisperShort			= "禁用整個團隊的狀態/回覆密語"--Duplicated from privacy but makes sense to include option in both panels
 L.DisableGuildStatusShort			= "禁用整個團隊同步到公會的進度訊息"--Duplicated from privacy but makes sense to include option in both panels

@@ -2,7 +2,6 @@ if GetLocale() ~= "deDE" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Übersetzt von "
 L.TranslationBy				= "Jods - Allanâ-Malfurion (EU)"
 L.Website					= "Besuche uns auf Discord: |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Folge auf Twitter: @deadlybossmods oder @MysticalOS"
@@ -90,6 +89,10 @@ L.ThickOutline				= "mit dickem Umriss"
 L.MonochromeOutline			= "ohne Glättung, mit Umriss"
 L.MonochromeThickOutline	= "ohne Glätt., mit dickem Umriss"
 L.RaidWarnSound				= "Sound für Schlachtzugwarnungen"
+--L.SAOne						= "Global Sound 1 (Personal)"
+--L.SATwo						= "Global Sound 2 (Everyone)"
+--L.SAThree					= "Global Sound 3 (High Priority Action)"
+--L.SAFour					= "Global Sound 4 (High Priority Run Away)"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages 		= "Allgemeine Meldungen"

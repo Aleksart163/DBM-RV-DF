@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2555, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240119065627")
+mod:SetRevision("20240208053057")
 mod:SetCreatureID(208363, 208365, 208367)--Urctos, Aerwynn, Pip
 mod:SetEncounterID(2728)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -42,7 +42,7 @@ local warnAgonizingClaws							= mod:NewStackAnnounce(421022, 2, nil, "Tank|Heal
 local warnUrsineRage								= mod:NewSpellAnnounce(425114, 4)--You done fucked up
 
 local specWarnBlindingRage							= mod:NewSpecialWarningCount(420525, nil, nil, nil, 2, 2)
-local specWarnBarrelingCharge						= mod:NewSpecialWarningCount(420948, nil, nil, nil, 1, 2)
+local specWarnBarrelingCharge						= mod:NewSpecialWarningCount(420948, nil, nil, nil, 1, 14)
 local specWarnBarrelingChargeSpecial				= mod:NewSpecialWarningMoveTo(420948, nil, nil, nil, 3, 14)
 local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL")
 local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL")
@@ -334,7 +334,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.specialsActive == 0 then
 			--Is cast during specials, but Cd resets during them, twice, once on special begin and once again on special end
 			if castBeforeSpecial(self, 35) then--Extra large used cause there is a large gap between 2nd cast and specials now.
-				timerNoxiousBlossomCD:Start(self:IsLFR() and 29.3 or self:IsNormal() and 22 or 20.7, self.vb.blossomCount+1)
+				timerNoxiousBlossomCD:Start(self:IsLFR() and 29.3 or self:IsNormal() and 22 or 20, self.vb.blossomCount+1)
 			elseif self.vb.rageNext and castBeforeSpecial(self, 20) then
 				if self:IsMythic() then
 					if self.vb.vinesNext then

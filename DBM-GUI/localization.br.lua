@@ -4,7 +4,6 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Traduzido por "
 L.TranslationBy 			= "GlitterStorm @ Azralon" -- your name here, localizers!
 L.Website					= "Visite-nos no discord em |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Siga na maioria das redes sociais @deadlybossmods ou @mysticalos"
@@ -136,7 +135,10 @@ L.RaidWarnSound				= "toque som no aviso de raide"
 L.RaidWarnMessage 			= "Obrigado por utilizar o Deadly Boss Mods" -- não existe no en.lua
 L.BarWhileMove 				= "Aviso de Raide móvel" -- não existe no en.lua
 L.RaidWarnSound				= "Tocar som junto com o aviso na raide" -- não existe no en.lua
-
+--L.SAOne						= "Global Sound 1 (Personal)"
+--L.SATwo						= "Global Sound 2 (Everyone)"
+--L.SAThree					= "Global Sound 3 (High Priority Action)"
+--L.SAFour					= "Global Sound 4 (High Priority Run Away)"
 
 
 

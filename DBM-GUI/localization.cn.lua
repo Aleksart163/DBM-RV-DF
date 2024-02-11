@@ -8,7 +8,6 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
 L.Website					= "拜访我们的Discord |cFF73C2FBhttps://discord.gg/deadlybossmods|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
@@ -358,6 +357,10 @@ L.CBTRole					= "剧情"
 L.CBTPhase					= "阶段转换"
 L.CBTImportant				= "重要 (自定义)"
 --Dropdown Options
+--L.SAOne						= "Global Sound 1 (Personal)"
+--L.SATwo						= "Global Sound 2 (Everyone)"
+--L.SAThree					= "Global Sound 3 (High Priority Action)"
+--L.SAFour					= "Global Sound 4 (High Priority Run Away)"
 L.ColorDropGeneric					= "通用技能配色"
 L.ColorDrop1						= "小怪来临配色"
 L.ColorDrop2						= "AOE技能配色"
