@@ -14,6 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 198072 198263 198077 198750",
 	"SPELL_CAST_SUCCESS 197961",
 	"SPELL_AURA_APPLIED 197963 197964 197965 197966 197967",
+	"SPELL_AURA_REMOVED 197963 197964 197965 197966 197967",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 mod:RegisterEvents(
@@ -35,14 +36,15 @@ local specWarnTempest				= mod:NewSpecialWarningRun(198263, nil, nil, nil, 4, 2)
 local specWarnShatterSpears			= mod:NewSpecialWarningDodge(198077, nil, nil, nil, 2, 2)
 local specWarnRunicBrand			= mod:NewSpecialWarningMoveTo(197961, nil, nil, nil, 2, 6)
 local specWarnAdd					= mod:NewSpecialWarningSwitch(201221, "-Healer", nil, nil, 1, 2)
-local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt", nil, nil, 1, 2)
+local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt", nil, nil, 3, 2)
 
 --local timerRP						= mod:NewRPTimer(28.5)
 --local timerSpearCD					= mod:NewCDTimer(8, 198077, nil, nil, nil, 3)--More data needed
 local timerTempestCD				= mod:NewCDCountTimer(56, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--More data needed
-local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 3)
+local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerShatterSpearsCD			= mod:NewCDTimer(56, 198077, nil, nil, nil, 2)
-local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 3)
+local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 7)
+local timerRunicBrand				= mod:NewCastTimer(12, 197961, nil, nil, nil, 7, nil, nil, nil, 3, 5)
 local timerAddCD					= mod:NewCDTimer(54, 201221, nil, nil, nil, 1, 201215)--54-58
 
 mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
@@ -126,7 +128,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 197963 and args:IsPlayer() then--Purple K (NE)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|t")
+		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
 			specWarnRunicBrand:Play("frontleft")
 		elseif self.Options.RuneBehavior == "Icon" then
@@ -136,8 +138,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnRunicBrand:Play("targetyou")
 		end
+		timerRunicBrand:Start()
 	elseif spellId == 197964 and args:IsPlayer() then--Orange N (SE)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|tSE|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
+		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
 			specWarnRunicBrand:Play("backleft")
 		elseif self.Options.RuneBehavior == "Icon" then
@@ -147,8 +150,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnRunicBrand:Play("targetyou")
 		end
+		timerRunicBrand:Start()
 	elseif spellId == 197965 and args:IsPlayer() then--Yellow H (SW)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|tSW|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
+		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
 			specWarnRunicBrand:Play("backright")
 		elseif self.Options.RuneBehavior == "Icon" then
@@ -158,8 +162,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnRunicBrand:Play("targetyou")
 		end
+		timerRunicBrand:Start()
 	elseif spellId == 197966 and args:IsPlayer() then--Blue fishies (NW)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|tNW|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
+		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
 			specWarnRunicBrand:Play("frontright")
 		elseif self.Options.RuneBehavior == "Icon" then
@@ -169,8 +174,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnRunicBrand:Play("targetyou")
 		end
+		timerRunicBrand:Start()
 	elseif spellId == 197967 and args:IsPlayer() then--Green box (N)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|tN|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
+		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
 			specWarnRunicBrand:Play("frontcenter")
 		elseif self.Options.RuneBehavior == "Icon" then
@@ -180,6 +186,22 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnRunicBrand:Play("targetyou")
 		end
+		timerRunicBrand:Start()
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 197963 and args:IsPlayer() then--Purple K (NE)
+		timerRunicBrand:Cancel()
+	elseif spellId == 197964 and args:IsPlayer() then--Orange N (SE)
+		timerRunicBrand:Cancel()
+	elseif spellId == 197965 and args:IsPlayer() then--Yellow H (SW)
+		timerRunicBrand:Cancel()
+	elseif spellId == 197966 and args:IsPlayer() then--Blue fishies (NW)
+		timerRunicBrand:Cancel()
+	elseif spellId == 197967 and args:IsPlayer() then--Green box (N)
+		timerRunicBrand:Cancel()
 	end
 end
 

@@ -46,6 +46,7 @@ local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, n
 local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3)--Tornados
 local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3)
 local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 2)
+local timerCyclone								= mod:NewCastTimer(14, 376943, nil, nil, nil, 7, nil, nil, nil, 1, 5)
 local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3)--232722 "Slicing Tornado" better?
 local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
@@ -153,6 +154,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCyclone:Show(self.vb.cycloneCount)
 		specWarnCyclone:Play("pullin")
 		timerCycloneCD:Start(self:IsHeroic() and 75 or 86.2, self.vb.cycloneCount+1)
+		timerCyclone:Start()
 		if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then
 			timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)--13.2-15
 		end
