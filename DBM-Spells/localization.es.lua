@@ -27,7 +27,7 @@ L:SetOptionLocalization({
 	YellOnCauldronofPower 	= "Avisar, cuando alguien esta poniendo $spell:371521",
 	YellOnLavish 			= "Avisar, cuando alguien esta poniendo $spell:382423 o similar",
 	YellOnRepair 			= "Avisar, cuando alguien esta poniendo $spell:199109 o similar",
-	YellOnPylon 			= "Avisar, cuando alguien esta poniendo $spell:199115",
+--	YellOnPylon 			= "Avisar, cuando alguien esta poniendo $spell:199115",
 	YellOnBank 				= "Avisar, cuando alguien esta poniendo $spell:83958",
 	YellOnToys 				= "Avisar, cuando alguien ponga juguetes como $spell:61031",
 	AutoSpirit 				= "Liberar espíritu automáticamente"

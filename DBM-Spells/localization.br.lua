@@ -27,7 +27,7 @@ L:SetOptionLocalization({
 	YellOnCauldronofPower 	= "Relatar quando alguém coloca $spell:371521",
 	YellOnLavish 			= "Relatar quando alguém coloca $spell:382423 ou similar",
 	YellOnRepair 			= "Relatar quando alguém coloca $spell:199109 ou similar",
-	YellOnPylon 			= "Relatar quando alguém coloca $spell:199115",
+--	YellOnPylon 			= "Relatar quando alguém coloca $spell:199115",
 	YellOnBank 				= "Relatar quando alguém coloca $spell:83958",
 	YellOnToys 				= "Relatar quando alguém colocar brinquedos como $spell:61031",
 	AutoSpirit 				= "Libertar espírito automaticamente"

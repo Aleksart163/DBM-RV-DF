@@ -110,7 +110,7 @@ mod:AddBoolOption("YellOnCauldronofPower", true) --Котел с зельями 
 mod:AddBoolOption("YellOnLavish", true) --еда
 mod:AddBoolOption("YellOnBank", true) --банк
 mod:AddBoolOption("YellOnRepair", true) --починка
-mod:AddBoolOption("YellOnPylon", true) --пилон
+--mod:AddBoolOption("YellOnPylon", true) --пилон
 mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
 

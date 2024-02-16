@@ -27,7 +27,7 @@ L:SetOptionLocalization({
 	YellOnCauldronofPower 	= "Сообщать, когда кто-то ставит $spell:371521",
 	YellOnLavish 			= "Сообщать, когда кто-то ставит $spell:382423 или аналогичные ему",
 	YellOnRepair 			= "Сообщать, когда кто-то ставит $spell:199109 или аналогичные ему",
-	YellOnPylon 			= "Сообщать, когда кто-то ставит $spell:199115",
+--	YellOnPylon 			= "Сообщать, когда кто-то ставит $spell:199115",
 	YellOnBank 				= "Сообщать, когда кто-то ставит $spell:83958",
 	YellOnToys 				= "Сообщать, когда кто-то ставит игрушки типо $spell:61031",
 	AutoSpirit 				= "Автоматически покидать тело"
