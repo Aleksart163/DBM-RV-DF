@@ -175,8 +175,6 @@ local premsg_values = {
 	["premsg_Spells_tranquility"] = {0, L.HeroismYell}, --Спокойствие
 	["premsg_Spells_rewind"] = {0, L.HeroismYell}, --Перемотка
 --	["premsg_Spells_innervate"] = {0, L.SoulstoneYell, true}, --Озарение
-	["premsg_Spells_tricks"] = {0, L.SoulstoneYell, true}, --Маленькие хитрости
-	["premsg_Spells_misdirection"] = {0, L.SoulstoneYell, true}, --Перенаправление
 	["premsg_Spells_sourceMagic"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth1"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth2"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
@@ -236,6 +234,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 222695 then -- test2 (Needs to be commented out before release)
 		prepareMessage(self, "premsg_Spells_test2", spellId, sourceName)
 	else]]
+	typeInstance = select(2, IsInInstance())
+	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 212040 and self:AntiSpam(15, "massres") then --Возвращение к жизни (друид)
 		warnMassres1:Show()
 		if self.Options.YellOnMassRes then
@@ -686,9 +687,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	local destName = args.destName
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
+	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 20707 then --Камень души
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnSoulstone:Show()
 			specWarnSoulstone:Play("targetyou")
@@ -697,64 +700,64 @@ function mod:SPELL_AURA_APPLIED(args)
 			prepareMessage(self, "premsg_Spells_soulstone", spellId, sourceName, destName)
 		end
 	elseif spellId == 29166 then --Озарение
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() and self:IsHealer() then
 			specWarnInnervate:Show()
 			specWarnInnervate:Play("targetyou")
 		end
 	elseif spellId == 64901 then --Символ надежды
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() and self:IsHealer() then
 			specWarnSymbolHope:Show()
 			specWarnSymbolHope:Play("targetyou")
 		end
 	elseif spellId == 33206 then --Подавление боли
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnPainSuppression:Show()
 			specWarnPainSuppression:Play("targetyou")
 		end
 	elseif spellId == 357170 then --Растяжение времени
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnTimeDilation:Show()
 			specWarnTimeDilation:Play("targetyou")
 		end
 	elseif spellId == 116849 then --Исцеляющий кокон
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnLifeCocoon:Show()
 			specWarnLifeCocoon:Play("targetyou")
 		end
 	elseif spellId == 1022 then --Благословение защиты
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnBlessingofProtection:Show()
 			specWarnBlessingofProtection:Play("targetyou")
 		end
 	elseif spellId == 47788 then --Оберегающий дух
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnGuardianSpirit:Show()
 			specWarnGuardianSpirit:Play("targetyou")
 		end
 	elseif spellId == 10060 then --Придание сил
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnPowerInfusion:Show()
 			specWarnPowerInfusion:Play("targetyou")
 		end
 	elseif spellId == 369459 and self:AntiSpam(5, "SourceofMagic") then --Магический источник
-		if typeInstance ~= "party" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnSourceofMagic:Show()
 			specWarnSourceofMagic:Play("targetyou")
@@ -763,22 +766,22 @@ function mod:SPELL_AURA_APPLIED(args)
 			prepareMessage(self, "premsg_Spells_sourceMagic", spellId, sourceName, destName)
 		end
 	elseif spellId == 204018 then --Благословение защиты от заклинаний
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnBlessingSpellwarding:Show()
 			specWarnBlessingSpellwarding:Play("targetyou")
 		end
 	elseif spellId == 6940 then --Жертвенное благословение
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnBlessingSacrifice:Show()
 			specWarnBlessingSacrifice:Play("targetyou")
 		end
 	elseif spellId == 102342 then --Железная кора
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnIronbark:Show()
 			specWarnIronbark:Play("targetyou")
@@ -790,26 +793,20 @@ function mod:SPELL_AURA_APPLIED(args)
 			prepareMessage(self, "premsg_Spells_ironbark", spellId, sourceName, destName)
 		end]]
 	elseif spellId == 57934 and self:AntiSpam(5, "TrickTheTrade") then --Маленькие хитрости
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
 			yellTricksTheTrade:Yell(SpellLinks(spellId))
 		elseif args:IsPlayer() then
 			warnTricksTheTrade:Show()
 		end
-		if self.Options.YellOnNapull then
-			prepareMessage(self, "premsg_Spells_tricks", spellId, sourceName, destName)
-		end
 	elseif spellId == 34477 and self:AntiSpam(5, "Misdirection") then --Перенаправление
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
 			yellMisdirection:Yell(SpellLinks(spellId))
 		elseif args:IsPlayer() then
 			warnMisdirection:Show()
-		end
-		if self.Options.YellOnNapull then
-			prepareMessage(self, "premsg_Spells_misdirection", spellId, sourceName, destName)
 		end
 	end
 end
@@ -845,6 +842,8 @@ function mod:SPELL_CREATE(args)
 	local destName = args.destName
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
+	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 698 and self:AntiSpam(10, "summoning") then --Ритуал призыва
 		warnRitualofSummoning:Show(sourceName)
 		if self.Options.YellOnRitualofSummoning then
@@ -891,15 +890,15 @@ function mod:SPELL_CREATE(args)
 			prepareMessage(self, "premsg_Spells_direbrews", spellId, sourceName)
 		end
 	elseif args:IsSpellID(371515, 371519, 371521) then --Котел с зельями мощи
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		warnPotionCauldronofPower:Show()
 		if self.Options.YellOnCauldronofPower then
 			prepareMessage(self, "premsg_Spells_CauldronofPower_rw", spellId, sourceName)
 		end
 	elseif args:IsSpellID(406963, 406964, 406965) then --Котел с зельями великой мощи
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		warnPotionCauldronofPower2:Show()
 		if self.Options.YellOnCauldronofPower then
 			prepareMessage(self, "premsg_Spells_CauldronofPower2_rw", spellId, sourceName)
@@ -914,6 +913,8 @@ function mod:SPELL_SUMMON(args)
 	local destName = args.destName
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
+	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 67826 and self:AntiSpam(10, "jeeves") then --Дживс
 		warnJeeves:Show(sourceName)
 		if self.Options.YellOnRepair then
@@ -937,15 +938,15 @@ function mod:SPELL_SUMMON(args)
 			prepareMessage(self, "premsg_Spells_moonfeather", spellId, sourceName)
 		end
 	elseif spellId == 98008 then --Тотем духовной связи
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if self.Options.YellOnRaidCooldown then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
 			prepareMessage(self, "premsg_Spells_spirittotem", spellId, sourceName)
 		end
 	elseif spellId == 207399 then --Тотем защиты Предков
-		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if DBM:GetNumRealGroupMembers() < 2 then return end
+	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
 			yellAncestralProtectionTotem:Yell(SpellLinks(spellId))
 		end
