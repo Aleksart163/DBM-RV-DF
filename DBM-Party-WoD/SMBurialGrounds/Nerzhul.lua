@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20231117105343")
+mod:SetRevision("20240201070000")
 mod:SetCreatureID(76407)
 mod:SetEncounterID(1682)
 mod.sendMainBossGUID = true
@@ -12,7 +12,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 154442",
---	"SPELL_SUMMON 154350",
+	"SPELL_SUMMON 154350",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -26,12 +26,27 @@ ability.id = 154442 and type = "begincast"
 local warnOmenOfDeath			= mod:NewTargetNoFilterAnnounce(154350, 3)
 
 local specWarnRitualOfBones		= mod:NewSpecialWarningSpell(154671, nil, nil, nil, 2, 2)
-local specWarnOmenOfDeath		= mod:NewSpecialWarningMove(154350, nil, nil, nil, 1, 2)
-local yellOmenOfDeath			= mod:NewYell(154350)
+local specWarnOmenOfDeath		= mod:NewSpecialWarningMove(154350, nil, nil, nil, 3, 2)
 local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, 2)
 
-local timerRitualOfBonesCD		= mod:NewCDTimer(50.5, 154671, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350, nil, nil, nil, 3)
+local timerRitualOfBonesCD		= mod:NewCDTimer(51.5, 154671, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Костяной ритуал
+local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Знамение смерти
+
+local yellOmenOfDeath			= mod:NewYell(154350, nil, nil, nil, "YELL")
+
+mod.vb.MurchalProshlyapenCount = 0
+
+local function startProshlyapationOfMurchal(self)
+	if not UnitIsDeadOrGhost("player") then
+		specWarnRitualOfBones:Show()
+		specWarnRitualOfBones:Play("specialsoon")
+	end
+	timerRitualOfBonesCD:Start()
+	timerOmenOfDeathCD:Start(25.5)
+	self.vb.MurchalProshlyapenCount = 0
+	DBM:Debug("MurchalProshlyapenCount = 0")
+	self:Schedule(51.5, startProshlyapationOfMurchal, self)
+end
 
 function mod:OmenOfDeathTarget(targetname, uId)
 	if not targetname then return end
@@ -45,9 +60,14 @@ function mod:OmenOfDeathTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	--timerOmenOfDeathCD:Start(8.5-delay)
-	timerRitualOfBonesCD:Start(20-delay)
---	specWarnRitualOfBones:ScheduleVoice(18-delay, "specialsoon")
+	self.vb.MurchalProshlyapenCount = 0
+	timerOmenOfDeathCD:Start(9.7-delay)
+	timerRitualOfBonesCD:Start(20.5-delay)
+	self:Schedule(20.5, startProshlyapationOfMurchal, self)
+end
+
+function mod:OnCombatEnd()
+	self:Unschedule(startProshlyapationOfMurchal)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -57,23 +77,16 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
---[[
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 154350 then
+		self.vb.MurchalProshlyapenCount = self.vb.MurchalProshlyapenCount + 1
 		self:BossTargetScanner(76407, "OmenOfDeathTarget", 0.04, 15)
-		timerOmenOfDeathCD:Start()
-	end
-end
---]]
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 154671 then
-		specWarnRitualOfBones:Show()
-		specWarnRitualOfBones:Play("specialsoon")
---		specWarnRitualOfBones:ScheduleVoice(48.5, "specialsoon")
-		timerRitualOfBonesCD:Start()
-	elseif spellId == 177691 then
-		self:BossTargetScanner(76407, "OmenOfDeathTarget", 0.04, 15)
-		timerOmenOfDeathCD:Start()
+		if self.vb.MurchalProshlyapenCount == 1 then
+			timerOmenOfDeathCD:Start(14.8)
+			DBM:Debug("MurchalProshlyapenCount = 1")
+		elseif self.vb.MurchalProshlyapenCount == 2 then
+			timerOmenOfDeathCD:Start(11)
+			DBM:Debug("MurchalProshlyapenCount = 2")
+		end
 	end
 end
