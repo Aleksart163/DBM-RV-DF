@@ -20,7 +20,7 @@ mod:RegisterEvents(
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
-local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
+local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
 local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false) --Дестабилизация
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
@@ -134,27 +134,6 @@ local function checkPrimalOverload(self)
 	timerPrimalOverloadCD:Start(60)
 	self:Schedule(70, checkPrimalOverload, self)
 end
-
---UGLY function to detect this because there isn't a good API for this.
---player regen was very unreliable due to fact it only fires for self
---This wastes cpu time being an infinite loop though but probably no more so than any WA doing this
---[[
-local function checkForCombatRas(self)
-	local combatFound = self:GroupInCombat()
-	if combatFound and not overloadCounting then
-		overloadCounting = true
-		timerPrimalOverloadCD:Resume()
-		local overloadRemaining = timerPrimalOverloadCD:GetRemaining()
-		if overloadRemaining and overloadRemaining > 0 then
-			self:Unschedule(checkPrimalOverload)
-		end
-	elseif not combatFound and overloadCounting then
-		overloadCounting = false
-		timerPrimalOverloadCD:Pause()
-		self:Unschedule(checkPrimalOverload)
-	end
-	self:Schedule(0.25, checkForCombatRas, self)
-end]]
 
 local function checkForCombat(self)
 	local combatFound = self:GroupInCombat()
@@ -563,7 +542,7 @@ do
 	function mod:CHALLENGE_MODE_COMPLETED()
 		--This basically force unloads things even when in a dungeon, so it's not countdown affixes that are disabled
 		delayedZoneCheck(self, true)
-	end
+		end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -620,7 +599,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSpitefulFixate:Show()
 			specWarnSpitefulFixate:Play("targetyou")
 		else
-			warnSpitefulFixate:Show()
+		warnSpitefulFixate:Show()
 		end
 	elseif spellId == 408556 then
 		if self:AntiSpam(20, "aff6") then
