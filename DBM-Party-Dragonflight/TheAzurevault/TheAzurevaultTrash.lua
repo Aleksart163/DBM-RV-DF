@@ -94,7 +94,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnWakingBane:Show(args.sourceName)
 			specWarnWakingBane:Play("kickcast")
-		elseif self:AntiSpam(3, 5) then
+		elseif self:AntiSpam(2, 5) then
 			warnWakingBane:Show()
 		end
 	elseif spellId == 377488 then
@@ -102,12 +102,12 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnIcyBindings:Show(args.sourceName)
 			specWarnIcyBindings:Play("kickcast")
-		elseif self:AntiSpam(3, 5) then
+		elseif self:AntiSpam(2, 5) then
 			warnIcyBindings:Show()
 		end
 	elseif spellId == 387067 then
 		timerArcaneBashCD:Start(18.2, args.sourceGUID)
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(3, 5) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(1.5, 5) then
 			specWarnArcaneBash:Show()
 			specWarnArcaneBash:Play("shockwave")
 		end
