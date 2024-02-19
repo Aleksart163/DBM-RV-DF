@@ -26,6 +26,7 @@ local warnIceCutter							= mod:NewCastAnnounce(377105, 4, nil, nil, "Tank|Heale
 local warnIcyBindings						= mod:NewCastAnnounce(377488, 3)
 local warnWakingBane						= mod:NewCastAnnounce(386546, 3)
 local warnBestialRoar						= mod:NewCastAnnounce(396991, 3)
+local warnArcaneBash						= mod:NewCastAnnounce(387067, 3)
 local warnSplinteringShards					= mod:NewTargetAnnounce(371007, 2)
 local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
 local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
@@ -110,6 +111,8 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(1.5, 5) then
 			specWarnArcaneBash:Show()
 			specWarnArcaneBash:Play("shockwave")
+		else
+			warnArcaneBash:Show()
 		end
 	end
 end
