@@ -3,6 +3,7 @@ if GetLocale() ~= "koKR" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
+
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
 L.Website					= "디스코드 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. SNS에서 @deadlybossmods 또는 @MysticalOS를 팔로우하세요"
@@ -509,7 +510,7 @@ L.Area_Cinematics					= "게임내 시네마틱 재생 차단"
 L.DuringFight						= "보스 전투중 컷신 재생 차단"--uses explicite IsEncounterInProgress check
 L.InstanceAnywhere					= "던전이나 공격대 인스턴스에서 비전투 컷신 재생 차단"
 L.NonInstanceAnywhere				= "위험: 야외 컷신 재생 차단 (권장하지 않음)"
-L.OnlyAfterSeen						= "한번 봤던 컷신만 재생 차단 (강력 권장, 한번은 스토리를 보는게 좋습니다)"
+L.OnlyAfterSeen						= "한번 봤던 컷신만 재생 차단 (컷신이 한번은 나오기 때문에 스토리를 이해하려면 이 설정을 강력히 추천합니다)"
 --Sound
 L.Area_Sound						= "게임내 소리 차단"
 L.DisableSFX					= "보스 전투중 효과 음량 비활성화"
@@ -580,7 +581,12 @@ L.NPAuraSize				= "아이콘 픽셀 크기 (정사각형): %d"
 L.NPIcon_BarOffSetX 				= "아이콘 위치 조정 X: %d"
 L.NPIcon_BarOffSetY 				= "아이콘 위치 조정 Y: %d"
 L.NPIcon_GrowthDirection 			= "아이콘 생성 방향"
-L.NPDemo							= "테스트 (이름표 근처에서 실행)"
+L.NPIcon_Spacing		 			= "아이콘 간격: %d"
+L.NPIcon_MaxTextLen		 			= "텍스트 최대 길이: %d"
+L.NPIconAnchorPoint		 			= "아이콘 기준점"
+L.NPDemo							= "테스트 (이름표 보이는데서만 작동)"
+L.FontTypeTimer						= "타이머 글꼴 선택"
+L.FontTypeText						= "텍스트 글꼴 선택"
 
 -- Misc
 L.Area_General				= "일반"

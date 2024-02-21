@@ -2,6 +2,7 @@ if GetLocale() ~= "zhTW" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
+
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "三皈依@暗影之月 & Imbav@聖光之願"
 L.Website					= "拜訪討論/支援論壇:|cFF73C2Fhttps://discord.gg/deadlybossmods|r. 請在推特上關注@deadlybossmods或@MysticalOS"
@@ -576,7 +577,12 @@ L.NPAuraSize				= "光環像素大小 (平方): %d"
 L.NPIcon_BarOffSetX 		= "圖示水平偏移：%d"
 L.NPIcon_BarOffSetY 		= "圖示垂直偏移：%d"
 L.NPIcon_GrowthDirection 	= "圖示增長方向"
+L.NPIcon_Spacing		 	= "圖示間距: %d"
+L.NPIcon_MaxTextLen		 	= "最大文字長度: %d"
+L.NPIconAnchorPoint		 	= "圖示定位點"
 L.NPDemo					= "測試 (靠近名條)"
+L.FontTypeTimer				= "選擇計時器字體"
+L.FontTypeText				= "選擇文字字體"
 
 -- Misc
 L.Area_General				= "一般"

@@ -4,7 +4,6 @@
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30403
 
-
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Main Core|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0核心|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Ядро|r|cffffe00a>|r |cff69ccf0Основной модуль|r
@@ -24,7 +23,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 7a0680c
+## Version: 77acf5e
 ## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua

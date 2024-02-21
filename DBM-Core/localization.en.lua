@@ -473,11 +473,13 @@ L.AUTO_TIMER_TEXTS = {
 	cdcount								= "%s (%%s)",--Now same as next, as the ~ was moved to timer number -- OPTIONAL
 	cdsource							= "%s: >%%s<",--Now same as next, as the ~ was moved to timer number -- OPTIONAL
 	cdspecial							= "Special",--Now same as next, as the ~ was moved to timer number
+	cdcombo								= "%%1$s + %%2$s",--Now same as next, as the ~ was moved to timer number
 
 	next								= "%s", -- OPTIONAL
 	nextcount							= "%s (%%s)", -- OPTIONAL
 	nextsource							= "%s: >%%s<", -- OPTIONAL
 	nextspecial							= "Special",
+	nextcombo							= "%%1$s + %%2$s",--Now same as next, as the ~ was moved to timer number
 
 	achievement							= "%s", -- OPTIONAL
 	stage								= "Stage",
@@ -513,12 +515,14 @@ L.AUTO_TIMER_OPTIONS = {
 	cdnpcount							= "Show nameplate only timer (with count) for $spell:%s cooldown",
 	cdsource							= "Show timer (with source) for $spell:%s cooldown",--Maybe better wording?
 	cdspecial							= "Show timer for special ability cooldown",
+	cdcombo								= "Show timer for ability combo cooldown",--Used for combining 2 abilities into a single timer
 	next								= "Show timer for next $spell:%s",
 	nextcount							= "Show timer for next $spell:%s",
 	nextnp								= "Show nameplate only timer for next $spell:%s",
 	nextnpcount							= "Show nameplate only timer (with count) for next $spell:%s",
 	nextsource							= "Show timer (with source) for next $spell:%s",--Maybe better wording?
 	nextspecial							= "Show timer for next special ability",
+	nextcombo							= "Show timer for next ability combo",--Used for combining 2 abilities into a single timer
 	achievement							= "Show timer for %s",
 	stage								= "Show timer for next stage",
 	stagecount							= "Show timer (with count) for next stage",
@@ -576,7 +580,7 @@ L.AUTO_YELL_ANNOUNCE_TEXT = {
 	repeaticon							= "{rt%%1$d}"--Doesn't need translation. It's just icon spam -- OPTIONAL
 }
 L.AUTO_YELL_CUSTOM_POSITION				= "{rt%d}%s"--Doesn't need translating. Has no strings (Used in niche situations such as icon repeat yells) -- OPTIONAL
-L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}" --Нужно для сообщений в ключах
+L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}" -- OPTIONAL Нужно для прошляпа Мурчаля в ключах
 L.AUTO_YELL_CUSTOM_FADE					= "%s faded"
 L.AUTO_HUD_OPTION_TEXT					= "Show HudMap for $spell:%s (Retired)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "Show HudMap for various mechanics (Retired)"

@@ -2,6 +2,7 @@ if GetLocale() ~= "deDE" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
+
 L.TranslationByPrefix		= "Übersetzt von "
 L.TranslationBy				= "Jods - Allanâ-Malfurion (EU)"
 L.Website					= "Besuche uns auf Discord: |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Folge auf Twitter: @deadlybossmods oder @MysticalOS"
@@ -353,6 +354,7 @@ L.FontHeight	= 16
 L.OTabRaids="Schlachtzug"
 L.OTabDungeons="Gruppe/Solo"
 L.OTabAbout="Über DBM"
+L.OTabPlugins = "Sonstige"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.TabCategory_AFFIXES="Affixe"
 L.Import="Importieren"
 L.Area_BasicSetup="Tipos für die Initiale DBM Konfiguration"
@@ -385,7 +387,7 @@ L.oRA3AnnounceConsumables="Melde oRA3 Verbrauchsgüter Check bei Kampfbeginn"
 L.Area_ImportExportProfile="Import/Export von Profilen"
 L.ImportExportInfo="Importieren überschreibt das aktuelle Profil. Nutzung auf eigene Gefahr."
 L.ButtonImportProfile="Importiere Profil"
-L.ButtonExportProfile="EXportiere Profil"
+L.ButtonExportProfile="Exportiere Profil"
 L.ImportErrorOn="Benutzerdefinierte Töne für Einstellung %s fehlen"
 L.ImportVoiceMissing="Fehlendes Sprachpaket: %s"
 L.TabCategory_Alerts="Warnungen"

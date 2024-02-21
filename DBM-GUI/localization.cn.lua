@@ -8,6 +8,7 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
+
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
 L.Website					= "拜访我们的Discord |cFF73C2FBhttps://discord.gg/deadlybossmods|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
@@ -580,7 +581,10 @@ L.NPAuraSize				= "技能图标大小 (比例): %d"
 L.NPIcon_BarOffSetX 		= "技能图标X轴偏移: %d"
 L.NPIcon_BarOffSetY 		= "技能图标Y轴偏移: %d"
 L.NPIcon_GrowthDirection 	= "技能图标出现方向"
+--L.NPIconAnchorPoint		 			= "Icon Anchor Point"
 L.NPDemo					= "测试 (靠近姓名版)"
+--L.FontTypeTimer						= "Select timer font"
+--L.FontTypeText						= "Select text font"
 
 -- Misc
 L.Area_General				= "一般"

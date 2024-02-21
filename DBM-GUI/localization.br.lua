@@ -4,6 +4,7 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
+
 L.TranslationByPrefix		= "Traduzido por "
 L.TranslationBy 			= "GlitterStorm @ Azralon" -- your name here, localizers!
 L.Website					= "Visite-nos no discord em |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Siga na maioria das redes sociais @deadlybossmods ou @mysticalos"

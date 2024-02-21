@@ -75,29 +75,29 @@ end
 
 ---@class DBM
 local DBM = {
-	Revision = parseCurseDate("20240212070000"),
+	Revision = parseCurseDate("20240220180302"),
 }
 _G.DBM = DBM
 
-local fakeBWVersion, fakeBWHash = 318, "56c92da"--318.2
+local fakeBWVersion, fakeBWHash = 323, "35eef51"--323.0
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
 	DBM.DisplayVersion = "10.2.24"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 12) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 9--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
-	DBM.DisplayVersion = "1.15.11"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 8) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "1.15.16"
+	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 5--When this is incremented, trigger force disable regardless of major patch
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
 	DBM.ReleaseRevision = releaseDate(2024, 1, 9) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.58"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 8) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.59"
+	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 4--When this is incremented, trigger force disable regardless of major patch
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
@@ -156,7 +156,7 @@ DBM.DefaultOptions = {
 	SpecialWarningSound4 = not isClassic and 553566,
 	SpecialWarningSound5 = 554236,--"Sound\\Creature\\Loathstare\\Loa_Naxx_Aggro02.ogg"
 	ModelSoundValue = "Short",
-	CountdownVoice = "Alarak",
+	CountdownVoice 	= "Alarak",
 	CountdownVoice2 = "Artanis",
 	CountdownVoice3 = "Kerrigan",
 	PullVoice = "Alarak",
@@ -368,7 +368,18 @@ DBM.DefaultOptions = {
 	NPIconSize = 30,
 	NPIconXOffset = 0,
 	NPIconYOffset = 0,
+	NPIconSpacing = 0,
 	NPIconGrowthDirection = "CENTER",
+	NPIconAnchorPoint = "TOP",
+	NPIconTimerEnabled = true,
+	NPIconTimerFont = "standardFont",
+	NPIconTimerFontStyle = "None",
+	NPIconTimerFontSize = 18,
+	NPIconTextEnabled = true,
+	NPIconTextFont = "standardFont",
+	NPIconTextFontStyle = "None",
+	NPIconTextFontSize = 10,
+	NPIconTextMaxLen = 7,
 	DontPlayCountdowns = false,
 	DontSendYells = false,
 	BlockNoteShare = false,
@@ -447,7 +458,7 @@ local usedProfile = "Default"
 local dbmIsEnabled = true
 private.dbmIsEnabled = dbmIsEnabled
 -- Table variables
-local newerVersionPerson, forceDisablePerson, cSyncSender, eeSyncSender, iconSetRevision, iconSetPerson, loadcIds, inCombat, oocBWComms, combatInfo, bossIds, raid, autoRespondSpam, queuedBattlefield, bossHealth, bossHealthuIdCache, lastBossEngage, lastBossDefeat = {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+local newerVersionPerson, forceDisablePerson, cSyncSender, eeSyncSender, iconSetRevision, iconSetPerson, loadcIds, inCombat, oocBWComms, combatInfo, bossIds, raid, autoRespondSpam, queuedBattlefield, bossHealth, bossNames, bossHealthuIdCache, lastBossEngage, lastBossDefeat = {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
 -- False variables
 local voiceSessionDisabled, targetEventsRegistered, combatInitialized, healthCombatInitialized, watchFrameRestore, questieWatchRestore, bossuIdFound, timerRequestInProgress = false, false, false, false, false, false, false, false
 -- Nil variables
@@ -604,8 +615,9 @@ else--TBC and Vanilla
 		[540] = {70, 2}, [558] = {70, 2}, [556] = {70, 2}, [555] = {70, 2}, [542] = {70, 2}, [546] = {70, 2}, [545] = {70, 2}, [547] = {70, 2}, [553] = {70, 2}, [554] = {70, 2}, [552] = {70, 2}, [557] = {70, 2}, [269] = {70, 2}, [560] = {70, 2}, [543] = {70, 2}, [585] = {70, 2},--BC Dungeons
 	}
 	-- Season of Discovery
-	if C_Seasons and C_Seasons.GetActiveSeason() == 2 then
+	if C_Seasons and C_Seasons.GetActiveSeason() == Enum.SeasonID.Placeholder then
 		instanceDifficultyBylevel[48] = {25, 3} -- Blackfathom deeps level up raid
+		instanceDifficultyBylevel[90] = {40, 3} -- Gnomeregan level up raid
 	end
 end
 
@@ -2654,6 +2666,9 @@ do
 		end
 	end
 
+	--This is primarily used for cached player unitIds by name lookup
+	--I'm not even sure why a boss check is in it, since GetBossUnitId existed (and is now deprecated)
+	--I'll leave the boss checking for now since I don't know if any mods (or core) are using this function this way
 	function DBM:GetRaidUnitId(name)
 		for i = 1, 10 do
 			local unitId = "boss" .. i
@@ -2680,27 +2695,75 @@ do
 	}
 
 	local bossTargetuIds = {
-		"boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8", "boss9", "boss10", "focus", "target"
+		"boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8", "boss9", "boss10"
 	}
 
 	--Not to be confused with GetUnitIdFromCID
-	function DBM:GetUnitIdFromGUID(guid, scanOnlyBoss)
-		local unitID
-		--First use blizzard internal client token check, but only if it's not boss only (because blizzard checks every token imaginable, even more than fullUids does)
-		if UnitTokenFromGUID and not scanOnlyBoss then
-			unitID = UnitTokenFromGUID(guid)
+	function DBM:GetUnitIdFromGUID(guid, bossOnly)
+		local returnUnitID
+		--First use blizzard internal client token check but only if it's not boss only
+		--(because blizzard checks every token imaginable, even more than fullUids does and they have boss as the END in their order selection)
+		--DBM prioiritzes the most common/useful tokens first, and rarely iterates passed even boss1, which is first token in OUR priorities
+		if UnitTokenFromGUID and not bossOnly then
+			returnUnitID = UnitTokenFromGUID(guid)
 		end
-		if unitID then
-			return unitID
+		if returnUnitID then
+			return returnUnitID
 		else
-			local usedTable = scanOnlyBoss and bossTargetuIds or fullUids
+			local usedTable = bossOnly and bossTargetuIds or fullUids
 			for _, unitId in ipairs(usedTable) do
 				local guid2 = UnitGUID(unitId)
 				if guid == guid2 then
-					return unitId
+					return returnUnitID
 				end
 			end
 		end
+	end
+
+	--Not to be confused with GetUnitIdFromGUID, in this function we don't know a specific guid so can't use UnitTokenFromGUID
+	function DBM:GetUnitIdFromCID(creatureID, bossOnly)
+		local returnUnitID
+		--Always prioritize a quick boss unit scan on retail first
+		if not isClassic and not isBCC then
+			for i = 1, 10 do
+				local unitId = "boss" .. i
+				local bossGUID = UnitGUID(unitId)
+				local cid = self:GetCIDFromGUID(bossGUID)
+				if cid == creatureID then
+					returnUnitID = unitId
+				end
+			end
+		end
+		if not returnUnitID and not bossOnly then
+			for _, unitId in ipairs(fullUids) do
+				local guid2 = UnitGUID(unitId)
+				local cid = self:GetCIDFromGUID(guid2)
+				if cid == creatureID then
+					returnUnitID = unitId
+				end
+			end
+		end
+		return returnUnitID
+	end
+
+	--Deprecated, only old mods use this (newer mods use GetUnitIdFromGUID or GetUnitIdFromCID)
+	function DBM:GetBossUnitId(name, bossOnly)
+		local returnUnitID
+		if not isClassic and not isBCC then
+			for i = 1, 10 do
+				if UnitName("boss" .. i) == name then
+					returnUnitID = "boss" .. i
+				end
+			end
+		end
+		if not returnUnitID and not bossOnly then
+			for uId in self:GetGroupMembers() do
+				if UnitName(uId .. "target") == name and not UnitIsPlayer(uId .. "target") then
+					returnUnitID = uId .. "target"
+				end
+			end
+		end
+		return returnUnitID
 	end
 
 	function DBM:GetPlayerGUIDByName(name)
@@ -2842,48 +2905,6 @@ end
 function DBM:IsCreatureGUID(guid)
 	local guidType = strsplit("-", guid or "")
 	return guidType and (guidType == "Creature" or guidType == "Vehicle")--To determine, add pet or not?
-end
-
-function DBM:GetBossUnitId(name, bossOnly)--Deprecated, only old mods use this
-	local returnUnitID
-	for i = 1, 10 do
-		if UnitName("boss" .. i) == name then
-			returnUnitID = "boss" .. i
-		end
-	end
-	if not returnUnitID and not bossOnly then
-		for uId in self:GetGroupMembers() do
-			if UnitName(uId .. "target") == name and not UnitIsPlayer(uId .. "target") then
-				returnUnitID = uId .. "target"
-			end
-		end
-	end
-	return returnUnitID
-end
-
---Not to be confused with GetUnitIdFromGUID
-function DBM:GetUnitIdFromCID(creatureID, bossOnly)
-	local returnUnitID
-	for i = 1, 10 do
-		local unitId = "boss" .. i
-		local bossGUID = UnitGUID(unitId)
-		local cid = self:GetCIDFromGUID(bossGUID)
-		if cid == creatureID then
-			returnUnitID = unitId
-		end
-	end
-	--Didn't find valid unitID from boss units, scan raid targets
-	if not returnUnitID and not bossOnly then
-		for uId in DBM:GetGroupMembers() do--Do not use self on this function, because self might be bossModPrototype
-			local unitId = uId .. "target"
-			local bossGUID = UnitGUID(unitId)
-			local cid = self:GetCIDFromGUID(bossGUID)
-			if cid == creatureID then
-				returnUnitID = unitId
-			end
-		end
-	end
-	return returnUnitID
 end
 
 --Scope, will only check if a unit is within 43 yards now
@@ -3123,6 +3144,8 @@ function DBM:LoadModOptions(modId, inCombat, first)
 		if first then
 			savedStats[id] = savedStats[id] or {}
 			local stats = savedStats[id]
+			stats.followerKills = stats.followerKills or 0
+			stats.followerPulls = stats.followerPulls or 0
 			stats.normalKills = stats.normalKills or 0
 			stats.normalPulls = stats.normalPulls or 0
 			stats.heroicKills = stats.heroicKills or 0
@@ -3428,6 +3451,8 @@ function DBM:ClearAllStats(modId)
 		local mod = self:GetModByName(id)
 		-- prevent nil table error
 		local defaultStats = {}
+		defaultStats.followerKills = 0
+		defaultStats.followerPulls = 0
 		defaultStats.normalKills = 0
 		defaultStats.normalPulls = 0
 		defaultStats.heroicKills = 0
@@ -4279,7 +4304,7 @@ do
 						fishingPole = true
 					end
 				end
-				if IsInRaid() and difference >= 30 then
+				if IsInRaid() and difference >= 18 then
 					dummyMod.geartext:Show(L.GEAR_WARNING:format(floor(difference)))
 				elseif IsInRaid() and (not weapon or fishingPole) then
 					dummyMod.geartext:Show(L.GEAR_WARNING_WEAPON)
@@ -5002,7 +5027,10 @@ do
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
 		self:Debug("ENCOUNTER_START event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size)
 		if dbmIsEnabled then
-			self:CheckAvailableMods()
+			--Only nag in raids on engage
+			if IsInRaid() then
+				self:CheckAvailableMods()
+			end
 			if combatInfo[LastInstanceMapID] then
 				for _, v in ipairs(combatInfo[LastInstanceMapID]) do
 					if not v.noESDetection and not (#inCombat > 0 and v.noMultiBoss) then
@@ -5025,7 +5053,10 @@ do
 
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size .. " " .. success)
-		self:CheckAvailableMods()
+		if success == 0 then
+			--Only nag on wipes (in any content)
+			self:CheckAvailableMods()
+		end
 		for i = #inCombat, 1, -1 do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
@@ -5265,24 +5296,24 @@ function checkWipe(self, confirm)
 	end
 end
 
-function checkBossHealth(self, onlyHighest)
+function checkBossHealth(self, mod)
 	if #inCombat > 0 then
 		for _, v in ipairs(inCombat) do
 			if not v.multiMobPullDetection or v.mainBoss then
-				self:GetBossHP(v.mainBoss or v.combatInfo.mob or -1, onlyHighest)
+				self:GetBossHP(v.mainBoss or v.combatInfo.mob or -1, mod.onlyHighest)
 			else
 				for _, mob in ipairs(v.multiMobPullDetection) do
-					self:GetBossHP(mob, onlyHighest)
+					self:GetBossHP(mob, mod.onlyHighest)
 				end
 			end
 		end
-		self:Schedule(1, checkBossHealth, self, onlyHighest)
+		self:Schedule(mod.bossHealthUpdateTime or 1, checkBossHealth, self, mod)
 	end
 end
 
 function checkCustomBossHealth(self, mod)
 	mod:CustomHealthUpdate()
-	self:Schedule(1, checkCustomBossHealth, self, mod)
+	self:Schedule(mod.bossHealthUpdateTime or 1, checkCustomBossHealth, self, mod)
 end
 
 do
@@ -5440,9 +5471,9 @@ do
 				end
 				--boss health info scheduler
 				if mod.CustomHealthUpdate then
-					self:Schedule(1, checkCustomBossHealth, self, mod)
+					self:Schedule(mod.bossHealthUpdateTime or 1, checkCustomBossHealth, self, mod)
 				else
-					self:Schedule(1, checkBossHealth, self, mod.onlyHighest)
+					self:Schedule(mod.bossHealthUpdateTime or 1, checkBossHealth, self, mod)
 				end
 			end
 			--process global options
@@ -8528,6 +8559,7 @@ function DBM:GetBossHP(cIdOrGUID, onlyHighest)
 		if not onlyHighest or onlyHighest and hp > (bossHealth[cIdOrGUID] or 0) then
 			bossHealth[cIdOrGUID] = hp
 		end
+		bossNames[cIdOrGUID] = UnitName(uId)
 		return hp, uId, UnitName(uId)
 	--Focus, does not exist in classic
 	elseif isRetail and ((self:GetCIDFromGUID(UnitGUID("focus")) == cIdOrGUID or UnitGUID("focus") == cIdOrGUID) and UnitHealthMax("focus") ~= 0) then
@@ -8536,6 +8568,7 @@ function DBM:GetBossHP(cIdOrGUID, onlyHighest)
 		if not onlyHighest or onlyHighest and hp > (bossHealth[cIdOrGUID] or 0) then
 			bossHealth[cIdOrGUID] = hp
 		end
+		bossNames[cIdOrGUID] = UnitName("focus")
 		return hp, "focus", UnitName("focus")
 	else
 		--Boss UnitIds
@@ -8550,6 +8583,7 @@ function DBM:GetBossHP(cIdOrGUID, onlyHighest)
 						bossHealth[cIdOrGUID] = hp
 					end
 					bossHealthuIdCache[cIdOrGUID] = unitID
+					bossNames[cIdOrGUID] = UnitName(unitID)
 					return hp, unitID, UnitName(unitID)
 				end
 			end
@@ -8566,7 +8600,25 @@ function DBM:GetBossHP(cIdOrGUID, onlyHighest)
 					bossHealth[cIdOrGUID] = hp
 				end
 				bossHealthuIdCache[cIdOrGUID] = unitId
+				bossNames[cIdOrGUID] = UnitName(unitId)
 				return hp, unitId, UnitName(unitId)
+			end
+		end
+		if not isRetail then
+			--Scan a few nameplates if we don't have raid boss uIDs, but not worth trying all of them
+			for i = 1, 20 do
+				local unitId = "nameplate" .. i
+				local bossguid = UnitGUID(unitId)
+				if (self:GetCIDFromGUID(bossguid) == cIdOrGUID or bossguid == cIdOrGUID) and UnitHealthMax(unitId) ~= 0 then
+					if bossHealth[cIdOrGUID] and (UnitHealth(unitId) == 0 and not UnitIsDead(unitId)) then return bossHealth[cIdOrGUID], unitId, UnitName(unitId) end--Return last non 0 value if value is 0, since it's last valid value we had.
+					local hp = UnitHealth(unitId) / UnitHealthMax(unitId) * 100
+					if not onlyHighest or onlyHighest and hp > (bossHealth[cIdOrGUID] or 0) then
+						bossHealth[cIdOrGUID] = hp
+					end
+					bossHealthuIdCache[cIdOrGUID] = unitId
+					bossNames[cIdOrGUID] = UnitName(unitId)
+					return hp, unitId, UnitName(unitId)
+				end
 			end
 		end
 	end
@@ -8626,6 +8678,10 @@ function bossModPrototype:GetLowestBossHealth()
 end
 
 bossModPrototype.GetBossHP = DBM.GetBossHP
+
+function DBM:GetCachedBossHealth()
+	return bossHealth, bossNames
+end
 
 -------------------------
 --  Timers Table Util  --
@@ -9386,7 +9442,7 @@ do
 					spellId = -spellId
 					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:EJ_GetSectionInfo(spellId) or CL.UNKNOWN)
 				else
-					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(SpellLinks(spellId) or CL.UNKNOWN)
+					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(SpellLinks(spellId) or CL.UNKNOWN) --Необходимо для прошляпа Мурчаля
 				end
 			else
 				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(CL.UNKNOWN)
@@ -11544,6 +11600,16 @@ do
 	---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: boolean|string?, optionName: string|number?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?)
 	function bossModPrototype:NewNextSpecialTimer(...)
 		return newTimer(self, "nextspecial", ...)
+	end
+
+	---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: boolean|string?, optionName: string|number?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?)
+	function bossModPrototype:NewCDComboTimer(...)
+		return newTimer(self, "cdcombo", ...)
+	end
+
+	---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: boolean|string?, optionName: string|number?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?)
+	function bossModPrototype:NewNextComboTimer(...)
+		return newTimer(self, "nextcombo", ...)
 	end
 
 	---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: boolean|string?, optionName: string|number?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?)
