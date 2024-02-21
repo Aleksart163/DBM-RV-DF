@@ -84,7 +84,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalOchkenProshlyapen = "Думаете, титаны навели в мире порядок? Нет!",
+	MurchalOchkenProshlyapen  = "Думаете, титаны навели в мире порядок? Нет!",
 	MurchalOchkenProshlyapen2 = "Прислужники бури, услышьте меня!",
 	MurchalOchkenProshlyapen3 = "Конец господству Аспектов! Тюрьма разрушена!",
 	negative = "отрицательную",

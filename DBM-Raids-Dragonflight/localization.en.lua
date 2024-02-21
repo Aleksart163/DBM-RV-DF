@@ -83,12 +83,12 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalOchkenProshlyapen = "You think the titans brought order to this world? No!",
+	MurchalOchkenProshlyapen  = "You think the titans brought order to this world? No!",
 	MurchalOchkenProshlyapen2 = "Minions of the storm, hear my call!",
 	MurchalOchkenProshlyapen3 = "The Aspects's hold on us is broken! Their prison falls!",
-	negative 	= "negative",
-	positive 	= "positive",
-	BreathEmote	= "Raszageth takes a deep breath..."
+	negative = "negative",
+	positive = "positive",
+	BreathEmote = "Raszageth takes a deep breath..."
 })
 
 -------------

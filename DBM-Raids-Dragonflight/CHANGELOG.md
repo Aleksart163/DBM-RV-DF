@@ -1,18 +1,61 @@
 # <DBM Mod> Raids (DF)
 
-## [10.2.23](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.23) (2024-02-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.22...10.2.23) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.2.24](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.24) (2024-02-20)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.23...10.2.24) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- Prep new tags for all versions to get seen cinematic fix and for classic era to get disabled range finder  
-- Update localization.ru.lua (#414)  
-- Update localization.tw.lua (#413)  
-- hopefully a little clearer text?  
--  - Remove an alert that was never used on gnarlroot cause it never actually got placed anywhere  
-     - Added an actually used alert for melee by default to run out of center on Gnarlroot to try and reduce number of melee deaths from being too close to center on phase change  
-     - Improved Umbral alerts to now say which soak group it is, but also on mythic difficulty to tell you to run out instead of soak if you have heartstopper.  
-- Port range check disabler to classic era, since it's now restricted as of 1.15.1  
-- Update koKR (#412)  
-- timer tweaks  
-- Prevent wiping the seen movies cache on options load.  
-- Also, this text should be disabled for now too  
+- prep new tags  
+- Fix target scanning so it only filters the active tank and not ALL of them. was already fixing this when https://github.com/DeadlyBossMods/DBM-Unified/pull/432 came through but this supercedes it cause it fixes it in more spots  
+- Update localization.ru.lua (#430)  
+- Update localization.es.lua (#429)  
+- Update koKR (#431)  
+- Fix journals description collapsing.  
+- update expression  
+- Fix last? we want it to ignore spellId, which will be nil more often than not. it's just args 1 and 2 in the \"start\" object this should show  
+- Add combo timer object  
+- Update localization.tw.lua (#993)  
+- Add simple boss health info frame (#428)  
+- fix stats errors in follower dungeons  
+- Modernize and improve GetUnitIdFromCID a bit to be uniform with it's counterpart GetUnitIdFromGUID Also moved them together so they're not existing in two totally separate areas of core. Even moved the deprecated GetBossUnitId to same area  
+- Add simple boss health info frame Displays the boss health that DBM keeps track of anyways. Can only be used for creature IDs that are explicitly registered for the mod  
+- deDE update (#427)  
+- update version check  
+- Update localization.tw.lua (#426)  
+- Update koKR (#425)  
+- why is this still using checkout v1, update to v4  
+- another fix  
+- add an emphasized soak warning to melee for flora as well  
+- Short text for flora on nymue so it's consistent with other mods. (ie "Red soaks")  
+- prune world events from retail  
+- Bump classic era version  
+- refactor tank swap automation on council to hopefully be more robust in both preventing more than one stack of claws AND still not let same tank get trampled twice in a row. This may be buggy and i won't get to test it until next tuesday  
+- Ugly ass fix to work around blizzard bug with council  
+- Update localization.ru.lua (#424)  
+- Change default for TDecimal from 11 to 9.9 (#415)  
+- Nameplate Timer Maintenance (#423)  
+- remove redundancy  
+- Update commonlocal.tw.lua (#422)  
+- Update localization.tw.lua (#421)  
+- Update localization.ru.lua (#420)  
+- Locale syncs  
+- Update commonlocal.ru.lua (#419)  
+- Update localization.ru.lua (#418)  
+- Nameplate improvements by @cont1nuity  
+- Bump alpha  
+- bump classic version after confirming recent fixes. This update overall improves user experience in gnomeregan by removing unintended spam  
+- - Fixed a bug where season of discovery table updates weren't happening at all - Fixed a bug where if they were happening, it was actually replacing entire table with only 2 entries - Changed available mod message to only run on engage in raids, not dungeons - Changed available mod message to only run on wipes (all content) instead of wipes and victories  
+- Add Gnomeregan level up raid (fixes auto-logging) (#417) Verified in-game that auto-logging began after this change. Instance ID confirmed via GetInstanceInfo() in-game  
+- Update koKR (#416)  
+- Update koKR (Retail) (#992)  
+- Update localization.ru.lua (#991)  
+- scope trio to just run gossip checks in shadowfang keep  
+- Apothecary Trio: Add option to auto-select start gossip.  
+- bump alpha  
+- Prep new tag for classic era  
+- update version check  
+- bump alpha  
+- prep new classic era tag  
+- change verbage on mass entanglement to be less directive  
+- Never actually adjusted the ilvl check after the last ilvl squish. 30 is pretty generous. 18 ilvls is 18% damage/healing and probably where it should be for now.  
+- fix missing target name in last  
+- code in optional tank swap for bleed on council, off by default  
 - bump alphas  
