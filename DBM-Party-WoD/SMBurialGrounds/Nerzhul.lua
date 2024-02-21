@@ -48,6 +48,7 @@ local function startProshlyapationOfMurchal(self)
 	self:Schedule(51.5, startProshlyapationOfMurchal, self)
 end
 
+--[[
 function mod:OmenOfDeathTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -57,7 +58,7 @@ function mod:OmenOfDeathTarget(targetname, uId)
 	else
 		warnOmenOfDeath:Show(targetname)
 	end
-end
+end]]
 
 function mod:OnCombatStart(delay)
 	self.vb.MurchalProshlyapenCount = 0
@@ -80,7 +81,7 @@ end
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 154350 then
 		self.vb.MurchalProshlyapenCount = self.vb.MurchalProshlyapenCount + 1
-		self:BossTargetScanner(76407, "OmenOfDeathTarget", 0.04, 15)
+	--	self:BossTargetScanner(76407, "OmenOfDeathTarget", 0.04, 15)
 		if self.vb.MurchalProshlyapenCount == 1 then
 			timerOmenOfDeathCD:Start(14.8)
 			DBM:Debug("MurchalProshlyapenCount = 1")
