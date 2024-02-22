@@ -34,7 +34,7 @@ local warnMarkCast								= mod:NewCountAnnounce(391686, 3)
 local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189)
 local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer")
 
-local specWarnCoalescingStorm					= mod:NewSpecialWarningCount(387849, nil, nil, nil, 2, 2)
+local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 2)
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2)
 local specWarnCyclone							= mod:NewSpecialWarningCount(376943, nil, nil, nil, 4, 12) --Смерч
 local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2)--232722 "Slicing Tornado" better?
@@ -123,7 +123,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 387849 then
+	if spellId == 387849 then --Поднимающаяся буря
 		self.vb.addIcon = 8
 		self.vb.stormCount = self.vb.stormCount + 1
 		specWarnCoalescingStorm:Show(self.vb.stormCount)
@@ -149,11 +149,23 @@ function mod:SPELL_CAST_START(args)
 		self.vb.burstCount = self.vb.burstCount + 1
 		warnRagingBurst:Show(self.vb.burstCount)
 		timerRagingBurstCD:Start(self:IsHeroic() and 75 or 86.2, self.vb.burstCount+1)
-	elseif spellId == 376943 then
+	elseif spellId == 376943 then --Смерч
 		self.vb.cycloneCount = self.vb.cycloneCount + 1
 		specWarnCyclone:Show(self.vb.cycloneCount)
 		specWarnCyclone:Play("pullin")
-		timerCycloneCD:Start(self:IsHeroic() and 75 or 86.2, self.vb.cycloneCount+1)
+		if self.vb.cycloneCount == 1 then
+			if self:IsHeroic() then
+				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1)
+			else
+				timerCycloneCD:Start(86.2, self.vb.cycloneCount+1)
+			end
+		else
+			if self:IsHeroic() then
+				timerCycloneCD:Start(75, self.vb.cycloneCount+1)
+			else
+				timerCycloneCD:Start(86.2, self.vb.cycloneCount+1)
+			end
+		end
 		timerCyclone:Start()
 		if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then
 			timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)--13.2-15
