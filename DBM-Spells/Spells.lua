@@ -96,7 +96,6 @@ local yellSymbolHope				= mod:NewYell(64901, L.SpellNameYell, nil, nil, "YELL") 
 local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell, nil, nil, "YELL") --Маленькие хитрости
 local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell, nil, nil, "YELL") --Перенаправление
 
-mod:AddBoolOption("YellOnNapull", true) --напулл
 mod:AddBoolOption("YellOnRaidCooldown", true) --рейд кд
 mod:AddBoolOption("YellOnResurrect", true) --бр
 mod:AddBoolOption("YellOnMassRes", true) --масс рес
@@ -175,7 +174,6 @@ local premsg_values = {
 	["premsg_Spells_tranquility"] = {0, L.HeroismYell}, --Спокойствие
 	["premsg_Spells_rewind"] = {0, L.HeroismYell}, --Перемотка
 --	["premsg_Spells_innervate"] = {0, L.SoulstoneYell, true}, --Озарение
-	["premsg_Spells_sourceMagic"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth1"] = {0, L.SoulstoneYell, true}, --Возрождение
 	["premsg_Spells_rebirth2"] = {0, L.SoulstoneYell, true}, --Воскрешение союзника
 	["premsg_Spells_rebirth3"] = {0, L.SoulstoneYell, true}, --Воскрешение камнем души
@@ -756,14 +754,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPowerInfusion:Play("targetyou")
 		end
 	elseif spellId == 369459 and self:AntiSpam(5, "SourceofMagic") then --Магический источник
-	--	if typeInstance ~= "party" then return end
-	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayer() then
 			specWarnSourceofMagic:Show()
 			specWarnSourceofMagic:Play("targetyou")
-		end
-		if self.Options.YellOnRaidCooldown then
-			prepareMessage(self, "premsg_Spells_sourceMagic", spellId, sourceName, destName)
 		end
 	elseif spellId == 204018 then --Благословение защиты от заклинаний
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
