@@ -42,7 +42,7 @@ local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil,
 local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 2)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
-local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.TANK_ICON)
 local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3)--Tornados
 local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3)
 local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 2) --Смерч
@@ -62,7 +62,7 @@ local specWarnAerialSlash						= mod:NewSpecialWarningDefensive(385812, nil, nil
 
 local timerAerialSlashCD						= mod:NewCDTimer(12, 385812, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-local yellConductiveMark						= mod:NewYell(391686, 28836, nil, nil, "YELL")--Short text "Mark"
+local yellConductiveMark						= mod:NewShortYell(391686, 28836, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(4, 391686)
 mod:AddSetIconOption("SetIconOnVolatileInfuser", "ej25903", true, 5, {8, 7, 6, 5, 4})
@@ -130,17 +130,17 @@ function mod:SPELL_CAST_START(args)
 		specWarnCoalescingStorm:Play("mobsoon")
 		--Timers reset by storm
 		if self:IsMythic() then
-			timerConductiveMarkCD:Restart(19.5, self.vb.markCount+1)
+		--	timerConductiveMarkCD:Restart(19.5, self.vb.markCount+1)
 			timerZephyrSlamCD:Restart(30, self.vb.slamCount+1)--30-33
 			timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
 			timerColaescingStormCD:Start(86.2, self.vb.stormCount+1)
 		elseif self:IsHeroic() then
 			timerZephyrSlamCD:Restart(20.7, self.vb.slamCount+1)
 			timerCrosswindsCD:Restart(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
-			timerConductiveMarkCD:Restart(35, self.vb.markCount+1)
+		--	timerConductiveMarkCD:Restart(35, self.vb.markCount+1)
 			timerColaescingStormCD:Start(75.5, self.vb.stormCount+1)
 		else
-			timerConductiveMarkCD:Restart(9.7, self.vb.markCount+1)
+		--	timerConductiveMarkCD:Restart(9.7, self.vb.markCount+1)
 			timerZephyrSlamCD:Restart(15.7, self.vb.slamCount+1)
 			timerCrosswindsCD:Restart(34, self.vb.crosswindCount+1)
 			timerColaescingStormCD:Start(86.2, self.vb.stormCount+1)
