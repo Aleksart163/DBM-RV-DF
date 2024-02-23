@@ -29,7 +29,7 @@ local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
 local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 2)
 local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2)
-local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2)
+local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2) --Дробящий удар
 local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2) --Оглушающий удар
 local specWarnConcussiveSlamTaunt				= mod:NewSpecialWarningTaunt(376279, nil, nil, nil, 1, 2) --Оглушающий удар
 local specWarnFrenziedDevastation				= mod:NewSpecialWarningSpell(377505, nil, nil, nil, 3, 2)
@@ -38,11 +38,11 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(382458, nil, nil, nil, 1, 
 
 local timerInfusedFalloutCD						= mod:NewNextCountTimer(35, 391592, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerRockBlastCD							= mod:NewNextCountTimer(35, 380487, nil, nil, nil, 3)
-local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 7, nil, nil, nil, 1, 5)
 local timerResonatingAnnihilation				= mod:NewCastTimer(5.5, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
-local timerShatteringImpactCD					= mod:NewNextCountTimer(35, 383073, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerShatteringImpactCD					= mod:NewNextCountTimer(35, 383073, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий удар
 local timerConcussiveSlamCD						= mod:NewNextCountTimer(35, 376279, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар
-local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2)--Berserk timer basically
+local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--Berserk timer basically
 
 local yellConcussiveSlam						= mod:NewShortYell(376279, nil, nil, nil, "YELL") --Оглушающий удар
 local yellInfusedFallout						= mod:NewIconRepeatYell(391592, nil, nil, nil, "YELL")
@@ -68,12 +68,12 @@ local allTimers = {
 	["mythic"] = {
 		--Infused Fallout (Mythic)
 		[396351] = {28.1, 42, 25.4, 30.7, 40.9, 24.6, 29.1, 43.3, 23.4, 29.1},--Missing some data
-		--Concussive Slam
-		[376279] = {12, 22, 20.9, 22, 31.5, 21.9, 21, 21.9, 31.5, 21.9, 21, 21.9, 31.5, 21.9},--Missing some data
+		--Оглушающий удар
+		[376279] = {12, 22, 20.9, 22, 31.5, 21.9, 21, 21.9, 31.5, 21.9, 21, 21.9, 31.5, 21.9, 31.5, 5.5, 2.5, 13.5}, --С последними прошляпами Мурчаля и его подпивасов
 		--Rock Blast
 		[380487] = {3, 43, 53.5, 42.9, 53.4, 43, 53.4, 42.9},--Final cast guessed based on pattern
-		--Shattering Impact
-		[383073] = {23, 42.9, 53.4, 42.9, 53.5, 42.9, 53.5, 42.9},--Final cast guessed based on pattern
+		--Дробящий удар
+		[383073] = {23, 42.9, 53.4, 42.9, 53.5, 42.9, 53.5, 45.3},--Final cast guessed based on pattern
 	},
 	["other"] = {
 		--Concussive Slam
@@ -164,7 +164,19 @@ function mod:SPELL_CAST_START(args)
 		self.vb.annihilationCount = self.vb.annihilationCount + 1
 		specWarnResonatingAnnihilation:Show(self.vb.annihilationCount)
 		specWarnResonatingAnnihilation:Play("specialsoon")
-		timerResonatingAnnihilationCD:Start(nil, self.vb.annihilationCount+1)--Doesn't need table, it's static
+		if not self:IsMythic() then
+			if self.vb.annihilationCount < 4 then
+				timerResonatingAnnihilationCD:Start(nil, self.vb.annihilationCount+1)
+			end
+		else
+			if self.vb.annihilationCount == 3 then
+				timerResonatingAnnihilationCD:Start(98.5, self.vb.annihilationCount+1)
+			elseif self.vb.annihilationCount == 4 then
+				timerResonatingAnnihilationCD:Stop()
+			else
+				timerResonatingAnnihilationCD:Start(nil, self.vb.annihilationCount+1)
+			end
+		end
 		if self.vb.annihilationCount == 4 then
 			self:UnregisterShortTermEvents()
 		end
