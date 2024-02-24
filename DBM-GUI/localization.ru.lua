@@ -6,7 +6,7 @@ local L = DBM_GUI_L
 
 L.TranslationByPrefix		= "Адаптация под firestorm - Aleksart163"
 L.TranslationBy 			= "Перевод на русский язык - Hollicsh"
-L.Website					= "Посетите наш дискорд: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r. Подпишитесь на твиттер: |cFF73C2FB@deadlybossmods или @MysticalOS|r"
+L.Website					= "Сайт с последней актуальной версией: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r Discord для связи по вопросам: |cFF73C2FBAleksart163|r"
 L.WebsiteButton				= "Форумы"
 
 L.OTabBosses				= "Боссы"

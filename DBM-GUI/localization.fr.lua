@@ -5,7 +5,7 @@ local L = DBM_GUI_L
 
 L.TranslationByPrefix		= "Traduit par "
 L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre/Leybola@EU-Sargeras/Noleen@EU-Hyjal" -- your name here, localizers!
-L.Website					= "Visitez notre discord sur |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Suivez-nous sur twitter @deadlybossmods ou @MysticalOS"
+--L.Website					= "Visitez notre discord sur |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Suivez-nous sur twitter @deadlybossmods ou @MysticalOS"
 L.WebsiteButton				= "Site web"
 
 L.OTabBosses	= "Bosses"--Deprecated and will be deleted once tabs no longer use this

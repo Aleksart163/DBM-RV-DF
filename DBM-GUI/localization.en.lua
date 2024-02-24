@@ -6,7 +6,7 @@ L.MainFrame							= "Dungeon Boss Master" -- OPTIONAL
 
 L.TranslationByPrefix				= "Translated by "
 L.TranslationBy 					= nil -- your name here, localizers!
-L.Website							= "Visit us on discord at |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r. Follow on most socials |cFF73C2FB@deadlybossmods or @MysticalOS|r"
+L.Website							= "Website with the latest up-to-date version: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r Discord for contact with questions |cFF73C2FBAleksart163|r"
 L.WebsiteButton						= "Website"
 
 L.OTabBosses						= "Boss Options"--Deprecated and will be deleted once tabs no longer use this

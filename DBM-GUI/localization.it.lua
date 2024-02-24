@@ -5,7 +5,7 @@ local L = DBM_GUI_L
 
 L.TranslationByPrefix		= "Tradotto da "
 L.TranslationBy 			= "Kaliad, Mattmagic @ Pozzo dell'Eternità"
-L.Website					= "Visitaci su Discord a |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Sequici su Twitter @deadlybossmods o @MysticalOS"
+--L.Website					= "Visitaci su Discord a |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Sequici su Twitter @deadlybossmods o @MysticalOS"
 L.WebsiteButton				= "Sito Web"
 
 L.OTabBosses	= "Boss"
