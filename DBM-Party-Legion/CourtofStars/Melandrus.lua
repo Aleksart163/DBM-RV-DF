@@ -29,7 +29,7 @@ local yellSurge						= mod:NewYell(209602)
 local specWarnSlicingMaelstrom		= mod:NewSpecialWarningSpell(209676, nil, nil, nil, 2, 2)
 local specWarnGale					= mod:NewSpecialWarningDodge(209628, nil, nil, nil, 2, 2)
 
-local timerRP						= mod:NewRPTimer(32.9)
+local timerRP						= mod:NewRPTimer(26)
 local timerSurgeCD					= mod:NewCDTimer(12.1, 209602, nil, nil, nil, 3)
 local timerMaelstromCD				= mod:NewCDCountTimer(24.2, 209676, nil, nil, nil, 3)
 local timerGaleCD					= mod:NewCDTimer(23.8, 209628, nil, nil, nil, 2)
