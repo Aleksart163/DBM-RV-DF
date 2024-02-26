@@ -37,6 +37,7 @@ end
  or ability.id = 211464 or ability.id = 209404 or ability.id = 209495 or ability.id = 209378 or ability.id = 397892 or ability.id = 397897
  or ability.id = 212784 or ability.id = 211473) and type = "begincast"
 --]]
+local warnSpyFound					= mod:NewAnnounce("pSpyFound", 1, 248732) --Шпион обнаружен
 local warnAvailableItems			= mod:NewAnnounce("warnAvailableItems", 1)
 local warnImpendingDoom				= mod:NewTargetAnnounce(397907, 2)
 local warnSoundAlarm				= mod:NewCastAnnounce(210261, 4)
@@ -65,8 +66,6 @@ local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 
 local specWarnWhirlingBlades		= mod:NewSpecialWarningRun(209378, "Melee", nil, nil, 4, 2)
 local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", nil, nil, 1, 2)
 local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, nil, 1, 2)
-local yellImpendingDoom				= mod:NewYell(397907)
-local yellImpendingDoomFades		= mod:NewShortFadesYell(397907)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(209512, nil, nil, nil, 1, 8)
 
 local timerQuellingStrikeCD			= mod:NewCDNPTimer(12, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON)--Mostly for tank to be aware of mob positioning before CD comes off
@@ -84,6 +83,9 @@ local timerWhirlingBladesCD			= mod:NewCDNPTimer(18.2, 209378, nil, "Melee", nil
 local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShockwaveCD				= mod:NewCDNPTimer(8.4, 207979, nil, nil, nil, 3)
 local timerCrushingLeapCD			= mod:NewCDNPTimer(16.9, 397897, nil, nil, nil, 3)
+
+local yellImpendingDoom				= mod:NewYell(397907, nil, nil, nil, "YELL")
+local yellImpendingDoomFades		= mod:NewShortFadesYell(397907, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGBoat", true)
 mod:AddBoolOption("AGDisguise", true)
@@ -664,6 +666,7 @@ do
 				callUpdate(clue)
 			end
 		elseif msg == "Finished" then
+			warnSpyFound:Show()
 			self:ResetGossipState()
 			if clue then
 				local targetname = DBM:GetUnitFullName(clue) or clue

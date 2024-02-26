@@ -279,10 +279,12 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	pSpyFound = "Шпион обнаружен",
 	warnAvailableItems	= "%s"
 })
 
 L:SetOptionLocalization({
+	pSpyFound 		= "Спец-предупреждение когда шпион обнаружен",
 	warnAvailableItems	= "Объявлять о доступных взаимодействиях в зоне на основе группы",
 	AGBoat			= "Автоматический выбор диалога для вызова лодки при взаимодействии с фонарем",
 	AGDisguise		= "Автоматически выбирать диалог, чтобы активировать маскировку при взаимодействии с Ли'лет Лунарх.",

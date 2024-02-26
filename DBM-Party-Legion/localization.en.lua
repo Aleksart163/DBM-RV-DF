@@ -278,10 +278,12 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	pSpyFound 			= "Spy detected",
 	warnAvailableItems	= "%s"
 })
 
 L:SetOptionLocalization({
+	pSpyFound 			= "Special warning when a spy is detected",
 	warnAvailableItems	= "Announce available interactions in zone based on group",
 	AGBoat				= "Auto select gossip to summon boat when interacting with lantern",
 	AGDisguise			= "Auto select gossip to activate disguise when interacting with Ly'leth Lunastre",

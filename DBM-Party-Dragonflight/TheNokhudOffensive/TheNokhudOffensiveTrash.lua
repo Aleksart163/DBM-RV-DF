@@ -6,7 +6,7 @@ mod:SetRevision("20231026112110")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 387145 386024 387127 384336 387629 387614 387411 382233 373395 383823 384365 386694 387125 387440",
+	"SPELL_CAST_START 387145 386024 387127 384336 387629 387614 387411 382233 373395 383823 384365 386694 387125 387440 386012",
 	"SPELL_CAST_SUCCESS 384476",
 	"SPELL_AURA_APPLIED 395035 334610 386223 345561",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
@@ -46,6 +46,7 @@ local specWarnTempest						= mod:NewSpecialWarningInterrupt(386024, "HasInterrup
 local specWarnDeathBoltVolley				= mod:NewSpecialWarningInterrupt(387411, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2)
+local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
 
 local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5)--20-23
 local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3)
@@ -120,6 +121,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnDisruptiveShout:Play("kickcast")
 		elseif self:AntiSpam(3, 7) then
 			warnDisruptiveShout:Show()
+		end
+	elseif spellId == 386012 then --Грозовой удар
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnStormbolt:Show(args.sourceName)
+			specWarnStormbolt:Play("kickcast")
 		end
 	elseif spellId == 387127 then
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "CLTarget", 0.1, 8)

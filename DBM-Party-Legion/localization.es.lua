@@ -267,7 +267,12 @@ L:SetGeneralLocalization({
 	name =	"Enemigos menores"
 })
 
+L:SetWarningLocalization({
+	pSpyFound = "Se ha encontrado un espía"
+})
+
 L:SetOptionLocalization({
+	pSpyFound = "Avisar, cuando se descubre un espía",
 	SpyHelper	= "Ayudar a encontrar al espía"
 })
 

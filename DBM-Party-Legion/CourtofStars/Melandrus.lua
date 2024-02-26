@@ -12,7 +12,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 209602 209676 209628"
+	"SPELL_CAST_START 209602 209676 209628",
+	"SPELL_AURA_APPLIED 224333"
 )
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_SAY"
@@ -23,9 +24,10 @@ mod:RegisterEvents(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnSurge						= mod:NewTargetAnnounce(209602, 4)
+local warnEnvelopingWinds			= mod:NewTargetNoFilterAnnounce(224333, 2)
 
+local specWarnEnvelopingWinds		= mod:NewSpecialWarningDispel(224333, "RemoveMagic", nil, nil, 3, 3) --Вихрь
 local specWarnSurge					= mod:NewSpecialWarningYou(209602, nil, nil, nil, 1, 2)
-local yellSurge						= mod:NewYell(209602)
 local specWarnSlicingMaelstrom		= mod:NewSpecialWarningSpell(209676, nil, nil, nil, 2, 2)
 local specWarnGale					= mod:NewSpecialWarningDodge(209628, nil, nil, nil, 2, 2)
 
@@ -33,6 +35,9 @@ local timerRP						= mod:NewRPTimer(26)
 local timerSurgeCD					= mod:NewCDTimer(12.1, 209602, nil, nil, nil, 3)
 local timerMaelstromCD				= mod:NewCDCountTimer(24.2, 209676, nil, nil, nil, 3)
 local timerGaleCD					= mod:NewCDTimer(23.8, 209628, nil, nil, nil, 2)
+
+local yellSurge						= mod:NewYell(209602, nil, nil, nil, "YELL")
+local yellEnvelopingWinds			= mod:NewShortYell(224333, nil, nil, nil, "YELL") --Вихрь
 
 local trashmod = DBM:GetModByName("CoSTrash")
 mod.vb.slicingMaelstromCount = 0
@@ -79,6 +84,20 @@ function mod:SPELL_CAST_START(args)
 		specWarnGale:Show()
 		specWarnGale:Play("watchstep")
 		timerGaleCD:Start()
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 224333 then --Вихрь
+		if args:IsPlayer() then
+			yellEnvelopingWinds:Yell()
+		elseif not args:IsPlayer() and self:IsSpellCaster() then
+			specWarnEnvelopingWinds:Show(args.destName)
+			specWarnEnvelopingWinds:Play("helpdispel")
+		else
+			warnEnvelopingWinds:Show(args.destName)
+		end
 	end
 end
 
