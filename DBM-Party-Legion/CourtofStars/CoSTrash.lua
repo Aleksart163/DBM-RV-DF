@@ -516,10 +516,10 @@ do
 		--Don't alert if buff already active
 		if notableBuffNPCs[cid] and notableBuffNPCs[cid].buffid and DBM:UnitBuff("player", notableBuffNPCs[cid].buffid) then return end
 		--Don't alert if we alerted within last 5 minutes
-		if self:AntiSpam(300, "CoS"..cid) then
+		if self:AntiSpam(60, "CoS"..cid) then
 			local delayAnnouncement = false
 			if item.professionicons then
-				if self:AntiSpam(300, "CoSProf") then
+				if self:AntiSpam(60, "CoSProf") then
 					self:SendBigWigsSync("getProfessions")
 					delayAnnouncement = true
 				end
@@ -709,7 +709,7 @@ do
 				end
 				professionCache[icon][#professionCache[icon]+1] = {name=sender, skill=skill}
 			end
-			self:AntiSpam(300, "CoSProf")
+			self:AntiSpam(60, "CoSProf")
 		end
 	end
 end
