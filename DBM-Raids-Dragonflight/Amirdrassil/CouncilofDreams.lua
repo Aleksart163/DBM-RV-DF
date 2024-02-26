@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2555, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240214090250")
+mod:SetRevision("20240223061121")
 mod:SetCreatureID(208363, 208365, 208367)--Urctos, Aerwynn, Pip
 mod:SetEncounterID(2728)
 mod:SetUsedIcons(1, 2, 3, 4)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20240104000000)
-mod:SetMinSyncRevision(20231129000000)
+mod:SetHotfixNoticeRev(20240223000000)
+mod:SetMinSyncRevision(20240223000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -47,7 +47,6 @@ local specWarnBarrelingChargeSpecial				= mod:NewSpecialWarningMoveTo(420948, ni
 local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL")
 local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL")
 local specWarnAgonizingClaws						= mod:NewSpecialWarningTaunt(421022, nil, nil, 2, 1, 2)
-local specWarnTrampled								= mod:NewSpecialWarningTaunt(423420, nil, nil, nil, 1, 2)--Not grouped on purpose, so that it stays on diff WA key in GUI
 --local specWarnPyroBlast							= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
 
 --local timerSinseekerCD							= mod:NewAITimer(49, 335114, nil, nil, nil, 3)
@@ -209,7 +208,7 @@ local function specialInterrupted(self, spellId)
 end
 
 local function checkSong()
-	if playerSong then--Still have it, warn again
+	if playerSong and not DBM:UnitDebuff("player", 418720) then--Still have it, warn again
 		specWarnSongoftheDragon:Show(DBM_COMMON_L.POOL)
 		specWarnSongoftheDragon:Play("takedamage")
 	end
@@ -222,6 +221,7 @@ function mod:OnCombatStart(delay)
 	self.vb.rageCount = 0
 	self.vb.rageNext = true
 	self.vb.chargeCount = 0
+	self.vb.nextSpecial = 1
 	if self:IsHard() then
 		--Urctos
 		timerAgonizingClawsCD:Start(4.9-delay, 1)
@@ -230,6 +230,9 @@ function mod:OnCombatStart(delay)
 		--Aerwynn
 		timerNoxiousBlossomCD:Start(4.9-delay, 1)
 		timerPoisonousJavelinCD:Start(21-delay, 1)
+		if self:IsMythic() then
+			timerConstrictingThicketCD:Start(55.8, 1)
+		end
 		--Pip
 		timerPolymorphBombCD:Start(36-delay, 1)
 		timerEmeraldWindsCD:Start(42.9-delay, 1)
@@ -268,7 +271,6 @@ function mod:OnCombatStart(delay)
 	self.vb.polyCount = 0
 	self.vb.polyIcon = 1
 	self.vb.windsCount = 0
-	--Still register private auras on pull until first RAID_BOSS_WHISPER detected, since we still want this mod to work if blizzard ever decides to fix bug that was reported many months ago on PTR
 	self:EnablePrivateAuraSound(418589, "bombyou", 2)
 	self:EnablePrivateAuraSound(429123, "bombyou", 2, 418589)--Register secondary private aura (different ID for differentn difficulty?)
 	nextSpecial = GetTime() + (self:IsLFR() and 74.6 or 55.8)
@@ -435,19 +437,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
-			if self.Options.SpecWarn421022taunt and not args:IsPlayer() then
+			if self.Options.SpecWarn421022taunt2 and not args:IsPlayer() then
 				if self.vb.clawsCount % 2 == 1 then--1 and 3
 					specWarnAgonizingClaws:Show(args.destName)
 					specWarnAgonizingClaws:Play("tauntboss")
-				else--Claws 2 and 4 need additional safety check to avoid getting killed by charge
+				else--Claws 2 and 4 need additional safety check to avoid getting hit by extra damage charge
 					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", 423420)
 					local remaining
 					if expireTime then
 						remaining = expireTime-GetTime()
 					end
 					--Don't taunt if charge is incoming and you can't take it cause you'll still have debuff
-					local neededTime = timerBarrelingChargeCD:GetRemaining(self.vb.chargeCount+1) or 20
-					if (not remaining or remaining and remaining < neededTime) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					local timerLeft = timerBarrelingChargeCD:GetRemaining(self.vb.chargeCount+1) or 20
+					if (not remaining or remaining and remaining < timerLeft) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 						specWarnAgonizingClaws:Show(args.destName)
 						specWarnAgonizingClaws:Play("tauntboss")
 					else
@@ -504,8 +506,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 421031 and args:IsPlayer() then
 		playerSong = true
-		specWarnSongoftheDragon:Show(DBM_COMMON_L.POOL)
-		specWarnSongoftheDragon:Play("takedamage")
+		if not DBM:UnitDebuff("player", 418720) then
+			specWarnSongoftheDragon:Show(DBM_COMMON_L.POOL)
+			specWarnSongoftheDragon:Play("takedamage")
+		end
 		self:Schedule(6, checkSong, self)--Schedule 2nd warning half way through debuff
 	elseif spellId == 421029 then
 		--Song isn't active until buff goes up, so if you interrupt bear SUPER fast, you can early terminate a combo on mythic
@@ -514,7 +518,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		--So don't intecfremnt specials active count if we recently ended a special phase early due to above bug
 		--Song is never cast first, specials active should always be 1 unless SUPER early bear interrupt
 		if self:IsMythic() and self.vb.specialsActive == 0 and castBeforeSpecial(self, 50) then
-			DBM:AddMsg("Special phase terminated early due to interrupting Blind rage before song finished casting, making blizzards encounter code think BOTH specials have ended already. Tanks, Aim the bear away now!")
+			DBM:ShowTestSpecialWarning("Special phase terminated early due to blizzard bug!", 3, nil, true)
 		else
 			self.vb.specialsActive = self.vb.specialsActive + 1
 		end
@@ -530,20 +534,19 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellBarrelingChargeFades:Cancel()
 		else
-			if self.vb.clawsCount == 2 then
-				--Only show taunt warning after charge, if the tank who took charge would die to claws 3
-				local uId = DBM:GetRaidUnitId(args.destName)
-				if uId then
-					local _, _, _, _, _, expireTime = DBM:UnitDebuff(uId, 421022)--Claws debuff
-					local remaining
-					if expireTime then
-						remaining = expireTime-GetTime()
-					end
-					--Don't taunt if charge is incoming and you can't take it cause you'll still have debuff
-					if remaining and remaining >= 12 and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-						specWarnTrampled:Show(args.destName)
-						specWarnTrampled:Play("tauntboss")
-					end
+			--Only show taunt warning after charge, if the tank who took charge would die to claws 3
+			local uId = DBM:GetRaidUnitId(args.destName)
+			if uId then
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff(uId, 421022)--Claws debuff
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				local timerLeft = timerAgonizingClawsCD:GetRemaining(self.vb.clawsCount+1) or 20
+				--Claws debuff wont' be gone yet off other tank, so you need to take it
+				if (remaining and remaining > timerLeft) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					specWarnAgonizingClaws:Show(args.destName)
+					specWarnAgonizingClaws:Play("tauntboss")
 				end
 			end
 		end
