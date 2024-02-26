@@ -75,7 +75,7 @@ end
 
 ---@class DBM
 local DBM = {
-	Revision = parseCurseDate("20240220180302"),
+	Revision = parseCurseDate("20240223063246"),
 }
 _G.DBM = DBM
 
@@ -84,21 +84,21 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.2.24"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 9--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "10.2.27"
+	DBM.ReleaseRevision = releaseDate(2024, 2, 23) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
-	DBM.DisplayVersion = "1.15.16"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 5--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "1.15.19 alpha"
+	DBM.ReleaseRevision = releaseDate(2024, 2, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 6--When this is incremented, trigger force disable regardless of major patch
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
 	DBM.ReleaseRevision = releaseDate(2024, 1, 9) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
+	PForceDisable = 3--When this is incremented, trigger force disable regardless of major patch
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.59"
-	DBM.ReleaseRevision = releaseDate(2024, 2, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 4--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "3.4.62 alpha"
+	DBM.ReleaseRevision = releaseDate(2024, 2, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 5--When this is incremented, trigger force disable regardless of major patch
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -2714,7 +2714,7 @@ do
 			for _, unitId in ipairs(usedTable) do
 				local guid2 = UnitGUID(unitId)
 				if guid == guid2 then
-					return returnUnitID
+					return unitId
 				end
 			end
 		end
@@ -2722,7 +2722,6 @@ do
 
 	--Not to be confused with GetUnitIdFromGUID, in this function we don't know a specific guid so can't use UnitTokenFromGUID
 	function DBM:GetUnitIdFromCID(creatureID, bossOnly)
-		local returnUnitID
 		--Always prioritize a quick boss unit scan on retail first
 		if not isClassic and not isBCC then
 			for i = 1, 10 do
@@ -2730,20 +2729,19 @@ do
 				local bossGUID = UnitGUID(unitId)
 				local cid = self:GetCIDFromGUID(bossGUID)
 				if cid == creatureID then
-					returnUnitID = unitId
+					return unitId
 				end
 			end
 		end
-		if not returnUnitID and not bossOnly then
+		if not bossOnly then
 			for _, unitId in ipairs(fullUids) do
 				local guid2 = UnitGUID(unitId)
 				local cid = self:GetCIDFromGUID(guid2)
 				if cid == creatureID then
-					returnUnitID = unitId
+					return unitId
 				end
 			end
 		end
-		return returnUnitID
 	end
 
 	--Deprecated, only old mods use this (newer mods use GetUnitIdFromGUID or GetUnitIdFromCID)
@@ -5213,7 +5211,7 @@ do
 	end
 
 	function DBM:GOSSIP_SHOW()
-	--	if not IsInInstance() then return end (необходимо отключить)
+		--if not IsInInstance() then return end (необходимо отключить)
 		local cid = self:GetUnitCreatureId("npc") or 0
 		local gossipOptionID = self:GetGossipID(true)
 		if gossipOptionID then--At least one must return for debug
@@ -10573,11 +10571,11 @@ do
 		frame:SetFrameStrata("HIGH")
 	end
 
-	function DBM:ShowTestSpecialWarning(_, number, noSound, force) -- text, number, noSound, force
+	function DBM:ShowTestSpecialWarning(text, number, noSound, force) -- text, number, noSound, force
 		if moving then
 			return
 		end
-		self:AddSpecialWarning(L.MOVE_SPECIAL_WARNING_TEXT)
+		self:AddSpecialWarning(text or L.MOVE_SPECIAL_WARNING_TEXT)
 		frame:SetFrameStrata("TOOLTIP")
 		self:Unschedule(testWarningEnd)
 		self:Schedule(self.Options.SpecialWarningDuration2 * 1.3, testWarningEnd)
