@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 --Out of combat register, to support the secondary bosses off to sides
 mod:RegisterEvents(
-	"SPELL_CAST_START 208165 207881 207906"
+	"SPELL_CAST_START 208165 207881 207906 208165"
 )
 
 --[[
@@ -21,9 +21,9 @@ mod:RegisterEvents(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --NOTE: Sub boss abilities are in trash module since they are often pulled out and not done with boss
-local warnWitheringSoul				= mod:NewSpellAnnounce(208165, 2)
 local warnBurningIntensity			= mod:NewSpellAnnounce(207906, 3)
 
+local specWarnWitheringSoul			= mod:NewSpecialWarningInterrupt(208165, "HasInterrupt", nil, nil, 1, 2) --Иссохшая душа
 local specWarnInfernalEruption		= mod:NewSpecialWarningDodge(207881, nil, nil, nil, 2, 2)
 
 local timerWitheringSoulCD			= mod:NewCDTimer(14.5, 208165, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
@@ -51,7 +51,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 208165 then
-		warnWitheringSoul:Show()
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnWitheringSoul:Show(args.sourceName)
+			specWarnWitheringSoul:Play("kickcast")
+		end
 		timerWitheringSoulCD:Start(self:IsMythicPlus() and 14.5 or 13.3)
 	elseif spellId == 207881 then
 		specWarnInfernalEruption:Show()
