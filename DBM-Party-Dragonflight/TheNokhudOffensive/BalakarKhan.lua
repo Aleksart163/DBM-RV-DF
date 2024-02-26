@@ -32,7 +32,7 @@ mod:RegisterEventsInCombat(
 --Stage One: Balakar's Might
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25185))
 local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Tank|Healer")
-local warnIronSpear								= mod:NewTargetAnnounce(376634, 2)
+local warnIronSpear								= mod:NewTargetNoFilterAnnounce(376634, 2)
 
 local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2)
 local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2)
@@ -51,7 +51,7 @@ local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInter
 --Stage Two: The Storm Unleashed
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25187))
 local warnPhase2								= mod:NewPhaseAnnounce(2, 2)
-local warnStaticSpear							= mod:NewTargetAnnounce(376864, 2)
+local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2)
 local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Tank|Healer")
 
 local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil, nil, 1, 2)
