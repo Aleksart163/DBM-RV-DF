@@ -23,7 +23,7 @@ mod:RegisterEvents(
 --NOTE: Sub boss abilities are in trash module since they are often pulled out and not done with boss
 local warnBurningIntensity			= mod:NewSpellAnnounce(207906, 3)
 
-local specWarnWitheringSoul			= mod:NewSpecialWarningInterrupt(208165, "HasInterrupt", nil, nil, 1, 2) --Иссохшая душа
+local specWarnWitheringSoul			= mod:NewSpecialWarningInterrupt(208165, "HasInterrupt", nil, nil, 3, 2) --Иссохшая душа
 local specWarnInfernalEruption		= mod:NewSpecialWarningDodge(207881, nil, nil, nil, 2, 2)
 
 local timerWitheringSoulCD			= mod:NewCDTimer(14.5, 208165, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
