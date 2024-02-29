@@ -42,6 +42,7 @@ local timerSavageBladeCD			= mod:NewCDTimer(19, 193668, nil, "Tank", nil, 5, nil
 local timerRagnarokCD				= mod:NewCDTimer(63.1, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 local yellFelblazeRush				= mod:NewYell(193659, nil, nil, nil, "YELL")
+local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL")
 
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end
@@ -100,8 +101,12 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 193783 and args:IsDestTypePlayer() and self:AntiSpam(2, 2) then
-		warnAegis:Show(args.destName)
+	if spellId == 193783 and self:AntiSpam(2, 2) then
+		if args:IsPlayer() then
+			yellAegis:Yell()
+		else
+			warnAegis:Show(args.destName)
+		end
 	end
 end
 
