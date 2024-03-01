@@ -17,7 +17,7 @@ for i = 1, #frames do
 	frames[i]:UnregisterEvent("GOSSIP_SHOW")
 end
 mod:RegisterEvents(
-	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473",
+	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697",
 	"SPELL_AURA_APPLIED 209033 209512 397907 373552",
 	"SPELL_AURA_REMOVED 397907",
 	"UNIT_DIED",
@@ -37,6 +37,8 @@ end
  or ability.id = 211464 or ability.id = 209404 or ability.id = 209495 or ability.id = 209378 or ability.id = 397892 or ability.id = 397897
  or ability.id = 212784 or ability.id = 211473) and type = "begincast"
 --]]
+
+local warnPickingUp					= mod:NewTargetAnnounce(214697, 1) --Поднять ключ
 local warnSpyFound					= mod:NewAnnounce("pSpyFound", 1, 248732) --Шпион обнаружен
 local warnAvailableItems			= mod:NewAnnounce("warnAvailableItems", 1)
 local warnImpendingDoom				= mod:NewTargetAnnounce(397907, 2)
@@ -84,6 +86,7 @@ local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterr
 local timerShockwaveCD				= mod:NewCDNPTimer(8.4, 207979, nil, nil, nil, 3)
 local timerCrushingLeapCD			= mod:NewCDNPTimer(16.9, 397897, nil, nil, nil, 3)
 
+local yellPickingUp					= mod:NewShortYell(214697, nil, nil, nil, "YELL") --Поднять ключ
 local yellImpendingDoom				= mod:NewYell(397907, nil, nil, nil, "YELL")
 local yellImpendingDoomFades		= mod:NewShortFadesYell(397907, nil, nil, nil, "YELL")
 
@@ -205,6 +208,12 @@ function mod:SPELL_CAST_START(args)
 		timerShadowSlashCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnShadowSlash:Show()
+		end
+	elseif spellId == 214697 then --Поднять ключ
+		if args:IsPlayerSource() then
+			yellPickingUp:Yell()
+		else
+			warnPickingUp:Show(args.sourceName)
 		end
 	end
 end
