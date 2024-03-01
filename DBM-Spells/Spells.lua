@@ -93,8 +93,8 @@ local yellRallyingCry				= mod:NewYell(97462, L.SpellNameYell, nil, nil, "YELL")
 local yellPowerWordBarrier			= mod:NewYell(62618, L.SpellNameYell, nil, nil, "YELL") --Слово силы: Барьер
 local yellAncestralProtectionTotem	= mod:NewYell(207399, L.SpellNameYell, nil, nil, "YELL") --Тотем защиты Предков
 local yellSymbolHope				= mod:NewYell(64901, L.SpellNameYell, nil, nil, "YELL") --Символ надежды
-local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell, nil, nil, "YELL") --Маленькие хитрости
-local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell, nil, nil, "YELL") --Перенаправление
+local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell2, nil, nil, "YELL") --Маленькие хитрости
+local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell2, nil, nil, "YELL") --Перенаправление
 
 mod:AddBoolOption("YellOnRaidCooldown", true) --рейд кд
 mod:AddBoolOption("YellOnResurrect", true) --бр
@@ -789,7 +789,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellTricksTheTrade:Yell(SpellLinks(spellId))
+			yellTricksTheTrade:Yell(SpellLinks(spellId), destName)
 		elseif args:IsPlayer() then
 			warnTricksTheTrade:Show()
 		end
@@ -797,7 +797,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
 		if args:IsPlayerSource() then
-			yellMisdirection:Yell(SpellLinks(spellId))
+			yellMisdirection:Yell(SpellLinks(spellId), destName)
 		elseif args:IsPlayer() then
 			warnMisdirection:Show()
 		end

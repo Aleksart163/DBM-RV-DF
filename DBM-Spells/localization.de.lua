@@ -36,6 +36,7 @@ L:SetOptionLocalization({
 L:SetMiscLocalization{
 --	WhisperThanks 	= "%s Vielen Dank für %s!",
 	SpellNameYell 	= "Anwendung %s!",
+	SpellNameYell2 	= "Anwendung %s auf %s!",
 	HeroismYell	  	= "%s %s nutzt %s!",
 	PortalYell 		= "%s %s öffnet %s!",
 	SoulwellYell 	= "%s %s richtet ein %s!",
