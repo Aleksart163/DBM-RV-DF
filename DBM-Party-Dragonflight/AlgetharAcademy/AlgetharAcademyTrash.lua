@@ -35,12 +35,8 @@ local specWarnDetonateSeeds						= mod:NewSpecialWarningDodge(390915, nil, nil, 
 local specWarnDeadlyWinds						= mod:NewSpecialWarningDodge(378003, nil, nil, nil, 2, 2)
 local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, nil, 2, 2)
 local specWarnGust								= mod:NewSpecialWarningDodge(377383, nil, nil, nil, 2, 2)
-local yellGust									= mod:NewYell(377383)
 local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, nil, 1, 2)--You warning not move away, because some strategies involve actually baiting charge into melee instead of out
-local yellnViciousAmbush						= mod:NewYell(388984)
 local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, nil, nil, 2, 2)
-local yellAstralBomb							= mod:NewYell(387843)
-local yellAstralBombFades						= mod:NewShortFadesYell(387843)
 local specWarnMonotonousLecture					= mod:NewSpecialWarningInterrupt(388392, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticBlast						= mod:NewSpecialWarningInterrupt(396812, "HasInterrupt", nil, nil, 1, 2)
 local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasInterrupt", nil, nil, 1, 2)
@@ -49,10 +45,16 @@ local timerMonotonousLectureCD					= mod:NewCDNPTimer(15.8, 388392, nil, nil, ni
 local timerMysticBlastCD						= mod:NewCDNPTimer(20.6, 396812, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerCalloftheFlockCD						= mod:NewCDNPTimer(36, 377389, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerDeadlyWindsCD						= mod:NewCDNPTimer(10.9, 378003, nil, nil, nil, 3)
+local timerExpelIntruders						= mod:NewCastTimer(5.5, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3)
 local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
 local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, nil, nil, nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
+
+local yellGust									= mod:NewYell(377383, nil, nil, nil, "YELL")
+local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL")
+local yellAstralBomb							= mod:NewYell(387843, nil, nil, nil, "YELL")
+local yellAstralBombFades						= mod:NewShortFadesYell(387843, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGBuffs", true)
 
@@ -127,6 +129,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnExpelIntruders:Show()
 			specWarnExpelIntruders:Play("justrun")
 		end
+		timerExpelIntruders:Start()
 --	elseif spellId == 310839 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 --		specWarnDirgefromBelow:Show(args.sourceName)
 --		specWarnDirgefromBelow:Play("kickcast")
@@ -180,6 +183,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 192680 then--Guardian Sentry
 		timerDeadlyWindsCD:Stop(args.destGUID)
 		timerExpelIntrudersCD:Stop(args.destGUID)
+		timerExpelIntruders:Stop()
 	elseif cid == 196671 then--Arcane Ravager
 		timerViciousAmbushCD:Stop(args.destGUID)
 	elseif cid == 196200 then--Algeth'ar Echoknight
