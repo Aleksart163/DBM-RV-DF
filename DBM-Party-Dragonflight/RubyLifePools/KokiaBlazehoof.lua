@@ -29,7 +29,7 @@ mod:RegisterEventsInCombat(
  or (ability.id = 373017 or ability.id = 373087) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnBurnout								= mod:NewCastAnnounce(373087, 4)
+
 local warnInferno								= mod:NewCastAnnounce(384823, 3)
 local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8)
 local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8)
@@ -38,14 +38,16 @@ local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, ni
 local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
 local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitch(372863, nil, nil, nil, 1, 2)
 local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, 2, 1, 2)
-local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2)
+local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2) --Выгорание
+local specWarnBurnout2							= mod:NewSpecialWarningDodge(373087, nil, nil, nil, 2, 2) --Выгорание
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
+local timerBurnout								= mod:NewCastTimer(5, 373087, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Выгорание
 local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerMoltenBoulderCD						= mod:NewCDTimer(16.9, 372107, nil, nil, nil, 3)
 local timerRitualofBlazebindingCD				= mod:NewCDTimer(33.9, 372863, nil, nil, nil, 1)
 
-local yellMoltenBoulder							= mod:NewYell(372107)
+local yellMoltenBoulder							= mod:NewYell(372107, nil, nil, nil, "YELL")
 
 local castsPerGUID = {}
 
@@ -100,13 +102,15 @@ function mod:SPELL_CAST_START(args)
 		else
 			specWarnRoaringBlaze:Play("kickcast")
 		end
-	elseif spellId == 373087 then
-		if self.Options.SpecWarn373087run then
+	elseif spellId == 373087 and self:AntiSpam(1, "Burnout") then
+		if self:IsMelee() then
 			specWarnBurnout:Show()
 			specWarnBurnout:Play("justrun")
 		else
-			warnBurnout:Show()
+			specWarnBurnout2:Show()
+			specWarnBurnout2:Play("watchstep")
 		end
+		timerBurnout:Start()
 	elseif spellId == 384823 then
 		warnInferno:Show()
 	end

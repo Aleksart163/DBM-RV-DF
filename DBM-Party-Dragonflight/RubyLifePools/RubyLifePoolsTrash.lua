@@ -43,6 +43,7 @@ local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, 
 local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterrupt", nil, nil, 1, 2)
 
+local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExcavatingBlastCD				= mod:NewCDNPTimer(17, 372696, nil, nil, nil, 3)
 local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, nil, nil, nil, 3)
@@ -99,7 +100,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFlameBreath:Play("breathsoon")
 		end
 	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
-	elseif spellId == 373614 and self:AntiSpam(2, "Burnout") then
+	elseif spellId == 373614 and self:AntiSpam(1, "Burnout") then
 		if self:IsMelee() then
 			specWarnBurnout:Show()
 			specWarnBurnout:Play("justrun")
@@ -108,6 +109,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnBurnout2:Play("watchstep")
 		end
 		warnBurnout:Show()
+		timerBurnout:Start()
 	elseif spellId == 372696 then
 		timerExcavatingBlastCD:Start(17, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
