@@ -12662,6 +12662,8 @@ local function startProshlyapationRinaBaka(self, event, arg1, arg2)
 			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
 	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
 			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "PARTY")]]
+		elseif message:find("!ProshlyapationTime") then
+			SendChatMessage("[DBM RV] Найден пользователь DBM RV ==> " ..sender.. ".", "PARTY")
 		end
 	elseif event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER" then
 		if message:find("EblanDetect") then
@@ -12724,11 +12726,11 @@ function startProshlyapationOfMurchal(force, raid, guild) --Прошляпанн
 				proshlyapOchkaMurchalya = C_Container.GetContainerItemLink(bag, slot)
 				if force then
 					if guild then
-						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "GUILD")
+						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "GUILD")
 					elseif raid then
-						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "RAID")
+						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "RAID")
 					else
-						SendChatMessage("[DBM RV v2.5]: " ..proshlyapOchkaMurchalya, "PARTY")
+						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "PARTY")
 					end
 				end
 			end
