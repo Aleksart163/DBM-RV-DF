@@ -35,8 +35,8 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(387150, nil, nil, nil, 1, 
 
 local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3)--15-24 (mod should account for two  mechanics that cause these delays)
 local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3) --Морозный опустошитель
-local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Абсолютный нуль
-local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Абсолютный нуль
+local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Абсолютный нуль
+local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Абсолютный нуль
 
 local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL")
 local yellIcyDevastator							= mod:NewShortYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
