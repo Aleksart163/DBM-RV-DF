@@ -12726,11 +12726,11 @@ function startProshlyapationOfMurchal(force, raid, guild) --Прошляпанн
 				proshlyapOchkaMurchalya = C_Container.GetContainerItemLink(bag, slot)
 				if force then
 					if guild then
-						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "GUILD")
+						SendChatMessage("[DBM RV] " ..proshlyapOchkaMurchalya, "GUILD")
 					elseif raid then
-						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "RAID")
+						SendChatMessage("[DBM RV] " ..proshlyapOchkaMurchalya, "RAID")
 					else
-						SendChatMessage("[DBM RV]: " ..proshlyapOchkaMurchalya, "PARTY")
+						SendChatMessage("[DBM RV] " ..proshlyapOchkaMurchalya, "PARTY")
 					end
 				end
 			end
