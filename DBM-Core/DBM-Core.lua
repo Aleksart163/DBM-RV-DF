@@ -12779,6 +12779,8 @@ local function proshlyapSoulburnin(self, event, msg)
 	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
 		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
 			startProshlyapationOfMurchal(true)
+		elseif msg == "!Proshlyapation" then
+			SendChatMessage("[DBM RV] Найден пользователь DBM RV ", "PARTY")
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
 		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
@@ -12787,8 +12789,6 @@ local function proshlyapSoulburnin(self, event, msg)
 	elseif event == "CHAT_MSG_GUILD" then
 		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOPG") then
 			startProshlyapationOfMurchal(true, true, true)
-		elseif string.lower(msg) == "!Proshlyapation" and DBM:AntiSpam(15, "MOPG") then
-			SendChatMessage("[DBM RV] Найден пользователь DBM RV ==> " ..sender.. ".", "YELL")
 		end
     end
 end

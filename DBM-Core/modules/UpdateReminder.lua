@@ -78,11 +78,11 @@ local function CreateOurFrame()
 end
 
 function DBM:ShowUpdateReminder(newVersion, newRevision, text, url)
-	urlText = url or "https://github.com/DeadlyBossMods/DeadlyBossMods/wiki"
+	urlText = url or "https://github.com/Aleksart163/DBM-RV-DF"
 	if not frame then
 		CreateOurFrame()
 	end
-	editBox:SetText(url or "https://github.com/DeadlyBossMods/DeadlyBossMods/wiki")
+	editBox:SetText(url or "https://github.com/Aleksart163/DBM-RV-DF")
 	editBox:HighlightText()
 	frame:Show()
 	if newVersion then
