@@ -25,7 +25,7 @@ mod:RegisterEventsInCombat(
 --]]
 local warnLeap							= mod:NewTargetAnnounce(197556, 2)
 local warnPhase2						= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnFixate						= mod:NewTargetAnnounce(196838, 2)
+local warnFixate						= mod:NewTargetNoFilterAnnounce(196838, 2)
 local warnFixateEnded					= mod:NewEndAnnounce(196838, 1)
 local warnClawFrenzy					= mod:NewSpellAnnounce(196512, 3, nil, nil, 2)
 
@@ -35,10 +35,9 @@ local specWarnFixate					= mod:NewSpecialWarningRun(196838, nil, nil, nil, 4, 2)
 local specWarnWolves					= mod:NewSpecialWarningSwitch(-12600, "Tank|Dps", nil, nil, 1, 2) --Эбеновый ворг
 
 local timerLeapCD						= mod:NewCDTimer(31, 197556, nil, nil, nil, 3) --Хищный прыжок
-local timerClawFrenzyCD					= mod:NewCDCountTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Бешеные когти
+local timerClawFrenzyCD					= mod:NewCDCountTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 3, 3) --Бешеные когти
 local timerHowlCD						= mod:NewCDTimer(31.5, 196543, nil, "SpellCaster", nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пугающий вой
 local timerScentCD						= mod:NewCDTimer(37.6, 196838, nil, nil, nil, 7) --Запах крови
-local timerWolvesCD						= mod:NewCDTimer(33.8, -12600, nil, nil, nil, 1, 199184)--33.8-56
 
 local yellLeap							= mod:NewYell(197556, nil, nil, nil, "YELL") --Хищный прыжок
 local yellFixate						= mod:NewYell(196838, nil, nil, nil, "YELL") --Запах крови
@@ -169,10 +168,9 @@ function mod:ENCOUNTER_START(encounterID)
 		self.vb.phase = 2
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
-		timerHowlCD:Start(4.4)
-		timerWolvesCD:Start(6)
-		timerLeapCD:Start(9.3)--9.3-15
-		timerClawFrenzyCD:Start(13.5, 1)--12-45 (massive variation cause if it's not cast immediately it gets spell queued behind leap, howl and then casts at 22-25 unless scent also spell queues it then it's 42-45sec ater p2 start
+		timerHowlCD:Start(4.5)
+		timerLeapCD:Start(9.5)--9.3-15
+		timerClawFrenzyCD:Start(20.5, 1)--12-45 (massive variation cause if it's not cast immediately it gets spell queued behind leap, howl and then casts at 22-25 unless scent also spell queues it then it's 42-45sec ater p2 start
 		timerScentCD:Start(23.7)--20-27.8
 	end
 end
