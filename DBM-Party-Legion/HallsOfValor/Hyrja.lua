@@ -34,15 +34,15 @@ local warnMysticEmpowermentHoly		= mod:NewStackAnnounce(192133, 4, nil, nil, 2) 
 local warnMysticEmpowermentThunder	= mod:NewStackAnnounce(192132, 4, nil, nil, 2) --Мистическое усиление: гром
 local warnExpelLight				= mod:NewTargetAnnounce(192048, 3)
 
-local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, nil, nil, nil, 3, 2) --Щит света
+local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, nil, nil, nil, 3, 4) --Щит света
 local specWarnShieldOfLight2		= mod:NewSpecialWarningTarget(192018, nil, nil, nil, 2, 2) --Щит света
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192307, nil, nil, nil, 2, 5)
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
 local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
 local specWarnExpelLight			= mod:NewSpecialWarningMoveAway(192048, nil, nil, nil, 2, 2)
 
-local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 4)--26.6-34
-local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5)--Shared timer by eye of storm and Sanctify
+local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)--26.6-34
+local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)--Shared timer by eye of storm and Sanctify
 local timerExpelLightCD				= mod:NewCDTimer(23, 192048, nil, nil, nil, 3)--May be lower but almost always delayed by spell queue ICDs
 
 local yellShieldOfLight				= mod:NewShortYell(192018, nil, nil, nil, "YELL") --Щит света
@@ -64,27 +64,24 @@ function mod:ShieldOfLightTarget(targetname, uId)
 	end
 end
 
-local function updateAllTimers(self, ICD)
-	DBM:Debug("updateAllTimers running", 3)
-	if timerShieldOfLightCD:GetRemaining() < ICD then
-		local elapsed, total = timerShieldOfLightCD:GetTime()
-		local extend = ICD - (total-elapsed)
-		DBM:Debug("timerShieldOfLightCD extended by: "..extend, 2)
-		timerShieldOfLightCD:Update(elapsed, total+extend)
-	end
+local function updateExpelLightTimers(self, ICD)
+	DBM:Debug("updateExpelLightTimers running", 3)
 	if timerExpelLightCD:GetRemaining() < ICD then
 		local elapsed, total = timerExpelLightCD:GetTime()
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerExpelLightCD extended by: "..extend, 2)
 		timerExpelLightCD:Update(elapsed, total+extend)
 	end
-	--Not confirmed special is affected by ICDs of shield and expel so disabled for now
-	--if timerSpecialCD:GetRemaining() < ICD then
-	--	local elapsed, total = timerSpecialCD:GetTime()
-	--	local extend = ICD - (total-elapsed)
-	--	DBM:Debug("timerSpecialCD extended by: "..extend, 2)
-	--	timerSpecialCD:Update(elapsed, total+extend)
-	--end
+end
+
+local function updateMurchalProshlyapsTimers(self, ICD)
+	DBM:Debug("updateMurchalProshlyapsTimers running", 3)
+	if timerShieldOfLightCD:GetRemaining() < ICD then
+		local elapsed, total = timerShieldOfLightCD:GetTime()
+		local extend = ICD - (total-elapsed)
+		DBM:Debug("timerShieldOfLightCD extended by: "..extend, 2)
+		timerShieldOfLightCD:Update(elapsed, total+extend)
+	end
 end
 
 function mod:OnCombatStart(delay)
@@ -101,22 +98,24 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 192307 then--P2 boss
+	if spellId == 192307 then --Освящение
 		specWarnSanctify:Show()
 		specWarnSanctify:Play("watchorb")
 		timerSpecialCD:Start()
-		updateAllTimers(self, 15.5)
-	elseif spellId == 192018 then
+		updateMurchalProshlyapsTimers(self, 12.8)
+		updateExpelLightTimers(self, 15.5)
+	elseif spellId == 192018 then --Щит света
 		self:BossTargetScanner(args.sourceGUID, "ShieldOfLightTarget", 0.1, 2)
 		timerShieldOfLightCD:Start()
-		updateAllTimers(self, 6)
-	elseif spellId == 200901 and args:GetSrcCreatureID() == 95833 then
+		updateMurchalProshlyapsTimers(self, 6)
+	elseif spellId == 200901 and args:GetSrcCreatureID() == 95833 then --Око шторма
 		if self:AntiSpam(2, "EyeofStorm") then
 			specWarnEyeofStorm:Show(eyeShortName)
 			specWarnEyeofStorm:Play("findshelter")
 		end
 		timerSpecialCD:Start()
-		updateAllTimers(self, 15.5)
+		updateMurchalProshlyapsTimers(self, 13)
+		updateExpelLightTimers(self, 15.5)
 	end
 end
 
@@ -124,7 +123,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 192044 then
 		timerExpelLightCD:Start()
-		updateAllTimers(self, 3.6)
+		updateExpelLightTimers(self, 3.6)
 	elseif spellId == 200901 then
 		specWarnEyeofStorm2:Show()
 		specWarnEyeofStorm2:Play("defensive")

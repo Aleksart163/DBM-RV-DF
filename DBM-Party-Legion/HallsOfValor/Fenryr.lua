@@ -35,7 +35,7 @@ local specWarnFixate					= mod:NewSpecialWarningRun(196838, nil, nil, nil, 4, 2)
 local specWarnWolves					= mod:NewSpecialWarningSwitch(-12600, "Tank|Dps", nil, nil, 1, 2) --Эбеновый ворг
 
 local timerLeapCD						= mod:NewCDTimer(31, 197556, nil, nil, nil, 3) --Хищный прыжок
-local timerClawFrenzyCD					= mod:NewCDCountTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 3, 3) --Бешеные когти
+local timerClawFrenzyCD					= mod:NewCDCountTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Бешеные когти
 local timerHowlCD						= mod:NewCDTimer(31.5, 196543, nil, "SpellCaster", nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пугающий вой
 local timerScentCD						= mod:NewCDTimer(37.6, 196838, nil, nil, nil, 7) --Запах крови
 

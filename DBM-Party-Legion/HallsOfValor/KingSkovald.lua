@@ -33,13 +33,14 @@ local warnClaimAegis				= mod:NewSpellAnnounce(194112, 2)
 
 local specWarnFelRush				= mod:NewSpecialWarningYou(193659, nil, nil, nil, 1, 2)
 local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil, nil, 1, 2)
-local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2)
+local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2) --Рагнарек
+local specWarnRagnarok2				= mod:NewSpecialWarningSpell(193826, nil, nil, nil, 3, 2) --Рагнарек
 local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
 
 local timerRP						= mod:NewRPTimer(34.4)
 local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
-local timerSavageBladeCD			= mod:NewCDTimer(19, 193668, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--23 unless delayed by claim aegis or ragnarok
-local timerRagnarokCD				= mod:NewCDTimer(63.1, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerSavageBladeCD			= mod:NewCDTimer(18, 193668, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Свирепый клинок
+local timerRagnarokCD				= mod:NewCDTimer(64.5, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Рагнарек
 
 local yellFelblazeRush				= mod:NewYell(193659, nil, nil, nil, "YELL")
 local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL")
@@ -57,7 +58,7 @@ end
 
 function mod:OnCombatStart(delay)
 	timerRushCD:Start(7.1-delay)
-	timerRagnarokCD:Start(11-delay)
+	timerRagnarokCD:Start(13.7-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -75,7 +76,7 @@ function mod:SPELL_CAST_START(args)
 		else--]]
 			timerRushCD:Start()
 		--end
-	elseif spellId == 193668 then
+	elseif spellId == 193668 then --Свирепый клинок
 		specWarnSavageBlade:Show()
 		specWarnSavageBlade:Play("defensive")
 --		local elapsed, total = timerRagnarokCD:GetTime()
@@ -83,13 +84,24 @@ function mod:SPELL_CAST_START(args)
 --		if remaining >= 20 then
 			timerSavageBladeCD:Start()
 --		end
-	elseif spellId == 193826 then
-		specWarnRagnarok:Show(SHIELDSLOT)
-		specWarnRagnarok:Play("findshield")
+	elseif spellId == 193826 then --Рагнарек
+		if ExtraActionBarFrame:IsShown() then
+			specWarnRagnarok2:Show()
+			specWarnRagnarok2:Play("useitem")
+		else
+			specWarnRagnarok:Show(SHIELDSLOT)
+			specWarnRagnarok:Play("findshield")
+		end
+		timerRushCD:Stop()
 		timerRagnarokCD:Start()
+		timerRushCD:Start(12)
 		--Other timers can be extended but they aren't restarted, they just get spell queued behind ragnarok
 	elseif spellId == 194112 then
 		warnClaimAegis:Show()
+		timerRushCD:Stop()
+		timerSavageBladeCD:Stop()
+		timerRushCD:Start(18)
+		timerSavageBladeCD:Start(18)
 	end
 end
 
