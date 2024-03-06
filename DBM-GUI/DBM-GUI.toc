@@ -10,7 +10,6 @@
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0IUG des options|r
 ## Title-ptBR:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0IU de opções|r
 ## Title-itIT:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Interfaccia Opzioni|r
-
 ## Notes: GUI for Deadly Boss Mods
 ## Notes-deDE: Grafische Benutzeroberfläche für Deadly Boss Mods
 ## Notes-zhCN: Deadly Boss Mods的设置界面
@@ -27,7 +26,7 @@
 ## LoadOnDemand: 1
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 4910e94
+## Version: 3f68f24
 ## X-Website: https://deadlybossmods.com
 
 localization.en.lua

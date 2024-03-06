@@ -10,13 +10,6 @@ local DBM = DBM
 
 do
 	local counts = {
-		{	text	= "Alarak",value 	= "Alarak", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Alarak\\", max = 5},
-		{	text	= "Artanis",value 	= "Artanis", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Artanis\\", max = 5},
-		{	text	= "Kerrigan",value 	= "Kerrigan", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kerrigan\\", max = 5},
-		{	text	= "Raynor",value 	= "Raynor", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Raynor\\", max = 5},
-		{	text	= "Tychus",value 	= "Tychus", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Tychus\\", max = 5},
-		{	text	= "Vorazun",value 	= "Vorazun", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Vorazun\\", max = 5},
-		{	text	= "Gachimuchi",value 	= "Gachimuchi", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Gachimuchi\\", max = 5},
 		{	text	= "Corsica",value 	= "Corsica", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Corsica\\", max = 10},
 		{	text	= "Koltrane",value 	= "Kolt", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kolt\\", max = 10},
 		{	text	= "Smooth",value 	= "Smooth", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Smooth\\", max = 10},
@@ -54,11 +47,6 @@ do
 	local victory = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
-		{text = "Alarak",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Alarak_Win.ogg", length=4},
-		{text = "Artanis",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Artanis_Win.ogg", length=4},
-		{text = "Kerrigan",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Kerrigan_Win.ogg", length=4},
-		{text = "Vorazun",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Vorazun_Win.ogg", length=4},
-		{text = "Gachimuchi",value  = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\Gachimuchi_Win.ogg", length=4},
 		{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
 		{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
 	}
@@ -91,7 +79,6 @@ do
 		defeat = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "Alarak: Shameful death",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Alarak_Shameful_Death.ogg", length=4},
 			{text = "Alizabal: Incompetent Raiders",value = 572130, length=4},--"Sound\\Creature\\ALIZABAL\\VO_BH_ALIZABAL_RESET_01.ogg"
 			{text = "Bwonsamdi: Over Your Head",value = 2016732, length=4},--"Sound\\Creature\\bwonsamdi\\vo_801_bwonsamdi_35_m.ogg"
 			{text = "Bwonsamdi: Pour Little Thing",value = 2016734, length=4},--"Sound\\Creature\\bwonsamdi\\vo_801_bwonsamdi_37_m.ogg"
@@ -151,10 +138,8 @@ do
 		dungeonMusic = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 			{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
-		--	{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+			{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 			{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
 		}
 	elseif isWrath then
@@ -200,8 +185,6 @@ do
 		battleMusic = {
 			{text = CL.NONE,value  = "None"},
 			{text = CL.RANDOM,value  = "Random"},
-			{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-			{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 			{text = "Anduin Part 2 B",value = 1417248, length=111},--"sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3" Soundkit: 68230
 			{text = "Bronze Jam",value = 350021, length=116},--"Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3" Soundkit: 118800
 			{text = "Invincible",value = 1100052, length=197},--"Sound\\Music\\Draenor\\MUS_Invincible.mp3" Soundkit: 49536
@@ -247,13 +230,11 @@ do
 	local music = {
 		{text = CL.NONE,value  = "None"},
 		{text = CL.RANDOM,value  = "Random"},
-		{text = "FNaF Security Breach",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\SecurityBreach.mp3", length=198},
-		{text = "Nightsong Extended",value = "Interface\\AddOns\\DBM-Core\\sounds\\Custom\\Nightsong.mp3", length=217},
 		{text = "Anduin Part 1 B",value = 1417242, length=140},--"sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3" Soundkit: 68230
 		{text = "Anduin Part 2 B",value = 1417248, length=111},--"sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3" Soundkit: 68230
 		{text = "Bronze Jam",value = 350021, length=116},--"Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3" Soundkit: 118800
 		{text = "Invincible",value = 1100052, length=197},--"Sound\\Music\\Draenor\\MUS_Invincible.mp3" Soundkit: 49536
-	--	{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
+		{text = "Nightsong",value = 441705, length=160},--"Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3" Soundkit: 71181
 		{text = "Ulduar: Titan Orchestra",value = 298910, length=102},--"Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3" Soundkit: 15873
 	}
 	local hasCached = false

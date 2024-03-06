@@ -129,7 +129,6 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["RemoveCurse"] = true,
 				["RemovePoison"] = true,
 				["RemoveEnrage"] = true,
-				["HasInterrupt"] = true,
 			},
 			[103] = {	--Feral Druid
 				["Dps"] = true,

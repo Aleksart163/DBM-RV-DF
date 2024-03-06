@@ -194,6 +194,10 @@ L:SetOptionLocalization({
 	Hybrid					= "Show Oppressing Howl stacks in stage 1 and Oblivion stacks in stages 2 and 3"
 })
 
+L:SetMiscLocalization({
+	EarlyStaging			= "Stage terminated early by health threshold"
+})
+
 -------------
 --  Trash  --
 -------------
