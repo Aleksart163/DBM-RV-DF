@@ -53,7 +53,7 @@ local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL
 local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
 
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
-mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
+--mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
 
 --mod.vb.rockIcon = 1
 mod.vb.awakenedIcon = 1
@@ -224,9 +224,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnRockBlast:CombinedShow(0.5, args.destName)
 	elseif spellId == 381253 then
 		local icon = self.vb.awakenedIcon
-		if self.Options.SetIconOnAwakenedEarth then
+	--[[	if self.Options.SetIconOnAwakenedEarth then
 			self:SetIcon(args.destName, icon)
-		end
+		end]]
 		if args:IsPlayer() then
 			specWarnAwakenedEarth:Show()
 			specWarnAwakenedEarth:Play("targetyou")
@@ -278,9 +278,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellAwakenedEarthFades:Cancel()
 		end
-		if self.Options.SetIconOnAwakenedEarth then
+	--[[	if self.Options.SetIconOnAwakenedEarth then
 			self:SetIcon(args.destName, 0)
-		end
+		end]]
 	elseif spellId == 391592 then
 		if args:IsPlayer() then
 			self:Unschedule(yellRepeater)
