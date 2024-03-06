@@ -24,6 +24,7 @@ mod:RegisterEventsInCombat(
 local warnRockBlast								= mod:NewTargetNoFilterAnnounce(380487, 3)
 local warnAwakenedEarth							= mod:NewTargetNoFilterAnnounce(381253, 3)
 local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer") --Оглушающий удар
+local warnConcussiveSlam2						= mod:NewTargetNoFilterAnnounce(376279, 4) --Оглушающий удар
 
 local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 1, 2)
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
@@ -92,6 +93,8 @@ function mod:ConcussiveSlamTarget(targetname, uId)
 		specWarnConcussiveSlam:Show()
 		specWarnConcussiveSlam:Play("defensive")
 		yellConcussiveSlam:Yell()
+	else
+		warnConcussiveSlam2:Show(targetname)
 	end
 end
 
