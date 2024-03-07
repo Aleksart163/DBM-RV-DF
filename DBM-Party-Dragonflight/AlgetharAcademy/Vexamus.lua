@@ -35,12 +35,11 @@ mod:RegisterEvents(
 --]]
 local warnArcaneOrbs							= mod:NewCountAnnounce(385974, 3)
 local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386173, 3)
+local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4)
 
-local specWarnArcaneFissure						= mod:NewSpecialWarningDodgeCount(388537, nil, nil, nil, 1, 2)
+local specWarnArcaneFissure						= mod:NewSpecialWarningDodgeCount(388537, nil, nil, nil, 3, 2) --Магический разлом
 local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, nil, nil, 1, 2)
-local yellManaBomb								= mod:NewYell(386181)
-local yellManaBombFades							= mod:NewShortFadesYell(386181)
-local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, nil, 1, 2)
+local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, nil, 3, 4) --Волна тайной магии
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
 local timerRP									= mod:NewRPTimer(19.8)
@@ -49,6 +48,10 @@ local timerArcaneFissureCD						= mod:NewCDCountTimer(40.7, 388537, nil, nil, ni
 local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386173, nil, nil, nil, 3)
 local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
+local yellArcaneExpulsion						= mod:NewShortYell(385958, nil, nil, nil, "YELL")
+local yellManaBomb								= mod:NewYell(386181, nil, nil, nil, "YELL")
+local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL")
+
 mod:AddInfoFrameOption(391977, true)
 
 --mod:GroupSpells(386173, 386181)--Mana Bombs with Mana Bomb
@@ -56,6 +59,17 @@ mod:AddInfoFrameOption(391977, true)
 mod.vb.orbCount = 0
 mod.vb.manaCount = 0
 mod.vb.fissureCount = 0
+
+function mod:ArcaneExpulsionTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnArcaneExpulsion:Show()
+		specWarnArcaneExpulsion:Play("defensive")
+		yellArcaneExpulsion:Yell()
+	else
+		warnArcaneExpulsion:Show(targetname)
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.orbCount = 0
@@ -100,10 +114,7 @@ function mod:SPELL_CAST_START(args)
 --			timerManaBombsCD:Start(26.7, self.vb.manaCount+1)
 --		end
 	elseif spellId == 385958 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnArcaneExpulsion:Show()
-			specWarnArcaneExpulsion:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "ArcaneExpulsionTarget", 0.1, 2)
 		timerArcaneExpulsionCD:Start()
 	end
 end
