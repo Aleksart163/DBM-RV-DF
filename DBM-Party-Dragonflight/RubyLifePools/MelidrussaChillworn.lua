@@ -35,7 +35,7 @@ local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagi
 local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 8, nil, nil, 1, 6)
 local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
 local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 1, 2)
-local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, 2, 1, 2, 4)
+local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, nil, 3, 2)
 local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8)
 
@@ -102,8 +102,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellFrozenSolid:Yell()
 		else
-			specWarnFrozenSolid:CombinedShow(0.5, args.destName)
-			specWarnFrozenSolid:ScheduleVoice(0.5, "helpdispel")
+			specWarnFrozenSolid:Show(args.destName)
+			specWarnFrozenSolid:Play("helpdispel")
 		end
 	elseif spellId == 373680 then
 		if not self:IsMythic() then--Interruptable at any time on non mythic
