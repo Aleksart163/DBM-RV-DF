@@ -8,7 +8,7 @@ mod:SetZone(2515)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991",
+	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991 391118",
 	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136",
 	"SPELL_AURA_APPLIED 371007 395492 375596 374778",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
@@ -30,7 +30,9 @@ local warnArcaneBash						= mod:NewCastAnnounce(387067, 3)
 local warnSplinteringShards					= mod:NewTargetAnnounce(371007, 2)
 local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
 local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
+local warSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
 
+local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
 local specWarnForbiddenKnowledge			= mod:NewSpecialWarningDodge(371358, nil, nil, nil, 2, 2)
 local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2, 2, 2)
@@ -42,7 +44,7 @@ local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, 
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2)
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
+local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 3, 2)
 
 local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerWakingBaneCD						= mod:NewCDNPTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -50,6 +52,7 @@ local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
 local timerArcaneBashCD						= mod:NewCDNPTimer(18.2, 387067, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
+local yellSpellfrostBreath					= mod:NewShortYell(391118, nil, nil, nil, "YELL") --Дыхание магического льда
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
 local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
 
@@ -58,6 +61,17 @@ mod:AddBoolOption("AGBook", true)
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
+
+function mod:SpellfrostBreathTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSpellfrostBreath:Show()
+		specWarnSpellfrostBreath:Play("defensive")
+		yellSpellfrostBreath:Yell()
+	else
+		warSpellfrostBreath:Show(targetname)
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -114,6 +128,8 @@ function mod:SPELL_CAST_START(args)
 		else
 			warnArcaneBash:Show()
 		end
+	elseif spellId == 391118 then --Дыхание магического льда
+		self:BossTargetScanner(args.sourceGUID, "SpellfrostBreathTarget", 0.1, 2)
 	end
 end
 
