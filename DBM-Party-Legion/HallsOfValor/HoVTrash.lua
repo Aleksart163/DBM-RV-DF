@@ -46,13 +46,13 @@ local timerRuneOfHealingCD			= mod:NewCDNPTimer(17, 198934, nil, "HasInterrupt",
 local timerHolyRadianceCD			= mod:NewCDNPTimer(18.1, 215433, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--17-18.2
 local timerCleansingFlameCD			= mod:NewCDNPTimer(6.1, 192563, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--6-9
 local timerBlastofLightCD			= mod:NewCDNPTimer(18, 191508, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--May be lower
-local timerEyeofStormCD				= mod:NewCDNPTimer(25, 200901, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3)--25-30 based on searing light casts since searing light has 6sec ICD lockout
+local timerEyeofStormCD				= mod:NewCDNPTimer(25, 200901, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
+local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerRP						= mod:NewRPTimer(28.5)
 
-local yellCrackle					= mod:NewShortYell(199805)
-local yellCracklingStorm			= mod:NewShortYell(198892)
-local yellThunderstrike				= mod:NewShortYell(215430)
+local yellCrackle					= mod:NewShortYell(199805, nil, nil, nil, "YELL")
+local yellCracklingStorm			= mod:NewShortYell(198892, nil, nil, nil, "YELL")
+local yellThunderstrike				= mod:NewShortYell(215430, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGSkovaldTrash", true)
 mod:AddBoolOption("AGStartOdyn", true)
