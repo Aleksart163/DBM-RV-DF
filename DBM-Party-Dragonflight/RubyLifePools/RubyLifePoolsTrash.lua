@@ -23,11 +23,12 @@ local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3)
 local warnBurnout							= mod:NewCastAnnounce(373614, 4)
 local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3)
 local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer")
-local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Tank|Healer")
+local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Healer") --Ураган стали
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4)
 local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3)
 local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3)
 
+local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
 local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2)
 local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2)
@@ -56,6 +57,7 @@ local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 5)
 local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5)--17-21
 local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 
+local yellSteelBarrage						= mod:NewShortYell(372047, nil, nil, nil, "YELL") --Ураган стали
 local yellLivingBomb						= mod:NewShortYell(373693, nil, nil, nil, "YELL")
 local yellLivingBombFades					= mod:NewShortFadesYell(373693, nil, nil, nil, "YELL")
 local yellStormBreath						= mod:NewShortYell(391726, nil, nil, nil, "YELL")
@@ -63,6 +65,15 @@ local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL")
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
+
+function mod:SteelBarrageTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSteelBarrage:Show()
+		specWarnSteelBarrage:Play("defensive")
+		yellSteelBarrage:Yell()
+	end
+end
 
 function mod:StormBreathTarget(targetname)
 	if not targetname then return end
@@ -89,13 +100,13 @@ function mod:SPELL_CAST_START(args)
 		timerBlazingRushCD:Start(17, args.sourceGUID)
 	elseif spellId == 391726 then
 		timerStormBreathCD:Start(15.7, args.sourceGUID)
-		if self:AntiSpam(3, 2) then
+		if self:AntiSpam(2, "StormBreath") then
 			specWarnStormBreath:Show()
 			specWarnStormBreath:Play("breathsoon")
 		end
 	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
 	elseif spellId == 391723 then
-		if self:AntiSpam(3, 2) then
+		if self:AntiSpam(2, "FlameBreath") then
 			specWarnFlameBreath:Show()
 			specWarnFlameBreath:Play("breathsoon")
 		end
@@ -157,6 +168,7 @@ function mod:SPELL_CAST_START(args)
 			warnFlashfire:Show()
 		end
 	elseif spellId == 372047 then
+		self:BossTargetScanner(args.sourceGUID, "SteelBarrageTarget", 0.1, 2)
 		timerSteelBarrageCD:Start(17, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnSteelBarrage:Show()
