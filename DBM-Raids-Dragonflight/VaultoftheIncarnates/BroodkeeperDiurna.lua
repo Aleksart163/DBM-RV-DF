@@ -37,6 +37,8 @@ mod:RegisterEventsInCombat(
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25119))
 ----Broodkeeper Diurna
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25120))
+
+local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnEggsLeft								= mod:NewCountAnnounce(19873, 1)
 local warnGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(375889, 2)
 local warnClutchwatchersRage					= mod:NewStackAnnounce(375829, 2)
@@ -72,7 +74,7 @@ local warnRendingBite							= mod:NewStackAnnounce(375475, 2, nil, "Tank|Healer"
 local warnChillingTantrum						= mod:NewCastAnnounce(375457, 3)
 local warnIonizingCharge						= mod:NewTargetAnnounce(375630, 3)
 
-local specWarnPrimalistReinforcements			= mod:NewSpecialWarningAddsCount(257554, "-Healer", nil, nil, 1, 2)
+local specWarnPrimalistReinforcements			= mod:NewSpecialWarningAddsCount(257554, "-Healer", 245546, nil, 1, 2)
 local specWarnIceBarrage						= mod:NewSpecialWarningInterruptCount(375716, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, false, nil, 2, 1, 2, 3)--Spammy as all hell, should never be on by default
 local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 2, 2)
@@ -80,7 +82,7 @@ local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2)
 
-local timerPrimalistReinforcementsCD			= mod:NewAddsCustomTimer(60, 257554, nil, nil, nil, 1)
+local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
 local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON)
 local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3)
 local timerCauterizingFlashflamesCD				= mod:NewCDNPTimer(11.7, 375485, nil, "MagicDispeller", nil, 5)
@@ -152,6 +154,17 @@ function mod:MortalStoneclawsTarget(targetname, uId)
 		specWarnMortalStoneclaws:Show()
 		specWarnMortalStoneclaws:Play("defensive")
 		yellMortalStoneclaws:Yell()
+	end
+end
+
+local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
+	self.vb.addsCount = self.vb.addsCount + 1
+	local proshlyap = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
+	if proshlyap then
+		specWarnPrimalistReinforcements:Show(self.vb.addsCount)
+		specWarnPrimalistReinforcements:Play("killmob")
+		timerPrimalistReinforcementsCD:Start(proshlyap, self.vb.self.vb.addsCount+1)
+		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
 end
 
@@ -551,9 +564,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 375475 and not args:IsPlayer() then
 		local amount = args.amount or 1
 		warnRendingBite:Show(args.destName, amount)
-	elseif spellId == 375879 then
+	elseif spellId == 375879 then --Неистовство хранительницы стаи (фаза 2)
 		local amount = args.amount or 1
-		warnBroodkeepersFury:Show(args.destName, amount)
+		if amount == 1 then
+			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+			warnPhase:Play("ptwo")
+		else
+			warnBroodkeepersFury:Show(args.destName, amount)
+		end
 		timerBroodkeepersFuryCD:Start(30, amount+1)
 		if self:GetStage(2, 1) then
 			self:SetStage(2)

@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231123214402")
 mod:SetCreatureID(190496)
 mod:SetEncounterID(2639)
-mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20221217000000)
 --mod:SetMinSyncRevision(20211203000000)
 mod.respawnTime = 29
@@ -52,6 +52,7 @@ local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YE
 local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL")
 local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
 
+mod:AddSetIconOption("SetIconOnRockBlast", 380487, true, false, {8})
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
 --mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
 
@@ -220,8 +221,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnRockBlast:Play("targetyou")--"mm"..icon
 			yellRockBlast:Yell()
 			yellRockBlastFades:Countdown(5)
+		else
+			warnRockBlast:Show(args.destName)
 		end
-		warnRockBlast:CombinedShow(0.5, args.destName)
+		if self.Options.SetIconOnRockBlast then
+			self:SetIcon(args.destName, 8, 5)
+		end
 	elseif spellId == 381253 then
 		local icon = self.vb.awakenedIcon
 	--[[	if self.Options.SetIconOnAwakenedEarth then
