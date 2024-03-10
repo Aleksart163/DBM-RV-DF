@@ -43,7 +43,7 @@ local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt",
 local timerTempestCD				= mod:NewCDCountTimer(56, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--More data needed
 local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerShatterSpearsCD			= mod:NewCDTimer(56, 198077, nil, nil, nil, 2)
-local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 7)
+local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 7, nil, nil, nil, 3, 5)
 local timerRunicBrand				= mod:NewCastTimer(12, 197961, nil, nil, nil, 7, nil, nil, nil, 3, 5)
 local timerAddCD					= mod:NewCDTimer(54, 201221, nil, nil, nil, 1, 201215)--54-58
 
