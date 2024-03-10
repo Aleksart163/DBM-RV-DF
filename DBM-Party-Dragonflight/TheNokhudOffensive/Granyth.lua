@@ -31,7 +31,6 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnShardsofStone							= mod:NewCountAnnounce(388817, 3)
-local warnLanced								= mod:NewTargetNoFilterAnnounce(387155, 1)
 local warnReload								= mod:NewCastAnnounce(386921, 2)
 local warnAdd									= mod:NewCountAnnounce(386320, 3)
 
@@ -98,7 +97,6 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 387155 then
-		warnLanced:Show(args.destName)
 		timerEruptionCD:Stop()
 		timerShardsofStoneCD:Stop()
 		timerTectonicStompCD:Stop()
