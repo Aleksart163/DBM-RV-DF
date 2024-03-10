@@ -79,7 +79,7 @@ local timerSearingGlareCD			= mod:NewCDNPTimer(8.4, 211299, nil, "HasInterrupt",
 local timerEyeStormCD				= mod:NewCDNPTimer(20.6, 212784, nil, nil, nil, 5)--Role color cause it needs a disrupt (stun, knockback) to interrupt.
 local timerBewitchCD				= mod:NewCDNPTimer(17, 211470, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShadowSlashCD			= mod:NewCDNPTimer(18.2, 211473, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2)
+local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2, nil, nil, nil, 3, 3)
 local timerScreamofPainCD			= mod:NewCDNPTimer(14.6, 397892, nil, nil, nil, 2)
 local timerWhirlingBladesCD			= mod:NewCDNPTimer(18.2, 209378, nil, "Melee", nil, 2)
 local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -210,7 +210,7 @@ function mod:SPELL_CAST_START(args)
 			warnShadowSlash:Show()
 		end
 	elseif spellId == 214697 then --Поднять ключ
-		if args:IsPlayerSource() then
+		if args:IsPlayer() then
 			yellPickingUp:Yell()
 		else
 			warnPickingUp:Show(args.sourceName)
