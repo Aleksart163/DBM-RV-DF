@@ -562,11 +562,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerMagneticChargeCD:Start(timer, self.vb.magneticCount+1)
 		end
 	elseif spellId == 382434 then--First intermission Starts (Storm Nova finished)
-		self:SetStage(1.5)
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
-		warnPhase:Play("phasechange")
 		self.vb.breathCount = 0--Reused for Lightning Devastation
-
 		if self.Options.SetBreathToBait then
 			timerLightningDevastationCD:Start(self:IsMythic() and 11.3 or 11.7, 1)
 		else
@@ -953,14 +949,18 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) -- (всё с офы и �
 end
 
 function mod:OnSync(msg)
-	if msg == "OchkenShlyapen" then
+	if msg == "OchkenShlyapen" then --1-ая переходка
+		self:SetStage(1.5)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
+		warnPhase:Play("phasechange")
 		timerStormNovaCD:Start(8.6)
+		timerStaticCharge:Stop()
 		timerHurricaneWingCD:Stop()
 		timerStaticChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
 		timerElectrifiedJawsCD:Stop()
 		timerLightningBreathCD:Stop()
-	elseif msg == "OchkenShlyapen2" then
+	elseif msg == "OchkenShlyapen2" then --Вызов элемов на 2 фазе
 		MurchalProshlyap = true
 		self.vb.breathCount = 0
 		timerPhaseCD:Stop()
@@ -970,7 +970,7 @@ function mod:OnSync(msg)
 		timerFulminatingChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
 		timerLightningDevastationCD:Start(26.2, self.vb.breathCount+1)
-	elseif msg == "OchkenShlyapen3" then
+	elseif msg == "OchkenShlyapen3" then --Конец 2 фазы
 		MurchalProshlyap = false
 		timerStormBreakCD:Stop()
 		timerBallLightningCD:Stop()
