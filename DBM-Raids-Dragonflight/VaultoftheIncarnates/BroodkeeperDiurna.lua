@@ -159,10 +159,10 @@ end
 
 local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	self.vb.addsCount = self.vb.addsCount + 1
+	specWarnPrimalistReinforcements:Show(self.vb.addsCount)
+	specWarnPrimalistReinforcements:Play("killmob")
 	local proshlyap = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
 	if proshlyap then
-		specWarnPrimalistReinforcements:Show(self.vb.addsCount)
-		specWarnPrimalistReinforcements:Play("killmob")
 		timerPrimalistReinforcementsCD:Start(proshlyap, self.vb.self.vb.addsCount+1)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
@@ -257,7 +257,6 @@ function mod:OnCombatStart(delay)
 		timerRapidIncubationCD:Start(14.3-delay, 1)
 	end
 	timerGreatstaffoftheBroodkeeperCD:Start(16.2-delay, 1)
-	timerPrimalistReinforcementsCD:Start(self:IsMythic() and 32.9 or 35.4-delay, 1)
 	timerIcyShroudCD:Start(26.2-delay, 1)
 	if self.Options.NPFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -265,15 +264,16 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		timerStormFissureCD:Start(28-delay)
 	end
+	self:Schedule(self:IsMythic() and 32.9 or 35.4, startProshlyapationOfMurchal, self)
+	timerPrimalistReinforcementsCD:Start(self:IsMythic() and 32.9 or 35.4-delay, 1)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
+	self:Unschedule(startProshlyapationOfMurchal)
 	if self.Options.NPFixate then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
+	
 end
 
 function mod:SPELL_CAST_START(args)
@@ -487,7 +487,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				end
 			end
 		end
-		if self:AntiSpam(10, 2) then
+	--[[	if self:AntiSpam(10, 2) then
 			self.vb.addsCount = self.vb.addsCount + 1
 			specWarnPrimalistReinforcements:Show(self.vb.addsCount)
 			specWarnPrimalistReinforcements:Play("killmob")
@@ -495,7 +495,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			if timer then
 				timerPrimalistReinforcementsCD:Start(timer, self.vb.addsCount+1)
 			end
-		end
+		end]]
 	end
 end
 
@@ -569,6 +569,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount == 1 then
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 			warnPhase:Play("ptwo")
+			self:Unschedule(startProshlyapationOfMurchal)
 		else
 			warnBroodkeepersFury:Show(args.destName, amount)
 		end
