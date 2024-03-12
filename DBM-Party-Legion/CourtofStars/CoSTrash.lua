@@ -210,7 +210,7 @@ function mod:SPELL_CAST_START(args)
 			warnShadowSlash:Show()
 		end
 	elseif spellId == 214697 then --Поднять ключ
-		if args:IsPlayer() then
+		if args:IsPlayerSource() then
 			yellPickingUp:Yell()
 		else
 			warnPickingUp:Show(args.sourceName)

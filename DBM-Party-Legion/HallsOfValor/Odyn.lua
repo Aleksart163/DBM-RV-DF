@@ -11,7 +11,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 198072 198263 198077 198750",
+	"SPELL_CAST_START 198263 198077 198750",
 	"SPELL_CAST_SUCCESS 197961",
 	"SPELL_AURA_APPLIED 197963 197964 197965 197966 197967",
 	"SPELL_AURA_REMOVED 197963 197964 197965 197966 197967",
@@ -30,26 +30,33 @@ mod:RegisterEvents(
  or ability.id = 198750 and type = "begincast"
 --]]
 --TODO, does boss still have old random tempest timers system from legion or are 10.0.2 changes universal?
-local warnSpear						= mod:NewSpellAnnounce(198072, 2)--Target not available so no target warning.
+local warnTempest					= mod:NewCastAnnounce(198263, 4)
 
-local specWarnTempest				= mod:NewSpecialWarningRun(198263, nil, nil, nil, 4, 2)
+local specWarnSpear					= mod:NewSpecialWarningDodge(198072, nil, nil, nil, 2, 2) --Копье света
+local specWarnTempest				= mod:NewSpecialWarningRun(198263, nil, nil, nil, 4, 2) --Светозарная буря
 local specWarnShatterSpears			= mod:NewSpecialWarningDodge(198077, nil, nil, nil, 2, 2)
-local specWarnRunicBrand			= mod:NewSpecialWarningMoveTo(197961, nil, nil, nil, 4, 6)
-local specWarnAdd					= mod:NewSpecialWarningSwitch(201221, "-Healer", nil, nil, 1, 2)
-local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt", nil, nil, 3, 2)
+local specWarnRunicBrand			= mod:NewSpecialWarningMoveTo(197963, nil, nil, nil, 4, 6)
+local specWarnRunicBrand2			= mod:NewSpecialWarningMoveTo(197964, nil, nil, nil, 4, 6)
+local specWarnRunicBrand3			= mod:NewSpecialWarningMoveTo(197965, nil, nil, nil, 4, 6)
+local specWarnRunicBrand4			= mod:NewSpecialWarningMoveTo(197966, nil, nil, nil, 4, 6)
+local specWarnRunicBrand5			= mod:NewSpecialWarningMoveTo(197967, nil, nil, nil, 4, 6)
+local specWarnAdd					= mod:NewSpecialWarningSwitch(201215, "-Healer", 245546, nil, 1, 2) --Призыв закаленного бурей воина
+local specWarnSurge					= mod:NewSpecialWarningInterrupt(198750, "HasInterrupt", nil, nil, 3, 2) --Импульс
 
---local timerRP						= mod:NewRPTimer(28.5)
---local timerSpearCD					= mod:NewCDTimer(8, 198077, nil, nil, nil, 3)--More data needed
-local timerTempestCD				= mod:NewCDCountTimer(56, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--More data needed
-local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
+local timerSpearCD					= mod:NewCDTimer(8, 198072, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Копье света
+local timerTempestCD				= mod:NewCDTimer(56, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Светозарная буря
+local timerTempest					= mod:NewCastTimer(7, 198263, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Светозарная буря
 local timerShatterSpearsCD			= mod:NewCDTimer(56, 198077, nil, nil, nil, 2)
 local timerRunicBrandCD				= mod:NewCDCountTimer(56, 197961, nil, nil, nil, 7, nil, nil, nil, 3, 5)
 local timerRunicBrand				= mod:NewCastTimer(12, 197961, nil, nil, nil, 7, nil, nil, nil, 3, 5)
-local timerAddCD					= mod:NewCDTimer(54, 201221, nil, nil, nil, 1, 201215)--54-58
+local timerAddCD					= mod:NewCDTimer(54, 201215, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Призыв закаленного бурей воина
 
 mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
 mod:AddDropdownOption("RuneBehavior", {"Icon", "Entrance", "Minimap", "Generic"}, "Generic", "misc")
 
+local FirstProshlyap = nil
+local MurchalProshlyapationTimers1 = {8, 8}
+local MurchalProshlyapationTimers2 = {12, 28, 8}
 --Boss has (at least) three timer modes, cannot determine which one on pull so on fly figuring out is used
 local oldTempestTimers = {
 	[1] = {8, 56, 72},
@@ -61,8 +68,10 @@ local oldTempestTimers = {
 mod.vb.temptestMode = 1
 mod.vb.tempestCount = 0
 mod.vb.brandCount = 0
+mod.vb.ochkenShlyapenCount = 0
 
 --Should run at 10, 18, 26, and 34
+--[[
 local function tempestDelayed(self)
 	if self.vb.tempestCount == 0 then
 		DBM:AddMsg(L.tempestModeMessage:format(self.vb.temptestMode))
@@ -72,42 +81,81 @@ local function tempestDelayed(self)
 	else
 		return
 	end
+end]]
+
+local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
+	self.vb.ochkenShlyapenCount = self.vb.ochkenShlyapenCount + 1
+	specWarnSpear:Show()
+	specWarnSpear:Play("watchstep")
+	if FirstProshlyap then -- при первом прошляпе Мурчаля
+		local proshlyap2 = MurchalProshlyapationTimers2[self.vb.ochkenShlyapenCount+1]
+		if proshlyap2 then
+			timerSpearCD:Start(proshlyap2, self.vb.ochkenShlyapenCount+1)
+			self:Schedule(proshlyap2, startProshlyapationOfMurchal, self)
+		end
+	else --при пулле босса
+		local proshlyap1 = MurchalProshlyapationTimers1[self.vb.ochkenShlyapenCount+1]
+		if proshlyap1 then
+			timerSpearCD:Start(proshlyap1, self.vb.ochkenShlyapenCount+1)
+			self:Schedule(proshlyap1, startProshlyapationOfMurchal, self)
+		end
+	end
+end
+
+local function startProshlyapationOfMurchal2(self) -- Proshlyapation of Murchal2
+	specWarnAdd:Show()
+	specWarnSpear:Play("mobkill")
 end
 
 function mod:OnCombatStart(delay)
 	self.vb.temptestMode = 1
 	self.vb.tempestCount = 0
 	self.vb.brandCount = 0
---	timerSpearCD:Start(-delay)
-	timerTempestCD:Start(24-delay, 1)
---	self:Schedule(10, tempestDelayed, self, 1)
+	self.vb.ochkenShlyapenCount = 0
+	FirstProshlyap = false
+	timerTempestCD:Start(24-delay) --Светозарная буря
 	timerShatterSpearsCD:Start(40-delay)
 	timerRunicBrandCD:Start(45.9-delay, 1)
+--	specWarnAdd:Schedule(19-delay) --Призыв закаленного бурей воина
+--	specWarnAdd:ScheduleVoice(19-delay, "mobkill") --Призыв закаленного бурей воина
+	self:Schedule(8, startProshlyapationOfMurchal, self)
+	timerSpearCD:Start(8-delay, 1)
+	self:Schedule(19, startProshlyapationOfMurchal2, self)
+	timerAddCD:Start(19-delay) --Призыв закаленного бурей воина
+end
+
+function mod:OnCombatEnd()
+	self:Unschedule(startProshlyapationOfMurchal)
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 198072 then
-		warnSpear:Show()
-	elseif spellId == 198263 then
+	if spellId == 198263 then --Светозарная буря
 		self.vb.tempestCount = self.vb.tempestCount + 1
-		specWarnTempest:Show(self.vb.tempestCount)
+		self.vb.ochkenShlyapenCount = 0
+		self:Unschedule(startProshlyapationOfMurchal)
+		warnTempest:Show()
+		if not FirstProshlyap then
+			FirstProshlyap = true
+		end
+		specWarnTempest:Show()
 		specWarnTempest:Play("runout")
-		timerTempestCD:Start(55, self.vb.tempestCount+1)
+		timerTempestCD:Start()
 		timerTempest:Start()
---		timerSpearCD:Start(12)
---		local timers = tempestTimers[self.vb.temptestMode]
---		if timers then
---			local nextCast = self.vb.tempestCount+1
---			if timers[nextCast] then
---				timerTempestCD:Start(timers[nextCast], nextCast)
---			end
---		end
+--[[		if self:IsMythic() then
+			timerAddCD:Start(51)
+			specWarnAdd:Schedule(51)
+			specWarnAdd:ScheduleVoice(51, "mobkill")
+		end]]
+		self:Schedule(12, startProshlyapationOfMurchal, self)
+		timerSpearCD:Start(12, 1)
+		self:Schedule(51, startProshlyapationOfMurchal2, self)
+		timerAddCD:Start(51)
 	elseif spellId == 198077 then
 		specWarnShatterSpears:Show()
 		specWarnShatterSpears:Play("watchorb")
 		timerShatterSpearsCD:Start()
-	elseif spellId == 198750 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+	elseif spellId == 198750 then
 		specWarnSurge:Show(args.sourceName)
 		specWarnSurge:Play("kickcast")
 	end
@@ -140,51 +188,51 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		timerRunicBrand:Start()
 	elseif spellId == 197964 and args:IsPlayer() then--Orange N (SE)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
+		specWarnRunicBrand2:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
-			specWarnRunicBrand:Play("backleft")
+			specWarnRunicBrand2:Play("backleft")
 		elseif self.Options.RuneBehavior == "Icon" then
-			specWarnRunicBrand:Play("mm2")--Orange Circle
+			specWarnRunicBrand2:Play("mm2")--Orange Circle
 		elseif self.Options.RuneBehavior == "Minimap" then
-			specWarnRunicBrand:Play("backright")
+			specWarnRunicBrand2:Play("backright")
 		else
-			specWarnRunicBrand:Play("targetyou")
+			specWarnRunicBrand2:Play("targetyou")
 		end
 		timerRunicBrand:Start()
 	elseif spellId == 197965 and args:IsPlayer() then--Yellow H (SW)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
+		specWarnRunicBrand3:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
-			specWarnRunicBrand:Play("backright")
+			specWarnRunicBrand3:Play("backright")
 		elseif self.Options.RuneBehavior == "Icon" then
-			specWarnRunicBrand:Play("mm1")--Yellow Star
+			specWarnRunicBrand3:Play("mm1")--Yellow Star
 		elseif self.Options.RuneBehavior == "Minimap" then
-			specWarnRunicBrand:Play("backleft")
+			specWarnRunicBrand3:Play("backleft")
 		else
-			specWarnRunicBrand:Play("targetyou")
+			specWarnRunicBrand3:Play("targetyou")
 		end
 		timerRunicBrand:Start()
 	elseif spellId == 197966 and args:IsPlayer() then--Blue fishies (NW)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
+		specWarnRunicBrand4:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
-			specWarnRunicBrand:Play("frontright")
+			specWarnRunicBrand4:Play("frontright")
 		elseif self.Options.RuneBehavior == "Icon" then
-			specWarnRunicBrand:Play("mm6")--Blue Square
+			specWarnRunicBrand4:Play("mm6")--Blue Square
 		elseif self.Options.RuneBehavior == "Minimap" then
-			specWarnRunicBrand:Play("frontleft")
+			specWarnRunicBrand4:Play("frontleft")
 		else
-			specWarnRunicBrand:Play("targetyou")
+			specWarnRunicBrand4:Play("targetyou")
 		end
 		timerRunicBrand:Start()
 	elseif spellId == 197967 and args:IsPlayer() then--Green box (N)
-		specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
+		specWarnRunicBrand5:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
 		if self.Options.RuneBehavior == "Entrance" then
-			specWarnRunicBrand:Play("frontcenter")
+			specWarnRunicBrand5:Play("frontcenter")
 		elseif self.Options.RuneBehavior == "Icon" then
-			specWarnRunicBrand:Play("mm4")--Green Triangle
+			specWarnRunicBrand5:Play("mm4")--Green Triangle
 		elseif self.Options.RuneBehavior == "Minimap" then
-			specWarnRunicBrand:Play("frontcenter")
+			specWarnRunicBrand5:Play("frontcenter")
 		else
-			specWarnRunicBrand:Play("targetyou")
+			specWarnRunicBrand5:Play("targetyou")
 		end
 		timerRunicBrand:Start()
 	end
@@ -205,15 +253,14 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+--[[
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 198396 then
-		warnSpear:Show()
-	elseif spellId == 201221 then--Summon Stormforged
+	if spellId == 201221 then--Summon Stormforged
 		specWarnAdd:Show()
 		specWarnAdd:Play("killmob")
 		timerAddCD:Start()
 	end
-end
+end]]
 
 --"<1368.18 21:44:20> [CHAT_MSG_MONSTER_YELL] Most impressive! I never thought I would meet anyone who could match the Valarjar's strength... and yet here you stand.#Odyn###Odyn##0#0##0#1600#nil#0#false#false#false#false", -- [6314]
 --About 3 seconds to trigger gossip, since RP is for when gossip becomes available

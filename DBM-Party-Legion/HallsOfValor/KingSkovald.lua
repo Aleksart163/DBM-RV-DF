@@ -45,6 +45,8 @@ local timerRagnarokCD				= mod:NewCDTimer(64.5, 193826, nil, nil, nil, 2, nil, D
 local yellFelblazeRush				= mod:NewYell(193659, nil, nil, nil, "YELL")
 local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL")
 
+local shield = DBM:GetSpellInfo(193983)
+
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -89,18 +91,18 @@ function mod:SPELL_CAST_START(args)
 			specWarnRagnarok2:Show()
 			specWarnRagnarok2:Play("useitem")
 		else
-			specWarnRagnarok:Show(SHIELDSLOT)
+			specWarnRagnarok:Show(shield)
 			specWarnRagnarok:Play("findshield")
 		end
 		timerRushCD:Stop()
 		timerRagnarokCD:Start()
 		timerRushCD:Start(12)
 		--Other timers can be extended but they aren't restarted, they just get spell queued behind ragnarok
-	elseif spellId == 194112 then
+	elseif spellId == 194112 then --Захватить Эгиду Агграмара!
 		warnClaimAegis:Show()
 		timerRushCD:Stop()
 		timerSavageBladeCD:Stop()
-		timerRushCD:Start(18)
+		timerRushCD:Start(33)
 		timerSavageBladeCD:Start(18)
 	end
 end
