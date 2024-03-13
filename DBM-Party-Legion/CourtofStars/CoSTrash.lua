@@ -285,7 +285,7 @@ do
 
 	local notableBuffNPCs = {
 		--Buffs
-		[105160] = { -- Fel Orb
+		[105160] = { -- Сфера Скверны
 			["name"] = DBM:GetSpellInfo(208275),
 			["buffid"] = 211081,
 			["class"] = {
@@ -295,7 +295,7 @@ do
 				["DEMONHUNTER"] = true
 			}
 		},
-		[105249] = { -- Nightshade Refreshments
+		[105249] = { -- Закуски ночной тени
 			["name"] = L.Nightshade,
 			["buffid"] = 211102,
 			["races"] = {
@@ -308,7 +308,7 @@ do
 				[4620675] = 1--Herbalist (DF)
 			}
 		},
-		[105340] = { -- Umbral Bloom
+		[105340] = { -- Теневой цветок
 			["name"] = L.UmbralBloom,
 			["buffid"] = 211110,
 			["class"] = {
@@ -321,7 +321,7 @@ do
 				[4620675] = 1--Herbalist (DF)
 			}
 		},
-		[105831] = { -- Infernal Tome
+		[105831] = { -- Инфернальный фолиант
 			["name"] = L.InfernalTome,
 			["buffid"] = 211080,
 			["class"] = {
@@ -330,7 +330,7 @@ do
 				["DEMONHUNTER"] = true
 			}
 		},
-		[106024] = { -- Magical Lantern
+		[106024] = { -- Магический светильник
 			["name"] = L.MagicalLantern,
 			["buffid"] = 211093,
 			["class"] = {
@@ -346,7 +346,7 @@ do
 				[4620672] = 1--Enchanting (New)
 			}
 		},
-		[106108] = { -- Starlight Rose Brew
+		[106108] = { -- Отвар из звездной розы
 			["name"] = L.StarlightRoseBrew,
 			["buffid"] = 211071,
 			["class"] = {
@@ -354,7 +354,7 @@ do
 				["MONK"] = true
 			},
 		},
-		[106110] = { -- Waterlogged Scroll
+		[106110] = { -- Промокший свиток
 			["name"] = L.WaterloggedScroll,
 			["buffid"] = 211084,
 			["class"] = {
@@ -368,7 +368,7 @@ do
 			}
 		},
 		--Debuffs
-		[105117] = { -- Flask of the Solemn Night
+		[105117] = { -- Настой священной ночи
 			["name"] = DBM:GetSpellInfo(207815),
 			["class"] = {
 				["ROGUE"] = true
@@ -378,7 +378,7 @@ do
 				[4620669] = 1 -- Alchemy (DF)
 			}
 		},
-		[105157] = {-- Arcane Power Conduit
+		[105157] = {-- Проводник магической энергии
 			["name"] = DBM:GetSpellInfo(210466),
 			["races"] = {
 				["Gnome"] = true,
@@ -393,7 +393,7 @@ do
 
 	local notableNonBuffNPCs = {
 		--Alerts
-		[105215] = { -- Discarded Junk
+		[105215] = { -- Выброшенный хлам
 			["name"] = L.DiscardedJunk,
 			["class"] = {
 				["HUNTER"] = true
@@ -403,7 +403,7 @@ do
 				[4620670] = 1 -- Blacksmithing (DF)
 			},
 		},
-		[106018] = { -- Bazaar Goods
+		[106018] = { -- Рыночные товары
 			["name"] = L.BazaarGoods,
 			["class"] = {
 				["WARRIOR"] = true,
@@ -414,7 +414,7 @@ do
 				[4620678] = 1 -- Leatherworking (DF)
 			}
 		},
-		[106112] = { -- Wounded Nightborne Civilian
+		[106112] = { -- Раненый ночнорожденный
 			["name"] = L.WoundedNightborneCivilian,
 			["professionicons"] = {
 --				[136249] = 800, -- Tailoring (old)
@@ -424,7 +424,7 @@ do
 				["Healer"] = true,
 			}
 		},
-		[106113] = { -- Lifesized Nightborne Statue
+		[106113] = { -- Статуя ночнорожденного в натуральную величину
 			["name"] = L.LifesizedNightborneStatue,
 			["professionicons"] = {
 --				[134708] = 800, -- Mining (old)
