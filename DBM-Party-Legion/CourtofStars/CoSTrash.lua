@@ -48,6 +48,7 @@ local warnCrushingLeap				= mod:NewCastAnnounce(397897, 3)
 local warnEyeStorm					= mod:NewCastAnnounce(212784, 4)
 local warnShadowSlash				= mod:NewCastAnnounce(211473, 4, nil, nil, "Tank|Healer")
 local warnHypnosisBat				= mod:NewTargetNoFilterAnnounce(373552, 3)
+local warnFelDetonation				= mod:NewCastAnnounce(211464, 4) --Взрыв Скверны
 
 local specWarnFortificationDispel	= mod:NewSpecialWarningDispel(209033, "MagicDispeller", nil, nil, 1, 2)
 local specWarnQuellingStrike		= mod:NewSpecialWarningDodge(209027, "Melee", nil, 2, 1, 2)
@@ -63,7 +64,7 @@ local specWarnBewitch				= mod:NewSpecialWarningInterrupt(211470, "HasInterrupt"
 local specWarnChargingStation		= mod:NewSpecialWarningInterrupt(225100, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSearingGlare			= mod:NewSpecialWarningInterrupt(211299, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisintegrationBeam	= mod:NewSpecialWarningInterrupt(207980, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFelDetonation			= mod:NewSpecialWarningMoveTo(211464, nil, nil, nil, 2, 13)
+local specWarnFelDetonation			= mod:NewSpecialWarningMoveTo(211464, nil, nil, nil, 2, 13) --Взрыв Скверны
 local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 2)
 local specWarnWhirlingBlades		= mod:NewSpecialWarningRun(209378, "Melee", nil, nil, 4, 2)
 local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", nil, nil, 1, 2)
@@ -79,7 +80,8 @@ local timerSearingGlareCD			= mod:NewCDNPTimer(8.4, 211299, nil, "HasInterrupt",
 local timerEyeStormCD				= mod:NewCDNPTimer(20.6, 212784, nil, nil, nil, 5)--Role color cause it needs a disrupt (stun, knockback) to interrupt.
 local timerBewitchCD				= mod:NewCDNPTimer(17, 211470, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShadowSlashCD			= mod:NewCDNPTimer(18.2, 211473, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2, nil, nil, nil, 3, 3)
+local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2, nil, nil, nil, 3, 3) --Взрыв Скверны
+local timerScreamofPain				= mod:NewCastTimer(1.5, 397892, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 1.5, 5)
 local timerScreamofPainCD			= mod:NewCDNPTimer(14.6, 397892, nil, nil, nil, 2)
 local timerWhirlingBladesCD			= mod:NewCDNPTimer(18.2, 209378, nil, "Melee", nil, 2)
 local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -170,6 +172,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 211464 then
 		timerFelDetonationCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 4) then
+			warnFelDetonation:Show()
 			specWarnFelDetonation:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnFelDetonation:Play("breaklos")
 		end
@@ -192,6 +195,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnScreamofPain:Show()
 		specWarnScreamofPain:Play("stopcast")
 		timerScreamofPainCD:Start(nil, args.sourceGUID)
+		timerScreamofPain:Start()
 	elseif spellId == 397897 then
 		timerCrushingLeapCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 6) then
