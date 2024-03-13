@@ -6,6 +6,7 @@ mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 mod:SetRevision("20230504231118")
 mod:SetCreatureID(75829)
 mod:SetEncounterID(1688)
+mod:SetUsedIcons(8)
 mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
@@ -37,12 +38,17 @@ local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 3)
 
 local yellVoidBlast				= mod:NewShortYell(152792, nil, nil, nil, "YELL") --Вспышка Бездны
 
+mod:AddSetIconOption("SetIconOnVoidBlast", 152792, true, 0, {8})
+
 function mod:VoidBlastTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnVoidBlast:Show()
 		specWarnVoidBlast:Play("defensive")
 		yellVoidBlast:Yell()
+	end
+	if self.Options.SetIconOnVoidBlast then
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 
