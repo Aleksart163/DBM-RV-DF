@@ -18,6 +18,7 @@ mod:RegisterEvents(
 )
 
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
+local warnPrimalOverload					= mod:NewSpellAnnounce(396411, 4) --Изначальная перегрузка
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
@@ -53,6 +54,7 @@ local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTO
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
 local yellMarkWind							= mod:NewFadesYell(396364, nil, nil, nil, "YELL") --Метка ветра
 
+mod:AddBoolOption("ProshlyapofMurchal", true)
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 
 local dota5s = false
@@ -262,20 +264,24 @@ function mod:SPELL_AURA_APPLIED(args)
 			Lightning = true
 			specWarnMarkLightning:Show()
 			specWarnMarkLightning:Play("gathershare")
-			yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
-			yellMarkLightning:Countdown(spellId, 3)
-			timerMarkLightning:Start(args.destName)
-			self:Schedule(3, startProshlyapationOfMurchal, self)
+			if self.Options.ProshlyapofMurchal then
+				yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
+				yellMarkLightning:Countdown(spellId, 3)
+				timerMarkLightning:Start(args.destName)
+				self:Schedule(3, startProshlyapationOfMurchal, self)
+			end
 		end
 	elseif spellId == 396364 then --Метка ветра
 		if args:IsPlayer() then
 			Wind = true
 			specWarnMarkWind:Show()
 			specWarnMarkWind:Play("gathershare")
-			yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
-			yellMarkWind:Countdown(spellId, 3)
-			timerMarkWind:Start(args.destName)
-			self:Schedule(3, startProshlyapationOfMurchal, self)
+			if self.Options.ProshlyapofMurchal then
+				yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
+				yellMarkWind:Countdown(spellId, 3)
+				timerMarkWind:Start(args.destName)
+				self:Schedule(3, startProshlyapationOfMurchal, self)
+			end
 		end
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
 		specWarnSpitefulFixate:Show()
@@ -305,9 +311,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			self.vb.mProshlyapCount = 0
 			specWarnMarkLightning2:Show()
 			specWarnMarkLightning2:Play("end")
-			self:Unschedule(startProshlyapationOfMurchal)
-			yellMarkLightning:Cancel()
-			timerMarkLightning:Cancel(args.destName)
+			if self.Options.ProshlyapofMurchal then
+				self:Unschedule(startProshlyapationOfMurchal)
+				yellMarkLightning:Cancel()
+				timerMarkLightning:Cancel(args.destName)
+			end
 		end
 	elseif spellId == 396364 then --Метка ветра
 		self.vb.murchalsProshlyapCount = self.vb.murchalsProshlyapCount - 1
@@ -316,9 +324,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			self.vb.mProshlyapCount = 0
 			specWarnMarkWind2:Show()
 			specWarnMarkWind2:Play("end")
-			self:Unschedule(startProshlyapationOfMurchal)
-			yellMarkWind:Cancel()
-			timerMarkWind:Cancel(args.destName)
+			if self.Options.ProshlyapofMurchal then
+				self:Unschedule(startProshlyapationOfMurchal)
+				yellMarkWind:Cancel()
+				timerMarkWind:Cancel(args.destName)
+			end
 		end
 		if self.vb.murchalsProshlyapCount == 1 then
 			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
@@ -343,6 +353,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.AfRaszageth1 or msg == L.AfRaszageth2 then
+		warnPrimalOverload:Show()
 		self.vb.murchalsProshlyapCount = 3
 		self:Schedule(18.5, ProshlyapationOfMurchal, self)
 		if not overloadDetected then
