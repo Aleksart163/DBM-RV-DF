@@ -44,7 +44,7 @@ local specWarnDarkClaw						= mod:NewSpecialWarningInterrupt(397931, "HasInterru
 
 local timerTaintedRippleCD					= mod:NewCDNPTimer(14.5, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Оскверненная волна
 local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Грохот прилива
-local timerDarkClawCD						= mod:NewCDNPTimer(9.7, 397931, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Коготь Тьмы
+local timerDarkClawCD						= mod:NewCDNPTimer(9.7, 397931, nil, nil, nil, 4, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Коготь Тьмы
 local timerHauntingScreamCD					= mod:NewCDNPTimer(18.2, 395859, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний крик
 local timerSleepySililoquyCD				= mod:NewCDNPTimer(9, 395872, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Вялый монолог
 local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15.3, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
