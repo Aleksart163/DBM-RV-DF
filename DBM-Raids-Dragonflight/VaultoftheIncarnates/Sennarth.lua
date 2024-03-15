@@ -103,7 +103,7 @@ local allTimers = {
 			--Enveloping Webs
 			[372082] = {18.1, 26.7, 30.5, 44.8, 26.7, 30.4, 38.9, 26.4, 30.4},
 			--Взрыв паутины
-			[373405] = {31.4, 37.7, 64.3, 36.5, 59.6, 39.1},
+			[373405] = {31.4, 37.7, 66.5, 36.5, 59.6, 37.6},
 			--Call Spiderlings
 			[372238] = {0, 25.5, 25.5, 26.7, 38.8, 25.5, 25.5, 25.5, 20.7, 26.7, 26.7},--5th has largest variance, 14-23 because sequencing isn't right way to do this, just the lazy way
 		},
