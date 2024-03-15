@@ -59,7 +59,7 @@ function mod:MagmaBreathTarget(targetname)
 		yellMagmaBreath:Yell()
 	end
 	if self.Options.SetIconOnMagmaBreathTarget then
-		self:SetIcon(targetname, 8, 6.5)
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 
