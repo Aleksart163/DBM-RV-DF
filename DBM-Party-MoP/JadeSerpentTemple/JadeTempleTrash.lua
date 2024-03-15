@@ -19,35 +19,36 @@ mod:RegisterEvents(
 --TODO, add https://www.wowhead.com/spell=110125/shattered-resolve when i better understand if ground stuff is on applied or removed
 local warnSurgingDeluge						= mod:NewSpellAnnounce(397881, 2)
 local warnTidalburst						= mod:NewCastAnnounce(397889, 3)
-local warnHauntingScream					= mod:NewCastAnnounce(395859, 4)
-local warnSleepySililoquy					= mod:NewCastAnnounce(395872, 3)
+local warnHauntingScream					= mod:NewCastAnnounce(395859, 4) --Потусторонний крик
+local warnSleepySililoquy					= mod:NewCastAnnounce(395872, 3) --Вялый монолог
 local warnCatNap							= mod:NewCastAnnounce(396073, 3)
 local warnFitofRage							= mod:NewCastAnnounce(396018, 3)
-local warnDefilingMists						= mod:NewCastAnnounce(397914, 3)
+local warnDefilingMists						= mod:NewCastAnnounce(397914, 3) --Оскверняющая дымка
 local warnHauntingGaze						= mod:NewCastAnnounce(114646, 3, nil, nil, "Tank|Healer")
-local warnDarkClaw							= mod:NewCastAnnounce(397931, 4, nil, nil, "Tank|Healer")
+local warnDarkClaw							= mod:NewCastAnnounce(397931, 4, nil, nil, "Tank|Healer") --Коготь Тьмы
 local warnGoldenBarrier						= mod:NewTargetNoFilterAnnounce(396020, 2)
 
 local specWarnTaintedRipple					= mod:NewSpecialWarningMoveTo(397878, nil, nil, nil, 2, 13)
-local specWarnFlamesofDoubt					= mod:NewSpecialWarningDodge(398300, nil, nil, nil, 2, 2)
+local specWarnFlamesofDoubt					= mod:NewSpecialWarningDodge(398300, nil, nil, nil, 2, 2) --Пламя сомнения
 local specWarnLegSweep						= mod:NewSpecialWarningDodge(397899, nil, nil, nil, 2, 2)
 local specWarnTerritorialDisplay			= mod:NewSpecialWarningDodge(396001, nil, nil, nil, 2, 2)
 local specWarnShatterResolve				= mod:NewSpecialWarningDodge(110125, nil, nil, nil, 2, 2)
 --local yellConcentrateAnima					= mod:NewYell(339525)
 --local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
 local specWarnFitOfRage						= mod:NewSpecialWarningDispel(396018, "RemoveEnrage", nil, nil, 1, 2)
-local specWarnHauntingScream				= mod:NewSpecialWarningInterrupt(395859, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSleepySililoquy				= mod:NewSpecialWarningInterrupt(395872, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDefilingMists					= mod:NewSpecialWarningInterrupt(397914, "HasInterrupt", nil, nil, 1, 2)
-local specWarnTidalburst					= mod:NewSpecialWarningInterrupt(397889, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHauntingScream				= mod:NewSpecialWarningInterrupt(395859, "HasInterrupt", nil, nil, 1, 2) --Потусторонний крик
+local specWarnSleepySililoquy				= mod:NewSpecialWarningInterrupt(395872, "HasInterrupt", nil, nil, 1, 2) --Вялый монолог
+local specWarnDefilingMists					= mod:NewSpecialWarningInterrupt(397914, "HasInterrupt", nil, nil, 1, 2) --Оскверняющая дымка
+local specWarnTidalburst					= mod:NewSpecialWarningInterrupt(397889, "HasInterrupt", nil, nil, 1, 2) --Грохот прилива
+local specWarnDarkClaw						= mod:NewSpecialWarningInterrupt(397931, "HasInterrupt", nil, nil, 3, 4) --Коготь Тьмы
 
-local timerTaintedRippleCD					= mod:NewCDNPTimer(14.5, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDarkClawCD						= mod:NewCDNPTimer(9.7, 397931, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--9.7-14.5
-local timerHauntingScreamCD					= mod:NewCDNPTimer(18.2, 395859, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSleepySililoquyCD				= mod:NewCDNPTimer(10.9, 395872, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--10.9-12
-local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15.3, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerDefilingMistsCD					= mod:NewCDNPTimer(10.9, 397914, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerTaintedRippleCD					= mod:NewCDNPTimer(14.5, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Оскверненная волна
+local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Грохот прилива
+local timerDarkClawCD						= mod:NewCDNPTimer(9.7, 397931, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Коготь Тьмы
+local timerHauntingScreamCD					= mod:NewCDNPTimer(18.2, 395859, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний крик
+local timerSleepySililoquyCD				= mod:NewCDNPTimer(9, 395872, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Вялый монолог
+local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15.3, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
+local timerDefilingMistsCD					= mod:NewCDNPTimer(10, 397914, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющая дымка
 
 --local playerName = UnitName("player")
 
@@ -106,8 +107,10 @@ function mod:SPELL_CAST_START(args)
 		warnCatNap:Show()
 	elseif spellId == 396018 and self:AntiSpam(3, 5) then
 		warnFitofRage:Show()
-	elseif spellId == 397931 then
+	elseif spellId == 397931 then --Коготь Тьмы
 		timerDarkClawCD:Start(nil, args.sourceGUID)
+		specWarnDarkClaw:Show(args.sourceName)
+		specWarnDarkClaw:Play("kickcast")
 		if self:AntiSpam(3, 5) then
 			warnDarkClaw:Show()
 		end
