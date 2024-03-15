@@ -28,16 +28,19 @@ mod:RegisterEventsInCombat(
 --]]
 local warnPlayBall								= mod:NewSpellAnnounce(377182, 2, nil, nil, nil, nil, nil, 2)
 
-local specWarnFirestorm							= mod:NewSpecialWarningDodge(376448, nil, nil, nil, 2, 2)
+local specWarnFirestorm							= mod:NewSpecialWarningDodge(376448, nil, nil, nil, 2, 2) --Огненная буря
 local specWarnOverpoweringGust					= mod:NewSpecialWarningDodge(377034, nil, nil, nil, 2, 2)
-local yellOverpoweringGust						= mod:NewYell(377034)
-local specWarnDeafeningScreech					= mod:NewSpecialWarningMoveAwayCount(377004, nil, nil, nil, 2, 2)
+local specWarnDeafeningScreech					= mod:NewSpecialWarningMoveAwayCount(377004, "-SpellCaster", nil, nil, 2, 2) --Оглушительный визг
 local specWarnSavagePeck						= mod:NewSpecialWarningDefensive(376997, nil, nil, nil, 1, 2)
+local specWarnDeafeningScreech2					= mod:NewSpecialWarningCast(377004, "SpellCaster", nil, nil, 2, 2) --Оглушительный визг
 
-local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, nil, nil, nil, 1)
+local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Огненная буря
 local timerOverpoweringGustCD					= mod:NewCDTimer(28.2, 377034, nil, nil, nil, 3)
-local timerDeafeningScreechCD					= mod:NewCDCountTimer(22.7, 377004, nil, nil, nil, 3)
+local timerDeafeningScreech						= mod:NewCastTimer(2.5, 377004, nil, "SpellCaster", nil, 7, nil, nil, nil, 3, 2.5) --Оглушительный визг
+local timerDeafeningScreechCD					= mod:NewCDCountTimer(22.7, 377004, nil, nil, nil, 2)
 local timerSavagePeckCD							= mod:NewCDTimer(13.6, 376997, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Spell queued intoo oblivion often
+
+local yellOverpoweringGust						= mod:NewYell(377034, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(4, 377004)
 
@@ -53,7 +56,7 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.ScreechCount = 0
 	timerSavagePeckCD:Start(3.6-delay)
-	timerDeafeningScreechCD:Start(10.1-delay)
+	timerDeafeningScreechCD:Start(10.1-delay, 1)
 	timerOverpoweringGustCD:Start(15.7-delay)
 end
 
@@ -70,11 +73,17 @@ function mod:SPELL_CAST_START(args)
 		specWarnOverpoweringGust:Show()
 		specWarnOverpoweringGust:Play("shockwave")
 		timerOverpoweringGustCD:Start()
-	elseif spellId == 377004 then
+	elseif spellId == 377004 then --Оглушительный визг
 		self.vb.ScreechCount = self.vb.ScreechCount + 1
-		specWarnDeafeningScreech:Show(self.vb.ScreechCount)
-		specWarnDeafeningScreech:Play("scatter")
+		if self:IsSpellCaster() then
+			specWarnDeafeningScreech2:Show()
+			specWarnDeafeningScreech2:Play("stopcast")
+		else
+			specWarnDeafeningScreech:Show(self.vb.ScreechCount)
+			specWarnDeafeningScreech:Play("scatter")
+		end
 		timerDeafeningScreechCD:Start(nil, self.vb.ScreechCount+1)
+		timerDeafeningScreech:Start()
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(4)
 		end

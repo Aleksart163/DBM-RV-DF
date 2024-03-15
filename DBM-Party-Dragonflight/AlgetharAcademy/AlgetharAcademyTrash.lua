@@ -24,7 +24,7 @@ mod:RegisterEvents(
 local warnManavoid								= mod:NewCastAnnounce(388863, 3)
 local warnMonotonousLecture						= mod:NewCastAnnounce(388392, 2)
 local warnViciousAmbush							= mod:NewTargetAnnounce(388984, 3)
-local warnCalloftheFlock						= mod:NewCastAnnounce(377389, 3)
+local warnCalloftheFlock						= mod:NewCastAnnounce(377389, 3) --Призыв стаи
 local warnMysticBlast							= mod:NewCastAnnounce(396812, 3)
 local warnAstralWhirlwind						= mod:NewCastAnnounce(387910, 3)
 local warnAstralBomb							= mod:NewCastAnnounce(387843, 3)
@@ -39,11 +39,11 @@ local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, ni
 local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, nil, nil, 2, 2)
 local specWarnMonotonousLecture					= mod:NewSpecialWarningInterrupt(388392, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticBlast						= mod:NewSpecialWarningInterrupt(396812, "HasInterrupt", nil, nil, 1, 2)
-local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasInterrupt", nil, nil, 1, 2)
+local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasInterrupt", nil, nil, 1, 2) --Призыв стаи
 
 local timerMonotonousLectureCD					= mod:NewCDNPTimer(15.8, 388392, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerMysticBlastCD						= mod:NewCDNPTimer(20.6, 396812, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerCalloftheFlockCD						= mod:NewCDNPTimer(36, 377389, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerCalloftheFlockCD						= mod:NewCDNPTimer(20, 377389, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Призыв стаи
 local timerDeadlyWindsCD						= mod:NewCDNPTimer(10.9, 378003, nil, nil, nil, 3)
 local timerExpelIntruders						= mod:NewCastTimer(5.5, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
