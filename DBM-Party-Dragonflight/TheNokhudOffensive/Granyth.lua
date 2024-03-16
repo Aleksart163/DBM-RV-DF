@@ -30,18 +30,18 @@ mod:RegisterEventsInCombat(
  or target.id = 194367 and type = "death"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnShardsofStone							= mod:NewCountAnnounce(388817, 3)
-local warnReload								= mod:NewCastAnnounce(386921, 2)
-local warnAdd									= mod:NewCountAnnounce(386320, 3)
+local warnShardsofStone							= mod:NewCountAnnounce(388817, 3) --Каменные осколки
+local warnReload								= mod:NewCastAnnounce(386921, 1) --Перезарядка
+local warnAdd									= mod:NewCountAnnounce(386320, 4) --Призыв диверсанта
 
-local specWarnEruption							= mod:NewSpecialWarningCount(388283, nil, nil, nil, 1, 2)
-local specWarnTectonicStomp						= mod:NewSpecialWarningRun(385916, "Melee", nil, nil, 4, 2)
+local specWarnEruption							= mod:NewSpecialWarningCount(388283, nil, nil, nil, 3, 4) --Извержение
+local specWarnTectonicStomp						= mod:NewSpecialWarningRun(385916, "Melee", nil, nil, 4, 2) --Тектонический топот
 
-local timerEruptionCD							= mod:NewCDTimer(35, 388283, nil, nil, nil, 2)
-local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, nil, nil, nil, 2)
-local timerTectonicStompCD						= mod:NewCDTimer(35, 385916, nil, nil, nil, 3)--Technically also aoe, but limited aoe range, so targeted aoe
-local timerSummonSaboteurCD						= mod:NewNextCountTimer(14.9, 386320, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerReload								= mod:NewCastTimer(25, 386921, nil, nil, nil, 5)
+local timerEruptionCD							= mod:NewCDTimer(35, 388283, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Извержение
+local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, nil, nil, nil, 2) --Каменные осколки
+local timerTectonicStompCD						= mod:NewCDTimer(35, 385916, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Тектонический топот
+local timerSummonSaboteurCD						= mod:NewNextCountTimer(14.9, 386320, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв диверсанта
+local timerReload								= mod:NewCastTimer(25, 386921, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Перезарядка
 
 mod:AddSetIconOption("SetIconOnAdd", 386320, true, 5, {8})
 
@@ -100,6 +100,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerEruptionCD:Stop()
 		timerShardsofStoneCD:Stop()
 		timerTectonicStompCD:Stop()
+		if self:IsMythic() then
+			timerSummonSaboteurCD:Start(6.2, self.vb.addCount+1)
+		end
 	end
 end
 
@@ -107,11 +110,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 387155 then--Lanced!
 		--Resets these timers
-		if self:IsMythic() then
-			timerSummonSaboteurCD:Start(5.6, self.vb.addCount+1)
-		end
-		timerShardsofStoneCD:Start(10)
-		timerTectonicStompCD:Start(15.3)
+		timerShardsofStoneCD:Start(11)
+		timerTectonicStompCD:Start(15)
 		timerEruptionCD:Start(28.6)
 	end
 end
