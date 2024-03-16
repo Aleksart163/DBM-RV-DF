@@ -29,20 +29,21 @@ mod:RegisterEventsInCombat(
  or ability.id = 153804
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnBodySlam				= mod:NewTargetAnnounce(154175, 4)
-local warnCorpseBreath			= mod:NewSpellAnnounce(165578, 2)
-local warnSubmerge				= mod:NewSpellAnnounce(177694, 1)
-local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1)
+local warnBodySlam				= mod:NewTargetAnnounce(154175, 4) --Мощный удар
+local warnCorpseBreath			= mod:NewSpellAnnounce(165578, 2) --Трупное дыхание
+local warnSubmerge				= mod:NewSpellAnnounce(172190, 2) --Погружение
+local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1) --Вдох
 
-local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 2)
-local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13)
-local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8)
+local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 2) --Мощный удар
+local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13) --Вдох
+local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8) --Некротическая слизь
 
-local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3)--34
-local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 1, 3)
-local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false, nil, 5)--32-37 Variation, also not that important so off by default since there will already be up to 3 smash timers
---local timerSubmergeCD			= mod:NewCDTimer(80, 177694, nil, nil, nil, 6)
+local timerSubmerge				= mod:NewBuffActiveTimer(7, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
+local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
+local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
+local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
+local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
+local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 mod.vb.inhaleActive = false
 local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
@@ -100,18 +101,21 @@ function mod:RAID_BOSS_EMOTE(msg)
 		self.vb.inhaleActive = true
 		specWarnInhale:Show(Pitch)
 		specWarnInhale:Play("inhalegetinpuddle")
-		timerInhaleCD:Start()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 177694 then
+	if spellId == 177694 then --Погружение
 		warnSubmerge:Show()
+		timerSubmerge:Start()
 		timerInhaleCD:Stop()
+		timerCorpseBreathCD:Stop()
 		local name, guid = UnitName(uId), UnitGUID(uId)
 		timerBodySlamCD:Stop(name, guid)
-		timerInhaleCD:Start(17.8)
---		timerSubmergeCD:Start()
+		timerBodySlamCD:Start(9)
+		timerInhaleCD:Start(20.5)
+		timerCorpseBreathCD:Start(13.5)
+		timerSubmergeCD:Start()
 	end
 end
 
