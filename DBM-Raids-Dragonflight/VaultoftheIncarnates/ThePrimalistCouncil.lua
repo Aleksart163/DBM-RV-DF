@@ -35,51 +35,51 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(24952))
 local warnFrostTomb								= mod:NewTargetNoFilterAnnounce(371591, 4)
 local warnGlacialConvocation					= mod:NewSpellAnnounce(386440, 4)
 
-local specWarnPrimalBlizzard					= mod:NewSpecialWarningCount(373059, nil, nil, nil, 2, 2)
-local specWarnPrimalBlizzardStack				= mod:NewSpecialWarningStack(373059, nil, 7, nil, nil, 1, 6)
+local specWarnPrimalBlizzard					= mod:NewSpecialWarningCount(373059, nil, nil, nil, 2, 2) --Изначальная снежная буря
+local specWarnPrimalBlizzardStack				= mod:NewSpecialWarningStack(373059, nil, 7, nil, nil, 3, 6) --Изначальная снежная буря
 local specWarnFrostSpike						= mod:NewSpecialWarningInterrupt(372315, "HasInterrupt", nil, nil, 1, 2)
 
-local timerPrimalBlizzardCD						= mod:NewCDCountTimer(79.4, 373059, nil, nil, nil, 2)--Can be delayed by many seconds
+local timerPrimalBlizzardCD						= mod:NewCDCountTimer(79.4, 373059, nil, nil, nil, 7) --Изначальная снежная буря
 
 mod:AddInfoFrameOption(373059, false)
 --Dathea Stormlash
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24958))
-local warnConductiveMark						= mod:NewTargetAnnounce(371624, 4, nil, false)--Even with global target filter on by default, off by default due to spam potential
+local warnConductiveMark						= mod:NewTargetAnnounce(371624, 4, nil, false) --Знак проводимости Even with global target filter on by default, off by default due to spam potential
 local warnStormingConvocation					= mod:NewSpellAnnounce(386375, 4)
 
-local specWarnConductiveMarkSpread				= mod:NewSpecialWarningMoveAway(371624, nil, nil, nil, 2, 2)
-local specWarnConductiveMark					= mod:NewSpecialWarningMoveTo(371624, nil, nil, nil, 1, 13)
+local specWarnConductiveMarkSpread				= mod:NewSpecialWarningMoveAway(371624, nil, nil, nil, 2, 2) --Знак проводимости
+local specWarnConductiveMark					= mod:NewSpecialWarningMoveTo(371624, nil, nil, nil, 1, 13) --Знак проводимости
 local specWarnLightningBolt						= mod:NewSpecialWarningInterrupt(372394, "HasInterrupt", nil, nil, 1, 2)
 
-local timerConductiveMarkCD						= mod:NewCDCountTimer(24.4, 371624, nil, nil, nil, 3)
+local timerConductiveMarkCD						= mod:NewCDCountTimer(24.4, 371624, nil, nil, nil, 3) --Знак проводимости
 local timerChainLightningCD						= mod:NewCDTimer(9.1, 372279, nil, "Healer", nil, 3)--9.1-15.4
 
 --Opalfang
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24967))
-local warnCrush									= mod:NewStackAnnounce(372056, 2, nil, "Tank|Healer")
+local warnCrush									= mod:NewStackAnnounce(372056, 2, nil, "Tank|Healer") --Сокрушение
 local warnQuakingConvocation					= mod:NewSpellAnnounce(386370, 4)
 
 local specWarnEarthenPillar						= mod:NewSpecialWarningCount(397134, nil, nil, nil, 2, 2)--Warn everyone for now, change if it has emotes or debuff later
-local specWarnCrush								= mod:NewSpecialWarningDefensive(372056, nil, nil, nil, 3, 2)
-local specWarnCrushTaunt						= mod:NewSpecialWarningTaunt(372056, nil, nil, nil, 1, 2)
+local specWarnCrush								= mod:NewSpecialWarningDefensive(372056, nil, nil, nil, 3, 4) --Сокрушение
+local specWarnCrushTaunt						= mod:NewSpecialWarningTaunt(372056, nil, nil, nil, 1, 2) --Сокрушение
 
 local timerEarthenPillarCD						= mod:NewCDCountTimer(40.8, 397134, nil, nil, nil, 3)--40.8--71
-local timerCrushCD								= mod:NewCDCountTimer(21.6, 372056, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerCrushCD								= mod:NewCDCountTimer(21.6, 372056, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Сокрушение
 --Embar Firepath
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24965))
-local warnMeteorAxe								= mod:NewTargetNoFilterAnnounce(374038, 4)
+local warnMeteorAxe								= mod:NewTargetNoFilterAnnounce(374038, 4) --Метеоритные топоры
 local warnSlashingBlaze							= mod:NewStackAnnounce(372027, 2, nil, "Tank|Healer")
 local warnBurningConvocation					= mod:NewSpellAnnounce(386289, 4)
 
-local specWarnMeteorAxe							= mod:NewSpecialWarningYouPos(374038, nil, nil, nil, 1, 2)
+local specWarnMeteorAxe							= mod:NewSpecialWarningYouPos(374038, nil, nil, nil, 3, 4) --Метеоритные топоры
 local specWarnSlashingBlaze						= mod:NewSpecialWarningDefensive(372027, nil, nil, nil, 2, 2)
 local specWarnSlashingBlazeTaunt				= mod:NewSpecialWarningTaunt(372027, nil, nil, nil, 1, 2)
 
-local timerMeteorAxeCD							= mod:NewCDCountTimer(39.1, 374038, nil, nil, nil, 3)
+local timerMeteorAxeCD							= mod:NewCDCountTimer(39.1, 374038, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Метеоритные топоры
 local timerSlashingBlazeCD						= mod:NewCDCountTimer(27.7, 372027, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-local yellCrush									= mod:NewShortYell(372056, nil, nil, nil, "YELL") 
-local yellConductiveMark						= mod:NewShortYell(371624, 28836, nil, nil, "YELL")
+local yellCrush									= mod:NewShortYell(372056, nil, nil, nil, "YELL") --Сокрушение
+local yellConductiveMark						= mod:NewShortYell(371624, 28836, nil, nil, "YELL") --Знак проводимости
 local yellMeteorAxe								= mod:NewShortPosYell(374038, 374043, nil, nil, "YELL")
 local yellMeteorAxeFades						= mod:NewIconFadesYell(374038, 374043, nil, nil, "YELL")
 
