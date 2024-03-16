@@ -46,13 +46,17 @@ local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false, nil, 2, nil,
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 mod.vb.inhaleActive = false
+
 local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
+local MurchalProshlyap = nil
 
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false
-	timerBodySlamCD:Start(15-delay, UnitName("boss1") or BOSS, UnitGUID("boss1"))--17?
---	timerInhaleCD:Start(15-delay)--it's like 15-60 variation, disabling for now
---	timerSubmergeCD:Start(-delay)
+	MurchalProshlyap = false
+	timerBodySlamCD:Start(31.5-delay, UnitName("boss1") or BOSS, UnitGUID("boss1"))--17?
+	timerCorpseBreathCD:Start(6.2-delay)
+	timerInhaleCD:Start(13.3-delay)
+	timerSubmergeCD:Start(51.4-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -101,11 +105,15 @@ function mod:RAID_BOSS_EMOTE(msg)
 		self.vb.inhaleActive = true
 		specWarnInhale:Show(Pitch)
 		specWarnInhale:Play("inhalegetinpuddle")
+		if not MurchalProshlyap then
+			timerInhale:Start(35.3)
+		end
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 177694 then --Погружение
+		MurchalProshlyap = true
 		warnSubmerge:Show()
 		timerSubmerge:Start()
 		timerInhaleCD:Stop()
