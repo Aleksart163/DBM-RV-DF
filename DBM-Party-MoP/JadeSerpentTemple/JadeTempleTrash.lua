@@ -25,7 +25,7 @@ local warnCatNap							= mod:NewCastAnnounce(396073, 3)
 local warnFitofRage							= mod:NewCastAnnounce(396018, 3)
 local warnDefilingMists						= mod:NewCastAnnounce(397914, 3) --Оскверняющая дымка
 local warnHauntingGaze						= mod:NewCastAnnounce(114646, 3, nil, nil, "Tank|Healer")
-local warnDarkClaw							= mod:NewCastAnnounce(397931, 4, nil, nil, "Tank|Healer") --Коготь Тьмы
+local warnDarkClaw							= mod:NewCastAnnounce(397931, 4) --Коготь Тьмы
 local warnGoldenBarrier						= mod:NewTargetNoFilterAnnounce(396020, 2)
 
 local specWarnTaintedRipple					= mod:NewSpecialWarningMoveTo(397878, nil, nil, nil, 2, 13)
@@ -40,7 +40,7 @@ local specWarnHauntingScream				= mod:NewSpecialWarningInterrupt(395859, "HasInt
 local specWarnSleepySililoquy				= mod:NewSpecialWarningInterrupt(395872, "HasInterrupt", nil, nil, 1, 2) --Вялый монолог
 local specWarnDefilingMists					= mod:NewSpecialWarningInterrupt(397914, "HasInterrupt", nil, nil, 1, 2) --Оскверняющая дымка
 local specWarnTidalburst					= mod:NewSpecialWarningInterrupt(397889, "HasInterrupt", nil, nil, 1, 2) --Грохот прилива
-local specWarnDarkClaw						= mod:NewSpecialWarningInterrupt(397931, "HasInterrupt", nil, nil, 3, 4) --Коготь Тьмы
+local specWarnDarkClaw						= mod:NewSpecialWarningDefensive(397931, nil, nil, nil, 3, 4) --Коготь Тьмы
 
 local timerTaintedRippleCD					= mod:NewCDNPTimer(14.5, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Оскверненная волна
 local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Грохот прилива
@@ -53,6 +53,16 @@ local timerDefilingMistsCD					= mod:NewCDNPTimer(10, 397914, nil, "HasInterrupt
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt
+
+function mod:DarkClawTarget(targetname, uId)
+	if not targetname then return end
+	if self:AntiSpam(2, targetname) then
+		if targetname == UnitName("player") then
+			specWarnDarkClaw:Show()
+			specWarnDarkClaw:Play("defensive")
+		end
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -108,10 +118,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 396018 and self:AntiSpam(3, 5) then
 		warnFitofRage:Show()
 	elseif spellId == 397931 then --Коготь Тьмы
+		self:BossTargetScanner(args.sourceGUID, "DarkClawTarget", 0.1, 2)
 		timerDarkClawCD:Start(nil, args.sourceGUID)
-		specWarnDarkClaw:Show(args.sourceName)
-		specWarnDarkClaw:Play("kickcast")
-		if self:AntiSpam(3, 5) then
+		if self:AntiSpam(2, 5) then
 			warnDarkClaw:Show()
 		end
 	elseif spellId == 114646 and self:AntiSpam(3, 5) then
