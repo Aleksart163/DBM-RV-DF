@@ -38,11 +38,11 @@ local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 
 local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13) --Вдох
 local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8) --Некротическая слизь
 
-local timerSubmerge				= mod:NewBuffActiveTimer(7, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
+local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
 local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
-local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
+local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 mod.vb.inhaleActive = false
@@ -67,14 +67,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnBodySlam:Show()
 			specWarnBodySlam:Play("watchstep")
 		end
-		if args:GetSrcCreatureID() == 75452 then--Source is Bonemaw, not one of his adds
-			timerBodySlamCD:Start(28, args.sourceName, args.sourceGUID)
-		else
-			timerBodySlamCD:Start(14, args.sourceName, args.sourceGUID)--little guys use it more often.
+		if args:GetSrcCreatureID() ~= 75452 then--Source is Bonemaw, not one of his adds
+			timerBodySlamCD:Start(42, args.sourceName, args.sourceGUID)--little guys use it more often.
 		end
 	elseif spellId == 165578 then
 		warnCorpseBreath:Show()
-		timerCorpseBreathCD:Start()
 	end
 end
 
@@ -117,10 +114,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		warnSubmerge:Show()
 		timerSubmerge:Start()
 		timerInhaleCD:Stop()
-		timerCorpseBreathCD:Stop()
 		local name, guid = UnitName(uId), UnitGUID(uId)
 		timerBodySlamCD:Stop(name, guid)
-		timerBodySlamCD:Start(9)
+		timerBodySlamCD:Start(9, UnitName("boss1") or BOSS, UnitGUID("boss1"))
 		timerInhaleCD:Start(20.5)
 		timerCorpseBreathCD:Start(13.5)
 		timerSubmergeCD:Start()
