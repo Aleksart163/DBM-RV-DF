@@ -48,7 +48,7 @@ local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2)
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
 local specWarnEnvelopingWebs					= mod:NewSpecialWarningYouPos(372082, nil, nil, nil, 1, 2)
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 3, nil, nil, 1, 6)
-local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(373405, nil, nil, nil, 4, 12) --Взрыв паутины
+local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(139496, nil, 373405, nil, 4, 12) --Взрыв паутины
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
 local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2)
 
