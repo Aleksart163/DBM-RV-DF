@@ -54,10 +54,10 @@ local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, 
 
 local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, nil, 3) --Леденящий взрыв
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3) --Опутывающие сети
-local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 373405, 372030, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
-local timerGossamerBurst						= mod:NewCastTimer(4, 373405, 372030, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины
+local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
+local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
-local timerFrostbreathArachnidCD				= mod:NewCDCountTimer(98.9, -24899, 211543, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Хладодыщащий арахнид
+local timerFrostbreathArachnidCD				= mod:NewCDCountTimer(98.9, -24899, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Хладодыщащий арахнид
 local timerFreezingBreathCD						= mod:NewCDTimer(11.1, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 

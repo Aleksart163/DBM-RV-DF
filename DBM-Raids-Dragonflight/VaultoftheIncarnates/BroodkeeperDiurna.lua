@@ -263,9 +263,12 @@ function mod:OnCombatStart(delay)
 	end
 	if self:IsMythic() then
 		timerStormFissureCD:Start(28-delay)
+		self:Schedule(32.9, startProshlyapationOfMurchal, self)
+		timerPrimalistReinforcementsCD:Start(32.9, 1)
+	else
+		self:Schedule(35.4, startProshlyapationOfMurchal, self)
+		timerPrimalistReinforcementsCD:Start(35.4, 1)
 	end
-	self:Schedule(self:IsMythic() and 32.9 or 35.4, startProshlyapationOfMurchal, self)
-	timerPrimalistReinforcementsCD:Start(self:IsMythic() and 32.9 or 35.4-delay, 1)
 end
 
 function mod:OnCombatEnd()
