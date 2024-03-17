@@ -396,7 +396,7 @@ mod:RegisterEvents(
 )
 
 --TODO, fine tune tank stacks/throttle?
---[[
+
 (ability.id = 240446 or ability.id = 409492) and type = "begincast"
  or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
@@ -646,14 +646,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
---[[
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
-		specWarnGTFO:Show(spellName)
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_MISSED = mod.SPELL_DAMAGE
+--function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+--	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
+--		specWarnGTFO:Show(spellName)
+--		specWarnGTFO:Play("watchfeet")
+--	end
+--end
+--mod.SPELL_MISSED = mod.SPELL_DAMAGE
 --]]
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
