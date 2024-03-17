@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240201052201")
+mod:SetRevision("20240305165926")
 --mod:SetModelID(47785)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--Stays active in all zones for zone change handlers, but registers events based on dungeon ids
 
@@ -14,12 +14,12 @@ mod:RegisterEvents(
 )
 
 --TODO, fine tune tank stacks/throttle?
-
+--[[
 (ability.id = 240446 or ability.id = 409492) and type = "begincast"
  or (ability.id = 408556 or ability.id = 408801) and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or (source.type = "NPC" and source.firstSeen = timestamp) and (source.name = "Afflicted Soul") or (target.type = "NPC" and target.firstSeen = timestamp) and (target.name = "Afflicted Soul")
-
+--]]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4)
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14)--Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
@@ -34,7 +34,7 @@ local specWarnGTFO							= mod:NewSpecialWarningGTFO(209862, nil, nil, nil, 1, 8
 
 local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3)
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true)
-local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
 local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
@@ -129,7 +129,7 @@ do
 		validZones = {[2579]=true, [1279]=true, [1501]=true, [1466]=true, [1763]=true, [643]=true, [1862]=true}
 	end
 	local eventsRegistered = false
-	local function delayedZoneCheck(self, force)
+	function mod:DelayedZoneCheck(force)
 		local currentZone = DBM:GetCurrentArea() or 0
 		if not force and validZones[currentZone] and not eventsRegistered then
 			eventsRegistered = true
@@ -165,18 +165,18 @@ do
 		end
 	end
 	function mod:LOADING_SCREEN_DISABLED()
-		self:Unschedule(delayedZoneCheck)
+		self:UnscheduleMethod("DelayedZoneCheck")
 		--Checks Delayed 1 second after core checks to prevent race condition of checking before core did and updated cached ID
-		self:Schedule(2, delayedZoneCheck, self)
-		self:Schedule(6, delayedZoneCheck, self)
+		self:ScheduleMethod(2, "DelayedZoneCheck")
+		self:ScheduleMethod(6, "DelayedZoneCheck")
 	end
 	mod.OnInitialize = mod.LOADING_SCREEN_DISABLED
 	mod.ZONE_CHANGED_NEW_AREA	= mod.LOADING_SCREEN_DISABLED
 
 	function mod:CHALLENGE_MODE_COMPLETED()
 		--This basically force unloads things even when in a dungeon, so it's not countdown affixes that are disabled
-		delayedZoneCheck(self, true)
-		end
+		self:DelayedZoneCheck(true)
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -202,6 +202,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+--[[
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -209,6 +210,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
 	end
 end
+--]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -233,7 +235,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSpitefulFixate:Show()
 			specWarnSpitefulFixate:Play("targetyou")
 		else
-		warnSpitefulFixate:Show()
+			warnSpitefulFixate:Show()
 		end
 	elseif spellId == 408556 then
 		if self:AntiSpam(20, "aff6") then
@@ -272,6 +274,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+--[[
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
 		specWarnGTFO:Show(spellName)
@@ -279,7 +282,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
+--]]
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
 --<614.44 01:20:38> [CLEU] SPELL_AURA_APPLIED#Creature-0-3023-1477-12533-199388-00007705B2#Raszageth#Player-3726-0C073FB8#Onlysummonz-Khaz'goroth#396364#Mark of Wind#DEBUFF#nil", -- [3912]
---]]
