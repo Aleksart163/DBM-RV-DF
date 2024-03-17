@@ -42,7 +42,7 @@ local specWarnDefilingMists					= mod:NewSpecialWarningInterrupt(397914, "HasInt
 local specWarnTidalburst					= mod:NewSpecialWarningInterrupt(397889, "HasInterrupt", nil, nil, 1, 2) --Грохот прилива
 local specWarnDarkClaw						= mod:NewSpecialWarningDefensive(397931, nil, nil, nil, 3, 4) --Коготь Тьмы
 
-local timerTaintedRippleCD					= mod:NewCDNPTimer(14.5, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Оскверненная волна
+local timerTaintedRippleCD					= mod:NewCDNPTimer(14, 397878, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Оскверненная волна
 local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Грохот прилива
 local timerDarkClawCD						= mod:NewCDNPTimer(9.7, 397931, nil, nil, nil, 4, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Коготь Тьмы
 local timerHauntingScreamCD					= mod:NewCDNPTimer(18.2, 395859, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний крик
