@@ -38,7 +38,7 @@ end
  or ability.id = 212784 or ability.id = 211473) and type = "begincast"
 --]]
 
-local warnPickingUp					= mod:NewTargetAnnounce(214697, 1) --Поднять ключ
+local warnPickingUp					= mod:NewTargetNoFilterAnnounce(214697, 1) --Поднять ключ
 local warnSpyFound					= mod:NewAnnounce("pSpyFound", 1, 248732) --Шпион обнаружен
 local warnAvailableItems			= mod:NewAnnounce("warnAvailableItems", 1)
 local warnImpendingDoom				= mod:NewTargetAnnounce(397907, 2)
@@ -88,7 +88,6 @@ local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterr
 local timerShockwaveCD				= mod:NewCDNPTimer(8.4, 207979, nil, nil, nil, 3)
 local timerCrushingLeapCD			= mod:NewCDNPTimer(16.9, 397897, nil, nil, nil, 3)
 
-local yellPickingUp					= mod:NewShortYell(214697, nil, nil, nil, "YELL") --Поднять ключ
 local yellImpendingDoom				= mod:NewYell(397907, nil, nil, nil, "YELL")
 local yellImpendingDoomFades		= mod:NewShortFadesYell(397907, nil, nil, nil, "YELL")
 
@@ -214,11 +213,7 @@ function mod:SPELL_CAST_START(args)
 			warnShadowSlash:Show()
 		end
 	elseif spellId == 214697 then --Поднять ключ
-		if args:IsPlayerSource() then
-			yellPickingUp:Yell()
-		else
-			warnPickingUp:Show(args.sourceName)
-		end
+		warnPickingUp:Show(args.sourceName)
 	end
 end
 
