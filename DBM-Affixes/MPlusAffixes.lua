@@ -54,7 +54,7 @@ local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTO
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
 local yellMarkWind							= mod:NewFadesYell(396364, nil, nil, nil, "YELL") --Метка ветра
 
-mod:AddBoolOption("ProshlyapofMurchal", true)
+mod:AddBoolOption("MurchalOchkenProshlyapen", true)
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
 
 local dota5s = false
@@ -90,6 +90,10 @@ local function startProshlyapationOfMurchal(self) --Изначальная пе�
 end
 
 local function stopProshlyapationOfMurchal(self)
+	if self:AntiSpam(16, "MarkOfWind") then
+		specWarnMarkWind2:Show()
+		specWarnMarkWind2:Play("end")
+	end
 	yellPrimalOverload:Cancel()
 	yellMarkWind:Cancel()
 	timerMarkWind:Cancel()
@@ -264,7 +268,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			Lightning = true
 			specWarnMarkLightning:Show()
 			specWarnMarkLightning:Play("gathershare")
-			if self.Options.ProshlyapofMurchal then
+			if self.Options.MurchalOchkenProshlyapen then
 				yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
 				yellMarkLightning:Countdown(spellId, 3)
 				timerMarkLightning:Start(args.destName)
@@ -276,7 +280,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			Wind = true
 			specWarnMarkWind:Show()
 			specWarnMarkWind:Play("gathershare")
-			if self.Options.ProshlyapofMurchal then
+			if self.Options.MurchalOchkenProshlyapen then
 				yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
 				yellMarkWind:Countdown(spellId, 3)
 				timerMarkWind:Start(args.destName)
@@ -311,7 +315,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self.vb.mProshlyapCount = 0
 			specWarnMarkLightning2:Show()
 			specWarnMarkLightning2:Play("end")
-			if self.Options.ProshlyapofMurchal then
+			if self.Options.MurchalOchkenProshlyapen then
 				self:Unschedule(startProshlyapationOfMurchal)
 				yellMarkLightning:Cancel()
 				timerMarkLightning:Cancel(args.destName)
@@ -322,9 +326,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			Wind = false
 			self.vb.mProshlyapCount = 0
-			specWarnMarkWind2:Show()
-			specWarnMarkWind2:Play("end")
-			if self.Options.ProshlyapofMurchal then
+			if self:AntiSpam(16, "MarkOfWind") then
+				specWarnMarkWind2:Show()
+				specWarnMarkWind2:Play("end")
+			end
+			if self.Options.MurchalOchkenProshlyapen then
 				self:Unschedule(startProshlyapationOfMurchal)
 				yellMarkWind:Cancel()
 				timerMarkWind:Cancel(args.destName)
