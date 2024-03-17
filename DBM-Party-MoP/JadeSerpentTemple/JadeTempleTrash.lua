@@ -7,7 +7,7 @@ mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 398300 395859 397899 397881 397889 396001 395872 396073 396018 397931 114646 397914 397878",
-	"SPELL_AURA_APPLIED 396020 396018",
+	"SPELL_AURA_APPLIED 396020 396018 395872",
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"UNIT_DIED",
@@ -21,6 +21,7 @@ local warnSurgingDeluge						= mod:NewSpellAnnounce(397881, 2)
 local warnTidalburst						= mod:NewCastAnnounce(397889, 3)
 local warnHauntingScream					= mod:NewCastAnnounce(395859, 4) --Потусторонний крик
 local warnSleepySililoquy					= mod:NewCastAnnounce(395872, 3) --Вялый монолог
+local warnSleepySililoquy2					= mod:NewTargetNoFilterAnnounce(395872, 2)
 local warnCatNap							= mod:NewCastAnnounce(396073, 3)
 local warnFitofRage							= mod:NewCastAnnounce(396018, 3)
 local warnDefilingMists						= mod:NewCastAnnounce(397914, 3) --Оскверняющая дымка
@@ -28,6 +29,7 @@ local warnHauntingGaze						= mod:NewCastAnnounce(114646, 3, nil, nil, "Tank|Hea
 local warnDarkClaw							= mod:NewCastAnnounce(397931, 4) --Коготь Тьмы
 local warnGoldenBarrier						= mod:NewTargetNoFilterAnnounce(396020, 2)
 
+local specWarnSleepySililoquy2				= mod:NewSpecialWarningDispel(395872, "RemoveMagic", nil, nil, 3, 2) --Вялый монолог
 local specWarnTaintedRipple					= mod:NewSpecialWarningMoveTo(397878, nil, nil, nil, 2, 13)
 local specWarnFlamesofDoubt					= mod:NewSpecialWarningDodge(398300, nil, nil, nil, 2, 2) --Пламя сомнения
 local specWarnLegSweep						= mod:NewSpecialWarningDodge(397899, nil, nil, nil, 2, 2)
@@ -143,6 +145,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 396018 and self:AntiSpam(3, 3) then
 		specWarnFitOfRage:Show(args.destName)
 		specWarnFitOfRage:Play("enrage")
+	elseif spellId == 395872 then --Вялый монолог
+		if not args:IsPlayer() then
+			specWarnSleepySililoquy2:Show(args.destName)
+			specWarnSleepySililoquy2:Play("dispelnow")
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
