@@ -74,7 +74,7 @@ local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, 
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(209512, nil, nil, nil, 1, 8)
 
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(19, 214692, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, 3, 5) --Залп стрел Тьмы
-local timerQuellingStrikeCD			= mod:NewCDNPTimer(12, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON)--Mostly for tank to be aware of mob positioning before CD comes off
+local timerQuellingStrikeCD			= mod:NewCDNPTimer(10, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Подавляющий удар
 local timerFortificationCD			= mod:NewCDNPTimer(18.1, 209033, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerSealMagicCD				= mod:NewCDNPTimer(18.1, 209404, nil, "SpellCaster", nil, 3)
 local timerChargingStationCD		= mod:NewCDNPTimer(13.3, 225100, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
