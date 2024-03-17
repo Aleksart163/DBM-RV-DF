@@ -32,6 +32,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization{
+	SpellFound 		= "%s uses %s",
 --	WhisperThanks 	= "%s Thank you for %s!",
 	SpellNameYell 	= "Using %s!",
 	SpellNameYell2 	= "Using %s on %s!",
