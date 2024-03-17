@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240203201001")
+mod:SetRevision("20240310194118")
 --mod:SetModelID(28649)
 mod:SetUsedIcons(8)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 234489 138845 142621 142583",
 --	"SPELL_CAST_SUCCESS 232504",
+	"SPELL_AURA_APPLIED 138901",
 	"SPELL_AURA_APPLIED_DOSE 138901",
 	"SPELL_AURA_REMOVED 138901",
 	"SPELL_AURA_REMOVED_DOSE 138901"
