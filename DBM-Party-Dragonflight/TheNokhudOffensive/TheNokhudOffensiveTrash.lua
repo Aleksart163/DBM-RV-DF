@@ -6,7 +6,7 @@ mod:SetRevision("20231026112110")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 387145 386024 387127 384336 387629 387614 387411 382233 373395 383823 384365 386694 387125 387440 386012",
+	"SPELL_CAST_START 387145 386024 387127 384336 387629 387614 387411 382233 373395 383823 384365 386694 387125 387440 386012 386028",
 	"SPELL_CAST_SUCCESS 384476",
 	"SPELL_AURA_APPLIED 395035 334610 386223 345561",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
@@ -20,6 +20,7 @@ mod:RegisterEvents(
 --[[
 (ability.id = 373395 or ability.id = 387411 or ability.id = 373395 or ability.id = 383823 or ability.id = 384365 or ability.id = 387440 or ability.id = 384336 or ability.id = 386024) and type = "begincast"
 --]]
+local warnThunderClap						= mod:NewCastAnnounce(386028, 4) --Удар грома
 local warnTotemicOverload					= mod:NewCastAnnounce(387145, 3)
 local warnChantoftheDead					= mod:NewCastAnnounce(387614, 3)
 local warnTempest							= mod:NewCastAnnounce(373395, 4)
@@ -31,9 +32,9 @@ local warnStormsurge						= mod:NewCastAnnounce(386694, 3)
 local warnThunderstrike						= mod:NewCastAnnounce(387125, 3, nil, nil, "Tank")
 local warnDesecratingRoar					= mod:NewCastAnnounce(387440, 4, nil, nil, nil, nil, nil, 3)--Has to be stunned/disrupted
 
+local specWarnThunderClap					= mod:NewSpecialWarningDodge((386028, "Melee", nil, nil, 2, 2) --Удар грома
 local specWarnShatterSoul					= mod:NewSpecialWarningMoveTo(395035, nil, nil, nil, 1, 2)
 local specWarnChainLightning				= mod:NewSpecialWarningMoveAway(387127, nil, nil, nil, 1, 2)
-local yellChainLightning					= mod:NewYell(387127)
 local specWarnHuntPrey						= mod:NewSpecialWarningYou(334610, nil, nil, nil, 1, 2)--This might throw duplicate spell alert in debug, that's cause it is in fact used in necrotic wake too
 local specWarnWarStomp						= mod:NewSpecialWarningDodge(384336, nil, nil, nil, 2, 2)
 local specWarnBroadStomp					= mod:NewSpecialWarningDodge(382233, nil, nil, nil, 2, 2)
@@ -48,13 +49,15 @@ local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "Has
 local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2)
 local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
 
-local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5)--20-23
-local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3)
-local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--20-30ish
-local timerTempestCD						= mod:NewCDNPTimer(20.6, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--20-25
-local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5) --Клич клана 20-23
+local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
+local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Прерывающий крик 20-30ish
+local timerTempestCD						= mod:NewCDNPTimer(20.6, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря20-25
+local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющий рык
+local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел смерти
+local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровожадный вопль
+
+local yellChainLightning					= mod:NewYell(387127, nil, nil, nil, "YELL")
 
 --local playerName = UnitName("player")
 
@@ -128,7 +131,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnStormbolt:Play("kickcast")
 		end
 	elseif spellId == 387127 then
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "CLTarget", 0.1, 8)
+		self:BossTargetScanner(args.sourceGUID, "CLTarget", 0.1, 2)
 	elseif spellId == 384336 then
 		timerWarStompCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
@@ -147,6 +150,9 @@ function mod:SPELL_CAST_START(args)
 		warnStormsurge:Show()
 	elseif spellId == 387125 and self:AntiSpam(3, 5) then
 		warnThunderstrike:Show()
+	elseif spellId == 386028 then
+		specWarnThunderClap:Show()
+		specWarnThunderClap:Play("watchstep")
 	end
 end
 
@@ -184,6 +190,8 @@ function mod:UNIT_DIED(args)
 		timerRallytheClanCD:Stop(args.destGUID)
 	elseif cid == 191847 then--Nokhud Plainstomper
 		timerWarStompCD:Stop(args.destGUID)
+		timerDisruptingShoutCD:Stop(args.destGUID)
+	elseif cid == 192800 then--Nokhud Lancemaster
 		timerDisruptingShoutCD:Stop(args.destGUID)
 	elseif cid == 194894 then--Primalist Stormspeaker
 		timerTempestCD:Stop(args.destGUID)

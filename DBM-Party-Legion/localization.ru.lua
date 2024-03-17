@@ -328,7 +328,7 @@ L:SetMiscLocalization({
 	LifesizedNightborneStatue	= "Статуя ночнорожденного",
 	--
 	Available					= "%s|cffffffff%s|r доступно",
-	UsableBy					= "может использовать %s"
+	UsableBy					= "может использоваться %s"
 })
 
 -----------------------
