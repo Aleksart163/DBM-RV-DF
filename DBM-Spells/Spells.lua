@@ -236,6 +236,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	local sourceName = args.sourceName
 	local destName = args.destName
+	spellName = DBM:GetSpellInfo(spellId)
 	if not UnitInYourParty(sourceName) then return end
 	--[[if spellId == 8690 then -- test (Needs to be commented out before release)
 		prepareMessage(self, "premsg_Spells_test", spellId, sourceName)
@@ -723,6 +724,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	local sourceName = args.sourceName
 	local destName = args.destName
+	spellName = DBM:GetSpellInfo(spellId)
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
 	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
@@ -874,6 +876,7 @@ function mod:SPELL_CREATE(args)
 	local spellId = args.spellId
 	local sourceName = args.sourceName
 	local destName = args.destName
+	spellName = DBM:GetSpellInfo(spellId)
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
 	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
@@ -974,6 +977,7 @@ function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	local sourceName = args.sourceName
 	local destName = args.destName
+	spellName = DBM:GetSpellInfo(spellId)
 	if not UnitInYourParty(sourceName) then return end
 	typeInstance = select(2, IsInInstance())
 	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
