@@ -17,7 +17,7 @@ for i = 1, #frames do
 	frames[i]:UnregisterEvent("GOSSIP_SHOW")
 end
 mod:RegisterEvents(
-	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697",
+	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697 214692",
 	"SPELL_AURA_APPLIED 209033 209512 397907 373552",
 	"SPELL_AURA_REMOVED 397907",
 	"UNIT_DIED",
@@ -49,7 +49,9 @@ local warnEyeStorm					= mod:NewCastAnnounce(212784, 4)
 local warnShadowSlash				= mod:NewCastAnnounce(211473, 4, nil, nil, "Tank|Healer")
 local warnHypnosisBat				= mod:NewTargetNoFilterAnnounce(373552, 3)
 local warnFelDetonation				= mod:NewCastAnnounce(211464, 4) --Взрыв Скверны
+local warnShadowBoltVolley			= mod:NewCastAnnounce(214692, 4) --Залп стрел Тьмы
 
+local specWarnShadowBoltVolley		= mod:NewSpecialWarningMoveTo(214692, "-Tank", nil, nil, 2, 2) --Залп стрел Тьмы
 local specWarnFortificationDispel	= mod:NewSpecialWarningDispel(209033, "MagicDispeller", nil, nil, 1, 2)
 local specWarnQuellingStrike		= mod:NewSpecialWarningDodge(209027, "Melee", nil, 2, 1, 2)
 local specWarnChargedBlast			= mod:NewSpecialWarningDodge(212031, "Tank", nil, nil, 1, 2)
@@ -71,6 +73,7 @@ local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", 
 local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, nil, 1, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(209512, nil, nil, nil, 1, 8)
 
+local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(19, 214692, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, 3, 5) --Залп стрел Тьмы
 local timerQuellingStrikeCD			= mod:NewCDNPTimer(12, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON)--Mostly for tank to be aware of mob positioning before CD comes off
 local timerFortificationCD			= mod:NewCDNPTimer(18.1, 209033, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerSealMagicCD				= mod:NewCDNPTimer(18.1, 209404, nil, "SpellCaster", nil, 3)
@@ -214,6 +217,10 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 214697 then --Поднять ключ
 		warnPickingUp:Show(args.sourceName)
+	elseif spellId == 214692 then --Залп стрел Тьмы
+		timerShadowBoltVolleyCD:Start(nil, args.sourceGUID)
+		specWarnShadowBoltVolley:Show(DBM_COMMON_L.BREAK_LOS)
+		specWarnShadowBoltVolley:Play("breaklos")
 	end
 end
 
@@ -274,6 +281,8 @@ function mod:UNIT_DIED(args)
 	elseif cid == 104273 then--Jazshariu
 		timerShockwaveCD:Stop(args.destGUID)
 		timerCrushingLeapCD:Stop(args.destGUID)
+	elseif cid == 108151 or cid == 107435 then --Герент Зловещий
+		timerShadowBoltVolleyCD:Stop(args.destGUID)
 	end
 end
 
