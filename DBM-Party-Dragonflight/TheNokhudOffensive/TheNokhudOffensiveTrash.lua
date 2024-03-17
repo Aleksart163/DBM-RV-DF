@@ -32,7 +32,7 @@ local warnStormsurge						= mod:NewCastAnnounce(386694, 3)
 local warnThunderstrike						= mod:NewCastAnnounce(387125, 3, nil, nil, "Tank")
 local warnDesecratingRoar					= mod:NewCastAnnounce(387440, 4, nil, nil, nil, nil, nil, 3)--Has to be stunned/disrupted
 
-local specWarnThunderClap					= mod:NewSpecialWarningDodge((386028, "Melee", nil, nil, 2, 2) --Удар грома
+local specWarnThunderClap					= mod:NewSpecialWarningDodge(386028, "Melee", nil, nil, 2, 2) --Удар грома
 local specWarnShatterSoul					= mod:NewSpecialWarningMoveTo(395035, nil, nil, nil, 1, 2)
 local specWarnChainLightning				= mod:NewSpecialWarningMoveAway(387127, nil, nil, nil, 1, 2)
 local specWarnHuntPrey						= mod:NewSpecialWarningYou(334610, nil, nil, nil, 1, 2)--This might throw duplicate spell alert in debug, that's cause it is in fact used in necrotic wake too
