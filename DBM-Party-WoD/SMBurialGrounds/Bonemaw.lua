@@ -39,11 +39,11 @@ local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13)
 local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8) --Некротическая слизь
 
 local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
+local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Погружение
 local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
-local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
+local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
-local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 mod.vb.inhaleActive = false
 
@@ -53,10 +53,10 @@ local MurchalProshlyap = nil
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false
 	MurchalProshlyap = false
-	timerBodySlamCD:Start(31.5-delay, UnitName("boss1") or BOSS, UnitGUID("boss1"))--17?
+	timerBodySlamCD:Start(31.5-delay)
 	timerCorpseBreathCD:Start(6.2-delay)
 	timerInhaleCD:Start(13.3-delay)
-	timerSubmergeCD:Start(51.4-delay)
+	timerSubmergeCD:Start(66-delay) --Погружение
 end
 
 function mod:SPELL_CAST_START(args)
@@ -66,9 +66,6 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(3) then--Throttle special warning when more than 1 slam at once happens.
 			specWarnBodySlam:Show()
 			specWarnBodySlam:Play("watchstep")
-		end
-		if args:GetSrcCreatureID() ~= 75452 then--Source is Bonemaw, not one of his adds
-			timerBodySlamCD:Start(42, args.sourceName, args.sourceGUID)--little guys use it more often.
 		end
 	elseif spellId == 165578 then
 		warnCorpseBreath:Show()
@@ -90,20 +87,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 76057 then--Carrion Centipede
-		timerBodySlamCD:Stop(args.destName, args.destGUID)
-	end
-end
-
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg:find("spell:153804") then--Slightly faster than combat log (~2)
 		self.vb.inhaleActive = true
 		specWarnInhale:Show(Pitch)
 		specWarnInhale:Play("inhalegetinpuddle")
 		if not MurchalProshlyap then
-			timerInhale:Start(35.3)
+			timerInhaleCD:Start(36.3)
 		end
 	end
 end
@@ -114,9 +104,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		warnSubmerge:Show()
 		timerSubmerge:Start()
 		timerInhaleCD:Stop()
-		local name, guid = UnitName(uId), UnitGUID(uId)
-		timerBodySlamCD:Stop(name, guid)
-		timerBodySlamCD:Start(9, UnitName("boss1") or BOSS, UnitGUID("boss1"))
+		timerBodySlamCD:Stop()
+		timerBodySlamCD:Start(9)
 		timerInhaleCD:Start(20.5)
 		timerCorpseBreathCD:Start(13.5)
 		timerSubmergeCD:Start()
