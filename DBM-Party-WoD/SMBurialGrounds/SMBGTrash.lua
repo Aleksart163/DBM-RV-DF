@@ -3,6 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20231026112110")
 --mod:SetModelID(47785)
+mod:SetUsedIcons(8)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
@@ -10,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 394512",
 	"SPELL_AURA_APPLIED 152819",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
---	"SPELL_AURA_REMOVED 339525",
+	"SPELL_AURA_REMOVED 152819",
 	"UNIT_DIED"
 )
 
@@ -25,7 +26,7 @@ local warnBodySlam							= mod:NewCastAnnounce(153395, 4)
 
 --local yellConcentrateAnima				= mod:NewYell(339525)
 --local yellConcentrateAnimaFades			= mod:NewShortFadesYell(339525)
-local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 2) --Слово Тьмы: Хрупкость
+local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 4) --Слово Тьмы: Хрупкость
 local specWarnShadowWordFrailtyDispel		= mod:NewSpecialWarningDispel(152819, "RemoveMagic", nil, nil, 3, 2) --Слово Тьмы: Хрупкость
 local specWarnShadowMend					= mod:NewSpecialWarningInterrupt(152818, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDeathblast					= mod:NewSpecialWarningInterrupt(398206, "HasInterrupt", nil, nil, 1, 2)
@@ -40,6 +41,8 @@ local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterru
 local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 local yellShadowWordFrailty					= mod:NewShortYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
+
+mod:AddSetIconOption("SetIconOnShadowWordFrailty", 152819, true, 0, {8})
 
 --local playerName = UnitName("player")
 
@@ -99,7 +102,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 152819 then
+	if spellId == 152819 then --Слово Тьмы: Хрупкость
 		if args:IsPlayer() then
 			specWarnShadowWordFrailty:Show()
 			specWarnShadowWordFrailty:Play("targetyou")
@@ -110,17 +113,20 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnShadowWordFrailtyDispel:Play("helpdispel")
 			end
 		end
+		if self.Options.SetIconOnShadowWordFrailty then
+			self:SetIcon(args.destName, 8)
+		end
 	end
 end
 
---[[
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 339525 and args:IsPlayer() then
-
+	if spellId == 152819 then --Слово Тьмы: Хрупкость
+		if self.Options.SetIconOnShadowWordFrailty then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
---]]
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

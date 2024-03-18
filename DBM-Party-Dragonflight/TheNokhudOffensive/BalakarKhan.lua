@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(186151)
 mod:SetEncounterID(2580)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20221214000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -14,8 +15,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 375943 375937 375929 376723 376725 376892 376827 376829 376727",
 	"SPELL_CAST_SUCCESS 376634 376730 376864",
-	"SPELL_AURA_APPLIED 376634 376864 376827",
-	"SPELL_AURA_REMOVED 376634 376864 376727",
+	"SPELL_AURA_APPLIED 376634 376864 376827 375937",
+	"SPELL_AURA_REMOVED 376634 376864 376727 375937 376827",
 	"SPELL_PERIODIC_DAMAGE 376899",
 	"SPELL_PERIODIC_MISSED 376899",
 	"UNIT_DIED"
@@ -69,6 +70,8 @@ local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YE
 local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL")
 local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL")
 local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL")
+
+mod:AddSetIconOption("SetIconOnConductiveStrike", 376827, true, 0, {8})
 
 mod.vb.addsLeft = 0
 mod.vb.comboCount = 0
@@ -172,10 +175,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnStaticSpear:Show(args.destName)
 		end
-	elseif spellId == 376827 then
+	elseif spellId == 375937 then --Разрывающий удар
+		if self.Options.SetIconOnConductiveStrike then
+			self:SetIcon(args.destName, 8)
+		end
+	elseif spellId == 376827 then --Проводящий удар
 		if self:IsSpellCaster() then
 			specWarnConductiveStrikeDispel:Show(args.destName)
 			specWarnConductiveStrikeDispel:Play("helpdispel")
+		end
+		if self.Options.SetIconOnConductiveStrike then
+			self:SetIcon(args.destName, 8)
 		end
 	end
 end
@@ -193,6 +203,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerConductiveStrikeCD:Start(8, 1)
 		timerStaticSpearCD:Start(18)
 		timerCracklingUpheavalCD:Start(37)
+	elseif spellId == 375937 then --Разрывающий удар
+		if self.Options.SetIconOnConductiveStrike then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 376827 then --Проводящий удар
+		if self.Options.SetIconOnConductiveStrike then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 

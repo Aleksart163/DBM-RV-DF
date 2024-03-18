@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(186738)
 mod:SetEncounterID(2584)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230110000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -14,7 +15,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 384978 385399 385075 388804 384696 384699",
 	"SPELL_CAST_SUCCESS 384696",
-	"SPELL_AURA_APPLIED 384978"
+	"SPELL_AURA_APPLIED 384978",
+	"SPELL_AURA_REMOVED 384978"
 )
 
 --TODO, Current under-tuning makes the crystals and fracture completely inconsiquential. Until that changes, not much to do with those.
@@ -39,6 +41,8 @@ local timerUnleashedDestructionCD				= mod:NewCDTimer(103.1, 385399, nil, nil, n
 local timerArcaneEruptionCD						= mod:NewCDTimer(54.6, 385075, nil, nil, nil, 3)
 
 local yellDragonStrike							= mod:NewShortYell(384978, nil, nil, nil, "YELL") --Удар дракона
+
+mod:AddSetIconOption("SetIconOnDragonStrike", 384978, true, 0, {8})
 
 mod:AddInfoFrameOption(388777, false)
 
@@ -109,6 +113,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsSpellCaster() then
 			specWarnDragonStrikeDebuff:Show(args.destName)
 			specWarnDragonStrikeDebuff:Play("helpdispel")
+		end
+		if self.Options.SetIconOnDragonStrike then
+			self:SetIcon(args.destName, 8)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 384978 then
+		if self.Options.SetIconOnDragonStrike then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end

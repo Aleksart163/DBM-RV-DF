@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20230504231118")
 mod:SetCreatureID(95833)
 mod:SetEncounterID(1806)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230308000000)
 
 mod:RegisterCombat("combat")
@@ -48,6 +49,8 @@ local timerExpelLightCD				= mod:NewCDTimer(23, 192048, nil, nil, nil, 3)--May b
 local yellShieldOfLight				= mod:NewShortYell(192018, nil, nil, nil, "YELL") --Щит света
 local yellExpelLight				= mod:NewShortYell(192048, nil, nil, nil, "YELL")
 
+mod:AddSetIconOption("SetIconOnShieldOfLight", 192018, true, 0, {8})
+
 mod:AddRangeFrameOption(8, 192048)
 
 local eyeShortName = DBM:GetSpellInfo(91320)--Inner Eye
@@ -61,6 +64,9 @@ function mod:ShieldOfLightTarget(targetname, uId)
 	else
 		specWarnShieldOfLight2:Show(targetname)
 		specWarnShieldOfLight2:Play("watchfeet")
+	end
+	if self.Options.SetIconOnShieldOfLight then
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 

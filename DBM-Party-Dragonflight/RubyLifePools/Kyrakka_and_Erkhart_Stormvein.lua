@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(190484, 190485)
 mod:SetEncounterID(2623)
+mod:SetUsedIcons(8)
 mod:SetBossHPInfoToHighest()
 mod:SetHotfixNoticeRev(20230109000000)
 --mod:SetMinSyncRevision(20211203000000)
@@ -14,7 +15,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 381605 381602 381525 381517 381512 385558 381516",
 	"SPELL_CAST_SUCCESS 381517",
-	"SPELL_AURA_APPLIED 381515 181089 381862",
+	"SPELL_AURA_APPLIED 381515 181089 381862 381512",
+	"SPELL_AURA_REMOVED 381512",
 	"UNIT_DIED"
 )
 
@@ -49,6 +51,8 @@ local timerCloudburstCD							= mod:NewCDTimer(19.3, 385558, nil, nil, nil, 2)--
 
 local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
 local yellStormslam								= mod:NewShortYell(381512, nil, nil, nil, "YELL")
+
+mod:AddSetIconOption("SetIconOnStormslam", 381512, true, 0, {8})
 
 mod:AddInfoFrameOption(381862, false)--Infernocore
 
@@ -175,6 +179,19 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnInfernoCore:Play("runout")
 		else
 			warnInfernoCore:Show()
+		end
+	elseif spellId == 381512 then --Сметающая буря
+		if self.Options.SetIconOnStormslam then
+			self:SetIcon(args.destName, 8)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 381512 then --Сметающая буря
+		if self.Options.SetIconOnStormslam then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end

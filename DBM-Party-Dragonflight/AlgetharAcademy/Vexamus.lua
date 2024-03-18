@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(194181)
 mod:SetEncounterID(2562)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20221015000000)
 mod:SetMinSyncRevision(20221015000000)
 --mod.respawnTime = 29
@@ -52,6 +53,8 @@ local yellArcaneExpulsion						= mod:NewShortYell(385958, nil, nil, nil, "YELL")
 local yellManaBomb								= mod:NewYell(386181, nil, nil, nil, "YELL")
 local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL")
 
+mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8})
+
 mod:AddInfoFrameOption(391977, true)
 
 --mod:GroupSpells(386173, 386181)--Mana Bombs with Mana Bomb
@@ -68,6 +71,9 @@ function mod:ArcaneExpulsionTarget(targetname, uId)
 		yellArcaneExpulsion:Yell()
 	else
 		warnArcaneExpulsion:Show(targetname)
+	end
+	if self.Options.SetIconOnArcaneExpulsion then
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 
