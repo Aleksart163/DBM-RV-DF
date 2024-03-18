@@ -273,9 +273,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self.Options.MurchalOchkenProshlyapen then
 				yellPrimalOverload:Yell(6, MarkLightning, 6) --Синяя
 				yellMarkLightning:Countdown(spellId, 3)
-				timerMarkLightning:Start(args.destName)
 				self:Schedule(2.5, startProshlyapationOfMurchal, self)
 			end
+			timerMarkLightning:Start()
 		end
 	elseif spellId == 396364 then --Метка ветра
 		if args:IsPlayer() then
@@ -285,9 +285,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self.Options.MurchalOchkenProshlyapen then
 				yellPrimalOverload:Yell(7, MarkWind, 7) --Красная
 				yellMarkWind:Countdown(spellId, 3)
-				timerMarkWind:Start(args.destName)
 				self:Schedule(2.5, startProshlyapationOfMurchal, self)
 			end
+			timerMarkWind:Start()
 		end
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
 		specWarnSpitefulFixate:Show()
@@ -320,8 +320,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			if self.Options.MurchalOchkenProshlyapen then
 				self:Unschedule(startProshlyapationOfMurchal)
 				yellMarkLightning:Cancel()
-				timerMarkLightning:Cancel(args.destName)
 			end
+			timerMarkLightning:Stop()
 		end
 	elseif spellId == 396364 then --Метка ветра
 		self.vb.murchalsProshlyapCount = self.vb.murchalsProshlyapCount - 1
@@ -335,8 +335,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			if self.Options.MurchalOchkenProshlyapen then
 				self:Unschedule(startProshlyapationOfMurchal)
 				yellMarkWind:Cancel()
-				timerMarkWind:Cancel(args.destName)
 			end
+			timerMarkWind:Stop()
 		end
 		if self.vb.murchalsProshlyapCount == 1 then
 			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
