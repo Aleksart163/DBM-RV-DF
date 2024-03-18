@@ -90,15 +90,17 @@ local function startProshlyapationOfMurchal(self) --Изначальная пе�
 end
 
 local function stopProshlyapationOfMurchal(self)
-	if self:AntiSpam(15.5, "Mark") then
-		specWarnMarkWind2:Show()
-		specWarnMarkWind2:Play("end")
+	if DBM:UnitDebuff("player", 396364) then
+		if self:AntiSpam(15.5, "Mark") then
+			specWarnMarkWind2:Show()
+			specWarnMarkWind2:Play("end")
+		end
+		yellPrimalOverload:Cancel()
+		yellMarkWind:Cancel()
+		timerMarkWind:Cancel()
+		self.vb.mProshlyapCount = 0
+		self:Unschedule(startProshlyapationOfMurchal)
 	end
-	yellPrimalOverload:Cancel()
-	yellMarkWind:Cancel()
-	timerMarkWind:Cancel()
-	self.vb.mProshlyapCount = 0
-	self:Unschedule(startProshlyapationOfMurchal)
 end
 
 local function ProshlyapationOfMurchal(self)
@@ -313,10 +315,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			Lightning = false
 			self.vb.mProshlyapCount = 0
-			if self:AntiSpam(15.5, "Mark") then
-				specWarnMarkLightning2:Show()
-				specWarnMarkLightning2:Play("end")
-			end
+			specWarnMarkLightning2:Show()
+			specWarnMarkLightning2:Play("end")
 			if self.Options.MurchalOchkenProshlyapen then
 				self:Unschedule(startProshlyapationOfMurchal)
 				yellMarkLightning:Cancel()
