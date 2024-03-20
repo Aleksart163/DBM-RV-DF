@@ -266,7 +266,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 391599 or spellId == 371836 then--Mythic, Non Mythic
 		local amount = args.amount or 1
 		blizzardStacks[args.destName] = amount
-		if args:IsPlayer() and amount >= 7 then
+		if args:IsPlayer() and amount == 7 then
 			playerBlizzardHigh = true
 			specWarnPrimalBlizzardStack:Show(amount)
 			specWarnPrimalBlizzardStack:Play("stackhigh")
