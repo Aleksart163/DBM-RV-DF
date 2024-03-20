@@ -52,7 +52,7 @@ local warnPotionCauldronofPower2	= mod:NewSpellAnnounce(406963, 1, nil, nil, 370
 --local warnLavishSuramar				= mod:NewSpellAnnounce(201352, 1) --Щедрое сурамарское угощение
 --local warnHearty					= mod:NewSpellAnnounce(201351, 1) --Обильное угощение
 --local warnSugar						= mod:NewSpellAnnounce(185709, 1) --Угощение из засахаренной рыбы
-local warnSoulstone					= mod:NewTargetAnnounce(20707, 1) --Камень души
+local warnSoulstone					= mod:NewTargetNoFilterAnnounce(20707, 1) --Камень души
 
 local warnRallyingCry				= mod:NewSpellAnnounce(97462, 1) --Ободряющий клич
 local warnPowerWordBarrier			= mod:NewSpellAnnounce(62618, 1) --Слово силы: Барьер
@@ -735,11 +735,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnSoulstone:Show()
 			specWarnSoulstone:Play("targetyou")
+		else
+			warnSoulstone:Show(destName)
 		end
 	--[[	if self.Options.YellOnSoulstone then
 			prepareMessage(self, "premsg_Spells_soulstone", spellId, sourceName, destName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 29166 then --Озарение
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
