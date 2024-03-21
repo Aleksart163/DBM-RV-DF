@@ -28,26 +28,26 @@ mod:RegisterEventsInCombat(
 local timerRP									= mod:NewRPTimer(34.4)
 --Teera
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25552))
-local warnRepel									= mod:NewCastAnnounce(386547, 3, nil, nil, nil, nil, nil, 2)
-local warnSpiritLeap							= mod:NewSpellAnnounce(385434, 3)
+local warnRepel									= mod:NewCastAnnounce(386547, 3, nil, nil, nil, nil, nil, 2) --Отпор
+local warnSpiritLeap							= mod:NewSpellAnnounce(385434, 3) --Прыжок духа
 
-local specWarnGaleArrow							= mod:NewSpecialWarningDodgeCount(382670, nil, nil, nil, 2, 2)
-local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2)
+local specWarnGaleArrow							= mod:NewSpecialWarningDodgeCount(382670, nil, nil, nil, 2, 2) --Ураганная стрела
+local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
-local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 3)
-local timerRepelCD								= mod:NewCDCountTimer(57.4, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSpiritLeapCD							= mod:NewCDCountTimer(20.4, 385434, nil, nil, nil, 3)--20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
+local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Ураганная стрела
+local timerRepelCD								= mod:NewCDCountTimer(57.4, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Отпор
+local timerSpiritLeapCD							= mod:NewCDCountTimer(20.4, 385434, nil, nil, nil, 3) --Прыжок духа 20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
 
 --Maruuk
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25546))
-local warnFrightfulRoar							= mod:NewCastAnnounce(386063, 3, nil, nil, nil, nil, nil, 2)--Not a special warning, since I don't want to layer 2 special warings for same pair
 
-local specWarnEarthsplitter						= mod:NewSpecialWarningDodgeCount(385339, nil, nil, nil, 2, 2)
-local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, nil, nil, nil, 4, 2)
+local specWarnEarthsplitter						= mod:NewSpecialWarningDodgeCount(385339, nil, nil, nil, 2, 2) --Раскол земли
+local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, "Melee", nil, nil, 4, 2) --Отпугивающий рык
+local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, "Ranged", nil, nil, 2, 2) --Отпугивающий рык
 local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 1, 2)
 
-local timerEarthSplitterCD						= mod:NewCDCountTimer(57.4, 385339, nil, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--Off by default since it should always be cast immediately after Repel)
-local timerFrightfulRoarCD						= mod:NewCDCountTimer(30.4, 386063, nil, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON)--New timer unknown
+local timerEarthSplitterCD						= mod:NewCDCountTimer(57.4, 385339, nil, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Раскол земли Off by default since it should always be cast immediately after Repel)
+local timerFrightfulRoarCD						= mod:NewCDCountTimer(30.4, 386063, nil, nil, nil, 7, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
 local timerBrutalizeCD							= mod:NewCDCountTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
 
 mod:AddNamePlateOption("NPAuraOnAncestralBond", 392198)
@@ -116,13 +116,13 @@ function mod:SPELL_CAST_START(args)
 		timerGaleArrowCD:Start(nil, self.vb.galeCount+1, args.sourceGUID)
 	elseif spellId == 386063 then
 		self.vb.roarCount = self.vb.roarCount + 1
-		if self.Options.SpecWarn386063run then
+		if self:IsRanged() then
+			specWarnFrightfulRoar2:Show()
+			specWarnFrightfulRoar2:Play("watchstep")
+		else
 			specWarnFrightfulRoar:Show()
 			specWarnFrightfulRoar:Play("justrun")
 			specWarnFrightfulRoar:ScheduleVoice(1, "fearsoon")
-		else
-			warnFrightfulRoar:Show()
-			warnFrightfulRoar:Play("fearsoon")
 		end
 		local timer
 		--Frightful Roar: 5.5, 38.4, 18.9, 38.4, 19, 38.5
@@ -176,7 +176,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 384808 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+	if spellId == 384808 then
 		specWarnGuardianWind:Show(args.sourceName)
 		specWarnGuardianWind:Play("kickcast")
 	elseif spellId == 392198 then
