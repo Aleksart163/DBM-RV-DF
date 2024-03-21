@@ -21,7 +21,7 @@ local warnSurgingDeluge						= mod:NewSpellAnnounce(397881, 2)
 local warnTidalburst						= mod:NewCastAnnounce(397889, 3)
 local warnHauntingScream					= mod:NewCastAnnounce(395859, 4) --Потусторонний крик
 local warnSleepySililoquy					= mod:NewCastAnnounce(395872, 3) --Вялый монолог
-local warnSleepySililoquy2					= mod:NewTargetNoFilterAnnounce(395872, 2)
+local warnSleepySililoquy2					= mod:NewTargetNoFilterAnnounce(395872, 2) --Вялый монолог
 local warnCatNap							= mod:NewCastAnnounce(396073, 3)
 local warnFitofRage							= mod:NewCastAnnounce(396018, 3)
 local warnDefilingMists						= mod:NewCastAnnounce(397914, 3) --Оскверняющая дымка
@@ -52,6 +52,7 @@ local timerSleepySililoquyCD				= mod:NewCDNPTimer(9, 395872, nil, "HasInterrupt
 local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15.3, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
 local timerDefilingMistsCD					= mod:NewCDNPTimer(10, 397914, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющая дымка
 
+local yellSleepySililoquy					= mod:NewShortYell(395872, nil, nil, nil, "YELL") --Вялый монолог
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt
@@ -146,9 +147,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnFitOfRage:Show(args.destName)
 		specWarnFitOfRage:Play("enrage")
 	elseif spellId == 395872 then --Вялый монолог
-		if not args:IsPlayer() then
+		if args:IsPlayer() then
+			yellSleepySililoquy:Yell()
+		else
 			specWarnSleepySililoquy2:Show(args.destName)
 			specWarnSleepySililoquy2:Play("dispelnow")
+			warnSleepySililoquy2:Show(args.destName)
 		end
 	end
 end
