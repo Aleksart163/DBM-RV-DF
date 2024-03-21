@@ -58,7 +58,7 @@ end
 function mod:OnCombatStart(delay)
 	timerFrostBombCD:Start(3.6-delay)
 	timerIcyDevastatorCD:Start(15-delay) --Морозный опустошитель 14.7 now?
-	timerAbsoluteZeroCD:Start(26.7-delay) --Абсолютный нуль
+	timerAbsoluteZeroCD:Start(25.5-delay) --Абсолютный нуль
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end

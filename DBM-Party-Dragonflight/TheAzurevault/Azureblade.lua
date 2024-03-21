@@ -24,67 +24,112 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --https://www.warcraftlogs.com/reports/1fvXGDK69nmq3MA7#fight=1&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20372222%20or%20ability.id%20%3D%20385578%20or%20ability.id%20%3D%20384223%20or%20ability.id%20%3D%20384132)%20and%20type%20%3D%20%22begincast%22%0A%20or%20ability.id%20%3D%20384132%20and%20type%20%3D%20%22removebuff%22%0A%20or%20type%20%3D%20%22dungeonencounterstart%22%20or%20type%20%3D%20%22dungeonencounterend%22&view=events
-local warnSummonDraconicImage					= mod:NewSpellAnnounce(384223, 3)
+local warnSummonDraconicImage					= mod:NewSpellAnnounce(384223, 4) --Призыв драконьей иллюзии
+local warnOverwhelmingEnergy					= mod:NewEndAnnounce(384132, 1) --Переполняющая энергия
 
-local specWarnArcaneCleave						= mod:NewSpecialWarningSpell(372222, nil, nil, nil, 1, 2)
-local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2)
-local yellAncientOrb							= mod:NewYell(385578)
+local specWarnArcaneCleave						= mod:NewSpecialWarningDefensive(372222, nil, nil, nil, 3, 4) --Удар тайной магии
+local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "MeleeDps", nil, nil, 2, 2) --Удар тайной магии
+local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2) --Древняя сфера
+local specWarnOverwhelmingEnergy				= mod:NewSpecialWarningSpell(384132, nil, nil, nil, 2, 2) --Переполняющая энергия
 local specWarnIllusionaryBolt					= mod:NewSpecialWarningInterrupt(373932, "HasInterrupt", nil, nil, 1, 2)
-local specWarnOverwhelmingEnergy				= mod:NewSpecialWarningSpell(384132, nil, nil, nil, 2, 2)
 
-local timerArcaneCleaveCD						= mod:NewCDTimer(13.3, 372222, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--13.3-15
-local timerAncientOrbCD							= mod:NewCDTimer(15.7, 385578, nil, nil, nil, 3)
-local timerSummonDraconicImageCD				= mod:NewCDTimer(14.2, 384223, nil, nil, nil, 1)
-local timerOverwhelmingenergyCD					= mod:NewCDTimer(35, 384132, nil, nil, nil, 6)
+local timerArcaneCleaveCD						= mod:NewCDTimer(13, 372222, nil, "Melee", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар тайной магии
+local timerAncientOrbCD							= mod:NewCDTimer(15, 385578, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Древняя сфера
+local timerSummonDraconicImageCD				= mod:NewCDTimer(15, 384223, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Призыв драконьей иллюзии
+local timerOverwhelmingenergyCD					= mod:NewCDTimer(35, 384132, nil, nil, nil, 6) --Переполняющая энергия
 
-function mod:OrbTarget(targetname)
+local yellArcaneCleave							= mod:NewYell(372222, nil, nil, nil, "YELL") --Удар тайной магии
+
+mod.vb.proshlyapsMurchalCount = 0
+mod.vb.proshlyapsMurchalCount2 = 0
+mod.vb.ancientOrbCount = 0
+
+local Proshlyap = nil
+local allProshlyapationsOfMurchalTimers = {
+	--Удар тайной магии
+	[372222] = {8, 13, 15, 15},
+	--Призыв драконьей иллюзии
+	[384223] = {5, 15, 15, 15},
+}
+
+function mod:ArcaneCleaveTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		yellAncientOrb:Yell()
+		specWarnArcaneCleave:Show()
+		specWarnArcaneCleave:Play("defensive")
+		yellArcaneCleave:Yell()
+	else
+		specWarnArcaneCleave2:Show()
+		specWarnArcaneCleave2:Play("watchstep")
 	end
 end
 
 function mod:OnCombatStart(delay)
-	timerSummonDraconicImageCD:Start(3-delay)
+	self.vb.proshlyapsMurchalCount = 0
+	self.vb.proshlyapsMurchalCount2 = 0
+	self.vb.ancientOrbCount = 0
+	Proshlyap = false
+	timerAncientOrbCD:Start(11.5-delay)
+	timerOverwhelmingenergyCD:Start(32-delay)
 	timerArcaneCleaveCD:Start(6-delay)
-	timerAncientOrbCD:Start(11-delay)
-	timerOverwhelmingenergyCD:Start(33-delay)
+	timerSummonDraconicImageCD:Start(3-delay)
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 372222 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnArcaneCleave:Show()
-			specWarnArcaneCleave:Play("shockwave")
+	if spellId == 372222 then --Удар тайной магии
+		self.vb.proshlyapsMurchalCount = self.vb.proshlyapsMurchalCount + 1
+		if not Proshlyap and self.vb.proshlyapsMurchalCount < 2 then
+			timerArcaneCleaveCD:Start(nil, self.vb.proshlyapsMurchalCount+1)
+		elseif Proshlyap then
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.proshlyapsMurchalCount+1)
+			if timer then
+				timerArcaneCleaveCD:Start(timer, self.vb.proshlyapsMurchalCount+1)
+			end
 		end
-		timerArcaneCleaveCD:Start()
-	elseif spellId == 385578 then
-		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "OrbTarget", 0.1, 8, true)
+		self:BossTargetScanner(args.sourceGUID, "ArcaneCleaveTarget", 0.1, 2)
+	elseif spellId == 385578 then --Древняя сфера
+		self.vb.ancientOrbCount = self.vb.ancientOrbCount + 1
+		if not Proshlyap and self.vb.ancientOrbCount < 2 then
+			timerAncientOrbCD:Start()
+		elseif Proshlyap and self.vb.ancientOrbCount < 4 then
+			timerAncientOrbCD:Start()
+		end
 		specWarnAncientOrb:Show()
 		specWarnAncientOrb:Play("watchorb")
-		timerAncientOrbCD:Start()
-	elseif spellId == 384223 then
+	elseif spellId == 384223 then --Призыв драконьей иллюзии
+		self.vb.proshlyapsMurchalCount2 = self.vb.proshlyapsMurchalCount2 + 1
+		if not Proshlyap and self.vb.proshlyapsMurchalCount2 < 2 then
+			timerSummonDraconicImageCD:Start(nil, self.vb.proshlyapsMurchalCount2+1)
+		elseif Proshlyap then
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.proshlyapsMurchalCount2+1)
+			if timer then
+				timerSummonDraconicImageCD:Start(timer, self.vb.proshlyapsMurchalCount2+1)
+			end
+		end
 		warnSummonDraconicImage:Show()
-		timerSummonDraconicImageCD:Start()
 	elseif spellId == 373932 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnIllusionaryBolt:Show(args.sourceName)
 		specWarnIllusionaryBolt:Play("kickcast")
-	elseif spellId == 384132 then--Overwhelming Energy
-		timerArcaneCleaveCD:Stop()
-		timerAncientOrbCD:Stop()
-		timerSummonDraconicImageCD:Stop()
+	elseif spellId == 384132 then --Переполняющая энергия
+		if not Proshlyap then
+			Proshlyap = true
+		end
 		specWarnOverwhelmingEnergy:Show()
 		specWarnOverwhelmingEnergy:Play("phasechange")
+		self.vb.proshlyapsMurchalCount = 0
+		self.vb.proshlyapsMurchalCount2 = 0
+		self.vb.ancientOrbCount = 0
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 384132 then--Overwhelming Energy
-		timerSummonDraconicImageCD:Start(4.7)--4.7-5.7
-		timerArcaneCleaveCD:Start(8)--7.1-8.1
-		timerAncientOrbCD:Start(13)--12-13
-		timerOverwhelmingenergyCD:Start(64.5)
+	if spellId == 384132 then --Переполняющая энергия
+		warnOverwhelmingEnergy:Show()
+		timerAncientOrbCD:Start(13.5)--12-13
+		timerOverwhelmingenergyCD:Start(64)
+		timerArcaneCleaveCD:Start(8)
+		timerSummonDraconicImageCD:Start(5)
 	end
 end
