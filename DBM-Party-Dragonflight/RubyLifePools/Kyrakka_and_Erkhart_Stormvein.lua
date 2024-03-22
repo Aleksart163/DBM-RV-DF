@@ -43,7 +43,7 @@ local warnCloudburst							= mod:NewSpellAnnounce(385558, 3)
 
 local specWarnStormslam							= mod:NewSpecialWarningDefensive(381512, nil, nil, nil, 3, 2)
 local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381512, "RemoveMagic", nil, nil, 3, 2)
-local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 4) --Прерывающая гроза
+local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 2) --Прерывающая гроза
 
 local timerWindsofChangeCD						= mod:NewCDCountTimer(19.3, 381517, 227878, nil, nil, 3)--Not actually a count timer, but has best localized text
 local timerStormslamCD							= mod:NewCDTimer(17, 381512, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
@@ -128,13 +128,15 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerStormslamCD:Start(nil, args.sourceGUID)--self:GetStage(1) and 10 or 14
 	elseif spellId == 385558 or spellId == 381516 then
-		if spellId == 381516 and self.Options.SpecWarn381516cast then--Mythic
-			specWarnInterruptingCloudburst:Show()
-			specWarnInterruptingCloudburst:Play("stopcast")
-		else--Normal/Heroic
-			warnCloudburst:Show()
+		if spellId == 381516 then--Mythic
+			if self:IsSpellCaster() then
+				specWarnInterruptingCloudburst:Show()
+				specWarnInterruptingCloudburst:Play("stopcast")
+			else
+				warnCloudburst:Show()
+			end
+			timerInterruptingCloudburst:Start()
 		end
-		timerInterruptingCloudburst:Start()
 		timerCloudburstCD:Start(nil, args.sourceGUID)
 	end
 end

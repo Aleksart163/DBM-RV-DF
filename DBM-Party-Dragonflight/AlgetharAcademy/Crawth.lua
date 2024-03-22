@@ -36,7 +36,7 @@ local specWarnDeafeningScreech2					= mod:NewSpecialWarningCast(377004, "SpellCa
 
 local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Огненная буря
 local timerOverpoweringGustCD					= mod:NewCDTimer(28.2, 377034, nil, nil, nil, 3)
-local timerDeafeningScreech						= mod:NewCastTimer(2.5, 377004, nil, "SpellCaster", nil, 7, nil, nil, nil, 3, 2.5) --Оглушительный визг
+local timerDeafeningScreech						= mod:NewCastTimer(2.5, 377004, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 2.5) --Оглушительный визг
 local timerDeafeningScreechCD					= mod:NewCDCountTimer(22.7, 377004, nil, nil, nil, 2)
 local timerSavagePeckCD							= mod:NewCDTimer(13.6, 376997, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Spell queued intoo oblivion often
 
