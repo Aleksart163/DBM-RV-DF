@@ -163,7 +163,7 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	specWarnPrimalistReinforcements:Play("killmob")
 	local proshlyap = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
 	if proshlyap then
-		timerPrimalistReinforcementsCD:Start(proshlyap, self.vb.self.vb.addsCount+1)
+		timerPrimalistReinforcementsCD:Start(proshlyap, self.vb.addsCount+1)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
 end

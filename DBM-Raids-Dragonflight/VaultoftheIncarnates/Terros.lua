@@ -26,9 +26,9 @@ local warnAwakenedEarth							= mod:NewTargetNoFilterAnnounce(381253, 3)
 local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer") --Оглушающий удар
 local warnConcussiveSlam2						= mod:NewTargetNoFilterAnnounce(376279, 4) --Оглушающий удар
 
-local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 1, 2)
+local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 3, 4)
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
-local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 2)
+local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 4)
 local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2)
 local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2) --Дробящий удар
 local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2) --Оглушающий удар
