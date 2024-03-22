@@ -43,11 +43,12 @@ local warnCloudburst							= mod:NewSpellAnnounce(385558, 3)
 
 local specWarnStormslam							= mod:NewSpecialWarningDefensive(381512, nil, nil, nil, 3, 2)
 local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381512, "RemoveMagic", nil, nil, 3, 2)
-local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 4)
+local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 4) --Прерывающая гроза
 
 local timerWindsofChangeCD						= mod:NewCDCountTimer(19.3, 381517, 227878, nil, nil, 3)--Not actually a count timer, but has best localized text
 local timerStormslamCD							= mod:NewCDTimer(17, 381512, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
 local timerCloudburstCD							= mod:NewCDTimer(19.3, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
+local timerInterruptingCloudburst				= mod:NewCastTimer(3, 381516, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 3) --Прерывающая гроза
 
 local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
 local yellStormslam								= mod:NewShortYell(381512, nil, nil, nil, "YELL")
@@ -133,6 +134,7 @@ function mod:SPELL_CAST_START(args)
 		else--Normal/Heroic
 			warnCloudburst:Show()
 		end
+		timerInterruptingCloudburst:Start()
 		timerCloudburstCD:Start(nil, args.sourceGUID)
 	end
 end
