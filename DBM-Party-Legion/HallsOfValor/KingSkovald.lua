@@ -28,17 +28,17 @@ mod:RegisterEvents(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnAegis						= mod:NewTargetNoFilterAnnounce(193783, 1)
-local warnFelblazeRush				= mod:NewTargetNoFilterAnnounce(193659, 2)
+local warnFelblazeRush				= mod:NewTargetNoFilterAnnounce(193659, 2) --Рывок пламени Скверны
 local warnClaimAegis				= mod:NewSpellAnnounce(194112, 2)
 
-local specWarnFelRush				= mod:NewSpecialWarningYou(193659, nil, nil, nil, 1, 2)
+local specWarnFelRush				= mod:NewSpecialWarningYou(193659, nil, nil, nil, 1, 2) --Рывок пламени Скверны
 local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil, nil, 1, 2)
 local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2) --Рагнарек
 local specWarnRagnarok2				= mod:NewSpecialWarningSpell(193826, nil, nil, nil, 3, 2) --Рагнарек
 local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
 
 local timerRP						= mod:NewRPTimer(34.4)
-local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
+local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок пламени Скверны 11-13 unless delayed by claim aegis or ragnarok
 local timerSavageBladeCD			= mod:NewCDTimer(18, 193668, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Свирепый клинок
 local timerRagnarokCD				= mod:NewCDTimer(64.5, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Рагнарек
 
@@ -102,7 +102,7 @@ function mod:SPELL_CAST_START(args)
 		warnClaimAegis:Show()
 		timerRushCD:Stop()
 		timerSavageBladeCD:Stop()
-		timerRushCD:Start(33)
+		timerRushCD:Start(32.5)
 		timerSavageBladeCD:Start(18)
 	end
 end
