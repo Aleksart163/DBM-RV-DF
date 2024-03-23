@@ -32,44 +32,44 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: Balakar's Might
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25185))
-local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Tank|Healer")
-local warnIronSpear								= mod:NewTargetNoFilterAnnounce(376634, 2)
+local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Tank|Healer") --Яростный удар
+local warnIronSpear								= mod:NewTargetNoFilterAnnounce(376634, 2) --Железное копье
 
-local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2)
-local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2)
-local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 3, 2)
+local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2) --Железное копье
+local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2) --Дрожь земли
+local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 3, 4) --Разрывающий удар
 
-local timerIronSpearCD							= mod:NewCDTimer(37, 376634, nil, nil, nil, 3)--Need more data
-local timerUpheavalCD							= mod:NewCDTimer(37, 375943, nil, nil, nil, 3)--Need data at all
-local timerRendingStrikeCD						= mod:NewCDCountTimer(21.9, 375937, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--CD used for both rending and savage
+local timerIronSpearCD							= mod:NewCDTimer(37, 376634, nil, nil, nil, 7) --Железное копье Need more data
+local timerUpheavalCD							= mod:NewCDTimer(37, 375943, nil, nil, nil, 3) --Дрожь земли Need data at all
+local timerRendingStrikeCD						= mod:NewCDCountTimer(21.9, 375937, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Разрывающий удар CD used for both rending and savage
 
 --Intermission: Stormwinds
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25192))
-local warnStormwinds							= mod:NewSpellAnnounce(376730, 2)
+local warnStormwinds							= mod:NewSpellAnnounce(376730, 2) --Штормовые ветра
 
-local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInterrupt", nil, nil, 1, 2)
+local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInterrupt", nil, nil, 1, 2) --Удар громовержца
 
 --Stage Two: The Storm Unleashed
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25187))
 local warnPhase2								= mod:NewPhaseAnnounce(2, 2)
-local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2)
+local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2) --Заряженное копье
 local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Tank|Healer")
 
-local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil, nil, 1, 2)
-local specWarnCracklingUpheaval					= mod:NewSpecialWarningDodge(376892, nil, nil, nil, 2, 2)
-local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 3, 2)
-local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 3, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(376899, nil, nil, nil, 1, 8)
+local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil, nil, 3, 2) --Заряженное копье
+local specWarnCracklingUpheaval					= mod:NewSpecialWarningDodge(376892, nil, nil, nil, 2, 2) --Трескучий сдвиг
+local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 3, 4) --Проводящий удар
+local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 3, 4) --Проводящий удар
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(376899, nil, nil, nil, 1, 8) --Трескучее облако
 
-local timerStaticSpearCD						= mod:NewCDTimer(38.3, 376864, nil, nil, nil, 3)
-local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3)
-local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--CD used for both Condutive and Thunder
+local timerStaticSpearCD						= mod:NewCDTimer(39, 376864, nil, nil, nil, 7) --Заряженное копье
+local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3) --Трескучий сдвиг
+local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Проводящий удар CD used for both Condutive and Thunder
 
-local yellIronSpear								= mod:NewYell(376634, nil, nil, nil, "YELL")
-local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YELL")
-local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL")
-local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL")
-local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL")
+local yellIronSpear								= mod:NewYell(376634, nil, nil, nil, "YELL") --Железное копье
+local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YELL") --Железное копье
+local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL") --Проводящий удар
+local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL") --Заряженное копье
+local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL") --Заряженное копье
 
 mod:AddSetIconOption("SetIconOnConductiveStrike", 376827, true, 0, {8})
 
@@ -147,7 +147,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 376634 then
---		timerIronSpearCD:Start()
+		timerIronSpearCD:Start()
 	elseif spellId == 376730 and self:AntiSpam(3, 1) then
 		warnStormwinds:Show()
 	elseif spellId == 376864 then
