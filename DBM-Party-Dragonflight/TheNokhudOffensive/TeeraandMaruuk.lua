@@ -44,11 +44,11 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25546))
 local specWarnEarthsplitter						= mod:NewSpecialWarningDodgeCount(385339, nil, nil, nil, 2, 2) --Раскол земли
 local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, "Melee", nil, nil, 4, 2) --Отпугивающий рык
 local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, "Ranged", nil, nil, 2, 2) --Отпугивающий рык
-local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 1, 2)
+local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 3, 4) --Свирепый удар
 
 local timerEarthSplitterCD						= mod:NewCDCountTimer(57.4, 385339, nil, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Раскол земли Off by default since it should always be cast immediately after Repel)
 local timerFrightfulRoarCD						= mod:NewCDCountTimer(30.4, 386063, nil, nil, nil, 7, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
-local timerBrutalizeCD							= mod:NewCDCountTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
+local timerBrutalizeCD							= mod:NewCDCountTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Свирепый удар Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
 
 mod:AddNamePlateOption("NPAuraOnAncestralBond", 392198)
 
@@ -79,7 +79,7 @@ local function scanBosses(self, delay)
 				timerRepelCD:Start(50-delay, 1, bossGUID)
 			else--Maruuk
 				timerFrightfulRoarCD:Start(5.5-delay, 1, bossGUID)
-				timerBrutalizeCD:Start(13.5-delay, 1, bossGUID)
+				timerBrutalizeCD:Start(12.5-delay, 1, bossGUID)
 				timerEarthSplitterCD:Start(51-delay, 1, bossGUID)
 			end
 		end
