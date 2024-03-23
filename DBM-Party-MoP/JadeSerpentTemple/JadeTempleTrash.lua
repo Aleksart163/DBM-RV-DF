@@ -49,7 +49,7 @@ local timerTidalburstCD						= mod:NewCDNPTimer(16.6, 397889, nil, "HasInterrupt
 local timerDarkClawCD						= mod:NewCDNPTimer(11, 397931, nil, nil, nil, 4, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Коготь Тьмы
 local timerHauntingScreamCD					= mod:NewCDNPTimer(18.2, 395859, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний крик
 local timerSleepySililoquyCD				= mod:NewCDNPTimer(9, 395872, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Вялый монолог
-local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15.3, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
+local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
 local timerDefilingMistsCD					= mod:NewCDNPTimer(10, 397914, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющая дымка
 
 local yellSleepySililoquy					= mod:NewShortYell(395872, nil, nil, nil, "YELL") --Вялый монолог
