@@ -82,7 +82,8 @@ local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2)
 
-local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
+local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
+--local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
 local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON)
 local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3)
 local timerCauterizingFlashflamesCD				= mod:NewCDNPTimer(11.7, 375485, nil, "MagicDispeller", nil, 5)
@@ -130,24 +131,36 @@ mod.vb.tankCombocount = 0
 mod.vb.wildFireCount = 0
 mod.vb.incubationCount = 0
 mod.vb.eggsGone = false
-local mythicAddsTimers	= {32.9, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
-local heroicAddsTimers	= {35.4, 19.0, 36.3, 20.0, 43.2, 19.8, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0}--Last 5 no longer happen?
-local normalAddsTimers	= {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
+local mythicAddsTimers = {32.9, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
+--local heroicAddsTimers	= {35.4, 19.0, 36.3, 20.0, 43.2, 19.8, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0}
+local heroicAddsTimers = {33, 18.5, 40.8, 18.0, 45, 15, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15
+local normalAddsTimers = {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
+local murchalProshlyapationAddCountMythic = {
+	["Proshlyapation"] = {L.Right, L.Right, L.Middle, L.Left, L.Right, L.Left, L.Left, L.Left, L.Right, L.Middle}
+}
+local murchalProshlyapationAddCountHeroic = {
+	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left, L.Unknown, L.Unknown}
+}
+local murchalProshlyapationAddCountNormal = {
+	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left}
+}
+
 local addUsedMarks = {}
 --[[
-Mortal Stoneclaws 2 second ICD (P1)
-Mortal Stoneslam 2 second ICD (P2 mythic)
-Wildfire 2.5 second ICD in P1 and 5 second ICD in P2 when double cast on heroic/mythic (still 2.5 on lfr/normal)
-Icy Shroud 2.5 second ICD
-Frozen Shroud 2.5 ICD including staff*
-Storm Fissure triggers 3 sec ICD
-greatstaff triggers 1 second ICD (not really worth including)
-rapid incubation triggers 3 second ICD, usually it's staff cast after 3 seconds later but in other cases another spell can jump in and push staff further out so 3 sec before staff rule isn't a gaurentee, but the 3 seconds before next spell is
+16 16 18 113 пулл босса
+16 16 45 047 1 треш +6 сек
+16 17 03 069 2 треш +6.5 сек
+16 17 44 077 3 треш +6.3 сек = 50377
+16 18 02 124 4 треш +6.3 сек = 8424
+16 18 47 156 5 треш +6.3 сек = 53456
+16 19 02 238 6 треш +6.3 сек = 8538
 
-Key Notes:
-In stage 1 staff is consistently 24 seconds, whether that's actual CD kind of doesn't matter, since other spells have equal CD it'll queue at 24-27sec regardless
-In stage 2, staff has 20 second cd on easy and 17 seconds on normal (at least based on current data) but it'll rarely ever see it's base CD due to spell queuing/ICD
---]]
+16 19 47 326 7 треш +6.3 сек
+16 20 02 380 8 треш +6.3 сек
+16 20 42 408 9 треш +6.3 сек
+16 21 02 472 10 треш +6.3 сек
+
+]]
 function mod:MortalStoneclawsTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -159,11 +172,10 @@ end
 
 local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	self.vb.addsCount = self.vb.addsCount + 1
-	specWarnPrimalistReinforcements:Show(self.vb.addsCount)
-	specWarnPrimalistReinforcements:Play("killmob")
 	local proshlyap = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
 	if proshlyap then
-		timerPrimalistReinforcementsCD:Start(proshlyap, self.vb.addsCount+1)
+		local text = self:IsMythic() and murchalProshlyapationAddCountMythic["Proshlyapation"][self.vb.addsCount+1] or self:IsHeroic() and murchalProshlyapationAddCountHeroic["Proshlyapation"][self.vb.addsCount+1] or self:IsEasy() and murchalProshlyapationAddCountNormal["Proshlyapation"][self.vb.addsCount+1]
+		timerPrimalistReinforcementsCD:Start(proshlyap, text)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
 end
@@ -254,20 +266,20 @@ function mod:OnCombatStart(delay)
 	timerMortalStoneclawsCD:Start(3.2-delay, 1)
 	timerWildfireCD:Start(8.2-delay, 1)
 	if not self:IsEasy() then
-		timerRapidIncubationCD:Start(14.3-delay, 1)
+		timerRapidIncubationCD:Start(14.3-delay, 1) --Ускоренная инкубация+
 	end
-	timerGreatstaffoftheBroodkeeperCD:Start(16.2-delay, 1)
-	timerIcyShroudCD:Start(26.2-delay, 1)
+	timerGreatstaffoftheBroodkeeperCD:Start(17.5-delay, 1) --Великий посох (точно под гер)+
+	timerIcyShroudCD:Start(27.5-delay, 1) --Ледяной покров+
 	if self.Options.NPFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self:IsMythic() then
 		timerStormFissureCD:Start(28-delay)
 		self:Schedule(32.9, startProshlyapationOfMurchal, self)
-		timerPrimalistReinforcementsCD:Start(32.9, 1)
+		timerPrimalistReinforcementsCD:Start(32.9, L.Right)
 	else
-		self:Schedule(35.4, startProshlyapationOfMurchal, self)
-		timerPrimalistReinforcementsCD:Start(35.4, 1)
+		self:Schedule(33, startProshlyapationOfMurchal, self)
+		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	end
 end
 

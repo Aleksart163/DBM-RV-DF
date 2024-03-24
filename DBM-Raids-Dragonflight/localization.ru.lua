@@ -69,8 +69,20 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2493)
 
+L:SetTimerLocalization({
+	timerMurchalProshlyapator = "Адды (%s)"
+})
+
+L:SetOptionLocalization({
+	timerMurchalProshlyapator = "Отсчёт времени до прибытия аддов"
+})
+
 L:SetMiscLocalization({
-	staff	= "Великий посох",
+	Middle 	= "Центр",
+	Left	= "Слева",
+	Right	= "Справа",
+	Unknown = "Неизвестно",
+	staff 	= "Великий посох",
 	eStaff	= "Усиленный Великий посох"
 })
 

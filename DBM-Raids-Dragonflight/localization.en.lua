@@ -68,7 +68,19 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2493)
 
+L:SetTimerLocalization({
+	timerMurchalProshlyapator = "Adds (%s)"
+})
+
+L:SetOptionLocalization({
+	timerMurchalProshlyapator = "Show timer for incoming adds"
+})
+
 L:SetMiscLocalization({
+	Middle 	= "Center",
+	Left	= "Left",
+	Right	= "Right",
+	Unknown = "Unknown",
 	staff	= "Staff",
 	eStaff	= "Empowered Staff"
 })
