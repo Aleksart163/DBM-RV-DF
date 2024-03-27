@@ -51,7 +51,7 @@ local specWarnGreatstaffsWrath					= mod:NewSpecialWarningYou(375889, nil, nil, 
 local specWarnWildfire							= mod:NewSpecialWarningDodge(375871, nil, nil, nil, 2, 2)
 local specWarnIcyShroud							= mod:NewSpecialWarningCount(388716, nil, nil, nil, 2, 2)
 local specWarnStormFissure						= mod:NewSpecialWarningDodge(396779, nil, nil, nil, 2, 2, 4)
-local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 3, 2)
+local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 3, 4) --Смертельные каменные когти
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8)
 
@@ -59,7 +59,7 @@ local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1)--Shared CD ability?
 local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3)--21.4-28
 local timerIcyShroudCD							= mod:NewCDCountTimer(39.1, 388716, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
-local timerMortalStoneclawsCD					= mod:NewCDCountTimer(20.2, 375870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)--Shared CD in P1, 7.3-15 P2
+local timerMortalStoneclawsCD					= mod:NewCDCountTimer(20.2, 375870, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные каменные когти Shared CD in P1, 7.3-15 P2
 local timerStormFissureCD						= mod:NewCDTimer(24, 396779, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
@@ -122,7 +122,7 @@ local yellEGreatstaffsWrath						= mod:NewShortYell(380483, nil, nil, nil, "YELL
 local yellDetonatingStoneslam					= mod:NewShortYell(396264, nil, nil, nil, "YELL")
 local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, nil, "YELL")
 
-local castsPerGUID = {}
+
 mod.vb.staffCount = 0
 mod.vb.icyCount = 0
 mod.vb.addsCount = 0
@@ -131,10 +131,14 @@ mod.vb.tankCombocount = 0
 mod.vb.wildFireCount = 0
 mod.vb.incubationCount = 0
 mod.vb.eggsGone = false
-local mythicAddsTimers = {32.9, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
---local heroicAddsTimers	= {35.4, 19.0, 36.3, 20.0, 43.2, 19.8, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0}
-local heroicAddsTimers = {33, 18.5, 40.8, 18.0, 45, 15, 45, 19.9, 43.1, 21.0, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15, 45
-local normalAddsTimers = {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
+
+local castsPerGUID = {}
+local addUsedMarks = {}
+local mythicAddsTimers = {33, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
+local heroicAddsTimers = {33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20
+--local normalAddsTimers = {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
+--local normalAddsTimers = {33, 18.5, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8} --33, 18.5 (исправленные)
+local normalAddsTimers = {33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --на проверку
 local murchalProshlyapationAddCountMythic = {
 	["Proshlyapation"] = {L.Right, L.Right, L.Middle, L.Left, L.Right, L.Left, L.Left, L.Left, L.Right, L.Middle}
 }
@@ -145,20 +149,19 @@ local murchalProshlyapationAddCountNormal = {
 	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left}
 }
 
-local addUsedMarks = {}
 --[[
-16 16 18 113 пулл босса
-16 16 45 047 1 треш +6 сек
-16 17 03 069 2 треш +6.5 сек
-16 17 44 077 3 треш +6.3 сек = 50377
-16 18 02 124 4 треш +6.3 сек = 8424
-16 18 47 156 5 треш +6.3 сек = 53456
-16 19 02 238 6 треш +6.3 сек = 8538
+15 33 20 170 пулл босса
+15 33 47 119 1 треш +6.3 сек = 53419
+15 34 05 187 2 треш +6.3 сек
 
-16 19 47 326 7 треш +6.3 сек
-16 20 02 380 8 треш +6.3 сек
-16 20 42 408 9 треш +6.3 сек
-16 21 02 472 10 треш +6.3 сек
+16 17 44 077 3 треш
+16 18 02 124 4 треш
+16 18 47 156 5 треш
+16 19 02 238 6 треш
+16 19 47 326 7 треш
+16 20 02 380 8 треш
+16 20 42 408 9 треш
+16 21 02 472 10 треш
 
 ]]
 function mod:MortalStoneclawsTarget(targetname, uId)
@@ -275,8 +278,8 @@ function mod:OnCombatStart(delay)
 	end
 	if self:IsMythic() then
 		timerStormFissureCD:Start(28-delay)
-		self:Schedule(32.9, startProshlyapationOfMurchal, self)
-		timerPrimalistReinforcementsCD:Start(32.9, L.Right)
+		self:Schedule(33, startProshlyapationOfMurchal, self)
+		timerPrimalistReinforcementsCD:Start(33, L.Right)
 	else
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
