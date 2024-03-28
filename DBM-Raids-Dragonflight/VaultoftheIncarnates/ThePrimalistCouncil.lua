@@ -39,7 +39,7 @@ local specWarnPrimalBlizzard					= mod:NewSpecialWarningCount(373059, nil, nil, 
 local specWarnPrimalBlizzardStack				= mod:NewSpecialWarningStack(373059, nil, 7, nil, nil, 3, 6) --Изначальная снежная буря
 local specWarnFrostSpike						= mod:NewSpecialWarningInterrupt(372315, "HasInterrupt", nil, nil, 1, 2)
 
-local timerPrimalBlizzardCD						= mod:NewCDCountTimer(79.4, 373059, nil, nil, nil, 7) --Изначальная снежная буря
+local timerPrimalBlizzardCD						= mod:NewCDCountTimer(79.4, 373059, nil, nil, nil, 7, nil, nil, nil, 1, 3) --Изначальная снежная буря
 
 mod:AddInfoFrameOption(373059, false)
 --Dathea Stormlash
