@@ -40,7 +40,7 @@ local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 
 
 local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Погружение
-local timerBodySlamCD			= mod:NewCDSourceTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
+local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
@@ -56,7 +56,7 @@ function mod:OnCombatStart(delay)
 	timerBodySlamCD:Start(31.5-delay)
 	timerCorpseBreathCD:Start(6.2-delay)
 	timerInhaleCD:Start(13.3-delay)
-	timerSubmergeCD:Start(66-delay) --Погружение
+	timerSubmergeCD:Start(65.5-delay) --Погружение
 end
 
 function mod:SPELL_CAST_START(args)
