@@ -18,27 +18,27 @@ mod:RegisterEvents(
 --[[
 (ability.id = 152818 or ability.id = 152964 or ability.id = 153395 or ability.id = 398150 or ability.id = 153268 or ability.id = 398206 or ability.id = 156718 or ability.id = 394512 or ability.id = 164907) and type = "begincast"
 --]]
-local warnVoidSlash							= mod:NewCastAnnounce(164907, 4, nil, nil, "Tank|Healer")
+local warnVoidSlash							= mod:NewCastAnnounce(164907, 4, nil, nil, "Tank|Healer") --Рассечение Бездны
 local warnDomination						= mod:NewCastAnnounce(398150, 4)
 local warnExhume							= mod:NewCastAnnounce(153268, 2)
 local warnVoidPulse							= mod:NewSpellAnnounce(152964, 3)
-local warnBodySlam							= mod:NewCastAnnounce(153395, 4)
+local warnBodySlam							= mod:NewCastAnnounce(153395, 4) --Мощный удар
 
 --local yellConcentrateAnima				= mod:NewYell(339525)
 --local yellConcentrateAnimaFades			= mod:NewShortFadesYell(339525)
 local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 4) --Слово Тьмы: Хрупкость
 local specWarnShadowWordFrailtyDispel		= mod:NewSpecialWarningDispel(152819, "RemoveMagic", nil, nil, 3, 2) --Слово Тьмы: Хрупкость
-local specWarnShadowMend					= mod:NewSpecialWarningInterrupt(152818, "HasInterrupt", nil, nil, 1, 2)
+local specWarnShadowMend					= mod:NewSpecialWarningInterrupt(152818, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
 local specWarnDeathblast					= mod:NewSpecialWarningInterrupt(398206, "HasInterrupt", nil, nil, 1, 2)
-local specWarnNecroticBurst					= mod:NewSpecialWarningInterrupt(156718, "HasInterrupt", nil, nil, 1, 2)
-local specWarnVoidEruptions					= mod:NewSpecialWarningDodge(394512, nil, nil, nil, 2, 2)
-local specWarnBodySlam						= mod:NewSpecialWarningDodge(153395, "Tank", nil, nil, 2, 2)
+local specWarnNecroticBurst					= mod:NewSpecialWarningInterrupt(156718, "HasInterrupt", nil, nil, 1, 2) --Некротический взрыв
+local specWarnVoidEruptions					= mod:NewSpecialWarningDodge(394512, nil, nil, nil, 2, 2) --Извержение Бездны
+local specWarnBodySlam						= mod:NewSpecialWarningDodge(153395, "Tank", nil, nil, 2, 2) --Мощный удар
 
-local timerShadowMendCD						= mod:NewCDNPTimer(8.5, 152818, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerVoidSlashCD						= mod:NewCDNPTimer(10.9, 164907, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerVoidEruptionsCD					= mod:NewCDNPTimer(19.4, 394512, nil, nil, nil, 3, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerShadowMendCD						= mod:NewCDNPTimer(8.5, 152818, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное восстановление
+local timerVoidSlashCD						= mod:NewCDNPTimer(10.9, 164907, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны
+local timerVoidEruptionsCD					= mod:NewCDNPTimer(19.1, 394512, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Извержение Бездны
+local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Некротический взрыв
+local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мощный удар
 
 local yellShadowWordFrailty					= mod:NewShortYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
 
