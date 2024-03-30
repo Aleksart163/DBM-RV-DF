@@ -21,11 +21,12 @@ mod:RegisterEvents(
 local warnVoidSlash							= mod:NewCastAnnounce(164907, 4, nil, nil, "Tank|Healer") --Рассечение Бездны
 local warnDomination						= mod:NewCastAnnounce(398150, 4)
 local warnExhume							= mod:NewCastAnnounce(153268, 2)
-local warnVoidPulse							= mod:NewSpellAnnounce(152964, 3)
+local warnVoidPulse							= mod:NewCastAnnounce(152964, 4) --Импульс Бездны
 local warnBodySlam							= mod:NewCastAnnounce(153395, 4) --Мощный удар
 
 --local yellConcentrateAnima				= mod:NewYell(339525)
 --local yellConcentrateAnimaFades			= mod:NewShortFadesYell(339525)
+local specWarnVoidPulse						= mod:NewSpecialWarningDefensive(152964, "-Tank", nil, nil, 2, 4) --Импульс Бездны
 local specWarnShadowWordFrailty				= mod:NewSpecialWarningYou(152819, nil, nil, nil, 3, 4) --Слово Тьмы: Хрупкость
 local specWarnShadowWordFrailtyDispel		= mod:NewSpecialWarningDispel(152819, "RemoveMagic", nil, nil, 3, 2) --Слово Тьмы: Хрупкость
 local specWarnShadowMend					= mod:NewSpecialWarningInterrupt(152818, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
@@ -65,8 +66,10 @@ function mod:SPELL_CAST_START(args)
 			specWarnNecroticBurst:Show(args.sourceName)
 			specWarnNecroticBurst:Play("kickcast")
 		end
-	elseif spellId == 152964 and self:AntiSpam(3, 4) then
+	elseif spellId == 152964 and self:AntiSpam(4, 4) then
 		warnVoidPulse:Show()
+		specWarnVoidPulse:Show()
+		specWarnVoidPulse:Play("watchstep")
 	elseif spellId == 153395 then
 		timerBodySlamCD:Start(nil, args.sourceGUID)--NO clean cancel, cause mob doesn't die, it leaves
 		if self:AntiSpam(5, 4) then
@@ -93,7 +96,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 394512 and self:AntiSpam(3, 2) then
+	if spellId == 394512 and self:AntiSpam(4, 2) then
 		specWarnVoidEruptions:Show()
 		specWarnVoidEruptions:Play("watchstep")
 	end

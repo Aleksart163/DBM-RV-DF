@@ -25,14 +25,11 @@ ability.id = 154442 and type = "begincast"
 --TODO, 154350 is not firing spell summmon anymore in 10.0.2 M+ version, Omen of Death moved to USCS but target scan needs to be rechecked as well
 local warnOmenOfDeath			= mod:NewSpellAnnounce(154350, 3)
 
-local specWarnRitualOfBones		= mod:NewSpecialWarningSpell(154671, nil, nil, nil, 2, 2)
---local specWarnOmenOfDeath		= mod:NewSpecialWarningMove(154350, nil, nil, nil, 3, 2)
+local specWarnRitualOfBones		= mod:NewSpecialWarningDodge(154671, nil, nil, nil, 3, 2) --Костяной ритуал
 local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, 2)
 
 local timerRitualOfBonesCD		= mod:NewCDTimer(51.5, 154671, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Костяной ритуал
 local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Знамение смерти
-
---local yellOmenOfDeath			= mod:NewYell(154350, nil, nil, nil, "YELL")
 
 mod.vb.MurchalProshlyapenCount = 0
 
@@ -47,18 +44,6 @@ local function startProshlyapationOfMurchal(self)
 	DBM:Debug("MurchalProshlyapenCount = 0")
 	self:Schedule(51.5, startProshlyapationOfMurchal, self)
 end
-
---[[
-function mod:OmenOfDeathTarget(targetname, uId)
-	if not targetname then return end
-	if targetname == UnitName("player") then
-		specWarnOmenOfDeath:Show()
-		specWarnOmenOfDeath:Play("runaway")
-		yellOmenOfDeath:Yell()
-	else
-		warnOmenOfDeath:Show(targetname)
-	end
-end]]
 
 function mod:OnCombatStart(delay)
 	self.vb.MurchalProshlyapenCount = 0
@@ -81,7 +66,6 @@ end
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 154350 then
 		self.vb.MurchalProshlyapenCount = self.vb.MurchalProshlyapenCount + 1
-	--	self:BossTargetScanner(76407, "OmenOfDeathTarget", 0.04, 15)
 		warnOmenOfDeath:Show()
 		if self.vb.MurchalProshlyapenCount == 1 then
 			timerOmenOfDeathCD:Start(14.8)

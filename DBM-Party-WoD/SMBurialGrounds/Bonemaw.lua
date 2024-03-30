@@ -29,7 +29,6 @@ mod:RegisterEventsInCombat(
  or ability.id = 153804
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnBodySlam				= mod:NewTargetAnnounce(154175, 4) --Мощный удар
 local warnCorpseBreath			= mod:NewSpellAnnounce(165578, 2) --Трупное дыхание
 local warnSubmerge				= mod:NewSpellAnnounce(172190, 2) --Погружение
 local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1) --Вдох
@@ -37,21 +36,25 @@ local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1) --Вдох
 local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 2) --Мощный удар
 local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13) --Вдох
 local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8) --Некротическая слизь
+local specWarnAdds				= mod:NewSpecialWarningSwitch(-9466, "-Healer", nil, nil, 2, 2) --Червь-трупоед
 
 local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Погружение
 local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
-local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
+local timerCorpseBreathCD		= mod:NewCDTimer(30.8, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
+local timerAddsCD				= mod:NewCDTimer(9, -9466, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
 
 mod.vb.inhaleActive = false
+mod.vb.inhaleCount = 0
 
 local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
 local MurchalProshlyap = nil
 
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false
+	self.vb.inhaleCount = 0
 	MurchalProshlyap = false
 	timerBodySlamCD:Start(31.5-delay)
 	timerCorpseBreathCD:Start(6.2-delay)
@@ -61,29 +64,39 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 154175 then
-		warnBodySlam:Show(args.sourceName)
-		if self:AntiSpam(3) then--Throttle special warning when more than 1 slam at once happens.
+	if spellId == 154175 then --Мощный удар
+		if self:AntiSpam(3, 2) then--Throttle special warning when more than 1 slam at once happens.
 			specWarnBodySlam:Show()
 			specWarnBodySlam:Play("watchstep")
 		end
-	elseif spellId == 165578 then
+	elseif spellId == 165578 then --Трупное дыхание
 		warnCorpseBreath:Show()
+		if not MurchalProshlyap then
+			timerCorpseBreathCD:Start()
+		end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 153804 then
+	if spellId == 153804 then --Вдох
+		self.vb.inhaleCount = self.vb.inhaleCount + 1
 		timerInhale:Start()
+		if not MurchalProshlyap and self.vb.inhaleCount == 1 then
+			timerAddsCD:Start()
+		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 153804 then
+	if spellId == 153804 then --Вдох
 		self.vb.inhaleActive = false
 		warnInhaleEnd:Show()
+		if not MurchalProshlyap and self.vb.inhaleCount == 1 then
+			specWarnAdds:Show()
+			specWarnAdds:Play("killmob")
+		end
 	end
 end
 
