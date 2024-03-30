@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 199805 192563 199726 191508 199210 198892 198934 215433 210875 192158 200901 198595 192288 199652",
 	"SPELL_CAST_SUCCESS 200901",
-	"SPELL_AURA_APPLIED 215430 199652",
+	"SPELL_AURA_APPLIED 215430 199652 193783",
 	"SPELL_AURA_APPLIED_DOSE 199652",
 	"SPELL_AURA_REMOVED 215430 199652",
 	"UNIT_DIED",
@@ -19,6 +19,7 @@ mod:RegisterEvents(
 )
 
 --TODO wicked dagger (199674)?
+local warnAegis						= mod:NewTargetNoFilterAnnounce(193783, 1) --Эгида Агграмара
 local warnCrackle					= mod:NewTargetNoFilterAnnounce(199805, 2)
 local warnCracklingStorm			= mod:NewTargetAnnounce(198892, 2)
 local warnThunderousBolt			= mod:NewCastAnnounce(198595, 3)
@@ -55,6 +56,7 @@ local timerEyeofStormCD				= mod:NewCDNPTimer(25, 200901, nil, nil, nil, 2, nil,
 local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3)
 local timerRP						= mod:NewRPTimer(28.5)
 
+local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL") --Эгида Агграмара
 local yellCrackle					= mod:NewShortYell(199805, nil, nil, nil, "YELL")
 local yellCracklingStorm			= mod:NewShortYell(198892, nil, nil, nil, "YELL")
 local yellThunderstrike				= mod:NewShortYell(215430, nil, nil, nil, "YELL")
@@ -209,6 +211,12 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnSever:Show(amount)
 				specWarnSever:Play("stackhigh")
 			end
+		end
+	elseif spellId == 193783 and self:AntiSpam(2, 2) then
+		if args:IsPlayer() then
+			yellAegis:Yell()
+		else
+			warnAegis:Show(args.destName)
 		end
 	end
 end
