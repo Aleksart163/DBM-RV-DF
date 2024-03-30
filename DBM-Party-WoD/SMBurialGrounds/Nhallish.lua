@@ -13,8 +13,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 152801 153067 152792",
-	"SPELL_AURA_APPLIED 152979",
-	"SPELL_AURA_REMOVED 152979",
+	"SPELL_AURA_APPLIED 152979 153033",
+	"SPELL_AURA_REMOVED 152979 153033",
 	"SPELL_PERIODIC_DAMAGE 153070",
 	"SPELL_ABSORBED 153070"
 )
@@ -26,15 +26,17 @@ mod:RegisterEventsInCombat(
 --]]
 
 local specWarnVoidBlast			= mod:NewSpecialWarningDefensive(152792, nil, nil, nil, 3, 4) --Вспышка Бездны
-local specWarnVoidVortex		= mod:NewSpecialWarningRun(152801, nil, nil, 2, 4, 2)
-local specWarnSoulShred			= mod:NewSpecialWarningSpell(152979, nil, nil, nil, 1, 2)
-local specWarnVoidDevastation	= mod:NewSpecialWarningDodge(153067, nil, nil, nil, 2, 2)
+local specWarnVoidVortex		= mod:NewSpecialWarningRun(152801, nil, nil, 2, 4, 2) --Водоворот Бездны
+local specWarnSoulShred			= mod:NewSpecialWarningSpell(152979, nil, nil, nil, 1, 2) --Осколок души
+local specWarnVoidDevastation	= mod:NewSpecialWarningDodge(153067, nil, nil, nil, 2, 2) --Опустошение Бездны
 local specWarnVoidDevastationM	= mod:NewSpecialWarningGTFO(153070, nil, nil, nil, 1, 8)
+local specWarnReturnedSoul		= mod:NewSpecialWarningYou(153033, nil, nil, nil, 1, 2) --Вернувшаяся душа
 
-local timerVoidVortexCD			= mod:NewCDTimer(77, 152801, nil, nil, nil, 2)
-local timerSoulShredCD			= mod:NewNextTimer(77, 152979, nil, nil, nil, 6)
-local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979)
-local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 3)
+local timerVoidVortexCD			= mod:NewCDTimer(77, 152801, nil, nil, nil, 2) --Водоворот Бездны
+local timerSoulShredCD			= mod:NewNextTimer(77, 152979, nil, nil, nil, 7) --Осколок души
+local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979, nil, nil, nil, 7) --Осколок души
+local timerReturnedSoul			= mod:NewBuffFadesTimer(20, 153033, nil, nil, nil, 7) --Вернувшаяся душа
+local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Опустошение Бездны
 
 local yellVoidBlast				= mod:NewShortYell(152792, nil, nil, nil, "YELL") --Вспышка Бездны
 
@@ -75,18 +77,30 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 152979 and self:AntiSpam() then--SPELL_CAST_SUCCESS is missing so have to scan for debuffs
-		specWarnSoulShred:Show()
-		timerSoulShredCD:Start()
-		timerSoulShred:Start()
-		specWarnSoulShred:Play("killspirit")
+	if spellId == 152979 then --Осколок души
+		if args:IsPlayer() then
+			specWarnSoulShred:Show()
+			specWarnSoulShred:Play("killspirit")
+			timerSoulShred:Start()
+		end
+		if self:AntiSpam(2, 1) then
+			timerSoulShredCD:Start()
+		end
+	elseif spellId == 153033 then --Вернувшаяся душа
+		if args:IsPlayer() then
+			specWarnReturnedSoul:Show()
+			specWarnReturnedSoul:Play("targetyou")
+			timerReturnedSoul:Start()
+		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 152979 and args:IsPlayer() then
-		timerSoulShred:Cancel()
+	if spellId == 152979 and args:IsPlayer() then --Осколок души
+		timerSoulShred:Stop()
+	elseif spellId == 153033 and args:IsPlayer() then --Вернувшаяся душа
+		timerReturnedSoul:Stop()
 	end
 end
 

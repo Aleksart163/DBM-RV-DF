@@ -12,6 +12,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 154442",
+	"SPELL_AURA_APPLIED 154469",
 	"SPELL_SUMMON 154350",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -26,6 +27,7 @@ ability.id = 154442 and type = "begincast"
 local warnOmenOfDeath			= mod:NewSpellAnnounce(154350, 3)
 
 local specWarnRitualOfBones		= mod:NewSpecialWarningDodge(154671, nil, nil, nil, 3, 2) --Костяной ритуал
+local specWarnRitualOfBones2	= mod:NewSpecialWarningYou(154469, nil, nil, nil, 3, 4)
 local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, 2)
 
 local timerRitualOfBonesCD		= mod:NewCDTimer(51.5, 154671, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Костяной ритуал
@@ -60,6 +62,16 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 154442 then
 		specWarnMalevolence:Show()
 		specWarnMalevolence:Play("shockwave")
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 154469 then
+		if args:IsPlayer() then
+			specWarnRitualOfBones2:Show()
+			specWarnRitualOfBones2:Play("defensive")
+		end
 	end
 end
 

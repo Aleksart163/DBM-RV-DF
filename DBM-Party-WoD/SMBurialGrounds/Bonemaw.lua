@@ -36,7 +36,7 @@ local warnInhaleEnd				= mod:NewEndAnnounce(153804, 1) --Вдох
 local specWarnBodySlam			= mod:NewSpecialWarningDodge(154175, nil, nil, nil, 2, 2) --Мощный удар
 local specWarnInhale			= mod:NewSpecialWarningMoveTo(153804, nil, nil, 2, 4, 13) --Вдох
 local specWarnNecroticPitch		= mod:NewSpecialWarningMove(153692, nil, nil, nil, 1, 8) --Некротическая слизь
-local specWarnAdds				= mod:NewSpecialWarningSwitch(-9466, "-Healer", nil, nil, 2, 2) --Червь-трупоед
+local specWarnAdds				= mod:NewSpecialWarningSwitch(-9466, "-Healer", 267813, nil, 2, 2) --Червь-трупоед
 
 local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Погружение
@@ -44,7 +44,7 @@ local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(30.8, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
-local timerAddsCD				= mod:NewCDTimer(9, -9466, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
+local timerAddsCD				= mod:NewCDTimer(26, -9466, nil, nil, nil, 1, 267813, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
 
 mod.vb.inhaleActive = false
 mod.vb.inhaleCount = 0
@@ -59,6 +59,7 @@ function mod:OnCombatStart(delay)
 	timerBodySlamCD:Start(31.5-delay)
 	timerCorpseBreathCD:Start(6.2-delay)
 	timerInhaleCD:Start(13.3-delay)
+	timerAddsCD:Start(-delay)
 	timerSubmergeCD:Start(65.5-delay) --Погружение
 end
 
@@ -82,9 +83,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 153804 then --Вдох
 		self.vb.inhaleCount = self.vb.inhaleCount + 1
 		timerInhale:Start()
-		if not MurchalProshlyap and self.vb.inhaleCount == 1 then
-			timerAddsCD:Start()
-		end
 	end
 end
 
