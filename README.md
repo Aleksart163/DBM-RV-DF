@@ -5,5 +5,4 @@
 # <p align="center"> Самый рабочий аддон под ключи и рейды на Dragonflight [Firestorm](https://firestorm-servers.com/ru/) </p>
 # <p align="center"> The most working addon for keys and raids on Dragonflight [Firestorm](https://firestorm-servers.com/ru/) </p>
 # <p align="center"> Поддержка проекта / Support the project </p>
-<p align="center"> <a href="https://www.donationalerts.com/r/aleksart163"> <img src = "https://i.imgur.com/ykI6lqX.jpeg" /> </a>
-<a href="https://www.qiwi.com/n/ALEKSART163"> <img src = "https://i.imgur.com/dvjMH7F.png" /> </a> </p>
+<p align="center"> <a href="https://www.donationalerts.com/r/aleksart163"> <img src = "https://i.imgur.com/ykI6lqX.jpeg" /> </a> </p>
