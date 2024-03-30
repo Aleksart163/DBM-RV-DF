@@ -50,7 +50,7 @@ local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt",
 local timerWakingBaneCD						= mod:NewCDNPTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
-local timerArcaneBashCD						= mod:NewCDNPTimer(18.2, 387067, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerArcaneBashCD						= mod:NewCDNPTimer(17.5, 387067, nil, "Melee", nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Оглушение тайной магией
 
 local yellSpellfrostBreath					= mod:NewShortYell(391118, nil, nil, nil, "YELL") --Дыхание магического льда
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
