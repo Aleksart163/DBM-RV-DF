@@ -135,10 +135,10 @@ mod.vb.eggsGone = false
 local castsPerGUID = {}
 local addUsedMarks = {}
 local mythicAddsTimers = {33, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
-local heroicAddsTimers = {33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20
+local heroicAddsTimers = {33, 18.3, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20
 --local normalAddsTimers = {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
 --local normalAddsTimers = {33, 18.5, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8} --33, 18.5 (исправленные)
-local normalAddsTimers = {33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --на проверку
+local normalAddsTimers = {33, 18.3, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --на проверку
 local murchalProshlyapationAddCountMythic = {
 	["Proshlyapation"] = {L.Right, L.Right, L.Middle, L.Left, L.Right, L.Left, L.Left, L.Left, L.Right, L.Middle}
 }
@@ -181,6 +181,7 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 		timerPrimalistReinforcementsCD:Start(proshlyap, text)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
+	DBM:AddMsg(L.Tip)
 end
 
 local function updateAllTimers(self, ICD, exclusion)
