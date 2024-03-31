@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 384316 384620 384686",
-	"SPELL_AURA_APPLIED 384686 394875",
+	"SPELL_AURA_APPLIED 384686 394875 384185",
 	"SPELL_AURA_APPLIED_DOSE 394875",
 	"SPELL_PERIODIC_DAMAGE 386916",
 	"SPELL_PERIODIC_MISSED 386916"
@@ -36,6 +36,8 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(386916, nil, nil, nil, 1, 
 local timerLightingStrikeCD						= mod:NewCDTimer(20.2, 384316, nil, nil, nil, 3)
 local timerElectricStormCD						= mod:NewCDTimer(63.1, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--60-61+3sec cast
 local timerEnergySurgeCD						= mod:NewCDTimer(16.5, 384686, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
+
+local yellLightningStrike						= mod:NewShortFadesYell(384185, nil, nil, nil, "YELL") --Удар молнии
 
 mod:AddInfoFrameOption(382628, false)
 
@@ -84,6 +86,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnEnergySurge:Play("dispelboss")
 	elseif spellId == 394875 then
 		warnSurgeBoss:Show(args.destName, args.amount or 1)
+	elseif spellId == 384185 then
+		if args:IsPlayer() then
+			yellLightningStrike:Countdown(spellId)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

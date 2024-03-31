@@ -28,6 +28,8 @@ mod:RegisterEventsInCombat(
 --local warnStaggeringBarrage					= mod:NewSpellAnnounce(361018, 3)
 
 --local specWarnInfusedStrikes					= mod:NewSpecialWarningStack(361966, nil, 8, nil, nil, 1, 6)
+local warnIcyDevastator							= mod:NewTargetNoFilterAnnounce(387151, 3) --Морозный опустошитель
+
 local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2)
 local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 4, 2) --Морозный опустошитель
 local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, nil, 3, 2) --Абсолютный нуль
@@ -52,6 +54,8 @@ function mod:DevastatorTarget(targetname)
 		specWarnIcyDevastator:Show()
 		specWarnIcyDevastator:Play("runout")
 		yellIcyDevastator:Yell()
+	else
+		warnIcyDevastator:Show(targetname)
 	end
 end
 
