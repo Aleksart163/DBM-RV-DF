@@ -138,16 +138,16 @@ local timerStormBreakCD						= mod:NewCDCountTimer(23.1, 389870, 7794, nil, nil,
 local timerBallLightningCD					= mod:NewCDCountTimer(23.1, 385068, nil, nil, nil, 3)
 --Stage Three: Storm Incarnate
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25477))
-local warnMagneticCharge					= mod:NewTargetNoFilterAnnounce(399713, 3)
+local warnMagneticCharge					= mod:NewTargetNoFilterAnnounce(399713, 4)
 
 local specWarnStormEater					= mod:NewSpecialWarningSpell(395885, nil, nil, nil, 2, 2, 4)
-local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, nil, nil, 3, 2)
+local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, nil, nil, 3, 4)
 local specWarnThunderstruckArmor			= mod:NewSpecialWarningTaunt(391285, nil, nil, nil, 1, 2) --Заряженная молнией броня
-local specWarnMagneticCharge				= mod:NewSpecialWarningYou(399713, nil, nil, nil, 1, 2)
+local specWarnMagneticCharge				= mod:NewSpecialWarningMoveAway(399713, nil, nil, nil, 3, 4) --Магнитный заряд
 
 local timerStormEaterCD						= mod:NewCDTimer(35, 395885, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerMagneticChargeCD					= mod:NewCDCountTimer(35, 399713, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerMagneticChargeCD					= mod:NewCDCountTimer(35, 399713, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магнитный заряд
+local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 
 local yellStaticCharge						= mod:NewShortPosYell(381615, 37859, nil, nil, "YELL")
 local yellStaticChargeFades					= mod:NewIconFadesYell(381615, 37859, nil, nil, "YELL")
@@ -157,12 +157,12 @@ local yellStormCharged						= mod:NewIconRepeatYell(391989, nil, nil, nil, "YELL
 local yellInversion							= mod:NewIconRepeatYell(394584, nil, nil, nil, "YELL")
 local yellFulminatingCharge					= mod:NewShortPosYell(377467, 221175, nil, nil, "YELL")--"Charge" shortname
 local yellFulminatingChargeFades			= mod:NewIconFadesYell(377467, 221175, nil, nil, "YELL")--"Charge" shortname
-local yellMagneticCharge					= mod:NewShortYell(399713, nil, nil, nil, "YELL")
-local yellMagneticChargeFades				= mod:NewShortFadesYell(399713, nil, nil, nil, "YELL")
+local yellMagneticCharge					= mod:NewShortYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
+local yellMagneticChargeFades				= mod:NewShortFadesYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
 local yellElectrifiedJaws					= mod:NewShortYell(395906, nil, nil, nil, "YELL") --Электрические челюсти
 local yellThunderousEnergy					= mod:NewShortYell(390763, nil, nil, nil, "YELL") --Дуга молнии
 
-mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
+mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {8}) --Магнитный заряд
 mod:GroupSpells(386410, 391285)--Thunderous Blast and associated melted armor debuff
 
 local StaticField = DBM:GetSpellInfo(377662) 
@@ -614,13 +614,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsMythic() then
 			timerStormEaterCD:Start(21.7)--Cast only once, then persistent aura
 			timerThunderousBlastCD:Start(28.6, 1)
-			timerMagneticChargeCD:Start(32.7)
+			timerMagneticChargeCD:Start(32.7, 1)
 			timerLightningBreathCD:Start(38.1, 1)
 			timerFulminatingChargeCD:Start(43.2, 1)
 			timerTempestWingCD:Start(70.6, 1)
 		elseif self:IsHeroic() then
 			timerThunderousBlastCD:Start(21.8, 1)
-			timerMagneticChargeCD:Start(25.9)
+			timerMagneticChargeCD:Start(25.9, 1)
 			timerLightningBreathCD:Start(31.3, 1)
 			timerFulminatingChargeCD:Start(40.9, 1)
 			timerTempestWingCD:Start(65.9, 1)
@@ -770,7 +770,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.chargeIcon = self.vb.chargeIcon + 1
 	elseif spellId == 399713 then
 		if self.Options.SetIconOnMagneticCharge then
-			self:SetIcon(args.destName, 4)
+			self:SetIcon(args.destName, 8)
 		end
 		if args:IsPlayer() then
 			specWarnMagneticCharge:Show()
