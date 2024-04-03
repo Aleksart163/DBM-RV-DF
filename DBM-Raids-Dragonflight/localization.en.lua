@@ -83,7 +83,6 @@ L:SetMiscLocalization({
 	Middle 	= "Center",
 	Left	= "Left",
 	Right	= "Right",
-	Unknown = "Unknown",
 	staff	= "Staff",
 	eStaff	= "Empowered Staff"
 })
