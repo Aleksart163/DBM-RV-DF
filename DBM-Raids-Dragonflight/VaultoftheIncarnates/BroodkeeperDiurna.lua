@@ -122,6 +122,7 @@ local yellEGreatstaffsWrath						= mod:NewShortYell(380483, nil, nil, nil, "YELL
 local yellDetonatingStoneslam					= mod:NewShortYell(396264, nil, nil, nil, "YELL")
 local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, nil, "YELL")
 
+mod:AddInfoFrameOption("ej25129", true)
 
 mod.vb.staffCount = 0
 mod.vb.icyCount = 0
@@ -143,7 +144,7 @@ local murchalProshlyapationAddCountMythic = {
 	["Proshlyapation"] = {L.Right, L.Right, L.Middle, L.Left, L.Right, L.Left, L.Left, L.Left, L.Right, L.Middle}
 }
 local murchalProshlyapationAddCountHeroic = {
-	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left, L.Unknown, L.Unknown}
+	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left}
 }
 local murchalProshlyapationAddCountNormal = {
 	["Proshlyapation"] = {L.Middle, L.Left, L.Right, L.Right, L.Left, L.Left, L.Right, L.Right, L.Left, L.Left}
@@ -255,6 +256,33 @@ local function resetTankComboState(self)
 	self.vb.tankComboStarted = false
 end
 
+local updateInfoFrame
+do
+	local lines = {}
+	local sortedLines = {}
+	local function addLine(key, value)
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
+	end
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		addLine(L.Adds, mod.vb.addsCount.."/10")
+		if mod:IsMythic() then
+			local nextLocation = murchalProshlyapationAddCountMythic["Proshlyapation"][mod.vb.addsCount+1]
+			if nextLocation then
+				addLine(L.Next, nextLocation)
+			end
+		else
+			local nextLocation = murchalProshlyapationAddCountHeroic["Proshlyapation"][mod.vb.addsCount+1]
+			if nextLocation then
+				addLine(L.Next, nextLocation)
+			end
+		end
+		return lines, sortedLines
+	end
+end
+
 function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
 	table.wipe(addUsedMarks)
@@ -285,6 +313,9 @@ function mod:OnCombatStart(delay)
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Show(3, "function", updateInfoFrame, false, false)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -292,7 +323,9 @@ function mod:OnCombatEnd()
 	if self.Options.NPFixate then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
-	
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -621,6 +654,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerFrozenShroudCD:Start(remainingIcy, 1)
 			end
 			self.vb.icyCount = 0--Reused for frozen shroud
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
 		end
 	end
 end
