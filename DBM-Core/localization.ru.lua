@@ -5,13 +5,13 @@ local L = DBM_CORE_L
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
-	L.DEADLY_BOSS_MODS					= "Bigwigs"
-	L.DBM								= "BW"
+	L.DEADLY_BOSS_MODS					= "Harmless Minion Mods"
+	L.DBM								= "HMM"
 end
 
 L.HOW_TO_USE_MOD					= "Добро пожаловать в " .. L.DBM .. ". Наберите /dbm help, чтобы получить список поддерживаемых команд. Для доступа к настройкам наберите /dbm в чате. Загрузите конкретные зоны вручную, чтобы настроить определённых боссов на свой вкус. " .. L.DBM .. " установит настройки по умолчанию для Вашей специализации, но Вы, возможно, захотите настроить их более тонко."
 L.SILENT_REMINDER					= "Напоминание: " .. L.DBM .. " всё ещё в тихом режиме."
-L.NEWS_UPDATE						= "|h|c11ff1111Новости|r|h: Это обновление представляет собой повторный выпуск версии 9.1.9 для устранения ложного обнаружения вредоносного ПО в хэше предыдущего выпуска файла. Подробнее об этом |Hgarrmission:DBM:news|h|cff3588ff[здесь]|r|h"
+L.NEWS_UPDATE						= "|h|c11ff1111Новости|r|h: Это обновление меняет структуру модов, поэтому Классические и Основные версии теперь используют унифицированные (одинаковые) модули. Это означает, что модули Vanilla, TBC, Wrath и Cata теперь устанавливаются отдельно, используя те же пакеты, что и Актуальные. Подробнее об этом |Hgarrmission:DBM:news|h|cff3588ff[здесь]|r|h"
 
 L.COPY_URL_DIALOG_NEWS				= "Чтобы прочитать последние новости, перейдите по ссылке ниже"
 
@@ -44,7 +44,8 @@ L.LOOT_SPEC_REMINDER				= "Ваша текущая специализация %s
 
 L.BIGWIGS_ICON_CONFLICT				= L.DBM .. " обнаружил, что у Вас включена установка меток в BigWigs и " .. L.DBM .. " одновременно. Пожалуйста, отключите метки в одном из них, чтобы избежать конфликтов."
 
-L.MOD_AVAILABLE						= "Для этого контента доступен дополнительный модуль %s. Вы можете скачать его с " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.MOD_AVAILABLE						= "Для этого контента доступен дополнительный модуль %s, но он не установлен. Вы можете скачать его с " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.MOD_MISSING						= "Модуль рейдов отсутствует"
 
 L.COMBAT_STARTED					= "%s вступает в бой. Удачи! :)"
 L.COMBAT_STARTED_IN_PROGRESS		= "%s вступает в бой (в процессе). Удачи! :)"
@@ -185,6 +186,7 @@ L.BIG_WIGS							= "BigWigs"
 L.WEAKAURA_KEY						= " (|cff308530Ключ WA:|r %s)"
 
 L.UPDATEREMINDER_HEADER				= "Ваша версия " .. L.DEADLY_BOSS_MODS .. " устарела.\n Версия %s (%s) доступна для загрузки через " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.UPDATEREMINDER_HEADER_SUBMODULE	= "Ваш модуль %s устарел.\n Версию %s можно загрузить через " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.UPDATEREMINDER_FOOTER				= "Нажмите " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  ", чтобы скопировать ссылку загрузки в буфер обмена."
 L.UPDATEREMINDER_FOOTER_GENERIC		= "Нажмите " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  ", чтобы скопировать в буфер обмена."
 L.UPDATEREMINDER_DISABLE			= "ПРЕДУПРЕЖДЕНИЕ: В связи с тем, что Ваш " .. L.DEADLY_BOSS_MODS.. " устарел и несовместим с более новыми версиями "..L.DBM..", он был принудительно отключен и не может использоваться до тех пор, пока не будет обновлен. Это делается для того, чтобы несовместимые моды не мешали игре ни Вам, ни другим участникам группы."
@@ -574,9 +576,9 @@ L.AUTO_RRANGE_OPTION_TEXT			= "Показывать обратное окно п
 L.AUTO_RRANGE_OPTION_TEXT_SHORT		= "Показывать обратное окно проверки дистанции (%s)"
 L.AUTO_INFO_FRAME_OPTION_TEXT		= "Показывать информационное окно для $spell:%s"
 L.AUTO_INFO_FRAME_OPTION_TEXT2		= "Показывать информационное окно для обзора боя"
-L.AUTO_INFO_FRAME_OPTION_TEXT3		= "Показать информационный фрейм для $spell:%s (при достижении порогового значения %%s)"
-L.AUTO_READY_CHECK_OPTION_TEXT		= "Проигрывать звук проверки готовности, когда пулят босса (даже если он не является целью)"
-L.AUTO_SPEEDCLEAR_OPTION_TEXT		= "Показать таймер для быстрой зачистки %s"
+L.AUTO_INFO_FRAME_OPTION_TEXT3		= "Показывать информационный фрейм для $spell:%s (при достижении порогового значения %%s)"
+L.AUTO_READY_CHECK_OPTION_TEXT		= "Воспроизводить звук проверки готовности, когда пуллят босса (даже если он не является целью)"
+L.AUTO_SPEEDCLEAR_OPTION_TEXT		= "Показывать таймер для быстрой зачистки %s"
 L.AUTO_PRIVATEAURA_OPTION_TEXT		= "Воспроизводить звуковые оповещения DBM для приватных аур $spell:%s в этом бою."
 
 -- New special warnings
