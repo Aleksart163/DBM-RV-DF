@@ -39,7 +39,6 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25119))
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25120))
 
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnEggsLeft								= mod:NewCountAnnounce(19873, 1)
 local warnGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(375889, 2)
 local warnClutchwatchersRage					= mod:NewStackAnnounce(375829, 2)
 local warnRapidIncubation						= mod:NewSpellAnnounce(376073, 3)
@@ -131,6 +130,7 @@ mod.vb.tankComboStarted = false
 mod.vb.tankCombocount = 0
 mod.vb.wildFireCount = 0
 mod.vb.incubationCount = 0
+mod.vb.murchalProshlyapEggsCount = 0
 mod.vb.eggsGone = false
 
 local castsPerGUID = {}
@@ -279,6 +279,9 @@ do
 				addLine(L.Next, nextLocation)
 			end
 		end
+		if mod.vb.murchalProshlyapEggsCount > 0 then
+			addLine(L.EggsLeft, mod.vb.murchalProshlyapEggsCount)
+		end
 		return lines, sortedLines
 	end
 end
@@ -306,15 +309,21 @@ function mod:OnCombatStart(delay)
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self:IsMythic() then
+		self.vb.murchalProshlyapEggsCount = 32
 		timerStormFissureCD:Start(28-delay)
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Right)
+	elseif self:IsHeroic() then
+		self.vb.murchalProshlyapEggsCount = 28
+		self:Schedule(33, startProshlyapationOfMurchal, self)
+		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	else
+		self.vb.murchalProshlyapEggsCount = 24
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:Show(3, "function", updateInfoFrame, false, false)
+		DBM.InfoFrame:Show(4, "function", updateInfoFrame, false, false)
 	end
 end
 
@@ -665,10 +674,8 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 375809 then
-		local amount = args.amount or 0
-		warnEggsLeft:Cancel()
-		warnEggsLeft:Schedule(2, amount)
-		if amount == 0 then
+		self.vb.murchalProshlyapEggsCount = self.vb.murchalProshlyapEggsCount - 1
+		if self.vb.murchalProshlyapEggsCount == 0 then
 			self.vb.eggsGone = true
 		end
 	elseif spellId == 376330 then

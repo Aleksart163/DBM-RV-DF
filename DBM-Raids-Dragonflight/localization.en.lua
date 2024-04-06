@@ -77,14 +77,15 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Tip		= "Bad timer with the release of adds? Report it to the addon author on Discord Aleksart163 or /w Куплиняш. It is recommended to have a recorded video of the boss fight for accuracy.",
-	Adds 	= "Adds",
-	Next 	= "Next Attack:",
-	Middle 	= "Center",
-	Left	= "Left",
-	Right	= "Right",
-	staff	= "Staff",
-	eStaff	= "Empowered Staff"
+	Tip			= "Bad timer with the release of adds? Report it to the addon author on Discord Aleksart163 or /w Куплиняш. It is recommended to have a recorded video of the boss fight for accuracy.",
+	Adds 		= "Adds",
+	Next 		= "Next Attack:",
+	EggsLeft 	= "Eggs left:",
+	Middle 		= "Center",
+	Left		= "Left",
+	Right		= "Right",
+	staff		= "Staff",
+	eStaff		= "Empowered Staff"
 })
 
 ---------------------------
