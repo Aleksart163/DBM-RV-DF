@@ -17,7 +17,7 @@ for i = 1, #frames do
 	frames[i]:UnregisterEvent("GOSSIP_SHOW")
 end
 mod:RegisterEvents(
-	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697 214692",
+	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697 214692 373364",
 	"SPELL_AURA_APPLIED 209033 209512 397907 373552",
 	"SPELL_AURA_REMOVED 397907",
 	"UNIT_DIED",
@@ -51,6 +51,7 @@ local warnHypnosisBat				= mod:NewTargetNoFilterAnnounce(373552, 3)
 local warnFelDetonation				= mod:NewCastAnnounce(211464, 4) --Взрыв Скверны
 local warnShadowBoltVolley			= mod:NewCastAnnounce(214692, 4) --Залп стрел Тьмы
 
+local specWarnVampiricClaws			= mod:NewSpecialWarningDefensive(373364, nil, nil, nil, 3, 4) --Когти вампира
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningMoveTo(214692, "-Tank", nil, nil, 2, 2) --Залп стрел Тьмы
 local specWarnFortificationDispel	= mod:NewSpecialWarningDispel(209033, "MagicDispeller", nil, nil, 1, 2)
 local specWarnQuellingStrike		= mod:NewSpecialWarningDodge(209027, "Melee", nil, 2, 1, 2)
@@ -102,6 +103,14 @@ mod:AddBoolOption("SendToChat2", true)
 mod:AddBoolOption("SpyHelperClose2", false)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 generalized, 7 GTFO
+
+function mod:VampiricClawsTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnVampiricClaws:Show()
+		specWarnVampiricClaws:Play("defensive")
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -221,6 +230,8 @@ function mod:SPELL_CAST_START(args)
 		timerShadowBoltVolleyCD:Start(nil, args.sourceGUID)
 		specWarnShadowBoltVolley:Show(DBM_COMMON_L.BREAK_LOS)
 		specWarnShadowBoltVolley:Play("breaklos")
+	elseif spellId == 373364 then --Когти вампира
+		self:BossTargetScanner(args.sourceGUID, "VampiricClawsTarget", 0.1, 2)
 	end
 end
 
