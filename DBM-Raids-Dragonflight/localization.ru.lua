@@ -85,7 +85,6 @@ L:SetMiscLocalization({
 	Middle 		= "Центр",
 	Left		= "Слева",
 	Right		= "Справа",
-	staff 		= "Великий посох",
 	staff		= "Великий посох",
 	eStaff		= "Усиленный Великий посох"
 })
