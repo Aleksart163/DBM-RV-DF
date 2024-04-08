@@ -57,8 +57,8 @@ local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil
 local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
 local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
-local timerFrostbreathArachnidCD				= mod:NewCDCountTimer(98.9, -24899, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Хладодыщащий арахнид
-local timerFreezingBreathCD						= mod:NewCDTimer(11.1, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, -24899, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Хладодыщащий арахнид
+local timerFreezingBreathCD						= mod:NewCDTimer(16, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 
 local yellChillingBlast							= mod:NewShortYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв
@@ -103,7 +103,7 @@ local allTimers = {
 			--Enveloping Webs
 			[372082] = {18.1, 26.7, 30.5, 44.8, 26.7, 30.4, 38.9, 26.4, 30.4},
 			--Взрыв паутины
-			[373405] = {31.4, 37.7, 66.5, 36.5, 59.6, 37.6},
+			[373405] = {31.4, 37.7, 66.3, 36.7, 59.8, 37.8},
 			--Call Spiderlings
 			[372238] = {0, 25.5, 25.5, 26.7, 38.8, 25.5, 25.5, 25.5, 20.7, 26.7, 26.7},--5th has largest variance, 14-23 because sequencing isn't right way to do this, just the lazy way
 		},
@@ -184,7 +184,6 @@ function mod:OnCombatStart(delay)
 	timerEnvelopingWebsCD:Start(17.2-delay, 1)
 	timerGossamerBurstCD:Start(31.4-delay, 1)
 	timerPhaseCD:Start(42.4-delay)
-	timerFrostbreathArachnidCD:Start(103.1, 2)--First one engages with boss
 	if self:IsMythic() then
 		difficultyName = "mythic"
 	elseif self:IsHeroic() then
@@ -249,13 +248,13 @@ function mod:SPELL_CAST_START(args)
 			timerGossamerBurstCD:Start(timer, self.vb.burstCount+1)
 		end
 		timerGossamerBurst:Start()
-	elseif spellId == 374112 then
+	elseif spellId == 374112 then --Мерзлое дыхание
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnFreezingBreath:Show()
 			specWarnFreezingBreath:Play("shockwave")
 		end
 		timerFreezingBreathCD:Start(nil, args.sourceGUID)
-	elseif spellId == 372539 then
+	elseif spellId == 372539 then --Вершина льда
 		warnApexofIce:Show()
 		self:SetStage(2)
 		self.vb.blastCount = 0
@@ -267,6 +266,7 @@ function mod:SPELL_CAST_START(args)
 		timerGossamerBurstCD:Stop()
 		timerCallSpiderlingsCD:Stop()
 		timerFrostbreathArachnidCD:Stop()
+		timerPhaseCD:Stop()
 	elseif spellId == 373027 then
 		self.vb.webIcon = 1
 		self.vb.webCount = self.vb.webCount + 1
@@ -291,16 +291,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.spiderlingsCount+1)
 			if timer then
 				timerCallSpiderlingsCD:Start(timer, self.vb.spiderlingsCount+1)
-			end
-		end
-	elseif spellId == 181113 then--Encounter Spawn
-		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		if cid == 189234 then--Frostbreath Arachnid
-			self.vb.bigAddCount = self.vb.bigAddCount + 1
-			warnFrostbreathArachnid:Show(self.vb.bigAddCount)
-			timerFreezingBreathCD:Start(6, args.sourceGUID)
-			if self.vb.bigAddCount < 3 then
-				timerFrostbreathArachnidCD:Start(nil, self.vb.bigAddCount+1)--98.9
 			end
 		end
 	end
@@ -437,30 +427,26 @@ end
 --"<300.23 23:33:05> [CLEU] SPELL_CAST_START#Creature-0-2085-2522-14007-187967-000040998B#Sennarth<12.0%-3.0%>##nil#372539#Apex of Ice#nil#nil", -- [23406]
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:find("INV_MineSpider2_Crystal.blp") then
---		self.vb.blastCount = 0
---		timerGossamerBurstCD:Stop()
---		timerChillingBlastCD:Stop()
-		if self.vb.stageTotality == 1 then--First movement
+		if self.vb.stageTotality == 1 then --1 движение босса
 			self:SetStage(1.25)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
-			--Stop stage 1 timers and basically restart them
-			--Only first movement has delay on spiderlings, other movements summon them immediately
---			timerCallSpiderlingsCD:Stop()
---			timerChillingBlastCD:Start(10, 1)
---			timerCallSpiderlingsCD:Start(20)
---			timerGossamerBurstCD:Start(27.4, self.vb.burstCount+1)
 			timerPhaseCD:Start(99.8)--Til next movement
-		elseif self.vb.stageTotality == 2 then--Second movement
+			if self:IsEasy() then
+				timerFrostbreathArachnidCD:Start(65) --точно под обычку
+			else
+				timerFrostbreathArachnidCD:Start(64) --точно под мифик и гер
+			end
+		elseif self.vb.stageTotality == 2 then --2 движение босса
 			self:SetStage(1.5)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
-			--Stop stage 1 timers and basically restart them
---			timerChillingBlastCD:Start(16, 1)
---			timerGossamerBurstCD:Start(33, self.vb.burstCount+1)
-			timerPhaseCD:Start(98.5)--Til next movement
-		else--Last movement
+			if self:IsEasy() then
+				timerFrostbreathArachnidCD:Start(65.5) --точно под обычку
+				timerPhaseCD:Start(100.5) --точно под обычку
+			else
+				timerFrostbreathArachnidCD:Start(62.5) --точно под мифик и гер
+				timerPhaseCD:Start(98.5) --точно под мифик и гер
+			end
+		else --последнее движение
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
-			--Stop them for last time, and not restart them, stage 2 soon
---			timerChillingBlastCD:Start(16, 1)
---			timerGossamerBurstCD:Start(33, self.vb.burstCount+1)
-			timerPhaseCD:Start(53.8)--Til Stage 2 (2nd movement has ended)
+			timerPhaseCD:Start(58)--Til Stage 2 (2nd movement has ended)
 		end
 	end
 end
