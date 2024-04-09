@@ -44,7 +44,7 @@ local warnChillingBlast							= mod:NewTargetAnnounce(371976, 2)
 local warnEnvelopingWebs						= mod:NewTargetNoFilterAnnounce(372082, 3)
 local warnWrappedInWebs							= mod:NewTargetNoFilterAnnounce(372044, 4)
 local warnCallSpiderlings						= mod:NewCountAnnounce(372238, 2)
-local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2)
+local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2) --Хладодыщащий арахнид
 
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
 local specWarnEnvelopingWebs					= mod:NewSpecialWarningYouPos(372082, nil, nil, nil, 1, 2)
@@ -57,8 +57,8 @@ local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, ni
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3) --Опутывающие сети
 local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
 local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
-local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
-local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, -24899, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Хладодыщащий арахнид
+--local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
+local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 372238, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Хладодыщащий арахнид
 local timerFreezingBreathCD						= mod:NewCDTimer(16, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 
@@ -168,6 +168,10 @@ local allTimers = {
 	},
 }
 
+local function startAnnounceArachnid(self)
+	warnFrostbreathArachnid:Show()
+end
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	table.wipe(stickyStacks)
@@ -265,7 +269,7 @@ function mod:SPELL_CAST_START(args)
 		timerChillingBlastCD:Stop()
 		timerEnvelopingWebsCD:Stop()
 		timerGossamerBurstCD:Stop()
-		timerCallSpiderlingsCD:Stop()
+	--	timerCallSpiderlingsCD:Stop()
 		timerFrostbreathArachnidCD:Stop()
 		timerPhaseCD:Stop()
 	elseif spellId == 373027 then
@@ -285,7 +289,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 372238 then
 		self.vb.spiderlingsCount = self.vb.spiderlingsCount + 1
 		warnCallSpiderlings:Show(self.vb.spiderlingsCount)
-		if self:GetStage(2) then
+	--[[	if self:GetStage(2) then
 			--Mythic sequenced, 44, 30, 35?
 			timerCallSpiderlingsCD:Start(self:IsNormal() and 25 or 30, self.vb.spiderlingsCount+1)
 		else
@@ -293,7 +297,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			if timer then
 				timerCallSpiderlingsCD:Start(timer, self.vb.spiderlingsCount+1)
 			end
-		end
+		end]]
 	end
 end
 
@@ -404,7 +408,7 @@ function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and args.extraSpellId == 372539 then
 		--These timers can still variate due to bugs I won't document here or code around (even though I know how to)
 		--needless to say I hope they get fixed
-		timerCallSpiderlingsCD:Start(8.4, 1)
+	--	timerCallSpiderlingsCD:Start(8.4, 1)
 		if not self:IsLFR() then
 			timerChillingBlastCD:Start(10.8, 1)
 		end
@@ -435,8 +439,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			timerPhaseCD:Start(99.8)--Til next movement
 			if self:IsEasy() then
 				timerFrostbreathArachnidCD:Start(65) --точно под обычку
+				self:Schedule(65, startAnnounceArachnid, self)
 			else
 				timerFrostbreathArachnidCD:Start(64) --точно под мифик и гер
+				self:Schedule(64, startAnnounceArachnid, self)
 			end
 		elseif self.vb.stageTotality == 2 then --2 движение босса
 			self:SetStage(1.5)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
@@ -445,9 +451,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			if self:IsEasy() then
 				timerFrostbreathArachnidCD:Start(65.5) --точно под обычку
 				timerPhaseCD:Start(100.5) --точно под обычку
+				self:Schedule(65.5, startAnnounceArachnid, self)
 			else
 				timerFrostbreathArachnidCD:Start(62.5) --точно под мифик и гер
 				timerPhaseCD:Start(98.5) --точно под мифик и гер
+				self:Schedule(62.5, startAnnounceArachnid, self)
 			end
 		else --последнее движение
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
