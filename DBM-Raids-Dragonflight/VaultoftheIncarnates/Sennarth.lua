@@ -272,6 +272,7 @@ function mod:SPELL_CAST_START(args)
 	--	timerCallSpiderlingsCD:Stop()
 		timerFrostbreathArachnidCD:Stop()
 		timerPhaseCD:Stop()
+		self:Unschedule(startAnnounceArachnid)
 	elseif spellId == 373027 then
 		self.vb.webIcon = 1
 		self.vb.webCount = self.vb.webCount + 1
