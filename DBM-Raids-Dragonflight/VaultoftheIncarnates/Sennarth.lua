@@ -39,6 +39,7 @@ mod:RegisterEventsInCombat(
 --local berserkTimer							= mod:NewBerserkTimer(600)
 --Stage One: Ice Climbers
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
+local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnChillingBlast							= mod:NewTargetAnnounce(371976, 2)
 local warnEnvelopingWebs						= mod:NewTargetNoFilterAnnounce(372082, 3)
 local warnWrappedInWebs							= mod:NewTargetNoFilterAnnounce(372044, 4)
@@ -71,7 +72,6 @@ mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing wi
 
 --Stage Two: Cold Peak
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
-local warnApexofIce									= mod:NewCastAnnounce(372539, 3)
 local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3)
 
 local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 2)
@@ -255,12 +255,13 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerFreezingBreathCD:Start(nil, args.sourceGUID)
 	elseif spellId == 372539 then --Вершина льда
-		warnApexofIce:Show()
-		self:SetStage(2)
 		self.vb.blastCount = 0
 		self.vb.burstCount = 0
 		self.vb.webCount = 0
 		self.vb.spiderlingsCount = 0
+		self:SetStage(2)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 		timerChillingBlastCD:Stop()
 		timerEnvelopingWebsCD:Stop()
 		timerGossamerBurstCD:Stop()
@@ -429,6 +430,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:find("INV_MineSpider2_Crystal.blp") then
 		if self.vb.stageTotality == 1 then --1 движение босса
 			self:SetStage(1.25)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
+			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.25))
+			warnPhase:Play("phasechange")
 			timerPhaseCD:Start(99.8)--Til next movement
 			if self:IsEasy() then
 				timerFrostbreathArachnidCD:Start(65) --точно под обычку
@@ -437,6 +440,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			end
 		elseif self.vb.stageTotality == 2 then --2 движение босса
 			self:SetStage(1.5)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
+			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
+			warnPhase:Play("phasechange")
 			if self:IsEasy() then
 				timerFrostbreathArachnidCD:Start(65.5) --точно под обычку
 				timerPhaseCD:Start(100.5) --точно под обычку
@@ -446,6 +451,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			end
 		else --последнее движение
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
+			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.75))
+			warnPhase:Play("phasechange")
 			timerPhaseCD:Start(58)--Til Stage 2 (2nd movement has ended)
 		end
 	end
