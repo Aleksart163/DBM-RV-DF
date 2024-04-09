@@ -132,7 +132,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(1.5, 5) then
 			specWarnArcaneBash:Show()
 			specWarnArcaneBash:Play("shockwave")
-		else
+		elseif self:AntiSpam(1.5, spellId) then
 			warnArcaneBash:Show()
 		end
 	elseif spellId == 391118 then --Дыхание магического льда
