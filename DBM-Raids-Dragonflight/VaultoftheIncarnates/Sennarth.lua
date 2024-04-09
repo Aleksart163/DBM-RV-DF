@@ -57,8 +57,8 @@ local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, ni
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3) --Опутывающие сети
 local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
 local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
---local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
-local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 372238, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Хладодыщащий арахнид
+local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
+local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 332313, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 3, 5) --Хладодыщащий арахнид
 local timerFreezingBreathCD						= mod:NewCDTimer(16, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 
@@ -181,7 +181,6 @@ function mod:OnCombatStart(delay)
 	self.vb.burstCount = 0
 	self.vb.spiderlingsCount = 0
 	self.vb.bigAddCount = 1--Starts at 1 because 1 is up with boss on pull
---	timerCallSpiderlingsCD:Start(1-delay, 1)--cast on engage
 	if not self:IsLFR() then
 		timerChillingBlastCD:Start(15.2-delay, 1)
 	end
@@ -269,7 +268,7 @@ function mod:SPELL_CAST_START(args)
 		timerChillingBlastCD:Stop()
 		timerEnvelopingWebsCD:Stop()
 		timerGossamerBurstCD:Stop()
-	--	timerCallSpiderlingsCD:Stop()
+		timerCallSpiderlingsCD:Stop()
 		timerFrostbreathArachnidCD:Stop()
 		timerPhaseCD:Stop()
 		self:Unschedule(startAnnounceArachnid)
@@ -290,7 +289,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 372238 then
 		self.vb.spiderlingsCount = self.vb.spiderlingsCount + 1
 		warnCallSpiderlings:Show(self.vb.spiderlingsCount)
-	--[[	if self:GetStage(2) then
+		if self:GetStage(2) then
 			--Mythic sequenced, 44, 30, 35?
 			timerCallSpiderlingsCD:Start(self:IsNormal() and 25 or 30, self.vb.spiderlingsCount+1)
 		else
@@ -298,7 +297,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			if timer then
 				timerCallSpiderlingsCD:Start(timer, self.vb.spiderlingsCount+1)
 			end
-		end]]
+		end
 	end
 end
 
@@ -409,7 +408,7 @@ function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and args.extraSpellId == 372539 then
 		--These timers can still variate due to bugs I won't document here or code around (even though I know how to)
 		--needless to say I hope they get fixed
-	--	timerCallSpiderlingsCD:Start(8.4, 1)
+		timerCallSpiderlingsCD:Start(8.4, 1)
 		if not self:IsLFR() then
 			timerChillingBlastCD:Start(10.8, 1)
 		end
