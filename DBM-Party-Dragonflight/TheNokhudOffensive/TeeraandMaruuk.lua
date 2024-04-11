@@ -42,8 +42,8 @@ local timerSpiritLeapCD							= mod:NewCDCountTimer(20.4, 385434, nil, nil, nil,
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25546))
 
 local specWarnEarthsplitter						= mod:NewSpecialWarningDodgeCount(385339, nil, nil, nil, 2, 2) --Раскол земли
-local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, "Melee", nil, nil, 4, 2) --Отпугивающий рык
-local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, "Ranged", nil, nil, 2, 2) --Отпугивающий рык
+local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, nil, nil, nil, 4, 2) --Отпугивающий рык
+local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, nil, nil, nil, 2, 2) --Отпугивающий рык
 local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 3, 4) --Свирепый удар
 
 local timerEarthSplitterCD						= mod:NewCDCountTimer(57.4, 385339, nil, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Раскол земли Off by default since it should always be cast immediately after Repel)
