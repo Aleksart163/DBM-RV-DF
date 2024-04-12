@@ -172,6 +172,7 @@ function mod:SPELL_CAST_START(args)
 			if self.vb.annihilationCount < 4 then
 				timerResonatingAnnihilationCD:Start(nil, self.vb.annihilationCount+1)
 			end
+			timerResonatingAnnihilation:Start(6.5)
 		else
 			if self.vb.annihilationCount == 3 then
 				timerResonatingAnnihilationCD:Start(98.5, self.vb.annihilationCount+1)
@@ -180,11 +181,11 @@ function mod:SPELL_CAST_START(args)
 			else
 				timerResonatingAnnihilationCD:Start(nil, self.vb.annihilationCount+1)
 			end
+			timerResonatingAnnihilation:Start()
 		end
 		if self.vb.annihilationCount == 4 then
 			self:UnregisterShortTermEvents()
 		end
-		timerResonatingAnnihilation:Start()
 	elseif spellId == 377505 and not self.vb.frenziedStarted then
 		self.vb.frenziedStarted = true
 		specWarnFrenziedDevastation:Show()

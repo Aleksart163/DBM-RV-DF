@@ -35,7 +35,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 374779
 --]]
 --General
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(374554, nil, nil, nil, 1, 8)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(374554, nil, nil, nil, 1, 8) --Лужа магмы
 
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 local berserkTimer								= mod:NewBerserkTimer(600)
@@ -43,6 +43,7 @@ local berserkTimer								= mod:NewBerserkTimer(600)
 --Stage One: Elemental Mastery
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25036))
 local warnSunderStrikeDebuff					= mod:NewStackAnnounce(372158, 2, nil, "Tank|Healer") --Раскалывающий удар
+local warSunderStrike							= mod:NewTargetNoFilterAnnounce(372158, 4) --Раскалывающий удар
 
 local specWarnSunderStrike						= mod:NewSpecialWarningDefensive(372158, nil, nil, nil, 3, 2) --Раскалывающий удар
 local specWarnSunderStrikeDebuff				= mod:NewSpecialWarningTaunt(372158, nil, nil, nil, 1, 2) --Раскалывающий удар
@@ -60,33 +61,33 @@ local yellSunderStrike							= mod:NewShortYell(372158, nil, nil, nil, "YELL") -
 mod:AddNamePlateOption("NPAuraOnSurge", 371971, true)
 --Fire Altar An altar of primal fire
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25040))
-local specWarnMagmaBurst						= mod:NewSpecialWarningDodge(382563, nil, nil, nil, 2, 2)
-local specWarnMoltenRupture						= mod:NewSpecialWarningDodge(373329, nil, nil, nil, 2, 2)
-local specWarnSearingCarnage					= mod:NewSpecialWarningDodge(374023, nil, nil, nil, 2, 2)--Just warn everyone since it targets most of raid, even if it's not on YOU, you need to avoid it
+local specWarnMagmaBurst						= mod:NewSpecialWarningDodge(382563, nil, nil, nil, 2, 2) --Взрыв магмы
+local specWarnMoltenRupture						= mod:NewSpecialWarningDodge(373329, nil, nil, nil, 2, 2) --Раскаленный разлом
+local specWarnSearingCarnage					= mod:NewSpecialWarningDodge(374023, nil, nil, nil, 2, 2) --Огненная бойня Just warn everyone since it targets most of raid, even if it's not on YOU, you need to avoid it
 
 ----Mythic Only (Flamewrought Eradicator)
-local warnRagingInferno							= mod:NewSpellAnnounce(394416, 3)
+local warnRagingInferno							= mod:NewSpellAnnounce(394416, 3) --Бушующее адское пламя
 
-local specWarnFlamewroughtEradicator			= mod:NewSpecialWarningSwitch(393314, "-Healer", nil, nil, 1, 2, 4)
-local specWarnFlameSmite						= mod:NewSpecialWarningYou(393309, nil, nil, nil, 2, 2, 4)
+local specWarnFlamewroughtEradicator			= mod:NewSpecialWarningSwitch(393314, "-Healer", nil, nil, 1, 2, 4) --Обожженный истребитель
+local specWarnFlameSmite						= mod:NewSpecialWarningYou(393309, nil, nil, nil, 2, 2, 4) --Огненная кара
 
-local timerFlameSmiteCD							= mod:NewCDTimer(30, 393309, nil, nil, nil, 5)
-local timerRagingInfernoCD						= mod:NewCDTimer(30, 394416, nil, nil, nil, 1)
+local timerFlameSmiteCD							= mod:NewCDTimer(30, 393309, nil, nil, nil, 5) --Огненная кара
+local timerRagingInfernoCD						= mod:NewCDTimer(30, 394416, nil, nil, nil, 1) --Бушующее адское пламя
 --Frost Altar An altar of primal frost.
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25061))
-local warnBitingChill							= mod:NewCountAnnounce(373678, 2)
-local warnAbsoluteZero							= mod:NewTargetNoFilterAnnounce(372458, 3)
-local warnFrostBite								= mod:NewFadesAnnounce(372514, 1)
+local warnBitingChill							= mod:NewCountAnnounce(373678, 2) --Жгучий холод
+local warnAbsoluteZero							= mod:NewTargetNoFilterAnnounce(372458, 3) --Абсолютный нуль
+local warnFrostBite								= mod:NewFadesAnnounce(372514, 1) --Ледяной укус
 local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(372517, 4, nil, false)--RL kinda thing
 
 local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2)--Cast by boss AND Dominator
-local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 1, 2)
-local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL")
-local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL")
+local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 1, 2) --Абсолютный нуль
+local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
+local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 
-local timerFrostBite							= mod:NewBuffFadesTimer(30, 372514, nil, false, nil, 5)
+local timerFrostBite							= mod:NewBuffFadesTimer(30, 372514, nil, false, nil, 5) --Ледяной укус
 
-mod:AddSetIconOption("SetIconOnAbsoluteZero", 372458, true, 9, {1, 2})
+mod:AddSetIconOption("SetIconOnAbsoluteZero", 372458, true, 9, {1, 2}) --Абсолютный нуль
 
 mod:GroupSpells(372458, 372514, 372517)--Group all Below Zero mechanics together
 ----Mythic Only (Icebound Dominator)
@@ -202,6 +203,8 @@ function mod:SunderStrikeTarget(targetname, uId)
 		specWarnSunderStrike:Show()
 		specWarnSunderStrike:Play("defensive")
 		yellSunderStrike:Yell()
+	else
+		warSunderStrike:Show(targetname)
 	end
 end
 

@@ -41,13 +41,13 @@ mod:RegisterEventsInCombat(
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnChillingBlast							= mod:NewTargetAnnounce(371976, 2)
-local warnEnvelopingWebs						= mod:NewTargetNoFilterAnnounce(372082, 3)
+local warnEnvelopingWebs						= mod:NewTargetNoFilterAnnounce(372082, 2) --Опутывающие сети
 local warnWrappedInWebs							= mod:NewTargetNoFilterAnnounce(372044, 4)
 local warnCallSpiderlings						= mod:NewCountAnnounce(372238, 2)
 local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2) --Хладодыщащий арахнид
 
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
-local specWarnEnvelopingWebs					= mod:NewSpecialWarningYouPos(372082, nil, nil, nil, 1, 2)
+local specWarnEnvelopingWebs					= mod:NewSpecialWarningYou(372082, nil, nil, nil, 1, 6) --Опутывающие сети
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 2, nil, nil, 1, 6)
 local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(139496, nil, 373405, nil, 4, 12) --Взрыв паутины
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
@@ -74,7 +74,7 @@ mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing wi
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
 local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3)
 
-local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 2)
+local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 6)
 local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, nil, 2, 12)
 
 local timerSuffocatingWebsCD						= mod:NewCDCountTimer(38.8, 373048, nil, nil, nil, 3)--38-46
@@ -436,22 +436,25 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			self:SetStage(1.25)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.25))
 			warnPhase:Play("phasechange")
-			timerPhaseCD:Start(99.8)--Til next movement
+			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
 			if self:IsEasy() then
-				timerFrostbreathArachnidCD:Start(65) --точно под обычку
-				self:Schedule(65, startAnnounceArachnid, self)
+				timerFrostbreathArachnidCD:Start(64.5) --точно под обычку
+				self:Schedule(64.5, startAnnounceArachnid, self)
+				timerPhaseCD:Start(102)
 			else
-				timerFrostbreathArachnidCD:Start(64) --точно под мифик и гер
+				timerFrostbreathArachnidCD:Start(64)
 				self:Schedule(64, startAnnounceArachnid, self)
+				timerPhaseCD:Start(99.8)
 			end
 		elseif self.vb.stageTotality == 2 then --2 движение босса
 			self:SetStage(1.5)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 			warnPhase:Play("phasechange")
+			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
 			if self:IsEasy() then
-				timerFrostbreathArachnidCD:Start(65.5) --точно под обычку
-				timerPhaseCD:Start(100.5) --точно под обычку
-				self:Schedule(65.5, startAnnounceArachnid, self)
+				timerFrostbreathArachnidCD:Start(62.5) --точно под обычку
+				timerPhaseCD:Start(98.5) --точно под обычку
+				self:Schedule(62.5, startAnnounceArachnid, self)
 			else
 				timerFrostbreathArachnidCD:Start(62.5) --точно под мифик и гер
 				timerPhaseCD:Start(98.5) --точно под мифик и гер
