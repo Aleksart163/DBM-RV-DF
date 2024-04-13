@@ -6,7 +6,8 @@ DBM_CORE_L = L
 L.DEADLY_BOSS_MODS						= "Dungeon Boss Master" -- NO TRANSLATE
 L.DBM									= "DBM RV" -- NO TRANSLATE
 
-DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL	= "https://github.com/Aleksart163/DBM-RV-DF"
+L.DBM_PROSHLYAPATION_OF_MURCHAL_URL		= "https://github.com/Aleksart163/DBM-RV-DF"
+L.DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think that some module needs an additional warning, timer, feature or localization? \nAny questions can be addressed to discord Aleksart163, /w Куплиняш or leave requests at |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
@@ -182,7 +183,7 @@ L.VERSIONCHECK_ENTRY_TWO				= "%s: %s (%s) & %s (%s)"--Two Boss mods -- OPTIONAL
 L.VERSIONCHECK_ENTRY_NO_DBM				= "%s: No boss mod installed"
 L.VERSIONCHECK_FOOTER					= "Found %d player(s) with " .. L.DBM .. " & %d player(s) with Bigwigs"
 L.VERSIONCHECK_OUTDATED					= "Following %d player(s) have outdated boss mod version: %s"
-L.YOUR_VERSION_OUTDATED     			= "Your version of " .. L.DEADLY_BOSS_MODS .. " is out-of-date. Please download the latest version through " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.YOUR_VERSION_OUTDATED     			= "Your version of " .. L.DEADLY_BOSS_MODS .. " is out-of-date. Please download the latest version through " .. L.DBM_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.VOICE_PACK_OUTDATED					= "Your selected " .. L.DBM .. " voice pack is missing some sounds supported by " .. L.DBM .. ". Some warning sounds will still play default sounds. Please download a newer version of voice pack or contact pack author for an update that contains missing audio"
 L.VOICE_MISSING							= "You have a " .. L.DBM .. " voice pack selected that could not be found. If this is an error, make sure your voice pack is properly installed and enabled in addons."
 L.VOICE_DISABLED						= "You currently have at least one " .. L.DBM .. " voice pack installed but none enabled. If you intend to use a voice pack, make sure it's chosen in 'Spoken Alerts', else uninstall unused voice packs to hide this message"
@@ -190,15 +191,15 @@ L.VOICE_COUNT_MISSING					= "Countdown voice %d is set to a voice/count pack tha
 L.BIG_WIGS								= "BigWigs" -- OPTIONAL
 L.WEAKAURA_KEY							= " (|cff308530WA Key:|r %s)"
 
-L.UPDATEREMINDER_HEADER					= "Your version of " .. L.DEADLY_BOSS_MODS.. " is out-of-date.\n Version %s (%s) is available for download through " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
-L.UPDATEREMINDER_HEADER_SUBMODULE		= "Your %s module is out-of-date.\n Version %s is available for download through " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.UPDATEREMINDER_HEADER					= "Your version of " .. L.DEADLY_BOSS_MODS.. " is out-of-date.\n Version %s (%s) is available for download through " .. L.DBM_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.UPDATEREMINDER_HEADER_SUBMODULE		= "Your %s module is out-of-date.\n Version %s is available for download through " .. L.DBM_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.UPDATEREMINDER_FOOTER					= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 L.UPDATEREMINDER_FOOTER_GENERIC			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy to your clipboard."
 L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
 L.UPDATEREMINDER_DISABLETEST			= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and this being a test/beta realm, it has been force disabled and cannot be used until updated. This is to ensure out of date mods aren't being used to generate test feedback"
 L.UPDATEREMINDER_HOTFIX					= L.DBM .. " version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 L.UPDATEREMINDER_HOTFIX_ALPHA			= L.DBM .. " version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
-L.UPDATEREMINDER_MAJORPATCH				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date, " .. L.DBM .. " has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from " .. DBM_CORE_PROSHLYAPATION_OF_MURCHAL_URL .. "."
+L.UPDATEREMINDER_MAJORPATCH				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date, " .. L.DBM .. " has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from " .. L.DBM_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.VEM									= "WARNING: You are running both " .. L.DEADLY_BOSS_MODS.. " and Voice Encounter Mods. DBM will not run in this configuration and therefore will not be loaded."
 L.OUTDATEDPROFILES						= "WARNING: DBM-Profiles not compatible with this version of " .. L.DBM .. ". It must be removed before DBM can proceed, to avoid conflict."
 L.OUTDATEDSPELLTIMERS					= "WARNING: DBM-SpellTimers breaks " .. L.DBM .. " and must be disabled for " .. L.DBM .. " to function properly."

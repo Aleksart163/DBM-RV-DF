@@ -5134,6 +5134,7 @@ do
 
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
 		self:Debug("ENCOUNTER_START event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size)
+		self:AddMsg(L.DBM_FORUMS_MESSAGE)
 		if dbmIsEnabled then
 			--Only nag in raids on engage
 			if IsInRaid() then
