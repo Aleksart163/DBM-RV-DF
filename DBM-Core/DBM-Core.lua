@@ -841,7 +841,7 @@ local function sendSync(protocol, prefix, msg)
 			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
 		else
 			SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel)
-		--	handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
 			if (prefix == "V" or prefix == "H") and not isRetail then
 				--Also send V and H syncs to old DBM versions so we can force disable them and get them out of circulation
 				local oldPrefix = isWrath and "D5WC" or "D5C"
