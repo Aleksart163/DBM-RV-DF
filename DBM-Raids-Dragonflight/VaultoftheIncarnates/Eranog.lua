@@ -31,50 +31,51 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: Army of Talon
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26001))
-local warnFlamerift								= mod:NewTargetNoFilterAnnounce(390715, 2)
-local warnBurningWound							= mod:NewStackAnnounce(394906, 2, nil, "Tank|Healer")
+local warnFlamerift								= mod:NewTargetNoFilterAnnounce(390715, 2) --Пламенный портал
+local warnBurningWound							= mod:NewStackAnnounce(394906, 2, nil, "Tank|Healer") --Жгучая рана
 
-local specWarnFlamerift							= mod:NewSpecialWarningMoveAway(390715, nil, nil, nil, 1, 2)
-local yellFlamerift								= mod:NewShortYell(390715)
-local yellFlameriftFades						= mod:NewShortFadesYell(390715)
-local specWarnGreaterFlamerift					= mod:NewSpecialWarningTaunt(396094, nil, nil, nil, 1, 2)
-local specWarnMoltenCleave						= mod:NewSpecialWarningDodgeCount(370615, nil, nil, nil, 2, 2)
-local specWarnBurningWound						= mod:NewSpecialWarningStack(394906, nil, 6, nil, nil, 1, 6)
-local specWarnBurningWoundTaunt					= mod:NewSpecialWarningTaunt(394906, false, nil, 2, 1, 2)
-local specWarnIncineratingRoar					= mod:NewSpecialWarningCount(396023, nil, nil, nil, 2, 2)
-local specWarnMoltenSpikes						= mod:NewSpecialWarningDodgeCount(396022, nil, nil, nil, 2, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
+local specWarnFlamerift							= mod:NewSpecialWarningMoveAway(390715, nil, nil, nil, 4, 2) --Пламенный портал
+local specWarnGreaterFlamerift					= mod:NewSpecialWarningTaunt(396094, nil, nil, nil, 1, 2) --Большой огненный разлом
+local specWarnMoltenCleave						= mod:NewSpecialWarningDodgeCount(370615, nil, nil, nil, 2, 2) --Раскаленный удар
+local specWarnBurningWound						= mod:NewSpecialWarningStack(394906, nil, 6, nil, nil, 1, 6) --Жгучая рана
+local specWarnBurningWoundTaunt					= mod:NewSpecialWarningTaunt(394906, false, nil, 2, 1, 2) --Жгучая рана
+local specWarnIncineratingRoar					= mod:NewSpecialWarningCount(396023, nil, nil, nil, 2, 2) --Испепеляющий рык
+local specWarnMoltenSpikes						= mod:NewSpecialWarningDodgeCount(396022, nil, nil, nil, 2, 2) --Раскаленные шипы
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8) --Поток лавы
 
-local timerMoltenCleaveCD						= mod:NewCDCountTimer(29.9, 370615, nil, nil, nil, 3)
-local timerFlameriftCD							= mod:NewCDCountTimer(28.9, 390715, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerIncineratingRoarCD					= mod:NewCDCountTimer(23.9, 396023, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerMoltenSpikesCD						= mod:NewCDCountTimer(21.4, 396022, nil, nil, nil, 3)
+local timerMoltenCleaveCD						= mod:NewCDCountTimer(29.9, 370615, nil, nil, nil, 3) --Раскаленный удар
+local timerFlameriftCD							= mod:NewCDCountTimer(28.9, 390715, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Пламенный портал
+local timerIncineratingRoarCD					= mod:NewCDCountTimer(23.9, 396023, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Испепеляющий рык
+local timerMoltenSpikesCD						= mod:NewCDCountTimer(21.4, 396022, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Раскаленные шипы
 --local berserkTimer							= mod:NewBerserkTimer(600)
+
+local yellFlamerift								= mod:NewShortYell(390715, nil, nil, nil, "YELL") --Пламенный портал
+local yellFlameriftFades						= mod:NewShortFadesYell(390715, nil, nil, nil, "YELL") --Пламенный портал
 
 --mod:AddInfoFrameOption(361651, true)
 mod:GroupSpells(390715, 396094)
 ---Frenzied Tarasek
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26005))
-local warnKillOrder								= mod:NewTargetAnnounce(370597, 3)
+local warnKillOrder								= mod:NewTargetAnnounce(370597, 3) --Команда "Убить!"
 
-local specWarnKillOrder							= mod:NewSpecialWarningYou(370597, nil, nil, nil, 1, 2)
+local specWarnKillOrder							= mod:NewSpecialWarningYou(370597, nil, nil, nil, 1, 3) --Команда "Убить!"
 
 mod:AddNamePlateOption("NPAuraOnKillOrder", 370597, true)
 mod:AddNamePlateOption("NPAuraOnRampage", 371562, true)
 --Flamescale Captain (Mythic)
 mod:AddTimerLine(DBM:GetSpellInfo(396039))
-local warnLeapingFlames							= mod:NewSpellAnnounce(394917, 3)
+local warnLeapingFlames							= mod:NewSpellAnnounce(394917, 3) --Прыгучее пламя
 
-local specWarnPyroBlast							= mod:NewSpecialWarningInterruptCount(396040, "HasInterrupt", nil, nil, 1, 2)
+local specWarnPyroBlast							= mod:NewSpecialWarningInterruptCount(396040, "HasInterrupt", nil, nil, 1, 2) --Огненная глыба
 
-local timerLeapingFlamesCD						= mod:NewCDTimer(30.2, 394917, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
+local timerLeapingFlamesCD						= mod:NewCDTimer(30.2, 394917, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Прыгучее пламя
 
 mod:AddSetIconOption("SetIconOnCaptain", 396039, true, 5, {8})
 --Stage Two: Army of Flame
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26004))
-local specWarnCollapsingArmy					= mod:NewSpecialWarningCount(370307, nil, nil, nil, 3, 2)
+local specWarnCollapsingArmy					= mod:NewSpecialWarningCount(370307, nil, nil, nil, 3, 4) --Армия пламени
 
-local timerCollapsingArmyCD						= mod:NewCDCountTimer(94, 370307, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerCollapsingArmyCD						= mod:NewCDCountTimer(94, 370307, nil, nil, nil, 7) --Армия пламени
 
 mod.vb.armyCount = 0
 mod.vb.cleaveCount = 0
@@ -178,14 +179,17 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 370597 then
-		warnKillOrder:CombinedShow(1, args.destName)
+	if spellId == 370597 then --Команда "Убить!"
 		if args:IsPlayer() then
-			specWarnKillOrder:Show()
-			specWarnKillOrder:Play("targetyou")
+			if self:AntiSpam(2, "KillOrder") then
+				specWarnKillOrder:Show()
+				specWarnKillOrder:Play("targetyou")
+			end
 			if self.Options.NPAuraOnKillOrder then
 				DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 			end
+		else
+			warnKillOrder:CombinedShow(1, args.destName)
 		end
 	elseif spellId == 371562 then
 		if self.Options.NPAuraOnRampage then

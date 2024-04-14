@@ -322,7 +322,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellEnvelopingWebs:Yell(icon, icon)
 			yellEnvelopingWebsFades:Countdown(spellId, nil, icon)
 		end
-		warnEnvelopingWebs:CombinedShow(0.5, args.destName)
+		warnEnvelopingWebs:CombinedShow(1, args.destName)
 		self.vb.webIcon = self.vb.webIcon + 1
 	elseif spellId == 373048 then
 		local icon = self.vb.webIcon
@@ -441,6 +441,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 				timerFrostbreathArachnidCD:Start(64.5) --точно под обычку
 				self:Schedule(64.5, startAnnounceArachnid, self)
 				timerPhaseCD:Start(102)
+			elseif self:IsHeroic() then
+				timerFrostbreathArachnidCD:Start(62.5)
+				self:Schedule(62.5, startAnnounceArachnid, self)
+				timerPhaseCD:Start(99.8)
 			else
 				timerFrostbreathArachnidCD:Start(64)
 				self:Schedule(64, startAnnounceArachnid, self)
@@ -453,12 +457,12 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
 			if self:IsEasy() then
 				timerFrostbreathArachnidCD:Start(62.5) --точно под обычку
+				self:Schedule(62.5, startAnnounceArachnid, self)
 				timerPhaseCD:Start(98.5) --точно под обычку
-				self:Schedule(62.5, startAnnounceArachnid, self)
 			else
-				timerFrostbreathArachnidCD:Start(62.5) --точно под мифик и гер
+				timerFrostbreathArachnidCD:Start(62) --точно под гер
+				self:Schedule(62, startAnnounceArachnid, self)
 				timerPhaseCD:Start(98.5) --точно под мифик и гер
-				self:Schedule(62.5, startAnnounceArachnid, self)
 			end
 		else --последнее движение
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2

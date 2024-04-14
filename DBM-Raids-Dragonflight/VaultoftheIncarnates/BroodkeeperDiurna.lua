@@ -39,57 +39,58 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25119))
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25120))
 
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(375889, 2)
-local warnClutchwatchersRage					= mod:NewStackAnnounce(375829, 2)
-local warnRapidIncubation						= mod:NewSpellAnnounce(376073, 3)
-local warnMortalWounds							= mod:NewStackAnnounce(378782, 2, nil, "Tank|Healer")
-local warnDiurnasGaze							= mod:NewYouAnnounce(390561, 3)
+local warnGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(375889, 2) --Гнев великого посоха
+local warnClutchwatchersRage					= mod:NewStackAnnounce(375829, 2) --Ярость хранительницы кладки
+local warnRapidIncubation						= mod:NewSpellAnnounce(376073, 3) --Ускоренная инкубация
+local warnMortalWounds							= mod:NewStackAnnounce(378782, 2, nil, "Tank|Healer") --Смертельное ранение
+local warnDiurnasGaze							= mod:NewYouAnnounce(390561, 3) --Пристальный взор Денны
+local warnPrimalistReinforcements				= mod:NewSpellAnnounce(-25129, 2) --Подкрепления воинов стихий
 
-local specWarnGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380175, nil, nil, nil, 2, 2)
-local specWarnGreatstaffsWrath					= mod:NewSpecialWarningYou(375889, nil, nil, nil, 1, 2)
-local specWarnWildfire							= mod:NewSpecialWarningDodge(375871, nil, nil, nil, 2, 2)
-local specWarnIcyShroud							= mod:NewSpecialWarningCount(388716, nil, nil, nil, 2, 2)
-local specWarnStormFissure						= mod:NewSpecialWarningDodge(396779, nil, nil, nil, 2, 2, 4)
+local specWarnGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380175, nil, nil, nil, 2, 2) --Великий посох хранительницы стаи
+local specWarnGreatstaffsWrath					= mod:NewSpecialWarningYou(375889, nil, nil, nil, 1, 2) --Гнев великого посоха
+local specWarnWildfire							= mod:NewSpecialWarningDodge(375871, nil, nil, nil, 2, 2) --Дикий огонь
+local specWarnIcyShroud							= mod:NewSpecialWarningCount(388716, nil, nil, nil, 2, 2) --Ледяной покров
+local specWarnStormFissure						= mod:NewSpecialWarningDodge(396779, nil, nil, nil, 2, 2, 4) --Штормовая трещина
 local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 3, 4) --Смертельные каменные когти
-local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8)
+local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2) --Смертельное ранение
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8) --Статическое поле
 
-local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.staff, nil, nil, 5)--Shared CD ability?
-local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1)--Shared CD ability?
-local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3)--21.4-28
-local timerIcyShroudCD							= mod:NewCDCountTimer(39.1, 388716, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
+local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.staff, nil, nil, 5) --Великий посох хранительницы стаи Shared CD ability?
+local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1) --Ускоренная инкубация Shared CD ability?
+local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3) --Дикий огонь 21.4-28
+local timerIcyShroudCD							= mod:NewCDCountTimer(39.1, 388716, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Ледяной покров Static CD
 local timerMortalStoneclawsCD					= mod:NewCDCountTimer(20.2, 375870, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные каменные когти Shared CD in P1, 7.3-15 P2
-local timerStormFissureCD						= mod:NewCDTimer(24, 396779, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerStormFissureCD						= mod:NewCDTimer(24, 396779, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Штормовая трещина
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:GroupSpells(380175, 375889)--Greatstaff spawn ith greatstaff wrath debuff
 mod:GroupSpells(375870, 378782)--Mortal Claws with Mortal Wounds
 ----Primalist Reinforcements
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25129))
-local warnBurrowingStrike						= mod:NewStackAnnounce(376272, 2, nil, "Tank|Healer")
-local warnCauterizingFlashflames				= mod:NewCastAnnounce(375485, 4)
-local warnFlameSentry							= mod:NewCastAnnounce(375575, 3)
-local warnRendingBite							= mod:NewStackAnnounce(375475, 2, nil, "Tank|Healer")
-local warnChillingTantrum						= mod:NewCastAnnounce(375457, 3)
-local warnIonizingCharge						= mod:NewTargetAnnounce(375630, 3)
+local warnBurrowingStrike						= mod:NewStackAnnounce(376272, 2, nil, "Tank|Healer") --Удар из-под земли
+local warnCauterizingFlashflames				= mod:NewCastAnnounce(375485, 4) --Быстрое прижигающее пламя
+local warnFlameSentry							= mod:NewCastAnnounce(375575, 3) --Огненный часовой
+local warnRendingBite							= mod:NewStackAnnounce(375475, 2, nil, "Tank|Healer") --Разрывающий укус
+local warnChillingTantrum						= mod:NewCastAnnounce(375457, 3) --Леденящий гнев
+local warnIonizingCharge						= mod:NewTargetAnnounce(375630, 3) --Ионизирующий заряд
 
 local specWarnPrimalistReinforcements			= mod:NewSpecialWarningAddsCount(257554, "-Healer", 245546, nil, 1, 2)
-local specWarnIceBarrage						= mod:NewSpecialWarningInterruptCount(375716, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, false, nil, 2, 1, 2, 3)--Spammy as all hell, should never be on by default
-local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 2, 2)
-local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil, nil, 1, 2, 3)
+local specWarnIceBarrage						= mod:NewSpecialWarningInterruptCount(375716, "HasInterrupt", nil, nil, 1, 2) --Ледяной обстрел
+local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, false, nil, 2, 1, 2, 3) --Удар из-под земли Spammy as all hell, should never be on by default
+local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 2, 2) --Подземные толчки
+local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil, nil, 1, 2, 3) --Разрывающий укус
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
-local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2)
+local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2) --Ионизирующий заряд
 
-local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
+local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Прошляп Мурчаля
 --local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
-local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON)
-local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3)
-local timerCauterizingFlashflamesCD				= mod:NewCDNPTimer(11.7, 375485, nil, "MagicDispeller", nil, 5)
-local timerFlameSentryCD						= mod:NewCDNPTimer(10.4, 375575, nil, nil, nil, 3)
-local timerRendingBiteCD						= mod:NewCDNPTimer(11, 375475, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON)
-local timerChillingTantrumCD					= mod:NewCDNPTimer(11.1, 375457, nil, nil, nil, 3)
-local timerIonizingChargeCD						= mod:NewCDNPTimer(10, 375630, nil, nil, nil, 3)
+local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON) --Удар из-под земли
+local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3) --Подземные толчки
+local timerCauterizingFlashflamesCD				= mod:NewCDNPTimer(11.7, 375485, nil, "MagicDispeller", nil, 5) --Быстрое прижигающее пламя
+local timerFlameSentryCD						= mod:NewCDNPTimer(10.4, 375575, nil, nil, nil, 3) --Огненный часовой
+local timerRendingBiteCD						= mod:NewCDNPTimer(11, 375475, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON) --Разрывающий укус
+local timerChillingTantrumCD					= mod:NewCDNPTimer(11.1, 375457, nil, nil, nil, 3) --Леденящий гнев
+local timerIonizingChargeCD						= mod:NewCDNPTimer(10, 375630, nil, nil, nil, 3) --Ионизирующий заряд
 
 --mod:AddInfoFrameOption(361651, true)
 mod:AddNamePlateOption("NPFixate", 376330, true)
@@ -99,25 +100,27 @@ mod:AddSetIconOption("SetIconOnStormbringers", "ej25139", true, true, {8, 7})
 mod:GroupSpells(385618, "ej25144", "ej25139")--Icon Marking with general adds announce
 --Stage Two: A Broodkeeper Scorned
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25146))
-local warnBroodkeepersFury						= mod:NewStackAnnounce(375879, 2)
-local warnEGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(380483, 2)
+local warnBroodkeepersFury						= mod:NewStackAnnounce(375879, 2) --Неистовство хранительницы стаи
+local warnEGreatstaffsWrath						= mod:NewTargetNoFilterAnnounce(380483, 2) --Усиленный гнев великого посоха
 
-local specWarnEGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380176, nil, nil, nil, 2, 2)
-local specWarnEGreatstaffsWrath					= mod:NewSpecialWarningYou(380483, nil, nil, nil, 1, 2)
-local specWarnFrozenShroud						= mod:NewSpecialWarningCount(388918, nil, nil, nil, 2, 2)
-local specWarnMortalStoneSlam					= mod:NewSpecialWarningDefensive(396269, nil, nil, nil, 1, 2, 4)
+local specWarnEGreatstaffoftheBroodkeeper		= mod:NewSpecialWarningCount(380176, nil, nil, nil, 2, 2) --Усиленный посох хранительницы стаи
+local specWarnEGreatstaffsWrath					= mod:NewSpecialWarningYou(380483, nil, nil, nil, 1, 2) --Усиленный гнев великого посоха
+local specWarnFrozenShroud						= mod:NewSpecialWarningCount(388918, nil, nil, nil, 2, 2) --Морозный покров
+local specWarnMortalStoneSlam					= mod:NewSpecialWarningDefensive(396269, nil, nil, nil, 1, 2, 4) --Смертельный каменный удар
 local specWarnDetonatingStoneslam				= mod:NewSpecialWarningYou(396264, false, nil, nil, 1, 2, 4)--Bit redundant, so off by default
 local specWarnDetonatingStoneslamTaunt			= mod:NewSpecialWarningTaunt(396264, nil, nil, nil, 1, 2, 4)
 
-local timerBroodkeepersFuryCD					= mod:NewNextCountTimer(30, 375879, nil, nil, nil, 5)--Static CD
+local timerBroodkeepersFuryCD					= mod:NewNextCountTimer(30, 375879, nil, nil, nil, 5) --Неистовство хранительницы стаи Static CD
 --local timerEGreatstaffoftheBroodkeeperCD		= mod:NewCDCountTimer(17, 380176, L.staff, nil, nil, 5)--Shared CD ability
-local timerFrozenShroudCD						= mod:NewCDCountTimer(40.5, 388918, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
-local timerMortalStoneSlamCD					= mod:NewCDCountTimer(20.7, 396269, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MYTHIC_ICON)
+local timerFrozenShroudCD						= mod:NewCDCountTimer(40.5, 388918, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Морозный покров Static CD
+local timerMortalStoneSlamCD					= mod:NewCDCountTimer(20.7, 396269, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MYTHIC_ICON) --Смертельный каменный удар
 
-local yellMortalStoneclaws						= mod:NewShortYell(375870, nil, nil, nil, "YELL")
-local yellGreatstaffsWrath						= mod:NewShortYell(375889, nil, nil, nil, "YELL")
-local yellIonizingCharge						= mod:NewShortYell(375630, nil, nil, nil, "YELL")
-local yellEGreatstaffsWrath						= mod:NewShortYell(380483, nil, nil, nil, "YELL")
+local yellMortalStoneclaws						= mod:NewShortYell(375870, nil, nil, nil, "YELL") --Смертельные каменные когти
+local yellMortalStoneSlam						= mod:NewShortYell(396269, nil, nil, nil, "YELL") --Смертельный каменный удар
+local yellGreatstaffsWrath						= mod:NewShortYell(375889, nil, nil, nil, "YELL") --Гнев великого посоха
+local yellIonizingCharge						= mod:NewShortYell(375630, nil, nil, nil, "YELL") --Ионизирующий заряд
+local yellIonizingCharge2						= mod:NewShortFadesYell(375630, nil, nil, nil, "YELL") --Ионизирующий заряд
+local yellEGreatstaffsWrath						= mod:NewShortYell(380483, nil, nil, nil, "YELL") --Усиленный гнев великого посоха
 local yellDetonatingStoneslam					= mod:NewShortYell(396264, nil, nil, nil, "YELL")
 local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, nil, "YELL")
 
@@ -136,10 +139,8 @@ mod.vb.eggsGone = false
 local castsPerGUID = {}
 local addUsedMarks = {}
 local mythicAddsTimers = {33, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
-local heroicAddsTimers = {33, 18.3, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --33, 18.5, 40.8, 18, 45, 15, 45, 15, 40, 20
---local normalAddsTimers = {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
---local normalAddsTimers = {33, 18.5, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8} --33, 18.5 (исправленные)
-local normalAddsTimers = {33, 18.3, 40.8, 18, 45, 15, 45, 15, 40, 20, 35.7, 20.0} --на проверку
+local heroicAddsTimers = {33, 18.2, 40.7, 17.9, 44.9, 14.9, 44.9, 14.9, 39.9, 19.9}
+local normalAddsTimers = {33, 18.2, 40.7, 17.9, 44.9, 14.9, 44.9, 14.9, 39.9, 19.9}
 local murchalProshlyapationAddCountMythic = {
 	["Proshlyapation"] = {L.Right, L.Right, L.Middle, L.Left, L.Right, L.Left, L.Left, L.Left, L.Right, L.Middle}
 }
@@ -165,12 +166,22 @@ local murchalProshlyapationAddCountNormal = {
 16 21 02 472 10 треш
 
 ]]
+
 function mod:MortalStoneclawsTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnMortalStoneclaws:Show()
 		specWarnMortalStoneclaws:Play("defensive")
 		yellMortalStoneclaws:Yell()
+	end
+end
+
+function mod:MortalStoneSlamTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnMortalStoneSlam:Show()
+		specWarnMortalStoneSlam:Play("defensive")
+		yellMortalStoneSlam:Yell()
 	end
 end
 
@@ -182,6 +193,7 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 		timerPrimalistReinforcementsCD:Start(proshlyap, text)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
+	warnPrimalistReinforcements:Show()
 	DBM:AddMsg(L.Tip)
 end
 
@@ -367,9 +379,9 @@ function mod:SPELL_CAST_START(args)
 		self.vb.icyCount = self.vb.icyCount + 1
 		specWarnFrozenShroud:Show(self.vb.icyCount)
 		specWarnFrozenShroud:Play("aesoon")
-		timerFrozenShroudCD:Start(nil, self.vb.icyCount+1)--40-45
+		timerFrozenShroudCD:Start(self:IsMythic() and 40.5 or self:IsHeroic() and 39.3 or 40.5, self.vb.icyCount+1)
 		updateAllTimers(self, 2.5)
-	elseif spellId == 375870 then
+	elseif spellId == 375870 then --Смертельные каменные когти
 		self:BossTargetScanner(args.sourceGUID, "MortalStoneclawsTarget", 0.1, 2)
 		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we do all this
 		if not self.vb.tankComboStarted then
@@ -383,11 +395,8 @@ function mod:SPELL_CAST_START(args)
 		local timer = ((self:IsEasy() or self:GetStage(1)) and 22.4 or 7.3)
 		timerMortalStoneclawsCD:Start(timer, self.vb.tankCombocount+1)
 		updateAllTimers(self, 2, true)
-	elseif spellId == 396269 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnMortalStoneSlam:Show()
-			specWarnMortalStoneSlam:Play("defensive")
-		end
+	elseif spellId == 396269 then --Смертельный каменный удар
+		self:BossTargetScanner(args.sourceGUID, "MortalStoneSlamTarget", 0.1, 2)
 		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we do all this
 		if not self.vb.tankComboStarted then
 			self.vb.tankComboStarted = true
@@ -582,6 +591,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnIonizingCharge:Show()
 			specWarnIonizingCharge:Play("range5")
 			yellIonizingCharge:Yell()
+			yellIonizingCharge2:Countdown(spellId)
 		end
 	elseif spellId == 396264 then
 		if args:IsPlayer() then
@@ -626,6 +636,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		warnRendingBite:Show(args.destName, amount)
 	elseif spellId == 375879 then --Неистовство хранительницы стаи (фаза 2)
+		--Проверить таймер с Морозным покровом, в героике 1-ый каст случился через 6.8 сек--
 		local amount = args.amount or 1
 		if amount == 1 then
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))

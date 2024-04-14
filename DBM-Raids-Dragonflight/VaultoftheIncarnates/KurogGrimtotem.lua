@@ -52,7 +52,7 @@ local timerSunderStrikeCD						= mod:NewCDTimer(19.4, 372158, nil, "Tank|Healer"
 --General timers for handling of bosses ability rotation
 local timerDamageCD								= mod:NewTimer(30, "timerDamageCD", 391096, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391096, nil, nil, "next")--Magma Burst, Biting Chill, Enveloping Earth, Lightning Crash
 local timerAvoidCD								= mod:NewTimer(60, "timerAvoidCD", 391100, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391100, nil, nil, "next")--Molten Rupture, Frigid Torrent, Erupting Bedrock, Shocking Burst
-local timerUltimateCD							= mod:NewTimer(60, "timerUltimateCD", 374680, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 374680, nil, nil, "next")--Searing Carnage, Absolute Zero, Seismic Rupture, Thunder Strike
+local timerUltimateCD							= mod:NewTimer(60, "timerUltimateCD", 374680, nil, nil, 7, nil, nil, nil, nil, nil, nil, nil, 374680, nil, nil, "next")--Searing Carnage, Absolute Zero, Seismic Rupture, Thunder Strike
 local timerAddEnrageCD							= mod:NewTimer(60, "timerAddEnrageCD", 28131, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, nil, nil, 400473, nil, nil, "next")
 
 local yellSunderStrike							= mod:NewShortYell(372158, nil, nil, nil, "YELL") --Раскалывающий удар
@@ -80,7 +80,8 @@ local warnAbsoluteZero							= mod:NewTargetNoFilterAnnounce(372458, 3) --Абс
 local warnFrostBite								= mod:NewFadesAnnounce(372514, 1) --Ледяной укус
 local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(372517, 4, nil, false)--RL kinda thing
 
-local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2)--Cast by boss AND Dominator
+local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2) --Ледяные звезды Cast by boss AND Dominator
+local specWarnFrigidTorrent2					= mod:NewSpecialWarningRun(391019, nil, nil, nil, 4, 4) --Ледяные звезды
 local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 1, 2) --Абсолютный нуль
 local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
@@ -91,28 +92,29 @@ mod:AddSetIconOption("SetIconOnAbsoluteZero", 372458, true, 9, {1, 2}) --Абс�
 
 mod:GroupSpells(372458, 372514, 372517)--Group all Below Zero mechanics together
 ----Mythic Only (Icebound Dominator)
-local specWarnIceboundDominator					= mod:NewSpecialWarningSwitch(393295, "-Healer", nil, nil, 1, 2, 4)
-local specWarnFreezing							= mod:NewSpecialWarningMoveTo(391419, nil, nil, nil, 1, 2, 4)--Effect of Icy Tempest (391425)
-local specWarnFrostSmite						= mod:NewSpecialWarningYou(393296, nil, nil, nil, 2, 2, 4)
+local specWarnIceboundDominator					= mod:NewSpecialWarningSwitch(393295, "-Healer", nil, nil, 1, 2, 4) --Покрытый льдом доминатор
+local specWarnFreezing							= mod:NewSpecialWarningMoveTo(391419, nil, nil, nil, 1, 2, 4) --Замерзание Effect of Icy Tempest (391425)
+local specWarnFrostSmite						= mod:NewSpecialWarningYou(393296, nil, nil, nil, 2, 2, 4) --Ледяная кара
 
-local timerFrostSmiteCD							= mod:NewCDTimer(30, 393296, nil, nil, nil, 5)
-local timerFrigidTorrentCD						= mod:NewCDTimer(32.5, 391019, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerFrostSmiteCD							= mod:NewCDTimer(30, 393296, nil, nil, nil, 5) --Ледяная кара
+local timerFrigidTorrentCD						= mod:NewCDTimer(32.5, 391019, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Ледяные звезды
 --Earth Altar An altar of primal earth.
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25064))
-local warnEnvelopingEarth						= mod:NewTargetNoFilterAnnounce(391056, 4, nil, "Healer")
+local warnEnvelopingEarth						= mod:NewTargetNoFilterAnnounce(391056, 4, nil, "Healer") --Охватывающая земля
 
-local specWarnEnvelopingEarth					= mod:NewSpecialWarningYou(391056, nil, nil, nil, 1, 2)
-local specWarnEruptingBedrock					= mod:NewSpecialWarningDodge(395893, nil, nil, 2, 2, 2)--Cast by boss AND Doppelboulder
-local specWarnSeismicRupture					= mod:NewSpecialWarningDodge(374691, nil, nil, nil, 2, 2)
+local specWarnEnvelopingEarth					= mod:NewSpecialWarningYou(391056, nil, nil, nil, 1, 3) --Охватывающая земля
+local specWarnEruptingBedrock					= mod:NewSpecialWarningDodge(395893, nil, nil, 2, 2, 2) --Каменный разлом Cast by boss AND Doppelboulder
+local specWarnEruptingBedrock2					= mod:NewSpecialWarningRun(395893, nil, nil, nil, 4, 4) --Каменный разлом
+local specWarnSeismicRupture					= mod:NewSpecialWarningDodge(374691, nil, nil, nil, 2, 2) --Сейсмический разлом
 
 ----Mythic Only (Ironwrought Smasher)
-local specWarnIronwroughtSmasher				= mod:NewSpecialWarningSwitch(392098, "-Healer", nil, nil, 1, 2, 4)
-local specWarnEarthSmite						= mod:NewSpecialWarningSpell(391268, nil, nil, nil, 1, 2, 4)
+local specWarnIronwroughtSmasher				= mod:NewSpecialWarningSwitch(392098, "-Healer", nil, nil, 1, 2, 4) --Железнокованный глыбень
+local specWarnEarthSmite						= mod:NewSpecialWarningSpell(391268, nil, nil, nil, 1, 2, 4) --Земляная кара
 
-local timerEarthSmiteCD							= mod:NewCDTimer(30, 391268, nil, nil, nil, 5)--Ironwrought Smasher
-local timerEruptingBedrockCD					= mod:NewCDTimer(60, 395893, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerEarthSmiteCD							= mod:NewCDTimer(30, 391268, nil, nil, nil, 5) --Земляная кара Ironwrought Smasher
+local timerEruptingBedrockCD					= mod:NewCDTimer(60, 395893, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Каменный разлом
 
-mod:AddSetIconOption("SetIconOnEnvelopingEarth", 391056, false, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnEnvelopingEarth", 391056, false, false, {1, 2, 3}) --Охватывающая земля
 --Storm Altar An altar of primal storm
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25068))
 local warnLightningCrash						= mod:NewTargetNoFilterAnnounce(373487, 4)
@@ -299,20 +301,24 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 374622 then
 		warnStormBreak:Show()
 		timerStormBreakCD:Start(nil, args.sourceGUID)
-	elseif spellId == 391019 then
-		if self:AntiSpam(3, 1) then
+	elseif spellId == 391019 then --Ледяные звезды
+		if self:IsRanged() then
 			specWarnFrigidTorrent:Show()
 			specWarnFrigidTorrent:Play("watchorb")
+		else
+			specWarnFrigidTorrent2:Show()
+			specWarnFrigidTorrent2:Play("runout")
 		end
 		if args:GetSrcCreatureID() ~= 184986 then--Mythic Add
 			timerFrigidTorrentCD:Start(nil, args.sourceGUID)
 		end
---	elseif spellId == 391055 then
-
-	elseif spellId == 395893 then
-		if self:AntiSpam(3, 2) then
+	elseif spellId == 395893 then --Каменный разлом
+		if self:IsRanged() then
 			specWarnEruptingBedrock:Show()
 			specWarnEruptingBedrock:Play("watchstep")
+		else
+			specWarnEruptingBedrock2:Show()
+			specWarnEruptingBedrock2:Play("runout")
 		end
 		if args:GetSrcCreatureID() ~= 184986 then--Mythic Add
 			timerEruptingBedrockCD:Start(nil, args.sourceGUID)
@@ -399,8 +405,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 373415 then
 		DBM:AddMsg("373415 is combat logging now, notify DBM author")
-		--specWarnMoltenRupture:Show()
-		--specWarnMoltenRupture:Play("farfromline")
+		specWarnMoltenRupture:Show()
+		specWarnMoltenRupture:Play("farfromline")
 	end
 end
 
@@ -425,6 +431,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.curAltar = 3
 		updateAltar(self)
 	elseif spellId == 396085 and (not self.vb.curAltar or self.vb.curAltar ~= 4) then--Earthen Dominance
+		--Если на фазе 2 первым делом завести на землю, то таймеров нету--
 		self.vb.curAltar = 4
 		updateAltar(self)
 	elseif spellId == 372158 and not args:IsPlayer() then
@@ -468,7 +475,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerFrostBite:Start()
 	elseif spellId == 372517 then
 		warnFrozenSolid:CombinedShow(1, args.destName)
-	elseif spellId == 374779 then--Primal Barrier
+	elseif spellId == 374779 then --Изначальный барьер (перефаза)
 		self:SetStage(2)
 		--Base
 		timerSunderStrikeCD:Stop()
@@ -546,7 +553,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 372514 and args:IsPlayer() then
 		warnFrostBite:Show()
 		timerFrostBite:Stop()
-	elseif spellId == 374779 then--Primal Barrier
+	elseif spellId == 374779 then --Изначальный барьер (перефаза)
 		self.vb.curAltar = false--Reset on intermission end because we don't want initial timers to show an altar spell when there isn't one yet
 		self.vb.damageCount = 0
 		self.vb.zeroCount = 0
