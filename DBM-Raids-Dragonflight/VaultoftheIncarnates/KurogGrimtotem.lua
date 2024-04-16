@@ -117,30 +117,30 @@ local timerEruptingBedrockCD					= mod:NewCDTimer(60, 395893, nil, nil, nil, 2, 
 mod:AddSetIconOption("SetIconOnEnvelopingEarth", 391056, false, false, {1, 2, 3}) --Охватывающая земля
 --Storm Altar An altar of primal storm
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25068))
-local warnLightningCrash						= mod:NewTargetNoFilterAnnounce(373487, 4)
-local warnShockingBurst							= mod:NewTargetNoFilterAnnounce(390920, 3)
+local warnLightningCrash						= mod:NewTargetNoFilterAnnounce(373487, 4) --Сокрушение молнией
+local warnShockingBurst							= mod:NewTargetNoFilterAnnounce(390920, 3) --Шоковый удар
 
-local specWarnLightningCrash					= mod:NewSpecialWarningMoveAway(373487, nil, nil, nil, 1, 2)
+local specWarnLightningCrash					= mod:NewSpecialWarningMoveAway(373487, nil, nil, nil, 1, 2) --Сокрушение молнией
 --local yellLightningCrashFades					= mod:NewIconFadesYell(373487)
 --local specWarnLightningCrashStacks			= mod:NewSpecialWarningStack(373535, nil, 8, nil, nil, 1, 6)
-local specWarnShockingBurst						= mod:NewSpecialWarningMoveAway(390920, nil, nil, nil, 1, 2)
-local specWarnThunderStrike						= mod:NewSpecialWarningSoak(374215, nil, nil, nil, 2, 2)--No Debuff
-local specWarnThunderStrikeBad					= mod:NewSpecialWarningDodge(374215, nil, nil, nil, 2, 2)--Debuff
+local specWarnShockingBurst						= mod:NewSpecialWarningMoveAway(390920, nil, nil, nil, 1, 2) --Шоковый удар
+local specWarnThunderStrike						= mod:NewSpecialWarningSoak(374215, nil, nil, nil, 2, 2) --Громовой удар No Debuff
+local specWarnThunderStrikeBad					= mod:NewSpecialWarningDodge(374215, nil, nil, nil, 2, 2) --Громовой удар Debuff
 
-local yellLightningCrash						= mod:NewShortYell(373487, nil, nil, nil, "YELL")
-local yellShockingBurst							= mod:NewShortYell(390920, nil, nil, nil, "YELL")
-local yellShockingBurstFades					= mod:NewShortFadesYell(390920, nil, nil, nil, "YELL")
+local yellLightningCrash						= mod:NewShortYell(373487, nil, nil, nil, "YELL") --Сокрушение молнией
+local yellShockingBurst							= mod:NewShortYell(390920, nil, nil, nil, "YELL") --Шоковый удар
+local yellShockingBurstFades					= mod:NewShortFadesYell(390920, nil, nil, nil, "YELL") --Шоковый удар
 
 mod:AddSetIconOption("SetIconOnShockingBurst", 390920, false, false, {4, 5})
 --mod:GroupSpells(373487, 373535)--Group Lighting crash source debuff with dest (nearest player) debuff
 ----Mythic Only (Stormwrought Despoiler)
-local warnOrbLightning							= mod:NewSpellAnnounce(394719, 3)
+local warnOrbLightning							= mod:NewSpellAnnounce(394719, 3) --Шаровая молния
 
-local specWarnStormwroughtDespoiler				= mod:NewSpecialWarningSwitch(393459, "-Healer", nil, nil, 1, 2, 4)
-local specWarnStormSmite						= mod:NewSpecialWarningYou(393429, nil, nil, nil, 2, 2, 4)
+local specWarnStormwroughtDespoiler				= mod:NewSpecialWarningSwitch(393459, "-Healer", nil, nil, 1, 2, 4) --Грозовой разоритель
+local specWarnStormSmite						= mod:NewSpecialWarningYou(393429, nil, nil, nil, 2, 2, 4) --Грозовая кара
 
-local timerOrbLightningCD						= mod:NewCDTimer(48.5, 394719, nil, nil, nil, 3)
-local timerStormSmiteCD							= mod:NewCDTimer(30, 393429, nil, nil, nil, 5)
+local timerOrbLightningCD						= mod:NewCDTimer(48.5, 394719, nil, nil, nil, 3) --Шаровая молния
+local timerStormSmiteCD							= mod:NewCDTimer(30, 393429, nil, nil, nil, 5) --Грозовая кара
 
 --Stage Two: Summoning Incarnates
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25071))
@@ -170,18 +170,18 @@ local timerAbsoluteZeroCD						= mod:NewCDCountTimer(24.3, 372458, nil, nil, nil
 
 ----Blazing Fiend
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25079))--Since searing gets bunbled with cast, it leaves category empty
-local timerSearingCarnageCD						= mod:NewCDTimer(23, 374023, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
+local timerSearingCarnageCD						= mod:NewCDTimer(23, 374023, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Огненная бойня Mythic Add version
 
 ----Thundering Destroyer
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25083))
-local warnStormBreak							= mod:NewSpellAnnounce(374622, 3)
+local warnStormBreak							= mod:NewSpellAnnounce(374622, 3) --Просвет бури
 
-local specWarnLethalCurrent						= mod:NewSpecialWarningYou(391696, nil, nil, nil, 1, 2)
+local specWarnLethalCurrent						= mod:NewSpecialWarningMoveAway(391696, nil, nil, nil, 1, 2) --Смертоносный поток
 
-local timerStormBreakCD							= mod:NewCDTimer(20.8, 374622, nil, nil, nil, 2)
-local timerThunderStrikeCD						= mod:NewCDTimer(41, 374215, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
+local timerStormBreakCD							= mod:NewCDTimer(20.8, 374622, nil, nil, nil, 3) --Просвет бури
+local timerThunderStrikeCD						= mod:NewCDTimer(41, 374215, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Громовой удар Mythic Add version
 
-local yellLethalCurrent							= mod:NewShortYell(391696, nil, nil, nil, "YELL")
+local yellLethalCurrent							= mod:NewShortYell(391696, nil, nil, nil, "YELL") --Смертоносный поток
 
 mod:GroupSpells(374622, 391696)--Storm Break and it's sub debuff Lethal Current
 
@@ -250,7 +250,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 390548 then
-		self:BossTargetScanner(args.sourceGUID, "SunderStrikeTarget", 0.1, 8)
+		self:BossTargetScanner(args.sourceGUID, "SunderStrikeTarget", 0.1, 2)
 		timerSunderStrikeCD:Start()
 	elseif spellId == 373678 then
 		self.vb.chillCast = self.vb.chillCast + 1
@@ -607,13 +607,16 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local GUID = UnitGUID(unitID)
 		local cid = self:GetCIDFromGUID(GUID)
 		if cid == 190688 then --Пылающий демон (огонь)
-			DBM:AddMsg("Murchal proshlyap 1")
+			DBM:Debug("Murchal proshlyap 1", 2)
+			timerSearingCarnageCD:Start(24.4)
 		elseif cid == 190686 then --Морозный разрушитель (лед)
-			DBM:AddMsg("Murchal proshlyap 2")
+			DBM:Debug("Murchal proshlyap 2", 2)
 		elseif cid == 190588 then --Тектонический крушитель (земля)
-			DBM:AddMsg("Murchal proshlyap 3")
+			DBM:Debug("Murchal proshlyap 3", 2)
 		elseif cid == 190690 then --Рокочущий опустошитель (воздух)
-			DBM:AddMsg("Murchal proshlyap 4")
+			DBM:Debug("Murchal proshlyap 4", 2)
+			timerStormBreakCD:Start(11.4)
+			timerThunderStrikeCD:Start(42.6)
 		end
 	end
 end
@@ -621,21 +624,21 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	--Intermission Adds
-	if cid == 190688 then--Blazing Fiend
+	if cid == 190688 then --Пылающий демон
 		timerSearingCarnageCD:Stop(args.destGUID)
-	elseif cid == 190686 then--Frozen Destroyer
+	elseif cid == 190686 then --Морозный разрушитель
 		timerAbsoluteZeroCD:Stop(args.destGUID)
 		timerFreezingTempestCD:Stop(args.destGUID)
 		timerAbsoluteZeroCD:Stop()
 		timerFreezingTempestCD:Stop()
-	elseif cid == 190588 then--Tectonic Crusher
+	elseif cid == 190588 then --Тектонический крушитель
 		timerGroundShatterCD:Stop(args.destGUID)
 		timerViolentUpheavelCD:Stop(args.destGUID)
 		timerSeismicRuptureCD:Stop(args.destGUID)
 		timerGroundShatterCD:Stop()
 		timerViolentUpheavelCD:Stop()
 		timerSeismicRuptureCD:Stop()
-	elseif cid == 190690 then--Thundering Ravager
+	elseif cid == 190690 then --Рокочущий опустошитель
 		timerStormBreakCD:Stop(args.destGUID)
 		timerThunderStrikeCD:Stop(args.destGUID)
 		timerStormBreakCD:Stop()
