@@ -12,8 +12,8 @@ mod.respawnTime = 29
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 390548 373678 382563 374022 372456 375450 374691 374215 376669 397338 374430 374623 374624 374622 391019 392125 392192 392152 391268 393314 393295 393296 392098 393459 394719 393429 395893 394416 393309",
-	"SPELL_CAST_SUCCESS 375825 375828 375824 375792 373415",
+	"SPELL_CAST_START 390548 373678 382563 374022 372456 375450 374691 374215 376669 397338 374430 374623 374624 374622 391019 392125 392192 392152 391268 393314 393295 393296 392098 393459 394719 393429 395893 394416 393309 373329",
+	"SPELL_CAST_SUCCESS 375825 375828 375824 375792",
 	"SPELL_AURA_APPLIED 371971 372158 373494 372458 372514 372517 374779 374380 374427 391056 390920 391419 396109 396113 396106 396085 396241 391696",
 	"SPELL_AURA_APPLIED_DOSE 372158 374321",
 	"SPELL_AURA_REMOVED 371971 372458 372514 374779 374380 374427 390920 391419 391056",
@@ -38,7 +38,7 @@ mod:RegisterEventsInCombat(
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(374554, nil, nil, nil, 1, 8) --Лужа магмы
 
 local timerPhaseCD								= mod:NewPhaseTimer(30)
-local berserkTimer								= mod:NewBerserkTimer(600)
+local berserkTimer								= mod:NewBerserkTimer(553)
 
 --Stage One: Elemental Mastery
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25036))
@@ -185,6 +185,7 @@ local yellLethalCurrent							= mod:NewShortYell(391696, nil, nil, nil, "YELL")
 
 mod:GroupSpells(374622, 391696)--Storm Break and it's sub debuff Lethal Current
 
+mod.vb.primalBarrier = 0
 mod.vb.chillCast = 0
 mod.vb.curAltar = false
 mod.vb.damageSpell = "?"
@@ -212,6 +213,7 @@ end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
+	self.vb.primalBarrier = 0
 	self.vb.chillCast = 0
 	self.vb.curAltar = false
 	self.vb.damageCount = 0
@@ -227,7 +229,7 @@ function mod:OnCombatStart(delay)
 	timerAvoidCD:Start(22-delay, "?")
 	timerUltimateCD:Start(45-delay, "?")
 	if self:IsMythic() then
-		berserkTimer:Start(600-delay)
+		berserkTimer:Start(-delay)
 	end
 	if self.Options.NPAuraOnSurge or self.Options.NPAuraOnElementalBond then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -242,6 +244,7 @@ function mod:OnCombatEnd()
 	if self.Options.NPAuraOnSurge or self.Options.NPAuraOnElementalBond then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
@@ -302,23 +305,27 @@ function mod:SPELL_CAST_START(args)
 		warnStormBreak:Show()
 		timerStormBreakCD:Start(nil, args.sourceGUID)
 	elseif spellId == 391019 then --Ледяные звезды
-		if self:IsRanged() then
-			specWarnFrigidTorrent:Show()
-			specWarnFrigidTorrent:Play("watchorb")
-		else
-			specWarnFrigidTorrent2:Show()
-			specWarnFrigidTorrent2:Play("runout")
+		if self:AntiSpam(3, "FrigidTorrent") then
+			if self:IsRanged() then
+				specWarnFrigidTorrent:Show()
+				specWarnFrigidTorrent:Play("watchorb")
+			else
+				specWarnFrigidTorrent2:Show()
+				specWarnFrigidTorrent2:Play("runout")
+			end
 		end
 		if args:GetSrcCreatureID() ~= 184986 then--Mythic Add
 			timerFrigidTorrentCD:Start(nil, args.sourceGUID)
 		end
 	elseif spellId == 395893 then --Каменный разлом
-		if self:IsRanged() then
-			specWarnEruptingBedrock:Show()
-			specWarnEruptingBedrock:Play("watchstep")
-		else
-			specWarnEruptingBedrock2:Show()
-			specWarnEruptingBedrock2:Play("runout")
+		if self:AntiSpam(3, "EruptingBedrock") then
+			if self:IsRanged() then
+				specWarnEruptingBedrock:Show()
+				specWarnEruptingBedrock:Play("watchstep")
+			else
+				specWarnEruptingBedrock2:Show()
+				specWarnEruptingBedrock2:Play("runout")
+			end
 		end
 		if args:GetSrcCreatureID() ~= 184986 then--Mythic Add
 			timerEruptingBedrockCD:Start(nil, args.sourceGUID)
@@ -378,6 +385,9 @@ function mod:SPELL_CAST_START(args)
 			specWarnStormSmite:Play("shockwave")
 		end
 		timerStormSmiteCD:Start(nil, args.sourceGUID)
+	elseif spellId == 373329 then --Раскаленный разлом
+		specWarnMoltenRupture:Show()
+		specWarnMoltenRupture:Play("watchstep")
 	end
 end
 
@@ -403,10 +413,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsMythic() then
 			timerThunderStrikeCD:Start(38.5, args.sourceGUID)
 		end
-	elseif spellId == 373415 then
-		DBM:AddMsg("373415 is combat logging now, notify DBM author")
-		specWarnMoltenRupture:Show()
-		specWarnMoltenRupture:Play("farfromline")
 	end
 end
 
@@ -483,6 +489,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerDamageCD:Stop()
 		timerAvoidCD:Stop()
 		timerUltimateCD:Stop()
+		self:RegisterShortTermEvents(
+			"INSTANCE_ENCOUNTER_ENGAGE_UNIT"
+		)
 	elseif spellId == 374380 then
 		if self.Options.NPAuraOnElementalBond then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
@@ -554,19 +563,19 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnFrostBite:Show()
 		timerFrostBite:Stop()
 	elseif spellId == 374779 then --Изначальный барьер (перефаза)
+		self.vb.primalBarrier = self.vb.primalBarrier + 1
 		self.vb.curAltar = false--Reset on intermission end because we don't want initial timers to show an altar spell when there isn't one yet
 		self.vb.damageCount = 0
 		self.vb.zeroCount = 0
 		self:SetStage(1)
 		timerSunderStrikeCD:Start(11.3)
-		if self.vb.stageTotality == 3 then
+		if self.vb.primalBarrier < 2 then
 			timerPhaseCD:Start(127)--Second intermission (Primal Barrier)
-		else
-			timerPhaseCD:Start(94)--Primal Attunement
 		end
 		timerDamageCD:Start(14.5, "?")
 		timerAvoidCD:Start(22.2, "?")--They fixed the skip bug apparently and it's no longer 68.4
 		timerUltimateCD:Start(45, "?")--if it's seismic rupture it's 53 else 45
+		self:UnregisterShortTermEvents()
 	elseif spellId == 374380 then
 		if self.Options.NPAuraOnElementalBond then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
@@ -588,6 +597,23 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 391056 then
 		if self.Options.SetIconOnEnvelopingEarth then
 			self:SetIcon(args.destName, 0)
+		end
+	end
+end
+
+function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	for i = 1, 5 do
+		local unitID = "boss"..i
+		local GUID = UnitGUID(unitID)
+		local cid = self:GetCIDFromGUID(GUID)
+		if cid == 190688 then --Пылающий демон (огонь)
+			DBM:AddMsg("Murchal proshlyap 1")
+		elseif cid == 190686 then --Морозный разрушитель (лед)
+			DBM:AddMsg("Murchal proshlyap 2")
+		elseif cid == 190588 then --Тектонический крушитель (земля)
+			DBM:AddMsg("Murchal proshlyap 3")
+		elseif cid == 190690 then --Рокочущий опустошитель (воздух)
+			DBM:AddMsg("Murchal proshlyap 4")
 		end
 	end
 end
@@ -639,8 +665,6 @@ function mod:UNIT_DIED(args)
 		timerOrbLightningCD:Stop()
 		timerStormSmiteCD:Stop()
 		timerAddEnrageCD:Stop(L.Storm)
---	elseif cid == 190586 then--seismic-pillar
-
 	end
 end
 
@@ -723,10 +747,7 @@ do
 	--Molten Rupture and Frigid Torrent flagged heroic+ only. So on normal and LFR Avoid Selection only has a 2/4 spells.
 	--Lightning Crash and Enveloping Earth flagged heroic+ only. So on normal and LFR "Damage Selection" only has a 2/4 spells.
 	function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-		if spellId == 373415 then
-			specWarnMoltenRupture:Show()
-			specWarnMoltenRupture:Play("farfromline")
-		elseif spellId == 391096 then--Damage Selection (Biting Chill, Lightning Crash, Magma Burst, Enveloping Earth)
+		if spellId == 391096 then--Damage Selection (Biting Chill, Lightning Crash, Magma Burst, Enveloping Earth)
 			self.vb.damageCount = self.vb.damageCount + 1
 			self.vb.damageSpell = self.vb.curAltar and (self:IsEasy() and spellEasyMapping[spellId][self.vb.curAltar] or spellMapping[spellId][self.vb.curAltar]) or "?"
 			local spellIcon = self.vb.curAltar and (self:IsEasy() and iconEasyMapping[spellId][self.vb.curAltar] or iconMapping[spellId][self.vb.curAltar]) or 136116

@@ -437,17 +437,13 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.25))
 			warnPhase:Play("phasechange")
 			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
+			timerFrostbreathArachnidCD:Start(62.5)
+			self:Schedule(62.5, startAnnounceArachnid, self)
 			if self:IsEasy() then
-				timerFrostbreathArachnidCD:Start(64.5) --точно под обычку
-				self:Schedule(64.5, startAnnounceArachnid, self)
 				timerPhaseCD:Start(102)
 			elseif self:IsHeroic() then
-				timerFrostbreathArachnidCD:Start(62.5)
-				self:Schedule(62.5, startAnnounceArachnid, self)
 				timerPhaseCD:Start(99.8)
 			else
-				timerFrostbreathArachnidCD:Start(64)
-				self:Schedule(64, startAnnounceArachnid, self)
 				timerPhaseCD:Start(99.8)
 			end
 		elseif self.vb.stageTotality == 2 then --2 движение босса
@@ -468,7 +464,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.75))
 			warnPhase:Play("phasechange")
-			timerPhaseCD:Start(58)--Til Stage 2 (2nd movement has ended)
+			timerPhaseCD:Start(57.5)--Til Stage 2 (2nd movement has ended)
 		end
 	end
 end
