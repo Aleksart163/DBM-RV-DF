@@ -1,26 +1,28 @@
 # <DBM RV Mod> Raids (DF)
 
-## [10.2.32](https://github.com/Aleksart163/DBM-RV-DF) (2024-04-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/10.2.31...10.2.32) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [10.2.35](https://github.com/Aleksart163/DBM-RV-DF) (2024-04-15)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/10.2.34...10.2.35) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Bump vanilla tocs and version  
-- Fix icons in boss health frame with customized names (#1023)  
-- Update M+ Affixes module to support Season 4  
-- Update core for detecting the new new new id for 20 man raids (because the existing IDs apparently weren't good enough)  
-- also fix reason it's being sent in first place  
-- fix another place that stores classic sub version to not store it on retail  
-- update strings  
-- fix typo  
-- fix a bug where retail was sending the vanilla classic subversion, subversion should be ignored on retail  
-- Core Updates:  
-     - Fixed bug where new unified core wasn't sending update available notifications to older versions of DBM pre unified, due to changed prefixes. For a short while, newer DBM will also similcast version info to old comms prefixes for classic until at least next major patch for classic wrath and classic vanilla.  
-     - The news message will now show every login instead of only first, until user has loaded an appropriate classic raids module.  
-- Fix regression from #1020  
-- Add icons to boss health info frame (#1021)  
-- Reduce number of locals in DBM-Core (#1020)  
-- Update zh-CN (#1019)  
-- Update koKR (#1015)  
-- Fix news items for br, es and fr  
-- Fix IsItemInRange in rangecheck  
-- Update localization.tw.lua (#1014)  
-- bump alpha  
+- prep new tag to fix cataclysm and retail errors with a new object introduced in cataclysm mod revamps  
+- Clear up some LuaLS errors on globals in Core  
+- Remove DontShowPTCountdownText since in 10.2.7 and 4.4.0, disabling that text no longer will be possible since we'll use blizzards own countdown timer. To do so would require tainting blizzards countdown function, which we no longer want to do.  
+- Update koKR (#1031)  
+- Update localization.es.lua (#1033)  
+- Update localization.es.lua (#1032)  
+- Add enum for role/spec-based option defaults  
+- All shamy specs are MagicDispeller  
+- Update README.md  
+- Update README.md  
+- OptionName can also be false  
+- rename cleave to soaks on fyrakk  
+- make DBM:GetRaidSubgroup easier to call on player unit  
+- only play sound for missing dungeon mods on retail and cata (where dungeons are more difficult)  
+- fix last  
+- Add yet another object needed for cata classic  
+- Better handle blizzard auto canceling timer on early pulls  
+- small bugfix to zone filter  
+- Use blizzard countdown in cataclysm and 10.2.7  
+- Update localization.ru.lua (#1028)  
+- Update koKR (#1029)  
+- Fix HasInterrupt for Shaman roles in classic (#1030)  
+- Resolve https://github.com/DeadlyBossMods/DeadlyBossMods/issues/950  
