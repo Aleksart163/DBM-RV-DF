@@ -82,7 +82,7 @@ local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(372517, 4, nil, fals
 
 local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2) --Ледяные звезды Cast by boss AND Dominator
 local specWarnFrigidTorrent2					= mod:NewSpecialWarningRun(391019, nil, nil, nil, 4, 4) --Ледяные звезды
-local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 1, 2) --Абсолютный нуль
+local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 3, 4) --Абсолютный нуль
 local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 
@@ -147,26 +147,26 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25071))
 mod:AddNamePlateOption("NPAuraOnElementalBond", 374380, true)
 ----Tectonic Crusher
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25073))
-local warnBreakingGravel						= mod:NewStackAnnounce(374321, 2, nil, "Tank|Healer")
-local warnGroundShatter							= mod:NewTargetNoFilterAnnounce(374427, 3)
+local warnBreakingGravel						= mod:NewStackAnnounce(374321, 2, nil, "Tank|Healer") --Разбивающий гравий
+local warnGroundShatter							= mod:NewTargetNoFilterAnnounce(374427, 3) --Разбивание земли
 
-local specWarnGroundShatter						= mod:NewSpecialWarningMoveAway(374427, nil, nil, nil, 1, 2)
-local specWarnViolentUpheavel					= mod:NewSpecialWarningDodge(374430, nil, nil, nil, 2, 2)
+local specWarnGroundShatter						= mod:NewSpecialWarningMoveAway(374427, nil, nil, nil, 4, 4) --Разбивание земли
+local specWarnViolentUpheavel					= mod:NewSpecialWarningDodge(374430, nil, nil, nil, 2, 2) --Яростный разлом
 
-local timerGroundShatterCD						= mod:NewCDTimer(30.4, 374427, nil, nil, nil, 3)
-local timerViolentUpheavelCD					= mod:NewCDTimer(33.2, 374430, nil, nil, nil, 3)--Sometimess stutter casts
-local timerSeismicRuptureCD						= mod:NewCDTimer(49.4, 374691, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
+local timerGroundShatterCD						= mod:NewCDTimer(30.4, 374427, nil, nil, nil, 3) --Разбивание земли
+local timerViolentUpheavelCD					= mod:NewCDTimer(33.2, 374430, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Яростный разлом Sometimess stutter casts
+local timerSeismicRuptureCD						= mod:NewCDTimer(49.4, 374691, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON) --Сейсмический разлом Mythic Add version
 
-local yellGroundShatter							= mod:NewShortYell(374427, nil, nil, nil, "YELL")
-local yellGroundShatterFades					= mod:NewShortFadesYell(374427, nil, nil, nil, "YELL")
+local yellGroundShatter							= mod:NewShortYell(374427, nil, nil, nil, "YELL") --Разбивание земли
+local yellGroundShatterFades					= mod:NewShortFadesYell(374427, nil, nil, nil, "YELL") --Разбивание земли
 ----Frozen Destroyer
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25076))
-local specWarnFrostBinds						= mod:NewSpecialWarningInterrupt(374623, "HasInterrupt", nil, nil, 1, 2)
+local specWarnFrostBinds						= mod:NewSpecialWarningInterrupt(374623, "HasInterrupt", nil, nil, 1, 2) --Узы холода
 
-local specWarnFreezingTempest					= mod:NewSpecialWarningMoveTo(374624, nil, nil, nil, 3, 2)
+local specWarnFreezingTempest					= mod:NewSpecialWarningMoveTo(374624, nil, nil, nil, 3, 4) --Леденящая буря
 
-local timerFreezingTempestCD					= mod:NewCDTimer(37.7, 374624, nil, nil, nil, 2)
-local timerAbsoluteZeroCD						= mod:NewCDCountTimer(24.3, 372458, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic Add version
+local timerFreezingTempestCD					= mod:NewCDTimer(37.7, 374624, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Леденящая буря
+local timerAbsoluteZeroCD						= mod:NewCDCountTimer(24.3, 372458, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Абсолютный нуль Mythic Add version
 
 ----Blazing Fiend
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25079))--Since searing gets bunbled with cast, it leaves category empty
@@ -250,7 +250,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 390548 then
-		self:BossTargetScanner(args.sourceGUID, "SunderStrikeTarget", 0.1, 2)
+		self:BossTargetScanner(args.sourceGUID, "SunderStrikeTarget", 0.2, 3)
 		timerSunderStrikeCD:Start()
 	elseif spellId == 373678 then
 		self.vb.chillCast = self.vb.chillCast + 1
@@ -608,15 +608,28 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local cid = self:GetCIDFromGUID(GUID)
 		if cid == 190688 then --Пылающий демон (огонь)
 			DBM:Debug("Murchal proshlyap 1", 2)
-			timerSearingCarnageCD:Start(24.4)
-		elseif cid == 190686 then --Морозный разрушитель (лед)
-			DBM:Debug("Murchal proshlyap 2", 2)
-		elseif cid == 190588 then --Тектонический крушитель (земля)
-			DBM:Debug("Murchal proshlyap 3", 2)
+			if self:IsMythic() then
+				timerSearingCarnageCD:Start(24.4)
+			end
 		elseif cid == 190690 then --Рокочущий опустошитель (воздух)
-			DBM:Debug("Murchal proshlyap 4", 2)
+			DBM:Debug("Murchal proshlyap 2", 2)
 			timerStormBreakCD:Start(11.4)
-			timerThunderStrikeCD:Start(42.6)
+			if self:IsMythic() then
+				timerThunderStrikeCD:Start(42.6)
+			end
+		elseif cid == 190686 then --Морозный разрушитель (лед)
+			DBM:Debug("Murchal proshlyap 3", 2)
+			if self:IsMythic() then
+				timerAbsoluteZeroCD:Start(24.8, 1)
+			end
+			timerFreezingTempestCD:Start(33.6)
+		elseif cid == 190588 then --Тектонический крушитель (земля)
+			DBM:Debug("Murchal proshlyap 4", 2)
+			timerGroundShatterCD:Start(10.3)
+			timerViolentUpheavelCD:Start(24.8)
+			if self:IsMythic() then
+				timerSeismicRuptureCD:Start(49.2)
+			end
 		end
 	end
 end
@@ -626,6 +639,11 @@ function mod:UNIT_DIED(args)
 	--Intermission Adds
 	if cid == 190688 then --Пылающий демон
 		timerSearingCarnageCD:Stop(args.destGUID)
+	elseif cid == 190690 then --Рокочущий опустошитель
+		timerStormBreakCD:Stop(args.destGUID)
+		timerThunderStrikeCD:Stop(args.destGUID)
+		timerStormBreakCD:Stop()
+		timerThunderStrikeCD:Stop()
 	elseif cid == 190686 then --Морозный разрушитель
 		timerAbsoluteZeroCD:Stop(args.destGUID)
 		timerFreezingTempestCD:Stop(args.destGUID)
@@ -638,11 +656,6 @@ function mod:UNIT_DIED(args)
 		timerGroundShatterCD:Stop()
 		timerViolentUpheavelCD:Stop()
 		timerSeismicRuptureCD:Stop()
-	elseif cid == 190690 then --Рокочущий опустошитель
-		timerStormBreakCD:Stop(args.destGUID)
-		timerThunderStrikeCD:Stop(args.destGUID)
-		timerStormBreakCD:Stop()
-		timerThunderStrikeCD:Stop()
 	--Mythic Adds
 	elseif cid == 198311 then--Flamewrought Eradicator
 		timerFlameSmiteCD:Stop(args.destGUID)
