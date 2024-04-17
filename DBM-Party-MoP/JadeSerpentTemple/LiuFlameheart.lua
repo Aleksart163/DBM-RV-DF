@@ -45,6 +45,7 @@ local timerDragonStrikeCD		= mod:NewNextTimer(15.7, 106823, nil, nil, 2, 5, nil,
 local timerJadeDragonStrikeCD	= mod:NewNextTimer(15.7, 106841, nil, nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Разящий удар Нефритовой Змеи Kicks affect entire group as well (which are part of tank combo)
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	timerDragonStrikeCD:Start(8-delay)
 end
 
@@ -75,6 +76,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 106797 then--Jade Essence (Phase 2 trigger)
+		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		timerDragonStrikeCD:Cancel()
@@ -119,10 +121,10 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local GUID = UnitGUID(unitID)
 		local cid = self:GetCIDFromGUID(GUID)
 		if cid == 56762 then -- Юй-лун
-			DBM:AddMsg("Murchal proshlyap")
-		--	DBM:Debug("Murchal proshlyap", 2)
+			self:SetStage(3)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 			warnPhase:Play("pthree")
+			DBM:AddMsg("Murchal proshlyap")
 			timerJadeDragonStrikeCD:Stop()
 			timerJadeBreathCD:Start(6)
 			timerJadeFireCD:Start(10)
