@@ -10,9 +10,9 @@ mod:SetEncounterID(1417)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 113309",
+	"SPELL_AURA_APPLIED 113309 396150 396152",
+	"SPELL_AURA_APPLIED_DOSE 113315 396150",
 	"SPELL_AURA_REMOVED 113309",
-	"SPELL_AURA_APPLIED_DOSE 113315",
 	"SPELL_CAST_SUCCESS 122714",
 	"UNIT_DIED"
 )
@@ -24,14 +24,20 @@ mod:RegisterEvents(
 --Stuff that might be used with more data--
 --4/6 12:57:22.825  UNIT_DISSIPATES,0x0000000000000000,nil,0x80000000,0x80000000,0xF130DEF800005B63,"Corrupted Scroll",0xa48,0x0
 -------------------------------------------
-local warnIntensity			= mod:NewStackAnnounce(113315, 3)
-local warnUltimatePower		= mod:NewTargetAnnounce(113309, 4)
+local warnFeelingSuperiority		= mod:NewTargetNoFilterAnnounce(396150, 4) --Чувство превосходства
+local warnFeelingSuperiority2		= mod:NewStackAnnounce(396150, 4) --Чувство превосходства
+local warnIntensity					= mod:NewStackAnnounce(113315, 3) --Напряженность
+local warnUltimatePower				= mod:NewTargetNoFilterAnnounce(113309, 2) --Первичная мощь
 
-local specWarnIntensity		= mod:NewSpecialWarning("SpecWarnIntensity", "-Healer", nil, 2, 1, 2)
-local specWarnUltimatePower	= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 2, 2)
+local specWarnFeelingSuperiority	= mod:NewSpecialWarningYou(396150, nil, nil, nil, 3, 6) --Чувство превосходства
+local specWarnFeelingSuperiority2	= mod:NewSpecialWarningStack(396150, nil, 4, nil, nil, 1, 4) --Чувство превосходства
+local specWarnFeelingInferiority	= mod:NewSpecialWarningYou(396152, nil, nil, nil, 1, 2) --Чувство неполноценности
+local specWarnIntensity				= mod:NewSpecialWarningTargetCount(113315, "-Healer", nil, nil, 3, 6) --Напряженность
+local specWarnUltimatePower			= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 2, 2) --Первичная мощь
 
-local timerRP				= mod:NewRPTimer(17.4)
-local timerUltimatePower	= mod:NewTargetTimer(15, 113309, nil, nil, nil, 5)
+local timerRP						= mod:NewRPTimer(17.4)
+local timerUltimatePower			= mod:NewTargetTimer(15, 113309, nil, nil, nil, 5)
+local timerFeelingInferiority		= mod:NewBuffActiveTimer(20, 396152, nil, nil, nil, 3) --Чувство неполноценности
 
 mod.vb.bossesDead = 0
 
@@ -39,34 +45,64 @@ function mod:OnCombatStart(delay)
 	self.vb.bossesDead = 0
 end
 
-function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 113309 then
-		specWarnUltimatePower:Show(args.destName)
-		specWarnUltimatePower:Play("aesoon")
-		timerUltimatePower:Start(args.destName)
-	end
-end
-
-function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 113309 then
-		timerUltimatePower:Stop(args.destName)
-	end
-end
-
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 122714 then
+	local spellId = args.spellId
+	if spellId == 122714 then --Расторопность хранителей истории
 		DBM:EndCombat(self)--Alternte win detection, UNIT_DIED not fire for 59051 (Strife), 59726 (Anger)
 	end
 end
 
-function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args.spellId == 113315 then
-		if args.amount == 7 then--Start point of special warnings subject to adjustment based on live tuning.
-			specWarnIntensity:Show(args.spellName, args.destName or "", args.amount)
-			specWarnIntensity:Play("targetchange")
-		elseif args.amount % 2 == 0 then
-			warnIntensity:Show(args.destName or "", args.amount)
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 113309 then --Первичная мощь
+		specWarnUltimatePower:Show(args.destName)
+		specWarnUltimatePower:Play("aesoon")
+		timerUltimatePower:Start(args.destName)
+	elseif spellId == 396150 then --Чувство превосходства
+		if args:IsPlayer() then
+			specWarnFeelingSuperiority:Show()
+			specWarnFeelingSuperiority:Play("targetyou")
+		else
+			warnFeelingSuperiority:Show(args.destName)
 		end
+	elseif spellId == 396152 then --Чувство неполноценности
+		if args:IsPlayer() then
+			specWarnFeelingInferiority:Show()
+			specWarnFeelingInferiority:Play("targetyou")
+			timerFeelingInferiority:Start()
+		end
+	end
+end
+
+function mod:SPELL_AURA_APPLIED_DOSE(args)
+	local spellId = args.spellId
+	if spellId == 113315 then --Напряженность
+		local amount = args.amount or 1
+		if amount == 7 then--Start point of special warnings subject to adjustment based on live tuning.
+			specWarnIntensity:Show(amount, args.destName)
+			specWarnIntensity:Play("targetchange")
+		elseif amount % 2 == 0 then
+			warnIntensity:Show(args.destName or "", amount)
+		end
+	elseif spellId == 396150 then --Чувство превосходства
+		local amount = args.amount or 1
+		if args:IsPlayer() then
+			if amount >= 4 and amount % 2 == 0 then
+				specWarnFeelingSuperiority2:Show(amount)
+				specWarnFeelingSuperiority2:Play("stackhigh")
+			end
+		else
+			if amount >= 4 and amount % 2 == 0 then
+				warnFeelingSuperiority2:Show(args.destName, amount)
+			end
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 113309 then
+		timerUltimatePower:Stop(args.destName)
 	end
 end
 
@@ -100,7 +136,7 @@ function mod:OnSync(msg, targetname)
 	if msg == "LibraryRP1" then
 		timerRP:Start(17.4)
 	elseif msg == "LibraryRP2" then
-		timerRP:Start(31.4)
+		timerRP:Start(21)
 	end
 end
 
