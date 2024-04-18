@@ -30,39 +30,39 @@ mod:RegisterEventsInCombat(
 --]]
 --Dathea, Ascended
 mod:AddTimerLine(DBM_COMMON_L.BOSS)
-local warnMarkCast								= mod:NewCountAnnounce(391686, 3)
-local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189)
-local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer")
+local warnMarkCast								= mod:NewCountAnnounce(391686, 3) --Знак проводимости
+local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189) --Яростный импульс
+local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer") --Удар южного ветра
 
-local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 2)
-local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2)
+local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 2) --Поднимающаяся буря
+local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2) --Знак проводимости
 local specWarnCyclone							= mod:NewSpecialWarningCount(376943, nil, nil, nil, 4, 12) --Смерч
-local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2)--232722 "Slicing Tornado" better?
-local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 1, 2)
-local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 2)
+local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2) --Встречный ветер 232722 "Slicing Tornado" better?
+local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 3, 4) --Удар южного ветра
+local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 2) --Удар южного ветра
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
-local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.TANK_ICON)
-local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3)--Tornados
-local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3)
+local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.TANK_ICON) --Поднимающаяся буря
+local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3) --Яростный импульс
+local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3) --Знак проводимости
 local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 2) --Смерч
 local timerCyclone								= mod:NewCastTimer(14, 376943, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Смерч
-local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3)--232722 "Slicing Tornado" better?
-local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3) --Встречный ветер 232722 "Slicing Tornado" better?
+local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар южного ветра
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddInfoFrameOption(391686, true)
 --Volatile Infuser
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25903))
-local warnBlowback								= mod:NewCastAnnounce(395501, 4)--Fallback warning, should know it's being cast even if not in distance of knockback, so you don't walk into it
+local warnBlowback								= mod:NewCastAnnounce(395501, 4) --Встречный ветер Fallback warning, should know it's being cast even if not in distance of knockback, so you don't walk into it
 
-local specWarnBlowback							= mod:NewSpecialWarningSpell(395501, nil, nil, nil, 2, 2)--Distance based warning, Ie in range of knockback
-local specWarnDivertedEssence					= mod:NewSpecialWarningInterruptCount(387943, "HasInterrupt", nil, nil, 1, 2)
-local specWarnAerialSlash						= mod:NewSpecialWarningDefensive(385812, nil, nil, nil, 1, 2)
+local specWarnBlowback							= mod:NewSpecialWarningSpell(395501, nil, nil, nil, 2, 2) --Встречный ветер Distance based warning, Ie in range of knockback
+local specWarnDivertedEssence					= mod:NewSpecialWarningInterruptCount(387943, "HasInterrupt", nil, nil, 1, 2) --Перемещенная сущность
+local specWarnAerialSlash						= mod:NewSpecialWarningDefensive(385812, nil, nil, nil, 1, 2) --Резкий удар ветра
 
-local timerAerialSlashCD						= mod:NewCDTimer(12, 385812, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerAerialSlashCD						= mod:NewCDTimer(12, 385812, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Резкий удар ветра
 
-local yellConductiveMark						= mod:NewShortYell(391686, 28836, nil, nil, "YELL")
+local yellConductiveMark						= mod:NewShortYell(391686, 28836, nil, nil, "YELL") --Знак проводимости
 
 mod:AddRangeFrameOption(4, 391686)
 mod:AddSetIconOption("SetIconOnVolatileInfuser", "ej25903", true, 5, {8, 7, 6, 5, 4})
