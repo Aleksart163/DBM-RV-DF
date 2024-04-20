@@ -41,10 +41,10 @@ local specWarnAdds				= mod:NewSpecialWarningSwitch(-9466, "-Healer", 267813, ni
 local timerSubmerge				= mod:NewBuffActiveTimer(6.5, 172190, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Погружение
 local timerSubmergeCD			= mod:NewCDTimer(43, 172190, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Погружение
 local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мощный удар
-local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
-local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
+local timerInhale				= mod:NewCastTimer(9.5, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
+local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(30.8, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
-local timerAddsCD				= mod:NewCDTimer(28, -9466, nil, nil, nil, 1, 267813, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
+local timerAddsCD				= mod:NewCDTimer(27.5, -9466, nil, nil, nil, 1, 267813, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
 
 mod.vb.inhaleActive = false
 mod.vb.inhaleCount = 0
