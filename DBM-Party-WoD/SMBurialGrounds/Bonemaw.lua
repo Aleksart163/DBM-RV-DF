@@ -44,13 +44,13 @@ local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_
 local timerInhale				= mod:NewCastTimer(9, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(30.8, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
-local timerAddsCD				= mod:NewCDTimer(26, -9466, nil, nil, nil, 1, 267813, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
+local timerAddsCD				= mod:NewCDTimer(28, -9466, nil, nil, nil, 1, 267813, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
 
 mod.vb.inhaleActive = false
 mod.vb.inhaleCount = 0
 
 local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
-local MurchalProshlyap = nil
+local MurchalProshlyap = false
 
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false

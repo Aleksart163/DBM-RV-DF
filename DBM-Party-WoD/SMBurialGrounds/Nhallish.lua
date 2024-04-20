@@ -24,6 +24,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 152979 and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+local warnVoidBlast				= mod:NewTargetNoFilterAnnounce(152792, 4) --Вспышка Бездны
 
 local specWarnVoidBlast			= mod:NewSpecialWarningDefensive(152792, nil, nil, nil, 3, 4) --Вспышка Бездны
 local specWarnVoidVortex		= mod:NewSpecialWarningRun(152801, nil, nil, 2, 4, 2) --Водоворот Бездны
@@ -48,6 +49,8 @@ function mod:VoidBlastTarget(targetname, uId)
 		specWarnVoidBlast:Show()
 		specWarnVoidBlast:Play("defensive")
 		yellVoidBlast:Yell()
+	else
+		warnVoidBlast:Show(targetname)
 	end
 	if self.Options.SetIconOnVoidBlast then
 		self:SetIcon(targetname, 8, 5)

@@ -24,7 +24,7 @@ ability.id = 154442 and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, 154350 is not firing spell summmon anymore in 10.0.2 M+ version, Omen of Death moved to USCS but target scan needs to be rechecked as well
-local warnOmenOfDeath			= mod:NewSpellAnnounce(154350, 3)
+local warnOmenOfDeath			= mod:NewSpellAnnounce(154350, 4)
 
 local specWarnRitualOfBones		= mod:NewSpecialWarningDodge(154671, nil, nil, nil, 3, 2) --Костяной ритуал
 local specWarnRitualOfBones2	= mod:NewSpecialWarningYou(154469, nil, nil, nil, 3, 4)
@@ -35,10 +35,15 @@ local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350, nil, nil, nil, 3, nil, 
 
 mod.vb.MurchalProshlyapenCount = 0
 
+local MurchalProshlyap = false
+
 local function startProshlyapationOfMurchal(self)
 	if not UnitIsDeadOrGhost("player") then
 		specWarnRitualOfBones:Show()
 		specWarnRitualOfBones:Play("specialsoon")
+	end
+	if not MurchalProshlyap then
+		MurchalProshlyap = true
 	end
 	timerRitualOfBonesCD:Start()
 	timerOmenOfDeathCD:Start(25.5)
@@ -49,6 +54,7 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.MurchalProshlyapenCount = 0
+	MurchalProshlyap = false
 	timerOmenOfDeathCD:Start(9.7-delay)
 	timerRitualOfBonesCD:Start(20.5-delay)
 	self:Schedule(20.5, startProshlyapationOfMurchal, self)
@@ -79,12 +85,14 @@ function mod:SPELL_SUMMON(args)
 	if args.spellId == 154350 then
 		self.vb.MurchalProshlyapenCount = self.vb.MurchalProshlyapenCount + 1
 		warnOmenOfDeath:Show()
-		if self.vb.MurchalProshlyapenCount == 1 then
-			timerOmenOfDeathCD:Start(14.8)
-			DBM:Debug("MurchalProshlyapenCount = 1")
-		elseif self.vb.MurchalProshlyapenCount == 2 then
-			timerOmenOfDeathCD:Start(11)
-			DBM:Debug("MurchalProshlyapenCount = 2")
+		if MurchalProshlyap then
+			if self.vb.MurchalProshlyapenCount == 1 then
+				timerOmenOfDeathCD:Start(14.8)
+				DBM:Debug("MurchalProshlyapenCount = 1")
+			elseif self.vb.MurchalProshlyapenCount == 2 then
+				timerOmenOfDeathCD:Start(11)
+				DBM:Debug("MurchalProshlyapenCount = 2")
+			end
 		end
 	end
 end
