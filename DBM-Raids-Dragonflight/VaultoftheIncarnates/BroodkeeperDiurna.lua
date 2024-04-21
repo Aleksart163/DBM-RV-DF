@@ -529,8 +529,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 396269 then
 		self.vb.tankComboStarted = false
 	elseif spellId == 181113 then
+		DBM:Debug("Murchal proshlyap", 2)
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
 		if cid == 191206 then--Mages
+			DBM:Debug("Murchal proshlyap 1", 2)
 			if not castsPerGUID[args.sourceGUID] then
 				castsPerGUID[args.sourceGUID] = 0
 				if self.Options.SetIconOnMages then
@@ -544,6 +546,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				end
 			end
 		elseif cid == 191232 then--StormBringers
+			DBM:Debug("Murchal proshlyap 2", 2)
 			if not castsPerGUID[args.sourceGUID] then
 				castsPerGUID[args.sourceGUID] = 0
 				if self.Options.SetIconOnStormbringers then

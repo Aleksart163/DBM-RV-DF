@@ -394,21 +394,25 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 375825 then--Frozen Destroyer
-		timerFreezingTempestCD:Start(30.4, args.sourceGUID)
+		DBM:Debug("Murchal proshlyap 33", 2)
+	--[[	timerFreezingTempestCD:Start(30.4, args.sourceGUID)
 		if self:IsMythic() then
 			timerAbsoluteZeroCD:Start(20.3, 1, args.sourceGUID)
-		end
+		end]]
 	elseif spellId == 375828 then--Blazing Fiend
+		DBM:Debug("Murchal proshlyap 11", 2)
 		if self:IsMythic() then
 			timerSearingCarnageCD:Start(20.2, args.sourceGUID)
 		end
 	elseif spellId == 375824 then--Tectonic Crusher
+		DBM:Debug("Murchal proshlyap 44", 2)
 		timerGroundShatterCD:Start(5.9, args.sourceGUID)
 		timerViolentUpheavelCD:Start(20.6, args.sourceGUID)
 		if self:IsMythic() then
 			timerSeismicRuptureCD:Start(45, args.sourceGUID)
 		end
 	elseif spellId == 375792 then--Thundering Ravager
+		DBM:Debug("Murchal proshlyap 22", 2)
 		timerStormBreakCD:Start(7.2, args.sourceGUID)
 		if self:IsMythic() then
 			timerThunderStrikeCD:Start(38.5, args.sourceGUID)
@@ -606,29 +610,37 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local unitID = "boss"..i
 		local GUID = UnitGUID(unitID)
 		local cid = self:GetCIDFromGUID(GUID)
+		-- 4.3 сек от прошляпа очка Мурчаля --
 		if cid == 190688 then --Пылающий демон (огонь)
 			DBM:Debug("Murchal proshlyap 1", 2)
 			if self:IsMythic() then
-				timerSearingCarnageCD:Start(24.4)
+				timerSearingCarnageCD:Start(20)
 			end
 		elseif cid == 190690 then --Рокочущий опустошитель (воздух)
 			DBM:Debug("Murchal proshlyap 2", 2)
-			timerStormBreakCD:Start(11.4)
 			if self:IsMythic() then
-				timerThunderStrikeCD:Start(42.6)
+				timerThunderStrikeCD:Start(38.3)
+				timerStormBreakCD:Start(7)
+			else
+				timerStormBreakCD:Start(7)
 			end
 		elseif cid == 190686 then --Морозный разрушитель (лед)
 			DBM:Debug("Murchal proshlyap 3", 2)
 			if self:IsMythic() then
-				timerAbsoluteZeroCD:Start(24.8, 1)
+				timerAbsoluteZeroCD:Start(20.5, 1)
+				timerFreezingTempestCD:Start(30.4)
+			elseif self:IsHeroic() then
+				timerFreezingTempestCD:Start(30.4)
+			else
+				timerFreezingTempestCD:Start(29.2)
 			end
-			timerFreezingTempestCD:Start(33.6)
 		elseif cid == 190588 then --Тектонический крушитель (земля)
 			DBM:Debug("Murchal proshlyap 4", 2)
-			timerGroundShatterCD:Start(10.3)
-			timerViolentUpheavelCD:Start(24.8)
 			if self:IsMythic() then
-				timerSeismicRuptureCD:Start(49.2)
+				timerSeismicRuptureCD:Start(45)
+			else
+				timerGroundShatterCD:Start(6)
+				timerViolentUpheavelCD:Start(20.5)
 			end
 		end
 	end
