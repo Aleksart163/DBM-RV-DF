@@ -72,18 +72,18 @@ mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing wi
 
 --Stage Two: Cold Peak
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
-local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3)
+local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3) --Удушающие тенета
 
-local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 6)
-local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, nil, 2, 12)
+local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 6) --Удушающие тенета
+local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, nil, 2, 12) --Отталкивающий взрыв
 
-local timerSuffocatingWebsCD						= mod:NewCDCountTimer(38.8, 373048, nil, nil, nil, 3)--38-46
-local timerRepellingBurstCD							= mod:NewCDCountTimer(33.9, 371983, nil, nil, nil, 2)--33-37 (unknown on normal
+local timerSuffocatingWebsCD						= mod:NewCDCountTimer(38.8, 373048, nil, nil, nil, 3) --Удушающие тенета 38-46
+local timerRepellingBurstCD							= mod:NewCDCountTimer(33.9, 371983, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Отталкивающий взрыв
 
 local yellSuffocatingWebs							= mod:NewShortPosYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
 local yellSuffocatingWebsFades						= mod:NewIconFadesYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
 
-mod:AddSetIconOption("SetIconOnSufWeb", 373048, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnSufWeb", 373048, true, false, {1, 2, 3}) --Удушающие тенета
 
 local stickyStacks = {}
 mod.vb.webIcon = 1
@@ -437,12 +437,12 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.25))
 			warnPhase:Play("phasechange")
 			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
-			timerFrostbreathArachnidCD:Start(62.5)
-			self:Schedule(62.5, startAnnounceArachnid, self)
+			timerFrostbreathArachnidCD:Start(63)
+			self:Schedule(63, startAnnounceArachnid, self)
 			if self:IsEasy() then
 				timerPhaseCD:Start(102)
 			elseif self:IsHeroic() then
-				timerPhaseCD:Start(99.8)
+				timerPhaseCD:Start(99.8) --
 			else
 				timerPhaseCD:Start(99.8)
 			end
@@ -455,10 +455,14 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 				timerFrostbreathArachnidCD:Start(62.5) --точно под обычку
 				self:Schedule(62.5, startAnnounceArachnid, self)
 				timerPhaseCD:Start(98.5) --точно под обычку
+			elseif self:IsHeroic() then
+				timerFrostbreathArachnidCD:Start(62) --точно под гер
+				self:Schedule(62, startAnnounceArachnid, self) --точно под гер
+				timerPhaseCD:Start(99.5) --точно под гер
 			else
 				timerFrostbreathArachnidCD:Start(62) --точно под гер
-				self:Schedule(62, startAnnounceArachnid, self)
-				timerPhaseCD:Start(98.5) --точно под мифик и гер
+				self:Schedule(62, startAnnounceArachnid, self) --точно под гер
+				timerPhaseCD:Start(98.5)
 			end
 		else --последнее движение
 			self:SetStage(1.75)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
