@@ -40,6 +40,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 382530 and (type = "applybuff" or type = "removebuff")
 --]]
 --General
+local warnStormNova								= mod:NewCastAnnounce(382434, 4)
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(388115, nil, nil, nil, 1, 8)
@@ -60,9 +61,9 @@ local specWarnLightingBreath					= mod:NewSpecialWarningDodgeCount(377594, nil, 
 
 local timerHurricaneWingCD						= mod:NewCDCountTimer(35, 377612, nil, nil, nil, 2)
 local timerHurricaneWing						= mod:NewCastTimer(6, 377612, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3)
-local timerStaticChargeCD						= mod:NewCDCountTimer(35, 381615, 167180, nil, nil, 3)--"Bombs"
-local timerStaticCharge							= mod:NewCastTimer(35, 381615, 167180, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--"Bombs"
-local timerVolatileCurrentCD					= mod:NewCDCountTimer(47, 388643, 384738, nil, nil, 3)
+local timerStaticChargeCD						= mod:NewCDCountTimer(35, 381615, 167180, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Статический разряд (Бомбы)
+local timerStaticCharge							= mod:NewCastTimer(35, 381615, 167180, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Статический разряд (Бомбы)
+local timerVolatileCurrentCD					= mod:NewCDCountTimer(47, 388643, 384738, nil, nil, 7)
 local timerElectrifiedJawsCD					= mod:NewCDCountTimer(25, 395906, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Электрические челюсти
 local timerLightningBreathCD					= mod:NewCDCountTimer(35, 377594, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
@@ -73,11 +74,11 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25683))
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25402))
 local warnLightningDevastation					= mod:NewCountAnnounce(385065, 3, nil, nil, 125030) --Опустошающая молния (Глубокий вдох)
 
-local specWarnStormNova							= mod:NewSpecialWarningSpell(382434, nil, nil, nil, 2, 2)
+local specWarnStormNova							= mod:NewSpecialWarningSpell(382434, nil, nil, nil, 2, 2) --Взрыв бури
 local specWarnLightningDevastation				= mod:NewSpecialWarningDodgeCount(385065, nil, 125030, nil, 3, 2) --Опустошающая молния (Глубокий вдох)
 
-local timerStormNovaCD							= mod:NewCDTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
-local timerStormNova							= mod:NewCastTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3)
+local timerStormNovaCD							= mod:NewCDTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Взрыв бури
+local timerStormNova							= mod:NewCastTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Взрыв бури
 local timerLightningDevastationCD				= mod:NewCDCountTimer(13.3, 385065, 125030, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Опустошающая молния (Глубокий вдох)
 
 mod:AddBoolOption("SetBreathToBait", false)
@@ -88,12 +89,12 @@ local warnShatteringShroud						= mod:NewTargetNoFilterAnnounce(397382, 4)
 local warnShatteringShroudFaded					= mod:NewFadesAnnounce(397382, 1)
 --local warnBlazingroar							= mod:NewCastAnnounce(397468, 4)--Redundant, it casts at same time as flame shield
 
-local specWarnSurgingBlast						= mod:NewSpecialWarningMoveAway(396037, nil, 37859, nil, 1, 2)
+local specWarnSurgingBlast						= mod:NewSpecialWarningMoveAway(396037, nil, 37859, nil, 4, 4) --Неконтролируемый взрыв (Бомбардировка)
 --local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(385553, "HasInterrupt", nil, nil, 1, 2)
 local specWarnShatteringShroud					= mod:NewSpecialWarningYou(397382, nil, nil, nil, 1, 2, 4)
 local specWarnFlameShield						= mod:NewSpecialWarningSwitch(397387, nil, nil, nil, 1, 2, 4)
 
-local timerSurgingBlastCD						= mod:NewCDTimer(12.4, 396037, 37859, false, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
+local timerSurgingBlastCD						= mod:NewCDTimer(12.4, 396037, 37859, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Неконтролируемый взрыв (Бомбардировка)
 local timerShatteringShroudCD					= mod:NewCDSourceTimer(35, 397382, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerFlameShieldCD						= mod:NewCDSourceTimer(35, 397387, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 
@@ -102,27 +103,27 @@ mod:AddNamePlateOption("NPAuraOnAscension", 385541)
 mod:AddNamePlateOption("NPAuraOnFlameShield", 397387)
 --Stage Two: Surging Power
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25312))
-local warnStormsurge						= mod:NewEndAnnounce(387261, 1)
-local warnInversion							= mod:NewTargetAnnounce(394584, 4)
-local warnFocusedCharge						= mod:NewYouAnnounce(394582, 1)
-local warnScatteredCharge					= mod:NewYouAnnounce(394583, 4)
-local warnFulminatingCharge					= mod:NewTargetNoFilterAnnounce(377467, 3, nil, nil, 345338)
+local warnStormsurge						= mod:NewEndAnnounce(387261, 1) --Энергия бури
+local warnInversion							= mod:NewTargetAnnounce(394584, 4) --Инверсия
+local warnFocusedCharge						= mod:NewYouAnnounce(394582, 1) --Концентрированный заряд
+local warnScatteredCharge					= mod:NewYouAnnounce(394583, 4) --Рассеянный заряд
+local warnFulminatingCharge					= mod:NewTargetNoFilterAnnounce(377467, 3, nil, nil, 345338) --Сверкающий заряд (Заряды)
 
-local specWarnStormsurge					= mod:NewSpecialWarningMoveAwayCount(387261, nil, nil, nil, 2, 2)--Maybe shorttext 28089?
-local specWarnPositiveCharge				= mod:NewSpecialWarningYou(391990, nil, nil, nil, 1, 13)--Split warning so user can custom sounds
-local specWarnNegativeCharge				= mod:NewSpecialWarningYou(391991, nil, nil, nil, 1, 13)--between positive and negative
-local specWarnInversion						= mod:NewSpecialWarningMoveAway(394584, nil, nil, nil, 3, 13, 4)
+local specWarnStormsurge					= mod:NewSpecialWarningMoveAwayCount(387261, nil, nil, nil, 2, 2) --Энергия бури
+local specWarnPositiveCharge				= mod:NewSpecialWarningYou(391990, nil, nil, nil, 1, 13) --Положительный заряд
+local specWarnNegativeCharge				= mod:NewSpecialWarningYou(391991, nil, nil, nil, 1, 13) --Отрицательный заряд
+local specWarnInversion						= mod:NewSpecialWarningMoveAway(394584, nil, nil, nil, 3, 13, 4) --Инверсия
 --local specWarnScatteredCharge				= mod:NewSpecialWarningMoveAway(394583, nil, nil, nil, 1, 2)
-local specWarnTempestWing					= mod:NewSpecialWarningCount(385574, nil, 63533, nil, 2, 2)--"Storm Wave"
-local specWarnFulminatingCharge				= mod:NewSpecialWarningYouPos(377467, nil, 221175, nil, 1, 2)--"Charge" shortname
+local specWarnTempestWing					= mod:NewSpecialWarningCount(385574, nil, 63533, nil, 2, 2) --Крыло бури (Штормовая волна)
+local specWarnFulminatingCharge				= mod:NewSpecialWarningYouPos(377467, nil, 345338, nil, 4, 2) --Сверкающий заряд (Заряд)
 
-local timerStormsurgeCD						= mod:NewCDCountTimer(35, 387261, nil, nil, nil, 7)--Maybe shorttext 28089?
-local timerTempestWingCD					= mod:NewCDCountTimer(35, 385574, 63533, nil, nil, 3)
-local timerFulminatingChargeCD				= mod:NewCDCountTimer(35, 377467, 345338, nil, nil, 3)--shortname "Charges"
-local timerInversionCD						= mod:NewCDCountTimer(6, 394584, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerStormsurgeCD						= mod:NewCDCountTimer(35, 387261, nil, nil, nil, 7) --Энергия бури
+local timerTempestWingCD					= mod:NewCDCountTimer(35, 385574, 63533, nil, nil, 2) --Крыло бури (Штормовая волна)
+local timerFulminatingChargeCD				= mod:NewCDCountTimer(35, 377467, 345338, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сверкающий заряд (Заряды)
+local timerInversionCD						= mod:NewCDCountTimer(6, 394584, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Инверсия
 
-mod:AddSetIconOption("SetIconOnFulminatingCharge", 377467, true, 0, {1, 2, 3})
-mod:AddInfoFrameOption(387261, true)
+mod:AddSetIconOption("SetIconOnFulminatingCharge", 377467, true, 0, {1, 2, 3}) --Сверкающий заряд (Заряды)
+mod:AddInfoFrameOption(387261, true) --Энергия бури
 mod:GroupSpells(391989, 391990, 391991, 394584)--Group positive and negative spellIds under parent category "Stormcharged"
 --Intermission: The Vault Falters
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25812))
@@ -154,9 +155,9 @@ local yellStaticChargeFades					= mod:NewIconFadesYell(381615, 37859, nil, nil, 
 local yellSurgingBlast						= mod:NewShortYell(396037, 37859, nil, nil, "YELL")
 local yellSurgingBlastFades					= mod:NewShortFadesYell(396037, 37859, nil, nil, "YELL")
 local yellStormCharged						= mod:NewIconRepeatYell(391989, nil, nil, nil, "YELL")
-local yellInversion							= mod:NewIconRepeatYell(394584, nil, nil, nil, "YELL")
-local yellFulminatingCharge					= mod:NewShortPosYell(377467, 221175, nil, nil, "YELL")--"Charge" shortname
-local yellFulminatingChargeFades			= mod:NewIconFadesYell(377467, 221175, nil, nil, "YELL")--"Charge" shortname
+local yellInversion							= mod:NewIconRepeatYell(394584, nil, nil, nil, "YELL") --Инверсия
+local yellFulminatingCharge					= mod:NewShortPosYell(377467, 345338, nil, nil, "YELL") --Сверкающий заряд (Заряд)
+local yellFulminatingChargeFades			= mod:NewIconFadesYell(377467, 345338, nil, nil, "YELL") --Сверкающий заряд (Заряд)
 local yellMagneticCharge					= mod:NewShortYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
 local yellMagneticChargeFades				= mod:NewShortFadesYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
 local yellElectrifiedJaws					= mod:NewShortYell(395906, nil, nil, nil, "YELL") --Электрические челюсти
@@ -529,7 +530,8 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerThunderousBlastCD:Start(timer, self.vb.tankCount+1)
 		end
-	elseif spellId == 382434 or spellId == 390463 then
+	elseif spellId == 382434 or spellId == 390463 then --Взрыв бури
+		warnStormNova:Show()
 		specWarnStormNova:Show()
 		specWarnStormNova:Play("carefly")
 		timerStormNova:Start()
@@ -561,7 +563,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if timer then
 			timerMagneticChargeCD:Start(timer, self.vb.magneticCount+1)
 		end
-	elseif spellId == 382434 then--First intermission Starts (Storm Nova finished)
+	elseif spellId == 382434 then -- первая Взрыв бури (Storm Nova finished)
 		self.vb.breathCount = 0--Reused for Lightning Devastation
 		if self.Options.SetBreathToBait then
 			timerLightningDevastationCD:Start(self:IsMythic() and 11.3 or 11.7, 1)
@@ -914,6 +916,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:SendSync("OchkenShlyapen2")
 	elseif msg == L.MurchalOchkenProshlyapen3 or msg:find(L.MurchalOchkenProshlyapen3) then --Конец 2 фазы
 		self:SendSync("OchkenShlyapen3")
+	elseif msg == L.MurchalOchkenProshlyapen4 or msg:find(L.MurchalOchkenProshlyapen4) then --Конец 1.5 фазы
+		self:SendSync("OchkenShlyapen4")
 	end
 end
 
@@ -951,6 +955,7 @@ end
 function mod:OnSync(msg)
 	if msg == "OchkenShlyapen" then --1-ая переходка
 		self:SetStage(1.5)
+		self.vb.breathCount = 0
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 		warnPhase:Play("phasechange")
 		timerStormNovaCD:Start(8.6)
@@ -969,7 +974,7 @@ function mod:OnSync(msg)
 		timerTempestWingCD:Stop()
 		timerFulminatingChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
-		timerLightningDevastationCD:Start(26.2, self.vb.breathCount+1)
+		timerLightningDevastationCD:Start(26.2, 1)
 	elseif msg == "OchkenShlyapen3" then --Конец 2 фазы
 		MurchalProshlyap = false
 		timerStormBreakCD:Stop()
@@ -977,5 +982,8 @@ function mod:OnSync(msg)
 		timerLightningStrikeCD:Stop()
 		timerLightningDevastationCD:Stop()
 		timerStormNovaCD:Start(2)
+	elseif msg == "OchkenShlyapen4" then --Конец 1.5 фазы
+		timerPhaseCD:Stop()
+		timerLightningDevastationCD:Stop()
 	end
 end

@@ -439,13 +439,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			--проверить ещё раз таймеры, а потом сделать прошляп Мурчалю--
 			timerFrostbreathArachnidCD:Start(63)
 			self:Schedule(63, startAnnounceArachnid, self)
-			if self:IsEasy() then
-				timerPhaseCD:Start(102)
-			elseif self:IsHeroic() then
-				timerPhaseCD:Start(99.8) --
-			else
-				timerPhaseCD:Start(99.8)
-			end
+			timerPhaseCD:Start(99.8) -- под гер и обычку норм (ещё раз проверить миф)
 		elseif self.vb.stageTotality == 2 then --2 движение босса
 			self:SetStage(1.5)--Arbritrary phase numbers since journal classifies movements as intermissions and top as true stage 2
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
