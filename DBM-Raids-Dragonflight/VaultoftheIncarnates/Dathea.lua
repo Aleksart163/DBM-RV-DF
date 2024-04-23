@@ -39,7 +39,7 @@ local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, ni
 local specWarnCyclone							= mod:NewSpecialWarningDodgeCount(376943, nil, nil, nil, 4, 12) --Смерч
 local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2) --Встречный ветер 232722 "Slicing Tornado" better?
 local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 3, 4) --Удар южного ветра
-local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 2) --Удар южного ветра
+local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 4) --Удар южного ветра
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Поднимающаяся буря
@@ -140,7 +140,7 @@ function mod:SPELL_CAST_START(args)
 			timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --
 			timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --
 			timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --
-			timerColaescingStormCD:Start(88.5, self.vb.stormCount+1) --
+			timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --
 		elseif self:IsHeroic() then
 			timerZephyrSlamCD:Restart(20.7, self.vb.slamCount+1)
 			timerCrosswindsCD:Restart(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
