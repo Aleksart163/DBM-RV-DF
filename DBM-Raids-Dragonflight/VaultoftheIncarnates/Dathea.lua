@@ -31,21 +31,21 @@ mod:RegisterEventsInCombat(
 --Dathea, Ascended
 mod:AddTimerLine(DBM_COMMON_L.BOSS)
 local warnMarkCast								= mod:NewCountAnnounce(391686, 3) --Знак проводимости
-local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189) --Яростный импульс
+local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189) --Яростный импульс (Воронки)
 local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer") --Удар южного ветра
 
-local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 2) --Поднимающаяся буря
+local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 4) --Поднимающаяся буря
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2) --Знак проводимости
-local specWarnCyclone							= mod:NewSpecialWarningCount(376943, nil, nil, nil, 4, 12) --Смерч
+local specWarnCyclone							= mod:NewSpecialWarningDodgeCount(376943, nil, nil, nil, 4, 12) --Смерч
 local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2) --Встречный ветер 232722 "Slicing Tornado" better?
 local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 3, 4) --Удар южного ветра
 local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 2) --Удар южного ветра
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
-local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.TANK_ICON) --Поднимающаяся буря
-local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3) --Яростный импульс
+local timerColaescingStormCD					= mod:NewCDCountTimer(79.1, 387849, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Поднимающаяся буря
+local timerRagingBurstCD						= mod:NewCDCountTimer(79.1, 388302, 86189, nil, nil, 3) --Яростный импульс (Воронки)
 local timerConductiveMarkCD						= mod:NewCDCountTimer(25, 391686, nil, nil, nil, 3) --Знак проводимости
-local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 2) --Смерч
+local timerCycloneCD							= mod:NewCDCountTimer(79.1, 376943, nil, nil, nil, 7) --Смерч
 local timerCyclone								= mod:NewCastTimer(14, 376943, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Смерч
 local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3) --Встречный ветер 232722 "Slicing Tornado" better?
 local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар южного ветра
@@ -56,7 +56,7 @@ local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Hea
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25903))
 local warnBlowback								= mod:NewCastAnnounce(395501, 4) --Встречный ветер Fallback warning, should know it's being cast even if not in distance of knockback, so you don't walk into it
 
-local specWarnBlowback							= mod:NewSpecialWarningSpell(395501, nil, nil, nil, 2, 2) --Встречный ветер Distance based warning, Ie in range of knockback
+local specWarnBlowback							= mod:NewSpecialWarningDodge(395501, nil, nil, nil, 2, 2) --Встречный ветер Distance based warning, Ie in range of knockback
 local specWarnDivertedEssence					= mod:NewSpecialWarningInterruptCount(387943, "HasInterrupt", nil, nil, 1, 2) --Перемещенная сущность
 local specWarnAerialSlash						= mod:NewSpecialWarningDefensive(385812, nil, nil, nil, 1, 2) --Резкий удар ветра
 
@@ -68,7 +68,7 @@ mod:AddRangeFrameOption(4, 391686)
 mod:AddSetIconOption("SetIconOnVolatileInfuser", "ej25903", true, 5, {8, 7, 6, 5, 4})
 --Thunder Caller
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25958))
-local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(384273, false, nil, nil, 1, 2)
+local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(384273, false, nil, nil, 1, 2) --Удар громовержца
 
 local castsPerGUID = {}
 mod.vb.addIcon = 8
@@ -83,7 +83,7 @@ function mod:ZephyrSlamTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnZephyrSlam:Show()
-		specWarnZephyrSlam:Play("carefly")
+		specWarnZephyrSlam:Play("defensive")
 	end
 end
 
@@ -97,13 +97,20 @@ function mod:OnCombatStart(delay)
 	self.vb.crosswindCount = 0
 	self.vb.slamCount = 0
 	timerConductiveMarkCD:Start(4.6-delay, 1)
-	timerRagingBurstCD:Start(7-delay, 1)
-	if self:IsHard() then
+	if self:IsMythic() then
+		timerRagingBurstCD:Start(8-delay, 1) --
+		timerZephyrSlamCD:Start(15.7-delay, 1) --
+		timerCrosswindsCD:Start(25.5-delay, 1) --
+		timerCycloneCD:Start(37-delay, 1)
+		timerColaescingStormCD:Start(72.5-delay, 1)--70-73 (check ito it being 73 consistently on mythic)
+	elseif self:IsHeroic() then
+		timerRagingBurstCD:Start(7-delay, 1)
 		timerZephyrSlamCD:Start(15.7-delay, 1)
 		timerCrosswindsCD:Start(25.5-delay, 1)
 		timerCycloneCD:Start(35.2-delay, 1)
 		timerColaescingStormCD:Start(70-delay, 1)--70-73 (check ito it being 73 consistently on mythic)
 	else
+		timerRagingBurstCD:Start(7-delay, 1)
 		timerZephyrSlamCD:Start(9.4-delay, 1)
 		timerCrosswindsCD:Start(28.9-delay, 1)
 		timerCycloneCD:Start(45.2-delay, 1)
@@ -130,10 +137,10 @@ function mod:SPELL_CAST_START(args)
 		specWarnCoalescingStorm:Play("mobsoon")
 		--Timers reset by storm
 		if self:IsMythic() then
-		--	timerConductiveMarkCD:Restart(19.5, self.vb.markCount+1)
-			timerZephyrSlamCD:Restart(30, self.vb.slamCount+1)--30-33
-			timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
-			timerColaescingStormCD:Start(86.2, self.vb.stormCount+1)
+			timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --
+			timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --
+			timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --
+			timerColaescingStormCD:Start(88.5, self.vb.stormCount+1) --
 		elseif self:IsHeroic() then
 			timerZephyrSlamCD:Restart(20.7, self.vb.slamCount+1)
 			timerCrosswindsCD:Restart(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
@@ -157,13 +164,13 @@ function mod:SPELL_CAST_START(args)
 			if self:IsHeroic() then
 				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1)
 			else
-				timerCycloneCD:Start(86.2, self.vb.cycloneCount+1)
+				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --точно под миф
 			end
 		else
 			if self:IsHeroic() then
 				timerCycloneCD:Start(75, self.vb.cycloneCount+1)
 			else
-				timerCycloneCD:Start(86.2, self.vb.cycloneCount+1)
+				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --точно под миф
 			end
 		end
 		timerCyclone:Start()
@@ -181,7 +188,7 @@ function mod:SPELL_CAST_START(args)
 		if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 6 then
 			timerZephyrSlamCD:Restart(6, self.vb.slamCount+1)--6-8
 		end
-	elseif spellId == 375580 then
+	elseif spellId == 375580 then --Удар южного ветра
 		self.vb.slamCount = self.vb.slamCount + 1
 		self:BossTargetScanner(args.sourceGUID, "ZephyrSlamTarget", 0.1, 2)
 		timerZephyrSlamCD:Start(nil, self.vb.slamCount+1)
