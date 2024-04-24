@@ -116,11 +116,11 @@ local allTimers = {
 	},
 	["normal"] = {--Needs work, some of these can be lower (Also includes LFR)
 		--Conductive Mark
-		[375331] = {16.7, 70.5, 43.7, 44.9, 43.7, 44.9, 43.8, 41.2, 44.9, 45, 42.5},
+		[375331] = {16.7, 73, 47, 46, 43.7, 44.9, 43.8, 41.2, 44.9, 45, 42.5},
 		--Pillars
 		[372322] = {8.5, 42.9, 47.6, 43.7, 43.7, 46.1, 43.7, 42.5, 47.3, 42.5, 43.7, 47.4},
 		--Primal Blizzard (excluded for now)
-		[373059] = {60, 149.6, 133, 133},
+		[373059] = {64, 149.6, 133, 133},
 	},
 }
 
@@ -182,7 +182,7 @@ function mod:OnCombatStart(delay)
 	else--Timers are slowed down
 		difficultyName = "normal"
 		--Kadros Icewrath
-		timerPrimalBlizzardCD:Start(60-delay, 1)
+		timerPrimalBlizzardCD:Start(64-delay, 1)
 		--Dathea Stormlsh
 		timerChainLightningCD:Start(10.7-delay)
 		timerConductiveMarkCD:Start(16.7-delay, 1)
