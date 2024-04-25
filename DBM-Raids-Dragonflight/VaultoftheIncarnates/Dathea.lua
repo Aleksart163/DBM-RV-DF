@@ -33,6 +33,7 @@ mod:AddTimerLine(DBM_COMMON_L.BOSS)
 local warnMarkCast								= mod:NewCountAnnounce(391686, 3) --Знак проводимости
 local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189) --Яростный импульс (Воронки)
 local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer") --Удар южного ветра
+local warnZephyrSlam2							= mod:NewTargetNoFilterAnnounce(375580, 4) --Удар южного ветра
 
 local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 4) --Поднимающаяся буря
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2) --Знак проводимости
@@ -51,7 +52,7 @@ local timerCrosswindsCD							= mod:NewCDCountTimer(33, 388410, nil, nil, nil, 3
 local timerZephyrSlamCD							= mod:NewCDCountTimer(15.7, 375580, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар южного ветра
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
---mod:AddInfoFrameOption(391686, true)
+mod:AddInfoFrameOption(375580, "Tank|Healer")
 --Volatile Infuser
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25903))
 local warnBlowback								= mod:NewCastAnnounce(395501, 4) --Встречный ветер Fallback warning, should know it's being cast even if not in distance of knockback, so you don't walk into it
@@ -84,6 +85,8 @@ function mod:ZephyrSlamTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnZephyrSlam:Show()
 		specWarnZephyrSlam:Play("defensive")
+	else
+		warnZephyrSlam2:Show(targetname)
 	end
 end
 
@@ -116,16 +119,16 @@ function mod:OnCombatStart(delay)
 		timerCycloneCD:Start(45.2-delay, 1)
 		timerColaescingStormCD:Start(80-delay, 1)
 	end
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(391686))
---		DBM.InfoFrame:Show(self:IsMythic() and 20 or 10, "playerdebuffstacks", 391686)
---	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(375580))
+		DBM.InfoFrame:Show(3, "playerdebuffstacks", 375580)
+	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -137,10 +140,22 @@ function mod:SPELL_CAST_START(args)
 		specWarnCoalescingStorm:Play("mobsoon")
 		--Timers reset by storm
 		if self:IsMythic() then
-			timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --
-			timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --
-			timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --
-			timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --
+			if self.vb.stormCount == 1 then
+				timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --Знак проводимости--
+				timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --Удар южного ветра--
+				timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --Встречный ветер--
+				timerColaescingStormCD:Start(88.2, self.vb.stormCount+1) --Поднимающаяся буря--
+			elseif self.vb.stormCount == 2 then
+				timerConductiveMarkCD:Start(9.5, self.vb.markCount+1) --Знак проводимости--
+				timerZephyrSlamCD:Restart(33, self.vb.slamCount+1) --Удар южного ветра--
+				timerCrosswindsCD:Restart(29.8, self.vb.crosswindCount+1) --Встречный ветер--
+				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря (пока неточно)
+			else--дефолтные, надо будет править
+				timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --Знак проводимости
+				timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --Удар южного ветра
+				timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --Встречный ветер
+				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря
+			end
 		elseif self:IsHeroic() then
 			timerZephyrSlamCD:Restart(20.7, self.vb.slamCount+1)
 			timerCrosswindsCD:Restart(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
@@ -160,24 +175,31 @@ function mod:SPELL_CAST_START(args)
 		self.vb.cycloneCount = self.vb.cycloneCount + 1
 		specWarnCyclone:Show(self.vb.cycloneCount)
 		specWarnCyclone:Play("pullin")
-		if self.vb.cycloneCount == 1 then
-			if self:IsHeroic() then
-				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1)
+		if self:IsMythic() then
+			if self.vb.cycloneCount == 1 then
+				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч точно под миф
+				timerZephyrSlamCD:Restart(16.8, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
+			elseif self.vb.cycloneCount == 2 then
+				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч (пока неизвестно)
+				timerZephyrSlamCD:Restart(18.4, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
 			else
-				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --точно под миф
+				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч (пока неизвестно)
+				if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 17 then
+					timerZephyrSlamCD:Start(17, self.vb.slamCount+1) --Удар южного ветра (пока неизвестно)
+				end
 			end
 		else
-			if self:IsHeroic() then
-				timerCycloneCD:Start(75, self.vb.cycloneCount+1)
+			if self.vb.cycloneCount == 1 then
+				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1) --точно под героик
 			else
-				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --точно под миф
+				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
+			end
+			if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then --точно под героик
+				timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)
 			end
 		end
 		timerCyclone:Start()
-		if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then
-			timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)--13.2-15
-		end
-	elseif spellId == 388410 then
+	elseif spellId == 388410 then --Встречный ветер
 		self.vb.crosswindCount = self.vb.crosswindCount + 1
 		specWarnCrosswinds:Show(self.vb.crosswindCount)
 		specWarnCrosswinds:Play("farfromline")
@@ -191,7 +213,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 375580 then --Удар южного ветра
 		self.vb.slamCount = self.vb.slamCount + 1
 		self:BossTargetScanner(args.sourceGUID, "ZephyrSlamTarget", 0.1, 2)
-		timerZephyrSlamCD:Start(nil, self.vb.slamCount+1)
+		timerZephyrSlamCD:Start(self:IsMythic() and 16.2 or 15.7, self.vb.slamCount+1)
 	elseif spellId == 387943 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0

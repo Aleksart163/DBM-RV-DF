@@ -489,7 +489,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:SetStage(2)
 		--Base
 		timerSunderStrikeCD:Stop()
-
 		timerDamageCD:Stop()
 		timerAvoidCD:Stop()
 		timerUltimateCD:Stop()
