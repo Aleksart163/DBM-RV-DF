@@ -19,11 +19,11 @@ mod:RegisterEvents(
 
 --TODO, I don't think shoulder slam target scan worked, maybe try again though.
 --TODO, add erratic growth interrupt?
-local warnNullStomp							= mod:NewCastAnnounce(386526, 2)
-local warnShoulderSlam						= mod:NewCastAnnounce(391136, 2)
-local warnPiercingShards					= mod:NewCastAnnounce(370764, 4)
-local warnIceCutter							= mod:NewCastAnnounce(377105, 4, nil, nil, "Tank|Healer")
-local warnIcyBindings						= mod:NewCastAnnounce(377488, 3)
+local warnNullStomp							= mod:NewCastAnnounce(386526, 2) --Нейтрализующий топот
+local warnShoulderSlam						= mod:NewCastAnnounce(391136, 2) --Удар плечом
+local warnPiercingShards					= mod:NewCastAnnounce(370764, 4) --Острые осколки
+local warnIceCutter							= mod:NewCastAnnounce(377105, 4, nil, nil, "Tank|Healer") --Ледокол
+local warnIcyBindings						= mod:NewCastAnnounce(377488, 3) --Ледяные путы
 local warnWakingBane						= mod:NewCastAnnounce(386546, 3)
 local warnBestialRoar						= mod:NewCastAnnounce(396991, 3)
 local warnArcaneBash						= mod:NewCastAnnounce(387067, 3)
@@ -36,19 +36,19 @@ local warSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Ды�
 local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
 local specWarnForbiddenKnowledge			= mod:NewSpecialWarningDodge(371358, nil, nil, nil, 2, 2)
-local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2, 2, 2)
-local specWarnShoulderSlam					= mod:NewSpecialWarningDodge(391136, false, nil, nil, 2, 2)
+local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2, 2, 2) --Нейтрализующий топот
+local specWarnShoulderSlam					= mod:NewSpecialWarningDodge(391136, false, nil, nil, 2, 2) --Удар плечом
 local specWarnCrystallineRupture			= mod:NewSpecialWarningDodge(370766, nil, nil, nil, 2, 2)
 local specWarnWildEruption					= mod:NewSpecialWarningDodge(375652, nil, nil, nil, 2, 2)
 local specWarnArcaneBash					= mod:NewSpecialWarningDodge(387067, nil, nil, nil, 2, 2)
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 1, 2)
-local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2)
+local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2) --Ледяные путы
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2) --Таинственные испарения
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
 
 local timerMysticVaporsCD					= mod:NewCDNPTimer(12.3, 387564, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Таинственные испарения
-local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerIcyBindingsCD					= mod:NewCDNPTimer(14.6, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Ледяные путы
 local timerWakingBaneCD						= mod:NewCDNPTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
@@ -120,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 			warnWakingBane:Show()
 		end
 	elseif spellId == 377488 then
-		timerIcyBindingsCD:Start(20, args.sourceGUID)
+		timerIcyBindingsCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnIcyBindings:Show(args.sourceName)
 			specWarnIcyBindings:Play("kickcast")
@@ -128,7 +128,7 @@ function mod:SPELL_CAST_START(args)
 			warnIcyBindings:Show()
 		end
 	elseif spellId == 387067 then
-		timerArcaneBashCD:Start(18.2, args.sourceGUID)
+		timerArcaneBashCD:Start(nil, args.sourceGUID)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(1.5, 5) then
 			specWarnArcaneBash:Show()
 			specWarnArcaneBash:Play("shockwave")
