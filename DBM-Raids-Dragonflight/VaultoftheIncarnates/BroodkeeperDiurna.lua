@@ -335,6 +335,7 @@ function mod:OnCombatStart(delay)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	end
 	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(245546))
 		DBM.InfoFrame:Show(4, "function", updateInfoFrame, false, false)
 	end
 end
