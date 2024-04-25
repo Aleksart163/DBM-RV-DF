@@ -3,7 +3,7 @@ if not DBM_CORE_L then DBM_CORE_L = {} end
 
 local L = DBM_CORE_L
 
-L.DBM_FORUMS_MESSAGE				= "Нашли баг или неправильный таймер? Считаете что какому-то модулю требуется дополнительное предупреждение, таймер, особенность или локализация?\nПо всем вопросам можете обращаться на discord Aleksart163, /w Куплиняш или оставлять запросы на |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
+L.DBM_FORUMS_MESSAGE				= "Нашли баг или неправильный таймер? Считаете что какому-то модулю требуется дополнительное предупреждение, таймер, особенность или локализация?\nПо всем вопросам можете обращаться на discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r или оставлять запросы на |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
