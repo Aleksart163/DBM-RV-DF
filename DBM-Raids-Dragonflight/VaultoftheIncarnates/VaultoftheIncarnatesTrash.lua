@@ -46,6 +46,7 @@ local yellMagmaBreath							= mod:NewShortYell(393783, nil, nil, nil, "YELL") --
 
 mod:AddSetIconOption("SetIconOnPulverizingBreath", 392635, true, 0, {8})
 mod:AddSetIconOption("SetIconOnMagmaBreathTarget", 393783, true, 0, {8})
+mod:AddSetIconOption("SetIconOnMeteorStrike", 396439, true, 0, {8})
 
 function mod:PulverizingBreathTarget(targetname)
 	if not targetname then return end
@@ -121,6 +122,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellMeteorStrike2:Countdown(spellId)
 		else
 			warnMeteorStrike:Show(args.destName)
+		end
+		if self.Options.SetIconOnMeteorStrike then
+			self:SetIcon(args.destName, 8, 6)
 		end
 	elseif spellId == 397052 then --Проводящий заряд
 		if args:IsPlayer() then
