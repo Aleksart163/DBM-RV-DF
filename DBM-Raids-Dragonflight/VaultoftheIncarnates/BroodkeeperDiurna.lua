@@ -35,7 +35,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: The Primalist Clutch
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25119))
-----Broodkeeper Diurna
+--Broodkeeper Diurna
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25120))
 
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
@@ -55,6 +55,7 @@ local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil,
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2) --Смертельное ранение
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8) --Статическое поле
 
+local timerPhaseCD								= mod:NewPhaseTimer(300)
 local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.staff, nil, nil, 5) --Великий посох хранительницы стаи Shared CD ability?
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1) --Ускоренная инкубация Shared CD ability?
 local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3) --Дикий огонь 21.4-28
@@ -321,15 +322,18 @@ function mod:OnCombatStart(delay)
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self:IsMythic() then
+		timerPhaseCD:Start(-delay)
 		self.vb.murchalProshlyapEggsCount = 32
 		timerStormFissureCD:Start(28-delay)
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Right)
 	elseif self:IsHeroic() then
+		timerPhaseCD:Start(-delay)
 		self.vb.murchalProshlyapEggsCount = 28
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	else
+		timerPhaseCD:Start(301.5-delay)
 		self.vb.murchalProshlyapEggsCount = 24
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
@@ -642,6 +646,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 375879 then --Неистовство хранительницы стаи (фаза 2)
 		--Проверить таймер с Морозным покровом, в героике 1-ый каст случился через 6.8 сек--
 		local amount = args.amount or 1
+		--2 фаза через 5 мин после начала боя?-- 300 сек героик, 301.5 обычка
 		if amount == 1 then
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 			warnPhase:Play("ptwo")
