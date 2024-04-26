@@ -151,9 +151,9 @@ function mod:SPELL_CAST_START(args)
 				timerCrosswindsCD:Restart(29.8, self.vb.crosswindCount+1) --Встречный ветер--
 				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря (пока неточно)
 			else--дефолтные, надо будет править
-				timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --Знак проводимости
-				timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --Удар южного ветра
-				timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --Встречный ветер
+				timerConductiveMarkCD:Start(21, self.vb.markCount+1) --Знак проводимости
+				timerZephyrSlamCD:Start(30, self.vb.slamCount+1) --Удар южного ветра
+				timerCrosswindsCD:Start(40, self.vb.crosswindCount+1) --Встречный ветер
 				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря
 			end
 		elseif self:IsHeroic() then
