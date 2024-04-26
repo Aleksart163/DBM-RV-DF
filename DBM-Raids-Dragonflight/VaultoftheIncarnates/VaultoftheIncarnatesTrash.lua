@@ -9,9 +9,9 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 393783 393787 392635 392280",
 	"SPELL_CAST_SUCCESS 393787 392280",
-	"SPELL_AURA_APPLIED 395273"
+	"SPELL_AURA_APPLIED 395273 396439 397052",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
---	"SPELL_AURA_REMOVED 339525"
+	"SPELL_AURA_REMOVED 396439"
 )
 
 --TODO, icon mark shared suffering? Maybe when they fix ENCOUNTER_START, for now I don't want to risk trash mod messing with a boss mods icon marking
@@ -23,14 +23,22 @@ mod:RegisterEvents(
 --local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
 --local specWarnDirgefromBelow				= mod:NewSpecialWarningInterrupt(310839, "HasInterrupt", nil, nil, 1, 2)
-local specWarnElectricSurge						= mod:NewSpecialWarningMoveAway(395273, nil, nil, nil, 4, 2)
-local specWarnPulverizingBreath					= mod:NewSpecialWarningDefensive(392635, nil, nil, nil, 3, 2) --Дробящее дыхание
+local warnMeteorStrike							= mod:NewTargetNoFilterAnnounce(396439, 4) --Падение метеора
+local warnConductiveCharge						= mod:NewTargetNoFilterAnnounce(397052, 4) --Проводящий заряд
+
+local specWarnMeteorStrike						= mod:NewSpecialWarningMoveTo(396439, nil, nil, nil, 3, 4) --Падение метеора
+local specWarnConductiveCharge					= mod:NewSpecialWarningMoveAway(397052, nil, nil, nil, 4, 2) --Проводящий заряд
+local specWarnElectricSurge						= mod:NewSpecialWarningMoveAway(395273, nil, nil, nil, 4, 2) --Электрический импульс
+local specWarnPulverizingBreath					= mod:NewSpecialWarningDodge(392635, nil, nil, nil, 3, 2) --Дробящее дыхание
 local specWarnMagmaBreath						= mod:NewSpecialWarningDefensive(393783, nil, nil, nil, 3, 2) --Дыхание магмой
 local specWarnStoneBarrage						= mod:NewSpecialWarningDefensive(392280, "-Tank", nil, nil, 2, 2) --Каменный обстрел
 local specWarnStoneBarrage2						= mod:NewSpecialWarningDodge(392280, nil, nil, nil, 2, 2) --Каменный обстрел
 local specWarnIgnite							= mod:NewSpecialWarningDefensive(393787, "-Tank", nil, nil, 2, 2) --Воспламенение
 local specWarnIgnite2							= mod:NewSpecialWarningDodge(393787, nil, nil, nil, 2, 2) --Воспламенение
 
+local yellMeteorStrike							= mod:NewYell(396439, nil, nil, nil, "YELL") --Падение метеора
+local yellConductiveCharge						= mod:NewYell(397052, nil, nil, nil, "YELL") --Проводящий заряд
+local yellMeteorStrike2							= mod:NewShortFadesYell(396439, nil, nil, nil, "YELL") --Падение метеора
 local yellElectricSurge							= mod:NewShortYell(395273, nil, nil, nil, "YELL") --Электрический импульс
 local yellElectricSurge2						= mod:NewShortFadesYell(395273, nil, nil, nil, "YELL") --Электрический импульс
 local yellPulverizingBreath						= mod:NewShortYell(392635, nil, nil, nil, "YELL") --Дробящее дыхание
@@ -43,7 +51,7 @@ function mod:PulverizingBreathTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnPulverizingBreath:Show()
-		specWarnPulverizingBreath:Play("defensive")
+		specWarnPulverizingBreath:Play("runout")
 		yellPulverizingBreath:Yell()
 	end
 	if self.Options.SetIconOnPulverizingBreath then
@@ -59,7 +67,7 @@ function mod:MagmaBreathTarget(targetname)
 		yellMagmaBreath:Yell()
 	end
 	if self.Options.SetIconOnMagmaBreathTarget then
-		self:SetIcon(targetname, 8, 5)
+		self:SetIcon(targetname, 8, 4)
 	end
 end
 
@@ -105,15 +113,33 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellElectricSurge:Yell()
 			yellElectricSurge2:Countdown(spellId, 3)
 		end
+	elseif spellId == 396439 then --Падение метеора
+		if args:IsPlayer() then
+			specWarnMeteorStrike:Show(DBM_COMMON_L.ALLIES)
+			specWarnMeteorStrike:Play("gathershare")
+			yellMeteorStrike:Yell()
+			yellMeteorStrike2:Countdown(spellId)
+		else
+			warnMeteorStrike:Show(args.destName)
+		end
+	elseif spellId == 397052 then --Проводящий заряд
+		if args:IsPlayer() then
+			specWarnConductiveCharge:Show()
+			specWarnConductiveCharge:Play("runaway")
+			yellConductiveCharge:Yell()
+		else
+			warnConductiveCharge:CombinedShow(0.5, args.destName)
+		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+--mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
---[[
 function mod:SPELL_AURA_REMOVED(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 339525 and args:IsPlayer() then
-
+	if spellId == 396439 then --Падение метеора
+		if args:IsPlayer() then
+			yellMeteorStrike2:Cancel()
+		end
 	end
 end
-]]
