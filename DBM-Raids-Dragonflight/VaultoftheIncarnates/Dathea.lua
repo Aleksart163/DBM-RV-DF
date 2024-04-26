@@ -188,9 +188,18 @@ function mod:SPELL_CAST_START(args)
 					timerZephyrSlamCD:Start(17, self.vb.slamCount+1) --Удар южного ветра (пока неизвестно)
 				end
 			end
-		else
+		elseif self:IsHeroic() then
 			if self.vb.cycloneCount == 1 then
 				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1) --точно под героик
+			else
+				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
+			end
+			if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then --точно под героик
+				timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)
+			end
+		else
+			if self.vb.cycloneCount == 1 then
+				timerCycloneCD:Start(69.9, self.vb.cycloneCount+1) --точно под обычку
 			else
 				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
 			end
