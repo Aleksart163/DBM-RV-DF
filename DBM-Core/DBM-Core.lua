@@ -5262,7 +5262,6 @@ do
 
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
 		self:Debug("ENCOUNTER_START event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size)
-		self:AddMsg(L.DBM_FORUMS_MESSAGE)
 		if dbmIsEnabled then
 			--Only nag in raids on engage
 			if IsInRaid() then
@@ -5290,6 +5289,9 @@ do
 
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size .. " " .. success)
+		if DBM:AntiSpam(5, "FM") then
+			self:AddMsg(L.DBM_FORUMS_MESSAGE)
+		end
 		if success == 0 then
 			--Only nag on wipes (in any content)
 			self:CheckAvailableMods()
