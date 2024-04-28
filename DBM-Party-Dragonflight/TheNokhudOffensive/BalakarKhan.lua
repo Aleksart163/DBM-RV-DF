@@ -51,7 +51,7 @@ local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInter
 
 --Stage Two: The Storm Unleashed
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25187))
-local warnPhase2								= mod:NewPhaseAnnounce(2, 2)
+local warnPhase									= mod:NewPhaseAnnounce(2, 2)
 local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2) --Заряженное копье
 local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Tank|Healer")
 
@@ -179,7 +179,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnConductiveStrike then
 			self:SetIcon(args.destName, 8)
 		end
-	elseif spellId == 376827 then --Проводящий удар
+	elseif spellId == 376827 and args:IsDestTypePlayer() then --Проводящий удар
 		if self:IsSpellCaster() then
 			specWarnConductiveStrikeDispel:Show(args.destName)
 			specWarnConductiveStrikeDispel:Play("helpdispel")
@@ -199,7 +199,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 376727 then
 		self:SetStage(2)
 		self.vb.comboCount = 0
-		warnPhase2:Show()
+		warnPhase:Show()
+		warnPhase:Play("ptwo")
 		timerConductiveStrikeCD:Start(8, 1)
 		timerStaticSpearCD:Start(18)
 		timerCracklingUpheavalCD:Start(37)

@@ -21,8 +21,8 @@ mod:RegisterEvents(
 (ability.id = 373395 or ability.id = 387411 or ability.id = 373395 or ability.id = 383823 or ability.id = 384365 or ability.id = 387440 or ability.id = 384336 or ability.id = 386024) and type = "begincast"
 --]]
 local warnThunderClap						= mod:NewCastAnnounce(386028, 4) --Удар грома
-local warnTotemicOverload					= mod:NewCastAnnounce(387145, 3)
-local warnChantoftheDead					= mod:NewCastAnnounce(387614, 3)
+local warnTotemicOverload					= mod:NewCastAnnounce(387145, 3) --Тотемная перегрузка
+local warnChantoftheDead					= mod:NewCastAnnounce(387614, 3) --Песнопения мертвых
 local warnTempest							= mod:NewCastAnnounce(373395, 4)
 local warnDeathBoltVolley					= mod:NewCastAnnounce(387411, 3)
 local warnBloodcurdlingShout				= mod:NewCastAnnounce(373395, 3)
@@ -51,6 +51,7 @@ local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterr
 
 local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5) --Клич клана 20-23
 local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
+local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
 local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Прерывающий крик 20-30ish
 local timerTempestCD						= mod:NewCDNPTimer(20.6, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря20-25
 local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющий рык
@@ -144,8 +145,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 382233 and self:AntiSpam(3, 2) then
 		specWarnBroadStomp:Show()
 		specWarnBroadStomp:Play("shockwave")
-	elseif spellId == 387614 and self:AntiSpam(5, 6) then
-		warnChantoftheDead:Show()
+	elseif spellId == 387614 then --Песнопения мертвых
+		timerChantoftheDeadCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(3, "ChantoftheDead") then
+			warnChantoftheDead:Show()
+		end
 	elseif spellId == 386694 and self:AntiSpam(3, 6) then
 		warnStormsurge:Show()
 	elseif spellId == 387125 and self:AntiSpam(3, 5) then
@@ -197,6 +201,8 @@ function mod:UNIT_DIED(args)
 		timerTempestCD:Stop(args.destGUID)
 	elseif cid == 195878 then--Uthel Beastcaller
 		timerDesecratingRoarCD:Stop(args.destGUID)
+	elseif cid == 195851 then --Мурчальский вестник прошляпа
+		timerChantoftheDeadCD:Stop(args.destGUID)
 	elseif cid == 195928 or cid == 195927 or cid == 195930 or cid == 195929 then--All 4 Soulharvesters
 		timerDeathBoltVolleyCD:Stop(args.destGUID)
 	elseif cid == 193462 then--Batak
