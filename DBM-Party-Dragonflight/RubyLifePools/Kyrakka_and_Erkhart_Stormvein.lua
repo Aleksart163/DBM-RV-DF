@@ -154,12 +154,15 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 381515 then
+	if spellId == 381515 or spellId == 381512 then
 		if not args:IsPlayer() then
 			if self:IsSpellCaster() then
 				specWarnStormslamDispel:Show(args.destName)
 				specWarnStormslamDispel:Play("helpdispel")
 			end
+		end
+		if self.Options.SetIconOnStormslam then
+			self:SetIcon(args.destName, 8)
 		end
 	elseif spellId == 181089 then
 		self:SetStage(2)
@@ -184,16 +187,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnInfernoCore:Show()
 		end
-	elseif spellId == 381512 then --Сметающая буря
-		if self.Options.SetIconOnStormslam then
-			self:SetIcon(args.destName, 8)
-		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 381512 then --Сметающая буря
+	if spellId == 381515 or spellId == 381512 then --Сметающая буря
 		if self.Options.SetIconOnStormslam then
 			self:SetIcon(args.destName, 0)
 		end
