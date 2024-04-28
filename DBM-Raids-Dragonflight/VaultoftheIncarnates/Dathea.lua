@@ -190,7 +190,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		elseif self:IsHeroic() then
 			if self.vb.cycloneCount == 1 then
-				timerCycloneCD:Start(69.5, self.vb.cycloneCount+1) --точно под героик
+				timerCycloneCD:Start(70, self.vb.cycloneCount+1) --точно под героик
 			else
 				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
 			end

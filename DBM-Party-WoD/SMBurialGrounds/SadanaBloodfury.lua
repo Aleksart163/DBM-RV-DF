@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 --]]
 local warnDaggerFall			= mod:NewSpellAnnounce(153240, 3)
 
-local specWarnDarkCommunion		= mod:NewSpecialWarningSwitch(153153, nil, nil, 2, 1, 2)--On Test, even tank and healer needed to dps to kill it. I'm going to assume it's an overtuning and at least excempt healer.
+local specWarnDarkCommunion		= mod:NewSpecialWarningSwitch(153153, "-Healer", nil, 2, 1, 2)--On Test, even tank and healer needed to dps to kill it. I'm going to assume it's an overtuning and at least excempt healer.
 local specWarnWhispers			= mod:NewSpecialWarningSpell(153094, nil, nil, nil, 2, 2)
 local specWarnDarkEclipse		= mod:NewSpecialWarningSpell(164974, nil, nil, nil, 3, 12) --Полное затмение
 
@@ -35,7 +35,7 @@ function mod:OnCombatStart(delay)
 	timerDaggerfallCD:Start(8.7-delay)
 	timerWhispersCD:Start(14-delay)
 	timerDarkCommunionCD:Start(24-delay)
-	timerDarkEclipseCD:Start(44-delay)
+	timerDarkEclipseCD:Start(42.8-delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)

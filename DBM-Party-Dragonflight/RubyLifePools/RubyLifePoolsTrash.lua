@@ -27,6 +27,7 @@ local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Healer")
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4)
 local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3)
 local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3)
+local warnBlazeboundDestroyerLeft			= mod:NewAnnounce("warnBlazeboundDestroyer", 2, 373614)
 
 local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
@@ -65,6 +66,8 @@ local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL")
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
+
+mod.vb.wardens = 4
 
 function mod:SteelBarrageTarget(targetname, uId)
 	if not targetname then return end
@@ -242,5 +245,17 @@ function mod:UNIT_DIED(args)
 		timerFlameDanceCD:Stop(args.destGUID)
 	elseif cid == 187969 then--Flashfrost Earthshaper
 		timerTectonicSlamCD:Stop(args.destGUID)
+	elseif cid == 190034 then
+		self:SendSync("BlazeboundDestroyer")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "BlazeboundDestroyer" then
+		self.vb.wardens = self.vb.wardens - 1
+		warnBlazeboundDestroyerLeft:Show(self.vb.wardens)
+		if self.vb.wardens == 4 then
+			self.vb.wardens = 0
+		end
 	end
 end

@@ -208,7 +208,15 @@ L:SetOptionLocalization({
 -----------------------
 -- Azureblade --
 -----------------------
---L= DBM:GetModLocalization(2505)
+L= DBM:GetModLocalization(2505)
+
+L:SetWarningLocalization({
+	WarningMinionDie = "The minion is killed. Left: %s"
+})
+
+L:SetOptionLocalization({
+	WarningMinionDie = "Warning about the death of the minions"
+})
 
 ---------
 --Trash--
@@ -255,6 +263,14 @@ L = DBM:GetModLocalization("RubyLifePoolsTrash")
 
 L:SetGeneralLocalization({
 	name =	"Ruby Life Pools Trash"
+})
+
+L:SetWarningLocalization({
+	warnBlazeboundDestroyer = "The minion is killed. Left: %s"
+})
+
+L:SetOptionLocalization({
+	warnBlazeboundDestroyer = "Warning about the death of the minions"
 })
 
 -----------------------

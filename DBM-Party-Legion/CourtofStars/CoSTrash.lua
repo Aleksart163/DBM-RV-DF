@@ -18,7 +18,7 @@ for i = 1, #frames do
 end
 mod:RegisterEvents(
 	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378 397892 397897 207979 212784 207980 212773 210261 209033 211473 214697 214692 373364",
-	"SPELL_AURA_APPLIED 209033 209512 397907 373552",
+	"SPELL_AURA_APPLIED 209033 209512 397907 373552 209413",
 	"SPELL_AURA_REMOVED 397907",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_SAY",
@@ -41,16 +41,18 @@ end
 local warnPickingUp					= mod:NewTargetNoFilterAnnounce(214697, 1) --Поднять ключ
 local warnSpyFound					= mod:NewAnnounce("pSpyFound", 1, 248732) --Шпион обнаружен
 local warnAvailableItems			= mod:NewAnnounce("warnAvailableItems", 1)
-local warnImpendingDoom				= mod:NewTargetAnnounce(397907, 2)
-local warnSoundAlarm				= mod:NewCastAnnounce(210261, 4)
-local warnSubdue					= mod:NewCastAnnounce(212773, 3)
-local warnCrushingLeap				= mod:NewCastAnnounce(397897, 3)
-local warnEyeStorm					= mod:NewCastAnnounce(212784, 4)
-local warnShadowSlash				= mod:NewCastAnnounce(211473, 4, nil, nil, "Tank|Healer")
-local warnHypnosisBat				= mod:NewTargetNoFilterAnnounce(373552, 3)
+local warnImpendingDoom				= mod:NewTargetNoFilterAnnounce(397907, 2) --Надвигающийся рок
+local warnSoundAlarm				= mod:NewCastAnnounce(210261, 4) --Сигнал тревоги
+local warnSubdue					= mod:NewCastAnnounce(212773, 3) --Подчинение
+local warnCrushingLeap				= mod:NewCastAnnounce(397897, 3) --Тяжелый прыжок
+local warnEyeStorm					= mod:NewCastAnnounce(212784, 4) --Буря глаз
+local warnShadowSlash				= mod:NewCastAnnounce(211473, 4, nil, nil, "Tank|Healer") --Темное рассечение
+local warnHypnosisBat				= mod:NewTargetNoFilterAnnounce(373552, 3) --Гипнонетопырь
 local warnFelDetonation				= mod:NewCastAnnounce(211464, 4) --Взрыв Скверны
 local warnShadowBoltVolley			= mod:NewCastAnnounce(214692, 4) --Залп стрел Тьмы
+local warnSuppress					= mod:NewTargetNoFilterAnnounce(209413, 4) --Подавление
 
+local specWarnHypnosisBat			= mod:NewSpecialWarningYou(373552, nil, nil, nil, 1, 2) --Гипнонетопырь
 local specWarnVampiricClaws			= mod:NewSpecialWarningDefensive(373364, nil, nil, nil, 3, 4) --Когти вампира
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningMoveTo(214692, "-Tank", nil, nil, 2, 2) --Залп стрел Тьмы
 local specWarnFortificationDispel	= mod:NewSpecialWarningDispel(209033, "MagicDispeller", nil, nil, 1, 2)
@@ -58,30 +60,30 @@ local specWarnQuellingStrike		= mod:NewSpecialWarningDodge(209027, "Melee", nil,
 local specWarnChargedBlast			= mod:NewSpecialWarningDodge(212031, "Tank", nil, nil, 1, 2)
 local specWarnChargedSmash			= mod:NewSpecialWarningDodge(209495, "Melee", nil, 2, 1, 2)
 local specWarnShockwave				= mod:NewSpecialWarningDodge(207979, nil, nil, nil, 2, 2)
-local specWarnSubdue				= mod:NewSpecialWarningInterrupt(212773, "HasInterrupt", nil, nil, 1, 2)
+local specWarnSubdue				= mod:NewSpecialWarningInterrupt(212773, "HasInterrupt", nil, nil, 1, 2) --Подчинение
 local specWarnFortification			= mod:NewSpecialWarningInterrupt(209033, false, nil, nil, 1, 2)--Opt in. There are still higher prio interrupts in most packs with guards and this can be dispelled after the fact
 local specWarnDrainMagic			= mod:NewSpecialWarningInterrupt(209485, "HasInterrupt", nil, nil, 1, 2)
 local specWarnNightfallOrb			= mod:NewSpecialWarningInterrupt(209410, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSuppress				= mod:NewSpecialWarningInterrupt(209413, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBewitch				= mod:NewSpecialWarningInterrupt(211470, "HasInterrupt", nil, nil, 1, 2)
-local specWarnChargingStation		= mod:NewSpecialWarningInterrupt(225100, "HasInterrupt", nil, nil, 1, 2)
+local specWarnChargingStation		= mod:NewSpecialWarningInterrupt(225100, "HasInterrupt", nil, nil, 1, 2) --Зарядная станция
 local specWarnSearingGlare			= mod:NewSpecialWarningInterrupt(211299, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisintegrationBeam	= mod:NewSpecialWarningInterrupt(207980, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFelDetonation			= mod:NewSpecialWarningMoveTo(211464, nil, nil, nil, 2, 13) --Взрыв Скверны
 local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 2)
 local specWarnWhirlingBlades		= mod:NewSpecialWarningRun(209378, "Melee", nil, nil, 4, 2)
 local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", nil, nil, 1, 2) --Крик боли
-local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, nil, 1, 2)
+local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, nil, 1, 4) --Надвигающийся рок
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(209512, nil, nil, nil, 1, 8)
 
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(19, 214692, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, 3, 5) --Залп стрел Тьмы
 local timerQuellingStrikeCD			= mod:NewCDNPTimer(10, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Подавляющий удар
-local timerFortificationCD			= mod:NewCDNPTimer(18.1, 209033, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSealMagicCD				= mod:NewCDNPTimer(18.1, 209404, nil, "SpellCaster", nil, 3)
-local timerChargingStationCD		= mod:NewCDNPTimer(13.3, 225100, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSuppressCD				= mod:NewCDNPTimer(17, 209413, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerFortificationCD			= mod:NewCDNPTimer(18.1, 209033, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Укрепление
+local timerSealMagicCD				= mod:NewCDNPTimer(18.1, 209404, nil, "HasInterrupt", nil, 2) --Подавление магии
+local timerChargingStationCD		= mod:NewCDNPTimer(13.3, 225100, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Зарядная станция
+local timerSuppressCD				= mod:NewCDNPTimer(16, 209413, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Подавление
 local timerSearingGlareCD			= mod:NewCDNPTimer(8.4, 211299, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerEyeStormCD				= mod:NewCDNPTimer(20.6, 212784, nil, nil, nil, 5)--Role color cause it needs a disrupt (stun, knockback) to interrupt.
+local timerEyeStormCD				= mod:NewCDNPTimer(20.6, 212784, nil, nil, nil, 5) --Буря глаз Role color cause it needs a disrupt (stun, knockback) to interrupt.
 local timerBewitchCD				= mod:NewCDNPTimer(17, 211470, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShadowSlashCD			= mod:NewCDNPTimer(18.2, 211473, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2, nil, nil, nil, 3, 3) --Взрыв Скверны
@@ -90,10 +92,11 @@ local timerScreamofPainCD			= mod:NewCDNPTimer(14.6, 397892, nil, "SpellCaster",
 local timerWhirlingBladesCD			= mod:NewCDNPTimer(18.2, 209378, nil, "Melee", nil, 2)
 local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShockwaveCD				= mod:NewCDNPTimer(8.4, 207979, nil, nil, nil, 3)
-local timerCrushingLeapCD			= mod:NewCDNPTimer(16.9, 397897, nil, nil, nil, 3)
+local timerCrushingLeapCD			= mod:NewCDNPTimer(16.9, 397897, nil, nil, nil, 3) --Тяжелый прыжок
 
-local yellImpendingDoom				= mod:NewYell(397907, nil, nil, nil, "YELL")
-local yellImpendingDoomFades		= mod:NewShortFadesYell(397907, nil, nil, nil, "YELL")
+local yellSuppress					= mod:NewYell(209413, nil, nil, nil, "YELL") --Подавление
+local yellImpendingDoom				= mod:NewYell(397907, nil, nil, nil, "YELL") --Надвигающийся рок
+local yellImpendingDoomFades		= mod:NewShortFadesYell(397907, nil, nil, nil, "YELL") --Надвигающийся рок
 
 mod:AddBoolOption("AGBoat", true)
 mod:AddBoolOption("AGDisguise", true)
@@ -252,8 +255,19 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellImpendingDoom:Yell()
 			yellImpendingDoomFades:Countdown(spellId)
 		end
-	elseif spellId == 373552 then
-		warnHypnosisBat:Show(args.destName)
+	elseif spellId == 373552 then --Гипнонетопырь
+		if args:IsPlayer() then
+			specWarnHypnosisBat:Show()
+			specWarnHypnosisBat:Play("targetyou")
+		else
+			warnHypnosisBat:Show(args.destName)
+		end
+	elseif spellId == 209413 then --Подавление
+		if args:IsPlayer() then
+			yellSuppress:Yell()
+		else
+			warnSuppress:CombinedShow(0.5, args.destName)
+		end
 	end
 end
 

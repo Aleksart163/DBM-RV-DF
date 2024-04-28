@@ -208,7 +208,15 @@ L:SetOptionLocalization({
 -----------------------
 -- Azureblade --
 -----------------------
---L= DBM:GetModLocalization(2505)
+L= DBM:GetModLocalization(2505)
+
+L:SetWarningLocalization({
+	warnDraconicImage = "Прислужник убит. Осталось: %s"
+})
+
+L:SetOptionLocalization({
+	warnDraconicImage = "Предупреждение о смерти прислужников"
+})
 
 ---------
 --Trash--
@@ -255,6 +263,14 @@ L = DBM:GetModLocalization("RubyLifePoolsTrash")
 
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Рубиновые Омуты Жизни"
+})
+
+L:SetWarningLocalization({
+	warnBlazeboundDestroyer = "Прислужник убит. Осталось: %s"
+})
+
+L:SetOptionLocalization({
+	warnBlazeboundDestroyer = "Предупреждение о смерти прислужников"
 })
 
 -----------------------

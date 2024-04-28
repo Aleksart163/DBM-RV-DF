@@ -13,7 +13,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 372222 385578 384223 373932 384132",
-	"SPELL_AURA_REMOVED 384132"
+	"SPELL_AURA_REMOVED 384132",
+	"UNIT_DIED"
 )
 
 --TODO, change arcane orb to personal alert if target scanner works or remove yell if it doesn't
@@ -26,7 +27,9 @@ mod:RegisterEventsInCombat(
 --https://www.warcraftlogs.com/reports/1fvXGDK69nmq3MA7#fight=1&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20372222%20or%20ability.id%20%3D%20385578%20or%20ability.id%20%3D%20384223%20or%20ability.id%20%3D%20384132)%20and%20type%20%3D%20%22begincast%22%0A%20or%20ability.id%20%3D%20384132%20and%20type%20%3D%20%22removebuff%22%0A%20or%20type%20%3D%20%22dungeonencounterstart%22%20or%20type%20%3D%20%22dungeonencounterend%22&view=events
 local warnSummonDraconicImage					= mod:NewSpellAnnounce(384223, 4) --Призыв драконьей иллюзии
 local warnOverwhelmingEnergy					= mod:NewEndAnnounce(384132, 1) --Переполняющая энергия
+local warnDraconicImageLeft						= mod:NewAnnounce("warnDraconicImage", 2, 384223)
 
+local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, 37859, nil, 2, 4) --Нестабильная магия
 local specWarnArcaneCleave						= mod:NewSpecialWarningDefensive(372222, nil, nil, nil, 3, 4) --Удар тайной магии
 local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "MeleeDps", nil, nil, 2, 2) --Удар тайной магии
 local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2) --Древняя сфера
@@ -43,8 +46,10 @@ local yellArcaneCleave							= mod:NewYell(372222, nil, nil, nil, "YELL") --Уд
 mod.vb.proshlyapsMurchalCount = 0
 mod.vb.proshlyapsMurchalCount2 = 0
 mod.vb.ancientOrbCount = 0
+mod.vb.wardens = 4
 
 local Proshlyap = nil
+local Perephase = nil
 local allProshlyapationsOfMurchalTimers = {
 	--Удар тайной магии
 	[372222] = {8, 13, 15, 15},
@@ -68,7 +73,9 @@ function mod:OnCombatStart(delay)
 	self.vb.proshlyapsMurchalCount = 0
 	self.vb.proshlyapsMurchalCount2 = 0
 	self.vb.ancientOrbCount = 0
+	self.vb.wardens = 0
 	Proshlyap = false
+	Perephase = false
 	timerAncientOrbCD:Start(11.5-delay)
 	timerOverwhelmingenergyCD:Start(32-delay)
 	timerArcaneCleaveCD:Start(6-delay)
@@ -112,6 +119,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnIllusionaryBolt:Show(args.sourceName)
 		specWarnIllusionaryBolt:Play("kickcast")
 	elseif spellId == 384132 then --Переполняющая энергия
+		Perephase = true
 		if not Proshlyap then
 			Proshlyap = true
 		end
@@ -120,16 +128,33 @@ function mod:SPELL_CAST_START(args)
 		self.vb.proshlyapsMurchalCount = 0
 		self.vb.proshlyapsMurchalCount2 = 0
 		self.vb.ancientOrbCount = 0
+		self.vb.wardens = 4
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 384132 then --Переполняющая энергия
+		self.vb.wardens = 0
+		Perephase = false
 		warnOverwhelmingEnergy:Show()
 		timerAncientOrbCD:Start(13.5)--12-13
 		timerOverwhelmingenergyCD:Start(64)
 		timerArcaneCleaveCD:Start(8)
 		timerSummonDraconicImageCD:Start(5)
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 192955 then
+		self.vb.wardens = self.vb.wardens - 1
+		if Perephase then
+			if self:AntiSpam(2, "UnstableMagic") then
+				specWarnUnstableMagic:Show()
+				specWarnUnstableMagic:Play("watchstep")
+			end
+			warnDraconicImageLeft:Schedule(2, self.vb.wardens)
+		end
 	end
 end

@@ -21,8 +21,8 @@ mod:RegisterEventsInCombat(
  or (ability.id = 219488 or ability.id = 207278) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+local warnPhase						= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnStreetsweeper				= mod:NewTargetNoFilterAnnounce(219488, 2, nil, false)
-local warnFlask						= mod:NewSpellAnnounce(207815, 2)
 
 local specWarnResonantSlash			= mod:NewSpecialWarningDodge(207261, nil, nil, nil, 2, 2)
 local specWarnArcaneLockdown		= mod:NewSpecialWarningJump(207278, nil, nil, nil, 2, 6)
@@ -63,7 +63,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 207815 then
 		self:SetStage(2)
-		warnFlask:Show()
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 	elseif spellId == 207806 then
 		specWarnBeacon:Show()
 		specWarnBeacon:Play("mobsoon")
