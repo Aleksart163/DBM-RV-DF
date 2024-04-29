@@ -53,6 +53,7 @@ local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL
 local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnRockBlast", 380487, true, false, {8})
+mod:AddSetIconOption("SetIconOnConcussiveSlam", 376279, true, 0, {8}) --Оглушающий удар
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
 --mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
 
@@ -96,6 +97,9 @@ function mod:ConcussiveSlamTarget(targetname, uId)
 		yellConcussiveSlam:Yell()
 	else
 		warnConcussiveSlam2:Show(targetname)
+	end
+	if self.Options.SetIconOnConcussiveSlam then
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 

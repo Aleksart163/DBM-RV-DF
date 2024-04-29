@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(186739)
 mod:SetEncounterID(2585)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230103000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -43,6 +44,8 @@ local timerOverwhelmingenergyCD					= mod:NewCDTimer(35, 384132, nil, nil, nil, 
 
 local yellArcaneCleave							= mod:NewYell(372222, nil, nil, nil, "YELL") --Удар тайной магии
 
+mod:AddSetIconOption("SetIconOnArcaneCleave", 372222, true, 0, {8}) --Удар тайной магии
+
 mod.vb.proshlyapsMurchalCount = 0
 mod.vb.proshlyapsMurchalCount2 = 0
 mod.vb.ancientOrbCount = 0
@@ -66,6 +69,9 @@ function mod:ArcaneCleaveTarget(targetname, uId)
 	else
 		specWarnArcaneCleave2:Show()
 		specWarnArcaneCleave2:Play("watchstep")
+	end
+	if self.Options.SetIconOnArcaneCleave then
+		self:SetIcon(targetname, 8, 5)
 	end
 end
 
