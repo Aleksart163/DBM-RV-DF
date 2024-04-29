@@ -71,6 +71,7 @@ mod:AddSetIconOption("SetIconOnVolatileInfuser", "ej25903", true, 5, {8, 7, 6, 5
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25958))
 local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(384273, false, nil, nil, 1, 2) --Удар громовержца
 
+local murchalProshlyapStacks = {}
 local castsPerGUID = {}
 mod.vb.addIcon = 8
 mod.vb.stormCount = 0
@@ -91,6 +92,7 @@ function mod:ZephyrSlamTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	table.wipe(murchalProshlyapStacks)
 	table.wipe(castsPerGUID)
 	self.vb.addIcon = 8
 	self.vb.stormCount = 0
@@ -121,11 +123,12 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(375580))
-		DBM.InfoFrame:Show(3, "playerdebuffstacks", 375580)
+		DBM.InfoFrame:Show(3, "table", murchalProshlyapStacks, 1)
 	end
 end
 
 function mod:OnCombatEnd()
+	table.wipe(murchalProshlyapStacks)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -307,8 +310,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(4)
 			end
 		end
-	elseif spellId == 375580 and not args:IsPlayer() then
+	elseif spellId == 375580 and not args:IsPlayer() then --Удар южного ветра
 		local amount = args.amount or 1
+		murchalProshlyapStacks[args.destName] = amount
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 		local remaining
 		if expireTime then
@@ -320,6 +324,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnZephyrSlam:Show(args.destName, amount)
 		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -327,10 +334,14 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 391686 then
+		murchalProshlyapStacks[args.destName] = nil
 		if args:IsPlayer() then
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
 		end
 	end
 end
