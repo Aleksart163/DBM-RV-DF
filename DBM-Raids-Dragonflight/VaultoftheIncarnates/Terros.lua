@@ -99,7 +99,7 @@ function mod:ConcussiveSlamTarget(targetname, uId)
 		warnConcussiveSlam2:Show(targetname)
 	end
 	if self.Options.SetIconOnConcussiveSlam then
-		self:SetIcon(targetname, 8, 5)
+		self:SetIcon(targetname, 8, 3)
 	end
 end
 

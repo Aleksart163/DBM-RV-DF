@@ -71,7 +71,7 @@ function mod:ArcaneCleaveTarget(targetname, uId)
 		specWarnArcaneCleave2:Play("watchstep")
 	end
 	if self.Options.SetIconOnArcaneCleave then
-		self:SetIcon(targetname, 8, 5)
+		self:SetIcon(targetname, 8, 3)
 	end
 end
 
