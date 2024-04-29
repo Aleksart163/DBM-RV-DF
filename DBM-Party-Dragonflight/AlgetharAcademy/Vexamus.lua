@@ -36,7 +36,7 @@ mod:RegisterEvents(
 --]]
 local warnArcaneOrbs							= mod:NewCountAnnounce(385974, 3)
 local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386173, 3)
-local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4)
+local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4) --Волна тайной магии
 
 local specWarnArcaneFissure						= mod:NewSpecialWarningDodgeCount(388537, nil, nil, nil, 3, 2) --Магический разлом
 local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, nil, nil, 1, 2)
@@ -49,11 +49,11 @@ local timerArcaneFissureCD						= mod:NewCDCountTimer(40.7, 388537, nil, nil, ni
 local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386173, nil, nil, nil, 3)
 local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-local yellArcaneExpulsion						= mod:NewShortYell(385958, nil, nil, nil, "YELL")
+local yellArcaneExpulsion						= mod:NewShortYell(385958, nil, nil, nil, "YELL") --Волна тайной магии
 local yellManaBomb								= mod:NewYell(386181, nil, nil, nil, "YELL")
 local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL")
 
-mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8})
+mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8}) --Волна тайной магии
 
 mod:AddInfoFrameOption(391977, true)
 
