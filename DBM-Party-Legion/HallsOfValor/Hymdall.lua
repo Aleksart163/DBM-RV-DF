@@ -19,15 +19,15 @@ mod:RegisterEventsInCombat(
 local warnBreath					= mod:NewCountAnnounce(188404, 4)
 local warnDancingBlade				= mod:NewTargetNoFilterAnnounce(193235, 3) --Танцующий клинок
 
-local specWarnSweep					= mod:NewSpecialWarningDefensive(193092, "Tank", nil, nil, 3, 2) --Рог доблести
+local specWarnSweep					= mod:NewSpecialWarningDefensive(193092, "Tank", nil, nil, 3, 2) --Кровопролитный круговой удар
 local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2) --Рог доблести
 local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
 local specWarnDancingBlade2			= mod:NewSpecialWarningYou(193235, nil, nil, nil, 3, 2) --Танцующий клинок
 
-local timerSweepCD					= mod:NewCDTimer(16.9, 193092, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerDancingBladeCD			= mod:NewCDTimer(10, 193235, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerHornCD					= mod:NewCDTimer(42.6, 191284, nil, nil, nil, 2)
-local timerBreathCast				= mod:NewCastCountTimer(43.8, 188404, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerSweepCD					= mod:NewCDTimer(16.9, 193092, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кровопролитный круговой удар
+local timerDancingBladeCD			= mod:NewCDTimer(10, 193235, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Танцующий клинок
+local timerHornCD					= mod:NewCDTimer(42.6, 191284, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Рог доблести
+local timerBreathCast				= mod:NewCastCountTimer(43.8, 188404, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури
 
 local yellDancingBlade				= mod:NewShortYell(193235, nil, nil, nil, "YELL") --Танцующий клинок
 

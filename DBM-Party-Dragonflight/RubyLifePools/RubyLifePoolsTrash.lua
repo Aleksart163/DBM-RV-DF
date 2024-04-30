@@ -246,7 +246,8 @@ function mod:UNIT_DIED(args)
 	elseif cid == 187969 then--Flashfrost Earthshaper
 		timerTectonicSlamCD:Stop(args.destGUID)
 	elseif cid == 190034 then
-		self:SendSync("BlazeboundDestroyer")
+		DBM:Debug("Murchal proshlyap", 2)
+	--	self:SendSync("BlazeboundDestroyer")
 	end
 end
 
