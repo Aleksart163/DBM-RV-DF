@@ -11,22 +11,27 @@ L:SetGeneralLocalization({
 	name = "Raid Spells"
 })
 
+L:SetWarningLocalization({
+	Heroism 		= "%s uses %s",
+	Rebirth 		= "%s uses %s on %s",
+	Food			= "%s puts %s",
+	RaidCooldown 	= "%s uses %s",
+	MobileBanking	= "%s puts %s"
+})
+
 L:SetOptionLocalization({
-	YellOnNapull	 		= "Announce when someone is casting a spell $spell:57934 or equivalent",
-	YellOnRaidCooldown 		= "Announce when someone is casting a spell $spell:97462 or equivalent",
-	YellOnResurrect 		= "Announce when someone has been subjected to $spell:20484 or equivalent",
+	RaidCooldown	 		= "Announce when someone is casting a spell $spell:97462 or equivalent",
+	Rebirth			 		= "Announce when someone has been subjected to $spell:20484 or equivalent",
 	YellOnMassRes 			= "Announce when someone is casting a spell $spell:212036 or equivalent",
-	YellOnHeroism 			= "Announce when someone is casting a spell $spell:32182 or equivalent",
+	Heroism		 			= "Announce when someone is casting a spell $spell:32182 or equivalent",
 	YellOnPortal 			= "Announce when someone opens $spell:224871 or equivalent",
 	YellOnSoulwell 			= "Announce when someone is casting a spell $spell:29893",
 	YellOnSoulstone 		= "Announce when someone has been subjected to $spell:20707",
 	YellOnRitualofSummoning = "Announce when someone is casting a spell $spell:698",
 	YellOnSummoning 		= "Announce when you cast a spell $spell:7720",
-	YellOnCauldronofPower 	= "Announce when someone puts $spell:371521",
-	YellOnLavish 			= "Announce when someone puts $spell:382423 or equivalent",
+	Food		 			= "Announce when someone puts $spell:382427 or equivalent",
 	YellOnRepair 			= "Announce when someone puts $spell:199109 or equivalent",
---	YellOnPylon 			= "Announce when someone puts $spell:199115",
-	YellOnBank 				= "Announce when someone puts $spell:83958",
+	MobileBanking 			= "Announce when someone puts $spell:83958",
 	YellOnToys 				= "Announce when someone puts toys like $spell:61031",
 	AutoSpirit 				= "Auto-release spirit"
 })
