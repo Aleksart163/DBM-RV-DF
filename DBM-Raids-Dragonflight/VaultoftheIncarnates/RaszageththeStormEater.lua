@@ -5,8 +5,8 @@ mod:SetRevision("20231231044144")
 mod:SetCreatureID(189492)
 mod:SetEncounterID(2607)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20230117000000)
-mod:SetMinSyncRevision(20221217000000)
+mod:SetHotfixNoticeRev(20240426070000)
+mod:SetMinSyncRevision(20230117000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -104,7 +104,7 @@ mod:AddNamePlateOption("NPAuraOnFlameShield", 397387)
 --Stage Two: Surging Power
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25312))
 local warnStormsurge						= mod:NewEndAnnounce(387261, 1) --Энергия бури
-local warnInversion							= mod:NewTargetAnnounce(394584, 4) --Инверсия
+local warnInversion							= mod:NewTargetNoFilterAnnounce(394584, 4) --Инверсия
 local warnFocusedCharge						= mod:NewYouAnnounce(394582, 1) --Концентрированный заряд
 local warnScatteredCharge					= mod:NewYouAnnounce(394583, 4) --Рассеянный заряд
 local warnFulminatingCharge					= mod:NewTargetNoFilterAnnounce(377467, 3, nil, nil, 345338) --Сверкающий заряд (Заряды)
@@ -120,7 +120,7 @@ local specWarnFulminatingCharge				= mod:NewSpecialWarningYouPos(377467, nil, 34
 local timerStormsurgeCD						= mod:NewCDCountTimer(35, 387261, nil, nil, nil, 7) --Энергия бури
 local timerTempestWingCD					= mod:NewCDCountTimer(35, 385574, 63533, nil, nil, 2) --Крыло бури (Штормовая волна)
 local timerFulminatingChargeCD				= mod:NewCDCountTimer(35, 377467, 345338, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сверкающий заряд (Заряды)
-local timerInversionCD						= mod:NewCDCountTimer(6, 394584, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Инверсия
+local timerInversionCD						= mod:NewCDTimer(6, 394584, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Инверсия
 
 mod:AddSetIconOption("SetIconOnFulminatingCharge", 377467, true, 0, {1, 2, 3}) --Сверкающий заряд (Заряды)
 mod:AddInfoFrameOption(387261, true) --Энергия бури
@@ -739,7 +739,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellRepeater(self, 7, 0)
 			playerPolarity = 2--Negative
 		end
-	elseif spellId == 394584 then
+	elseif spellId == 394584 then --Инверсия
 		warnInversion:CombinedShow(0.3, args.destName)
 		if self:AntiSpam(4, 5) then
 			timerInversionCD:Start(6)
@@ -912,23 +912,12 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.MurchalOchkenProshlyapen or msg:find(L.MurchalOchkenProshlyapen) then --1-ая переходка
 		self:SendSync("OchkenShlyapen")
-	elseif msg == L.MurchalOchkenProshlyapen2 or msg:find(L.MurchalOchkenProshlyapen2) then --Вызов элемов на 2 фазе
+	elseif msg == L.MurchalOchkenProshlyapen2 or msg:find(L.MurchalOchkenProshlyapen2) then --Конец 1.5 фазы
 		self:SendSync("OchkenShlyapen2")
-	elseif msg == L.MurchalOchkenProshlyapen3 or msg:find(L.MurchalOchkenProshlyapen3) then --Конец 2 фазы
+	elseif msg == L.MurchalOchkenProshlyapen3 or msg:find(L.MurchalOchkenProshlyapen3) then --Вызов элемов на 2 фазе
 		self:SendSync("OchkenShlyapen3")
-	elseif msg == L.MurchalOchkenProshlyapen4 or msg:find(L.MurchalOchkenProshlyapen4) then --Конец 1.5 фазы
+	elseif msg == L.MurchalOchkenProshlyapen4 or msg:find(L.MurchalOchkenProshlyapen4) then --Конец 2 фазы
 		self:SendSync("OchkenShlyapen4")
-	end
-end
-
-function mod:UNIT_HEALTH(uId)
-	if self:GetUnitCreatureId(uId) == 189492 and UnitHealth(uId) / UnitHealthMax(uId) == 0.65 then --1-ая переходка
-		timerStormNovaCD:Start(7.3) --Взрыв бури
-		timerHurricaneWingCD:Stop()
-		timerStaticChargeCD:Stop()
-		timerVolatileCurrentCD:Stop()
-		timerElectrifiedJawsCD:Stop()
-		timerLightningBreathCD:Stop()
 	end
 end
 
@@ -965,7 +954,10 @@ function mod:OnSync(msg)
 		timerVolatileCurrentCD:Stop()
 		timerElectrifiedJawsCD:Stop()
 		timerLightningBreathCD:Stop()
-	elseif msg == "OchkenShlyapen2" then --Вызов элемов на 2 фазе
+	elseif msg == "OchkenShlyapen2" then --Конец 1.5 фазы
+		timerPhaseCD:Stop()
+		timerLightningDevastationCD:Stop()
+	elseif msg == "OchkenShlyapen3" then --Вызов элемов на 2 фазе
 		MurchalProshlyap = true
 		self.vb.breathCount = 0
 		timerPhaseCD:Stop()
@@ -975,15 +967,12 @@ function mod:OnSync(msg)
 		timerFulminatingChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
 		timerLightningDevastationCD:Start(26.2, 1)
-	elseif msg == "OchkenShlyapen3" then --Конец 2 фазы
+	elseif msg == "OchkenShlyapen4" then --Конец 2 фазы
 		MurchalProshlyap = false
 		timerStormBreakCD:Stop()
 		timerBallLightningCD:Stop()
 		timerLightningStrikeCD:Stop()
 		timerLightningDevastationCD:Stop()
 		timerStormNovaCD:Start(2)
-	elseif msg == "OchkenShlyapen4" then --Конец 1.5 фазы
-		timerPhaseCD:Stop()
-		timerLightningDevastationCD:Stop()
 	end
 end

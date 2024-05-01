@@ -14,9 +14,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 390548 373678 382563 374022 372456 375450 374691 374215 376669 397338 374430 374623 374624 374622 391019 392125 392192 392152 391268 393314 393295 393296 392098 393459 394719 393429 395893 394416 393309 373329",
 	"SPELL_CAST_SUCCESS 375825 375828 375824 375792",
-	"SPELL_AURA_APPLIED 371971 372158 373494 372458 372514 372517 374779 374380 374427 391056 390920 391419 396109 396113 396106 396085 396241 391696",
+	"SPELL_AURA_APPLIED 374023 371971 372158 373494 372458 372514 372517 374779 374380 374427 391056 390920 391419 396109 396113 396106 396085 396241 391696",
 	"SPELL_AURA_APPLIED_DOSE 372158 374321",
-	"SPELL_AURA_REMOVED 371971 372458 372514 374779 374380 374427 390920 391419 391056",
+	"SPELL_AURA_REMOVED 374023 371971 372458 372514 374779 374380 374427 390920 391419 391056",
 	"SPELL_PERIODIC_DAMAGE 374554 391555",
 	"SPELL_PERIODIC_MISSED 374554 391555",
 	"UNIT_DIED",
@@ -43,7 +43,7 @@ local berserkTimer								= mod:NewBerserkTimer(553)
 --Stage One: Elemental Mastery
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25036))
 local warnSunderStrikeDebuff					= mod:NewStackAnnounce(372158, 2, nil, "Tank|Healer") --Раскалывающий удар
-local warSunderStrike							= mod:NewTargetNoFilterAnnounce(372158, 4) --Раскалывающий удар
+local warnSunderStrike							= mod:NewTargetNoFilterAnnounce(372158, 4) --Раскалывающий удар
 
 local specWarnSunderStrike						= mod:NewSpecialWarningDefensive(372158, nil, nil, nil, 3, 2) --Раскалывающий удар
 local specWarnSunderStrikeDebuff				= mod:NewSpecialWarningTaunt(372158, nil, nil, nil, 1, 2) --Раскалывающий удар
@@ -61,9 +61,15 @@ local yellSunderStrike							= mod:NewShortYell(372158, nil, nil, nil, "YELL") -
 mod:AddNamePlateOption("NPAuraOnSurge", 371971, true)
 --Fire Altar An altar of primal fire
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25040))
+local warnSearingCarnage						= mod:NewTargetNoFilterAnnounce(374023, 4) --Огненная бойня
+
 local specWarnMagmaBurst						= mod:NewSpecialWarningDodge(382563, nil, nil, nil, 2, 2) --Взрыв магмы
 local specWarnMoltenRupture						= mod:NewSpecialWarningDodge(373329, nil, nil, nil, 2, 2) --Раскаленный разлом
 local specWarnSearingCarnage					= mod:NewSpecialWarningDodge(374023, nil, nil, nil, 2, 2) --Огненная бойня Just warn everyone since it targets most of raid, even if it's not on YOU, you need to avoid it
+local specWarnSearingCarnage2					= mod:NewSpecialWarningMoveAway(374023, nil, nil, nil, 4, 4) --Огненная бойня
+
+local yellSearingCarnage						= mod:NewShortYell(374023, nil, nil, nil, "YELL") --Огненная бойня
+local yellSearingCarnage2						= mod:NewShortFadesYell(374023, nil, nil, nil, "YELL") --Огненная бойня
 
 ----Mythic Only (Flamewrought Eradicator)
 local warnRagingInferno							= mod:NewSpellAnnounce(394416, 3) --Бушующее адское пламя
@@ -124,7 +130,7 @@ local specWarnLightningCrash					= mod:NewSpecialWarningMoveAway(373487, nil, ni
 --local yellLightningCrashFades					= mod:NewIconFadesYell(373487)
 --local specWarnLightningCrashStacks			= mod:NewSpecialWarningStack(373535, nil, 8, nil, nil, 1, 6)
 local specWarnShockingBurst						= mod:NewSpecialWarningMoveAway(390920, nil, nil, nil, 1, 2) --Шоковый удар
-local specWarnThunderStrike						= mod:NewSpecialWarningSoak(374215, nil, nil, nil, 2, 2) --Громовой удар No Debuff
+local specWarnThunderStrike						= mod:NewSpecialWarningSoak(374215, nil, nil, nil, 4, 2) --Громовой удар No Debuff
 local specWarnThunderStrikeBad					= mod:NewSpecialWarningDodge(374215, nil, nil, nil, 2, 2) --Громовой удар Debuff
 
 local yellLightningCrash						= mod:NewShortYell(373487, nil, nil, nil, "YELL") --Сокрушение молнией
@@ -153,9 +159,9 @@ local warnGroundShatter							= mod:NewTargetNoFilterAnnounce(374427, 3) --Ра�
 local specWarnGroundShatter						= mod:NewSpecialWarningMoveAway(374427, nil, nil, nil, 4, 4) --Разбивание земли
 local specWarnViolentUpheavel					= mod:NewSpecialWarningDodge(374430, nil, nil, nil, 2, 2) --Яростный разлом
 
-local timerGroundShatterCD						= mod:NewCDTimer(30.4, 374427, nil, nil, nil, 3) --Разбивание земли
+local timerGroundShatterCD						= mod:NewCDTimer(30.4, 374427, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Разбивание земли
 local timerViolentUpheavelCD					= mod:NewCDTimer(33.2, 374430, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Яростный разлом Sometimess stutter casts
-local timerSeismicRuptureCD						= mod:NewCDTimer(49.4, 374691, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON) --Сейсмический разлом Mythic Add version
+local timerSeismicRuptureCD						= mod:NewCDTimer(49.4, 374691, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Сейсмический разлом Mythic Add version
 
 local yellGroundShatter							= mod:NewShortYell(374427, nil, nil, nil, "YELL") --Разбивание земли
 local yellGroundShatterFades					= mod:NewShortFadesYell(374427, nil, nil, nil, "YELL") --Разбивание земли
@@ -166,20 +172,21 @@ local specWarnFrostBinds						= mod:NewSpecialWarningInterrupt(374623, "HasInter
 local specWarnFreezingTempest					= mod:NewSpecialWarningMoveTo(374624, nil, nil, nil, 3, 4) --Леденящая буря
 
 local timerFreezingTempestCD					= mod:NewCDTimer(37.7, 374624, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Леденящая буря
-local timerAbsoluteZeroCD						= mod:NewCDCountTimer(24.3, 372458, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Абсолютный нуль Mythic Add version
+local timerAbsoluteZeroCD						= mod:NewCDCountTimer(24.3, 372458, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Абсолютный нуль Mythic Add version
 
 ----Blazing Fiend
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25079))--Since searing gets bunbled with cast, it leaves category empty
-local timerSearingCarnageCD						= mod:NewCDTimer(23, 374023, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Огненная бойня Mythic Add version
+local timerSearingCarnageCD						= mod:NewCDTimer(23, 374023, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Огненная бойня Mythic Add version
 
 ----Thundering Destroyer
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25083))
 local warnStormBreak							= mod:NewSpellAnnounce(374622, 3) --Просвет бури
 
-local specWarnLethalCurrent						= mod:NewSpecialWarningMoveAway(391696, nil, nil, nil, 1, 2) --Смертоносный поток
+local specWarnLethalCurrent						= mod:NewSpecialWarningMoveAway(391696, nil, nil, nil, 4, 4) --Смертоносный поток
 
 local timerStormBreakCD							= mod:NewCDTimer(20.8, 374622, nil, nil, nil, 3) --Просвет бури
-local timerThunderStrikeCD						= mod:NewCDTimer(41, 374215, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Громовой удар Mythic Add version
+local timerThunderStrike						= mod:NewCastTimer(7, 374215, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Взрыв бури
+local timerThunderStrikeCD						= mod:NewCDTimer(41, 374215, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Громовой удар Mythic Add version
 
 local yellLethalCurrent							= mod:NewShortYell(391696, nil, nil, nil, "YELL") --Смертоносный поток
 
@@ -207,8 +214,12 @@ function mod:SunderStrikeTarget(targetname, uId)
 		specWarnSunderStrike:Play("defensive")
 		yellSunderStrike:Yell()
 	else
-		warSunderStrike:Show(targetname)
+		warnSunderStrike:Show(targetname)
 	end
+end
+
+local function startProshlyapationOfMurchal(self)
+	self:UnregisterShortTermEvents()
 end
 
 function mod:OnCombatStart(delay)
@@ -287,6 +298,7 @@ function mod:SPELL_CAST_START(args)
 		if args:GetSrcCreatureID() ~= 184986 then--Mythic Add
 			timerThunderStrikeCD:Start(nil, args.sourceGUID)
 		end
+		timerThunderStrike:Start()
 	elseif spellId == 397338 then
 		table.wipe(groundShatterTargets)
 		timerGroundShatterCD:Start(nil, args.sourceGUID)
@@ -393,6 +405,8 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
+	--От всего нету толку, всё сломано--
+	--Активация должна быть при появлении мобов--
 	if spellId == 375825 then--Frozen Destroyer
 		DBM:Debug("Murchal proshlyap 33", 2)
 	--[[	timerFreezingTempestCD:Start(30.4, args.sourceGUID)
@@ -401,22 +415,22 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end]]
 	elseif spellId == 375828 then--Blazing Fiend
 		DBM:Debug("Murchal proshlyap 11", 2)
-		if self:IsMythic() then
+	--[[	if self:IsMythic() then
 			timerSearingCarnageCD:Start(20.2, args.sourceGUID)
-		end
+		end]]
 	elseif spellId == 375824 then--Tectonic Crusher
 		DBM:Debug("Murchal proshlyap 44", 2)
-		timerGroundShatterCD:Start(5.9, args.sourceGUID)
+	--[[	timerGroundShatterCD:Start(5.9, args.sourceGUID)
 		timerViolentUpheavelCD:Start(20.6, args.sourceGUID)
 		if self:IsMythic() then
 			timerSeismicRuptureCD:Start(45, args.sourceGUID)
-		end
+		end]]
 	elseif spellId == 375792 then--Thundering Ravager
 		DBM:Debug("Murchal proshlyap 22", 2)
-		timerStormBreakCD:Start(7.2, args.sourceGUID)
+	--[[	timerStormBreakCD:Start(7.2, args.sourceGUID)
 		if self:IsMythic() then
 			timerThunderStrikeCD:Start(38.5, args.sourceGUID)
-		end
+		end]]
 	end
 end
 
@@ -495,6 +509,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:RegisterShortTermEvents(
 			"INSTANCE_ENCOUNTER_ENGAGE_UNIT"
 		)
+		self:Schedule(7, startProshlyapationOfMurchal, self)
 	elseif spellId == 374380 then
 		if self.Options.NPAuraOnElementalBond then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
@@ -541,6 +556,15 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnLethalCurrent:Play("targetyou")
 			yellLethalCurrent:Yell()
 		end
+	elseif spellId == 374023 then --Огненная бойня
+		if args:IsPlayer() then
+			specWarnSearingCarnage2:Show()
+			specWarnSearingCarnage2:Play("watchstep")
+			yellSearingCarnage:Yell()
+			yellSearingCarnage2:Countdown(spellId)
+		else
+			warnSearingCarnage:CombinedShow(0.5, args.destName)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -578,7 +602,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDamageCD:Start(14.5, "?")
 		timerAvoidCD:Start(22.2, "?")--They fixed the skip bug apparently and it's no longer 68.4
 		timerUltimateCD:Start(45, "?")--if it's seismic rupture it's 53 else 45
-		self:UnregisterShortTermEvents()
 	elseif spellId == 374380 then
 		if self.Options.NPAuraOnElementalBond then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
@@ -601,11 +624,15 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnEnvelopingEarth then
 			self:SetIcon(args.destName, 0)
 		end
+	elseif spellId == 374023 then --Огненная бойня
+		if args:IsPlayer() then
+			yellSearingCarnage2:Cancel()
+		end
 	end
 end
 
 function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
-	for i = 1, 5 do
+	for i = 1, 3 do
 		local unitID = "boss"..i
 		local GUID = UnitGUID(unitID)
 		local cid = self:GetCIDFromGUID(GUID)
@@ -636,6 +663,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		elseif cid == 190588 then --Тектонический крушитель (земля)
 			DBM:Debug("Murchal proshlyap 4", 2)
 			if self:IsMythic() then
+				timerGroundShatterCD:Start(6)
 				timerSeismicRuptureCD:Start(45)
 			else
 				timerGroundShatterCD:Start(6)
@@ -655,6 +683,7 @@ function mod:UNIT_DIED(args)
 		timerThunderStrikeCD:Stop(args.destGUID)
 		timerStormBreakCD:Stop()
 		timerThunderStrikeCD:Stop()
+		timerThunderStrike:Stop()
 	elseif cid == 190686 then --Морозный разрушитель
 		timerAbsoluteZeroCD:Stop(args.destGUID)
 		timerFreezingTempestCD:Stop(args.destGUID)

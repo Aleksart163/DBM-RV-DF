@@ -100,9 +100,9 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	MurchalOchkenProshlyapen  = "Думаете, титаны навели в мире порядок? Нет!",
-	MurchalOchkenProshlyapen2 = "Прислужники бури, услышьте меня!",
-	MurchalOchkenProshlyapen3 = "Конец господству Аспектов! Тюрьма разрушена!",
-	MurchalOchkenProshlyapen4 = "Мы сорвем оковы и вернем драконам былое величие!",
+	MurchalOchkenProshlyapen2 = "Мы сорвем оковы и вернем драконам былое величие!",
+	MurchalOchkenProshlyapen3 = "Прислужники бури, услышьте меня!",
+	MurchalOchkenProshlyapen4 = "Конец господству Аспектов! Тюрьма разрушена!",
 	negative = "отрицательную",
 	positive = "положительную",
 	BreathEmote	= "Рашагет делает глубокий вдох..."

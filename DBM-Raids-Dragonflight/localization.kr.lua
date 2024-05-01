@@ -84,10 +84,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalOchkenProshlyapen  = "티탄이 이 세상에 질서를 가져온 줄 아느냐? 틀렸다!",
-	MurchalOchkenProshlyapen2 = "폭풍의 하수인이여, 내 부름에 응하라!",
-	MurchalOchkenProshlyapen3 = "위상들은 이제 우리를 속박하지 못한다! 감옥은 무너지리라!", --на проверку
-	MurchalOchkenProshlyapen4 = "우린 티탄의 사슬을 끊고 용족의 영광을 되찾을 것이다!",
+	MurchalOchkenProshlyapen  = "티탄이 이 세상에 질서를 가져온 줄 아느냐? 틀렸다!", --
+	MurchalOchkenProshlyapen2 = "우린 티탄의 사슬을 끊고 용족의 영광을 되찾을 것이다!", --
+	MurchalOchkenProshlyapen3 = "폭풍의 하수인이여, 내 부름에 응하라!", --
+	MurchalOchkenProshlyapen4 = "위상들은 이제 우리를 속박하지 못한다! 감옥은 무너지리라!", --
 	negative = "음전하",
 	positive = "양전하",
 	BreathEmote	= "라자게스가 숨을 깊게 들이쉽니다..."
