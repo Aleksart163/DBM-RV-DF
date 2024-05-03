@@ -9573,6 +9573,11 @@ do
 	function bossModPrototype:NewTargetSourceAnnounce(spellId, color, ...)
 		return newAnnounce(self, "targetsource", spellId, color or 3, ...)
 	end
+	
+	---@overload fun(self, spellId, color, icon, optionDefault: SpecFlags|boolean?, optionName, castTime, preWarnTime, soundOption, noFilter): Announce
+	function bossModPrototype:NewTargetSourceAnnounce2(spellId, color, ...)
+		return newAnnounce(self, "targetsource2", spellId, color or 3, icon, ...)
+	end
 
 	---@overload fun(self, spellId, color, icon, optionDefault: SpecFlags|boolean?, optionName, castTime, preWarnTime, soundOption, noFilter): Announce
 	function bossModPrototype:NewTargetCountAnnounce(spellId, color, ...)
