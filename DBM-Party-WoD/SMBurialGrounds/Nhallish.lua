@@ -26,17 +26,18 @@ mod:RegisterEventsInCombat(
 --]]
 local warnVoidBlast				= mod:NewTargetNoFilterAnnounce(152792, 4) --Вспышка Бездны
 
+local specWarnSoulSteal			= mod:NewSpecialWarningSpell(152962, nil, nil, nil, 2, 2) --Кража души
 local specWarnVoidBlast			= mod:NewSpecialWarningDefensive(152792, nil, nil, nil, 3, 4) --Вспышка Бездны
 local specWarnVoidVortex		= mod:NewSpecialWarningRun(152801, nil, nil, 2, 4, 2) --Водоворот Бездны
-local specWarnSoulShred			= mod:NewSpecialWarningSpell(152979, nil, nil, nil, 1, 2) --Осколок души
+local specWarnSoulShred			= mod:NewSpecialWarningYou(152979, nil, nil, nil, 1, 2) --Осколок души
 local specWarnVoidDevastation	= mod:NewSpecialWarningDodge(153067, nil, nil, nil, 2, 2) --Опустошение Бездны
 local specWarnVoidDevastationM	= mod:NewSpecialWarningGTFO(153070, nil, nil, nil, 1, 8)
 local specWarnReturnedSoul		= mod:NewSpecialWarningYou(153033, nil, nil, nil, 1, 2) --Вернувшаяся душа
 
-local timerVoidBlastCD			= mod:NewCDTimer(77, 152792, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Вспышка Бездны
-local timerPlanarShiftCD		= mod:NewCDTimer(77, 153623, nil, nil, nil, 3) --Сдвиг плоскости
-local timerVoidVortexCD			= mod:NewCDTimer(77, 152801, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Водоворот Бездны
-local timerSoulStealCD			= mod:NewNextTimer(75, 152962, nil, nil, nil, 7) --Кража души
+local timerVoidBlastCD			= mod:NewCDTimer(77.5, 152792, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Вспышка Бездны
+local timerPlanarShiftCD		= mod:NewCDTimer(77.5, 153623, nil, nil, nil, 3) --Сдвиг плоскости
+local timerVoidVortexCD			= mod:NewCDTimer(77.5, 152801, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Водоворот Бездны
+local timerSoulStealCD			= mod:NewNextTimer(77.5, 152962, nil, nil, nil, 7) --Кража души
 local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979, nil, nil, nil, 7) --Осколок души
 local timerReturnedSoul			= mod:NewBuffFadesTimer(20, 153033, nil, nil, nil, 7) --Вернувшаяся душа
 local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Опустошение Бездны
@@ -63,7 +64,7 @@ function mod:OnCombatStart(delay)
 	timerVoidBlastCD:Start(10.5-delay) --
 	timerPlanarShiftCD:Start(25.5-delay) --
 	timerVoidVortexCD:Start(27.5-delay) --
-	timerSoulStealCD:Start(37-delay)
+	timerSoulStealCD:Start(37-delay) --
 	timerVoidDevastationCD:Start(65.3-delay)
 end
 
@@ -81,6 +82,8 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(args.sourceGUID, "VoidBlastTarget", 0.1, 2)
 		timerVoidBlastCD:Start()
 	elseif spellId == 152962 then --Кража души
+		specWarnSoulSteal:Show()
+		specWarnSoulSteal:Play("specialsoon")
 		timerSoulStealCD:Start()
 	elseif spellId == 153623 then --Сдвиг плоскости
 		timerPlanarShiftCD:Start()
