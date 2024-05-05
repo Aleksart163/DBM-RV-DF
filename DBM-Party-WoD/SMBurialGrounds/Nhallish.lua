@@ -40,7 +40,7 @@ local timerVoidVortexCD			= mod:NewCDTimer(77.5, 152801, nil, nil, nil, 2, nil, 
 local timerSoulStealCD			= mod:NewNextTimer(77.5, 152962, nil, nil, nil, 7) --Кража души
 local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979, nil, nil, nil, 7) --Осколок души
 local timerReturnedSoul			= mod:NewBuffFadesTimer(20, 153033, nil, nil, nil, 7) --Вернувшаяся душа
-local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Опустошение Бездны
+local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Опустошение Бездны
 
 local yellVoidBlast				= mod:NewShortYell(152792, nil, nil, nil, "YELL") --Вспышка Бездны
 

@@ -28,24 +28,24 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 385518
 --]]
-local warnChillstorm							= mod:NewTargetNoFilterAnnounce(372851, 3)
-local warnIceBulwark							= mod:NewSpellAnnounce(372988, 4)
+local warnChillstorm							= mod:NewTargetNoFilterAnnounce(372851, 4) --Ледяная буря
+local warnIceBulwark							= mod:NewSpellAnnounce(372988, 4) --Ледяной бастион
 
-local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagic", nil, nil, 3, 2) --Полная заморозка
-local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 8, nil, nil, 1, 6)
+local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagic", nil, nil, 3, 4) --Полная заморозка
+local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 4, nil, nil, 1, 6) --Древний холод
 local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
-local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 1, 2)
-local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, nil, 3, 2)
-local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8)
+local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 4, 4) --Ледяная буря
+local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, nil, 3, 4) --Ледяная перегрузка
+local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2) --Пробуждение дракончиков
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8) --Ледяная буря
 
-local timerChillstormCD							= mod:NewCDTimer(23, 372851, nil, nil, nil, 3)
-local timerHailbombsCD							= mod:NewCDTimer(23, 396044, nil, nil, nil, 3)
-local timerFrostOverloadCD						= mod:NewCDTimer(8.5, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Cast after each whelps, which is health based
+local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Ледяная буря
+local timerHailbombsCD							= mod:NewCDTimer(20, 396044, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывные градины
+local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка Cast after each whelps, which is health based
 
 local yellFrozenSolid							= mod:NewShortYell(373022, nil, nil, nil, "YELL") --Полная заморозка
-local yellChillstorm							= mod:NewYell(372851, nil, nil, nil, "YELL")
-local yellChillstormFades						= mod:NewShortFadesYell(372851, nil, nil, nil, "YELL")
+local yellChillstorm							= mod:NewYell(372851, nil, nil, nil, "YELL") --Ледяная буря
+local yellChillstormFades						= mod:NewShortFadesYell(372851, nil, nil, nil, "YELL") --Ледяная буря
 
 mod:AddInfoFrameOption(372682, true)
 
@@ -53,8 +53,8 @@ local chillStacks = {}
 
 function mod:OnCombatStart(delay)
 	table.wipe(chillStacks)
-	timerHailbombsCD:Start(4.7-delay)
-	timerChillstormCD:Start(11.9-delay)
+	timerHailbombsCD:Start(4-delay) --
+	timerChillstormCD:Start(14.2-delay) --
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(372682))
 		DBM.InfoFrame:Show(5, "table", chillStacks, 1)
@@ -70,18 +70,20 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 372851 then
+	if spellId == 372851 then --Ледяная буря
 		timerChillstormCD:Start()
-	elseif spellId == 396044 then
+	elseif spellId == 396044 then --Взрывные градины
 		specWarnHailbombs:Show()
 		specWarnHailbombs:Play("watchstep")
 		timerHailbombsCD:Start()
-	elseif spellId == 373046 then
+	elseif spellId == 373046 then --Пробуждение дракончиков
 		specWarnAwakenWhelps:Show()
 		specWarnAwakenWhelps:Play("killmob")
 		if self:IsMythic() then
 			timerFrostOverloadCD:Start()
 		end
+		timerChillstormCD:Stop()
+		timerHailbombsCD:Stop()
 	end
 end
 
@@ -93,12 +95,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(chillStacks, 0.2)
 		end
-		if args:IsPlayer() and amount >= 8 then
+		if args:IsPlayer() and amount >= 4 then
 			specWarnPrimalChill:Cancel()--Possible to get multiple applications at once so we throttle by scheduling
 			specWarnPrimalChill:Schedule(0.2, amount)
 			specWarnPrimalChill:ScheduleVoice(0.2, "stackhigh")
 		end
-	elseif spellId == 373022 then
+	elseif spellId == 373022 then --Полная заморозка
 		if args:IsPlayer() then
 			yellFrozenSolid:Yell()
 		else
@@ -137,10 +139,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 372988 then--Ice Bulwark Removed, now can interrupt on mythic and mythic+
 		specWarnFrostOverload:Show(args.destName)
 		specWarnFrostOverload:Play("kickcast")
-	elseif spellId == 373680 then--Frost Overload
+	elseif spellId == 373680 then --Ледяная перегрузка (когда кикнули каст)
 		--True, at least in M+
-		timerHailbombsCD:Start(4.8)
-		timerChillstormCD:Start(13.3)
+		timerHailbombsCD:Start(4)
+		timerChillstormCD:Start(14.2)
 	end
 end
 
