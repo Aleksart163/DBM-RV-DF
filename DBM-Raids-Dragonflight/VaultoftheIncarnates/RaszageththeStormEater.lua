@@ -142,13 +142,13 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25477))
 local warnMagneticCharge					= mod:NewTargetNoFilterAnnounce(399713, 4)
 
 local specWarnStormEater					= mod:NewSpecialWarningSpell(395885, nil, nil, nil, 2, 2, 4)
-local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, nil, nil, 3, 4)
+local specWarnThunderousBlast				= mod:NewSpecialWarningDefensive(386410, nil, nil, nil, 3, 4) --Громовой заряд
 local specWarnThunderstruckArmor			= mod:NewSpecialWarningTaunt(391285, nil, nil, nil, 1, 2) --Заряженная молнией броня
 local specWarnMagneticCharge				= mod:NewSpecialWarningMoveAway(399713, nil, nil, nil, 3, 4) --Магнитный заряд
 
 local timerStormEaterCD						= mod:NewCDTimer(35, 395885, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerMagneticChargeCD					= mod:NewCDCountTimer(35, 399713, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магнитный заряд
-local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+local timerThunderousBlastCD				= mod:NewCDCountTimer(35, 386410, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Громовой заряд
 
 local yellStaticCharge						= mod:NewShortPosYell(381615, 37859, nil, nil, "YELL")
 local yellStaticChargeFades					= mod:NewIconFadesYell(381615, 37859, nil, nil, "YELL")
@@ -164,6 +164,7 @@ local yellElectrifiedJaws					= mod:NewShortYell(395906, nil, nil, nil, "YELL") 
 local yellThunderousEnergy					= mod:NewShortYell(390763, nil, nil, nil, "YELL") --Дуга молнии
 
 mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {8}) --Магнитный заряд
+mod:AddSetIconOption("SetIconOnThunderousBlast", 386410, true, 0, {7}) --Громовой заряд
 mod:GroupSpells(386410, 391285)--Thunderous Blast and associated melted armor debuff
 
 local StaticField = DBM:GetSpellInfo(377662) 
@@ -319,6 +320,9 @@ function mod:ThunderousBlastTarget(targetname, uId)
 		specWarnThunderousBlast:Show()
 		specWarnThunderousBlast:Play("defensive")
 		yellThunderousEnergy:Yell()
+	end
+	if self.Options.SetIconOnThunderousBlast then
+		self:SetIcon(targetname, 7, 7)
 	end
 end
 
@@ -910,7 +914,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.MurchalOchkenProshlyapen or msg:find(L.MurchalOchkenProshlyapen) then --1-ая переходка
+	if msg == L.MurchalOchkenProshlyapen or msg:find(L.MurchalOchkenProshlyapen) then --Конец 1 фазы
 		self:SendSync("OchkenShlyapen")
 	elseif msg == L.MurchalOchkenProshlyapen2 or msg:find(L.MurchalOchkenProshlyapen2) then --Конец 1.5 фазы
 		self:SendSync("OchkenShlyapen2")
@@ -921,6 +925,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
+--[[
 --Purely for earlier timer canceling, new timers not started on USCS if it can be helped, otherwise timers can't be updated easily from WCLs
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) -- (всё с офы и нихуя не пашет)
 	if spellId == 396734 and self:GetStage(1) then--Storm Shroud
@@ -939,10 +944,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) -- (всё с офы и �
 		timerLightningDevastationCD:Stop()
 		timerStormNovaCD:Start(4.8)
 	end
-end
+end]]
 
 function mod:OnSync(msg)
-	if msg == "OchkenShlyapen" then --1-ая переходка
+	if msg == "OchkenShlyapen" then --Конец 1 фазы
 		self:SetStage(1.5)
 		self.vb.breathCount = 0
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))

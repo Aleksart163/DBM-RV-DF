@@ -86,9 +86,10 @@ local timerSearingGlareCD			= mod:NewCDNPTimer(8.4, 211299, nil, "HasInterrupt",
 local timerEyeStormCD				= mod:NewCDNPTimer(20.6, 212784, nil, nil, nil, 5) --Буря глаз Role color cause it needs a disrupt (stun, knockback) to interrupt.
 local timerBewitchCD				= mod:NewCDNPTimer(17, 211470, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShadowSlashCD			= mod:NewCDNPTimer(18.2, 211473, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFelDetonationCD			= mod:NewCDNPTimer(12.1, 211464, nil, nil, nil, 2, nil, nil, nil, 3, 3) --Взрыв Скверны
+local timerFelDetonation			= mod:NewCastTimer(4, 211464, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Взрыв Скверны
+local timerFelDetonationCD			= mod:NewCDNPTimer(12, 211464, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Взрыв Скверны
 local timerScreamofPain				= mod:NewCastTimer(1.5, 397892, nil, "SpellCaster", nil, 7, nil, nil, nil, 3, 1.5) --Крик боли
-local timerScreamofPainCD			= mod:NewCDNPTimer(14.6, 397892, nil, "SpellCaster", nil, 2, nil, nil, nil, 3, 3) --Крик боли
+local timerScreamofPainCD			= mod:NewCDNPTimer(14, 397892, nil, "SpellCaster", nil, 2, nil, nil, nil, 3, 3) --Крик боли
 local timerWhirlingBladesCD			= mod:NewCDNPTimer(18.2, 209378, nil, "Melee", nil, 2)
 local timerDisintegrationBeamCD		= mod:NewCDNPTimer(6.1, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShockwaveCD				= mod:NewCDNPTimer(8.4, 207979, nil, nil, nil, 3)
@@ -185,6 +186,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 211464 then
 		timerFelDetonationCD:Start(nil, args.sourceGUID)
+		timerFelDetonation:Start()
 		if self:AntiSpam(3, 4) then
 			warnFelDetonation:Show()
 			specWarnFelDetonation:Show(DBM_COMMON_L.BREAK_LOS)
@@ -297,6 +299,7 @@ function mod:UNIT_DIED(args)
 		timerShadowSlashCD:Stop(args.destGUID)
 	elseif cid == 104278 then--Felbound Enforcer
 		timerFelDetonationCD:Stop(args.destGUID)
+		timerFelDetonation:Stop()
 	elseif cid == 104275 then--Imacu'tya
 		timerScreamofPainCD:Stop(args.destGUID)
 		timerWhirlingBladesCD:Stop(args.destGUID)

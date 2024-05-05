@@ -23,6 +23,8 @@ mod:RegisterEvents(
 --local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
 --local specWarnDirgefromBelow				= mod:NewSpecialWarningInterrupt(310839, "HasInterrupt", nil, nil, 1, 2)
+local warnPulverizingBreath						= mod:NewTargetNoFilterAnnounce(392635, 4) --Дробящее дыхание
+local warnMagmaBreath							= mod:NewTargetNoFilterAnnounce(393783, 4) --Дыхание магмой
 local warnMeteorStrike							= mod:NewTargetNoFilterAnnounce(396439, 4) --Падение метеора
 local warnConductiveCharge						= mod:NewTargetNoFilterAnnounce(397052, 4) --Проводящий заряд
 
@@ -54,6 +56,8 @@ function mod:PulverizingBreathTarget(targetname)
 		specWarnPulverizingBreath:Show()
 		specWarnPulverizingBreath:Play("runout")
 		yellPulverizingBreath:Yell()
+	else
+		warnPulverizingBreath:Show(targetname)
 	end
 	if self.Options.SetIconOnPulverizingBreath then
 		self:SetIcon(targetname, 8, 5)
@@ -66,6 +70,8 @@ function mod:MagmaBreathTarget(targetname)
 		specWarnMagmaBreath:Show()
 		specWarnMagmaBreath:Play("defensive")
 		yellMagmaBreath:Yell()
+	else
+		warnMagmaBreath:Show(targetname)
 	end
 	if self.Options.SetIconOnMagmaBreathTarget then
 		self:SetIcon(targetname, 8, 4)
@@ -80,7 +86,7 @@ function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 392635 then --Дробящее дыхание
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "PulverizingBreathTarget", 0.1, 8)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "PulverizingBreathTarget", 0.1, 2)
 	elseif spellId == 393783 then --Дыхание магмой
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "MagmaBreathTarget", 0.1, 2)
 	elseif spellId == 392280 then --Каменный обстрел
