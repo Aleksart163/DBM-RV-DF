@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 382670 386063 385339 386547 385434 382836",
-	"SPELL_AURA_APPLIED 384808 392198",
+	"SPELL_AURA_APPLIED 384808 392198 392151",
 	"SPELL_AURA_REMOVED 392198",
 	"UNIT_DIED"
 )
@@ -30,8 +30,10 @@ local timerRP									= mod:NewRPTimer(27.4)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25552))
 local warnRepel									= mod:NewCastAnnounce(386547, 3, nil, nil, nil, nil, nil, 2) --Отпор
 local warnSpiritLeap							= mod:NewSpellAnnounce(385434, 3) --Прыжок духа
+local warnGaleArrow								= mod:NewCountAnnounce(382670, 3) --Ураганная стрела
 
-local specWarnGaleArrow							= mod:NewSpecialWarningDodgeCount(382670, nil, nil, nil, 2, 4) --Ураганная стрела
+local specWarnGaleArrow							= mod:NewSpecialWarningDefensive(382670, nil, nil, nil, 3, 4) --Ураганная стрела
+local specWarnGaleArrow2						= mod:NewSpecialWarningDodge(382670, nil, nil, nil, 2, 4) --Ураганная стрела
 local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
 local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7) --Ураганная стрела
@@ -130,8 +132,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 382670 then --Ураганная стрела
 		self.vb.galeCount = self.vb.galeCount + 1
-		specWarnGaleArrow:Show(self.vb.galeCount)
-		specWarnGaleArrow:Play("watchstep")
+		warnGaleArrow:Show(self.vb.galeCount)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.galeCount+1) or 60.5
 		if timer then
 			timerGaleArrowCD:Start(timer, self.vb.galeCount+1, args.sourceGUID)
@@ -191,6 +192,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 392198 then
 		if self.Options.NPAuraOnAncestralBond then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
+		end
+	elseif spellId == 392151 then --Ураганная стрела
+		if args:IsPlayer() then
+			specWarnGaleArrow:Show()
+			specWarnGaleArrow:Play("defensive")
+		else
+			specWarnGaleArrow2:Show()
+			specWarnGaleArrow2:Play("watchstep")
 		end
 	end
 end

@@ -12,8 +12,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	Heroism 		= "%s uses %s",
 	Rebirth 		= "%s uses %s on %s",
+	Heroism 		= "%s uses %s",
 	Food			= "%s puts %s",
 	RaidCooldown 	= "%s uses %s",
 	MobileBanking	= "%s puts %s"

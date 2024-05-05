@@ -28,8 +28,8 @@ local warnMassres4					= mod:NewTargetSourceAnnounce2(212048, 1) --Древне�
 local warnMassres5					= mod:NewTargetSourceAnnounce2(212051, 1) --Повторное пробуждение (монк) --
 local warnMassres6					= mod:NewTargetSourceAnnounce2(361178, 1) --Массовое возвращение (драктир) --
 --инженерия
-local warnJeeves					= mod:NewSpellAnnounce(67826, 1) --Дживс
-local warnAutoHammer				= mod:NewSpellAnnounce(199109, 1) --Автоматический молот
+local warnJeeves					= mod:NewTargetSourceAnnounce2(67826, 1) --Дживс
+local warnAutoHammer				= mod:NewTargetSourceAnnounce2(199109, 1) --Автоматический молот
 --героизм
 --local warnTimeWarp					= mod:NewSpellAnnounce(80353, 1) --Искажение времени
 --local warnFuryoftheAspects			= mod:NewSpellAnnounce(390386, 1) --Ярость Аспектов
@@ -52,8 +52,8 @@ local warnPrimalRage				= mod:NewSpellAnnounce(264667, 1) --Исступлени
 local warnSated						= mod:NewSpellAnnounce(57724, 1) --Пресыщение
 local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступление
 --бр
-local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
---local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрождение
+local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрождение
+--local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
 --другое
 local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
 --еда и поты
@@ -1005,9 +1005,9 @@ function mod:SPELL_SUMMON(args)
 	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 67826 and self:AntiSpam(10, "jeeves") then --Дживс
-		warnJeeves:Show(sourceName)
+		warnJeeves:Show(sourceName, spellName)
 	elseif spellId == 199109 and self:AntiSpam(10, "hammer") then --Автоматический молот
-		warnAutoHammer:Show(sourceName)
+		warnAutoHammer:Show(sourceName, spellName)
 	elseif spellId == 195782 and self:AntiSpam(5, "moonfeather") then --Призыв статуи лунного совуха
 	--[[	if self.Options.YellOnToys then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnToys then
