@@ -161,7 +161,7 @@ local yellFulminatingChargeFades			= mod:NewIconFadesYell(377467, 345338, nil, n
 local yellMagneticCharge					= mod:NewShortYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
 local yellMagneticChargeFades				= mod:NewShortFadesYell(399713, nil, nil, nil, "YELL") --Магнитный заряд
 local yellElectrifiedJaws					= mod:NewShortYell(395906, nil, nil, nil, "YELL") --Электрические челюсти
-local yellThunderousEnergy					= mod:NewShortYell(390763, nil, nil, nil, "YELL") --Дуга молнии
+local yellThunderousBlast					= mod:NewShortYell(386410, nil, nil, nil, "YELL") --Громовой заряд
 
 mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {8}) --Магнитный заряд
 mod:AddSetIconOption("SetIconOnThunderousBlast", 386410, true, 0, {7}) --Громовой заряд
@@ -319,7 +319,7 @@ function mod:ThunderousBlastTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnThunderousBlast:Show()
 		specWarnThunderousBlast:Play("defensive")
-		yellThunderousEnergy:Yell()
+		yellThunderousBlast:Yell()
 	end
 	if self.Options.SetIconOnThunderousBlast then
 		self:SetIcon(targetname, 7, 7)
