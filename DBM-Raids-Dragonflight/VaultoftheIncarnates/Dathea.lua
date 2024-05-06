@@ -40,6 +40,7 @@ local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, ni
 local specWarnCyclone							= mod:NewSpecialWarningDodgeCount(376943, nil, nil, nil, 4, 12) --Смерч
 local specWarnCrosswinds						= mod:NewSpecialWarningDodgeCount(388410, nil, nil, nil, 2, 2) --Встречный ветер 232722 "Slicing Tornado" better?
 local specWarnZephyrSlam						= mod:NewSpecialWarningDefensive(375580, nil, nil, nil, 3, 4) --Удар южного ветра
+local specWarnZephyrSlam2						= mod:NewSpecialWarningStack(375580, nil, 2, nil, nil, 1, 4) --Удар южного ветра
 local specWarnZephyrSlamTaunt					= mod:NewSpecialWarningTaunt(375580, nil, nil, nil, 1, 4) --Удар южного ветра
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
@@ -310,7 +311,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(4)
 			end
 		end
-	elseif spellId == 375580 and not args:IsPlayer() then --Удар южного ветра
+	elseif spellId == 375580 then --Удар южного ветра
 		local amount = args.amount or 1
 		murchalProshlyapStacks[args.destName] = amount
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
@@ -318,11 +319,16 @@ function mod:SPELL_AURA_APPLIED(args)
 		if expireTime then
 			remaining = expireTime-GetTime()
 		end
-		if amount >= 2 and (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-			specWarnZephyrSlamTaunt:Show(args.destName)
-			specWarnZephyrSlamTaunt:Play("tauntboss")
-		else
-			warnZephyrSlam:Show(args.destName, amount)
+		if amount >= 2 then
+			if args:IsPlayer() then
+				specWarnZephyrSlam2:Show(amount)
+				specWarnZephyrSlam2:Play("stackhigh")
+			elseif (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+				specWarnZephyrSlamTaunt:Show(args.destName)
+				specWarnZephyrSlamTaunt:Play("tauntboss")
+			else
+				warnZephyrSlam:Show(args.destName, amount)
+			end
 		end
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
