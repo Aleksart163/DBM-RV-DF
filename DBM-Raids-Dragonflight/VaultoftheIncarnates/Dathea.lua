@@ -314,20 +314,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 375580 then --Удар южного ветра
 		local amount = args.amount or 1
 		murchalProshlyapStacks[args.destName] = amount
-		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		local remaining
-		if expireTime then
-			remaining = expireTime-GetTime()
-		end
 		if amount >= 2 then
 			if args:IsPlayer() then
 				specWarnZephyrSlam2:Show(amount)
 				specWarnZephyrSlam2:Play("stackhigh")
-			elseif (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-				specWarnZephyrSlamTaunt:Show(args.destName)
-				specWarnZephyrSlamTaunt:Play("tauntboss")
 			else
-				warnZephyrSlam:Show(args.destName, amount)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 6.1) then
+					specWarnZephyrSlamTaunt:Show(args.destName)
+					specWarnZephyrSlamTaunt:Play("tauntboss")
+				else
+					warnZephyrSlam:Show(args.destName, amount)
+				end
 			end
 		end
 		if self.Options.InfoFrame then
