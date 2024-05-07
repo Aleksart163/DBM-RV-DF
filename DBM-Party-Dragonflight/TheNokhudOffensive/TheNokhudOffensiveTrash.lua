@@ -50,7 +50,7 @@ local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasIn
 local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
 
 local timerThunderClapCD					= mod:NewCDNPTimer(19.5, 386028, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар грома
-local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5) --Клич клана 20-23
+local timerRallytheClanCD					= mod:NewCDNPTimer(20, 383823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Клич клана 20-23
 local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
 local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
 local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Прерывающий крик 20-30ish
