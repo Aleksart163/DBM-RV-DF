@@ -19,14 +19,15 @@ mod:RegisterEventsInCombat(
 local warnBreath					= mod:NewCountAnnounce(188404, 4)
 local warnDancingBlade				= mod:NewTargetNoFilterAnnounce(193235, 3) --Танцующий клинок
 
-local specWarnSweep					= mod:NewSpecialWarningDefensive(193092, "Tank", nil, nil, 3, 2) --Кровопролитный круговой удар
-local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, nil, nil, nil, 3, 2) --Рог доблести
+local specWarnSweep					= mod:NewSpecialWarningDefensive(193092, nil, nil, nil, 3, 4) --Кровопролитный круговой удар
+local specWarnHornOfValor			= mod:NewSpecialWarningDefensive(191284, "-Tank", nil, nil, 3, 2) --Рог доблести
+local specWarnHornOfValor2			= mod:NewSpecialWarningSpell(191284, "Tank", nil, nil, 2, 2) --Рог доблести
 local specWarnDancingBlade			= mod:NewSpecialWarningMove(193235, nil, nil, nil, 1, 8) --Танцующий клинок
 local specWarnDancingBlade2			= mod:NewSpecialWarningYou(193235, nil, nil, nil, 3, 2) --Танцующий клинок
 
 local timerSweepCD					= mod:NewCDTimer(16.9, 193092, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кровопролитный круговой удар
 local timerDancingBladeCD			= mod:NewCDTimer(10, 193235, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Танцующий клинок
-local timerHornCD					= mod:NewCDTimer(42.6, 191284, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Рог доблести
+local timerHornCD					= mod:NewCDTimer(42.6, 191284, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Рог доблести
 local timerBreathCast				= mod:NewCastCountTimer(43.8, 188404, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури
 
 local yellDancingBlade				= mod:NewShortYell(193235, nil, nil, nil, "YELL") --Танцующий клинок
@@ -51,6 +52,14 @@ function mod:DancingBladeTarget(targetname, uId) --Танцующий клино
 	end
 end
 
+function mod:SweepTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSweep:Show()
+		specWarnSweep:Play("defensive")
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.bladeCount = 0
 	timerDancingBladeCD:Start(4.3-delay)
@@ -62,8 +71,13 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 191284 then
 		self.vb.breathCount = 0
-		specWarnHornOfValor:Show()
-		specWarnHornOfValor:Play("defensive")
+		if self:IsTank() then
+			specWarnHornOfValor2:Show()
+			specWarnHornOfValor2:Play("specialsoon")
+		else
+			specWarnHornOfValor:Show()
+			specWarnHornOfValor:Play("defensive")
+		end
 		timerBreathCast:Start(4.7, 1)
 		timerHornCD:Start()
 	elseif spellId == 193235 then
@@ -81,9 +95,8 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.breathCount < 3 then
 			timerBreathCast:Start(5, self.vb.breathCount+1)
 		end
-	elseif spellId == 193092 then
-		specWarnSweep:Show()
-		specWarnSweep:Play("defensive")
+	elseif spellId == 193092 then --Кровопролитный круговой удар
+		self:BossTargetScanner(args.sourceGUID, "SweepTarget", 0.1, 2)
 		timerSweepCD:Start()
 	end
 end
