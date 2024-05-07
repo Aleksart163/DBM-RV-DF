@@ -123,7 +123,7 @@ function mod:SPELL_CAST_START(args)
 		timerMoltenCleaveCD:Stop()
 		timerIncineratingRoarCD:Stop()
 		timerMoltenSpikesCD:Stop()
-		timerCollapsingArmyCD:Start()
+		timerCollapsingArmy:Start()
 	elseif spellId == 390715 then
 		self.vb.riftCount = self.vb.riftCount + 1
 		if self.vb.riftCount < 3 then--Cast 3x per rotation
@@ -255,7 +255,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.cleaveCount = 0
 		self.vb.riftCount = 0
 		self.vb.spikesCount = 0
-		timerIncineratingRoarCD:Start(10, 1)
+		timerIncineratingRoarCD:Start(9.7, 1) --
 		timerFlameriftCD:Start(13.9, 1)
 		timerMoltenCleaveCD:Start(38, 1)
 		if self:IsHard() then
