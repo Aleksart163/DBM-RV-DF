@@ -13027,17 +13027,17 @@ frame:SetScript("OnEvent", startProshlyapationRinaBaka)
 
 local function proshlyapSoulburnin(self, event, msg)
 	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
 			startProshlyapationOfMurchal(true)
 		elseif msg == "!Proshlyapation" and DBM:AntiSpam(5, "PRSH") then
 			SendChatMessage("[DBM RV] Найден пользователь DBM RV ", "PARTY")
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOP") then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
 			startProshlyapationOfMurchal(true, true)
 		end
 	elseif event == "CHAT_MSG_GUILD" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(15, "MOPG") then
+		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOPG") then
 			startProshlyapationOfMurchal(true, true, true)
 		end
     end
