@@ -11,7 +11,8 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 393787 392280",
 	"SPELL_AURA_APPLIED 395273 396439 397052",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
-	"SPELL_AURA_REMOVED 396439"
+	"SPELL_AURA_REMOVED 396439",
+	"GOSSIP_SHOW"
 )
 
 --TODO, icon mark shared suffering? Maybe when they fix ENCOUNTER_START, for now I don't want to risk trash mod messing with a boss mods icon marking
@@ -150,6 +151,15 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 396439 then --Падение метеора
 		if args:IsPlayer() then
 			yellMeteorStrike2:Cancel()
+		end
+	end
+end
+
+function mod:GOSSIP_SHOW()
+	local gossipOptionID = self:GetGossipID()
+	if gossipOptionID then
+		if gossipOptionID == 107550 or gossipOptionID == 107546 or gossipOptionID == 107552 or gossipOptionID == 107548 or gossipOptionID == 107543 then
+			self:SelectGossip(gossipOptionID)
 		end
 	end
 end
