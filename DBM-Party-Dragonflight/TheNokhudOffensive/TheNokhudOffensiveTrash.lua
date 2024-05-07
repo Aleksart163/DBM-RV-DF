@@ -49,6 +49,7 @@ local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "Has
 local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2)
 local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
 
+local timerThunderClapCD					= mod:NewCDNPTimer(19.5, 386028, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар грома
 local timerRallytheClanCD					= mod:NewCDNPTimer(20.6, 383823, nil, nil, nil, 5) --Клич клана 20-23
 local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
 local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
@@ -155,8 +156,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 387125 and self:AntiSpam(3, 5) then
 		warnThunderstrike:Show()
 	elseif spellId == 386028 then
+		timerThunderClapCD:Start(nil, args.sourceGUID)
 		specWarnThunderClap:Show()
-		specWarnThunderClap:Play("watchstep")
+		specWarnThunderClap:Play("runout")
 	end
 end
 
@@ -207,5 +209,7 @@ function mod:UNIT_DIED(args)
 		timerDeathBoltVolleyCD:Stop(args.destGUID)
 	elseif cid == 193462 then--Batak
 		timerBloodcurdlingShoutCD:Stop(args.destGUID)
+	elseif cid == 195696 then
+		timerThunderClapCD:Stop(args.destGUID)
 	end
 end
