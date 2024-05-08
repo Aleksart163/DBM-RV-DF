@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20240507051555")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991 391118",
+	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991 389804 374885 375652 391118",
 	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136",
 	"SPELL_AURA_APPLIED 371007 395492 375596 374778",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
@@ -19,6 +19,10 @@ mod:RegisterEvents(
 
 --TODO, I don't think shoulder slam target scan worked, maybe try again though.
 --TODO, add erratic growth interrupt?
+--[[
+(ability.id = 391136 or ability.id = 370764 or ability.id = 386526 or ability.id = 387564 or ability.id = 377105 or ability.id = 370766 or ability.id = 386546 or ability.id = 387067 or ability.id = 377488 or ability.id = 396991 or ability.id = 389804) and type = "begincast"
+ or (ability.id = 374885 or ability.id = 371358 or ability.id = 375652 or ability.id = 375596 or ability.id = 391136) and type = "cast"
+--]]
 local warnNullStomp							= mod:NewCastAnnounce(386526, 2) --Нейтрализующий топот
 local warnShoulderSlam						= mod:NewCastAnnounce(391136, 2) --Удар плечом
 local warnPiercingShards					= mod:NewCastAnnounce(370764, 4) --Острые осколки
@@ -26,11 +30,11 @@ local warnIceCutter							= mod:NewCastAnnounce(377105, 4, nil, nil, "Tank|Heale
 local warnIcyBindings						= mod:NewCastAnnounce(377488, 3) --Ледяные путы
 local warnWakingBane						= mod:NewCastAnnounce(386546, 3)
 local warnBestialRoar						= mod:NewCastAnnounce(396991, 3)
-local warnArcaneBash						= mod:NewCastAnnounce(387067, 3)
 local warnSplinteringShards					= mod:NewTargetAnnounce(371007, 2)
-local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинственные испарения
 local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
 local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
+local warnArcaneBash						= mod:NewCastAnnounce(387067, 3)
+local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинственные испарения
 local warSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
 
 local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
@@ -45,24 +49,27 @@ local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, 
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2) --Ледяные путы
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2) --Таинственные испарения
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHeavyTome						= mod:NewSpecialWarningInterrupt(389804, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
 
+local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Ледяные путы
+local timerWakingBaneCD						= mod:NewCDNPTimer(18.2, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerMysticVaporsCD					= mod:NewCDNPTimer(12.3, 387564, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Таинственные испарения
-local timerIcyBindingsCD					= mod:NewCDNPTimer(14.6, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Ледяные путы
-local timerWakingBaneCD						= mod:NewCDNPTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerHeavyTomeCD						= mod:NewCDNPTimer(14.6, 389804, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
-local timerArcaneBashCD						= mod:NewCDNPTimer(17.5, 387067, nil, "Melee", nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Оглушение тайной магией
+local timerArcaneBashCD						= mod:NewCDNPTimer(17.5, 387067, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerNullStompCD						= mod:NewCDNPTimer(8.1, 386526, nil, nil, nil, 3)
+local timerPiercingShardsCD					= mod:NewCDNPTimer(15.4, 370764, nil, nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBestialRoarCD					= mod:NewCDNPTimer(17, 396991, nil, nil, nil, 2)
+local timerUnstablePowerCD					= mod:NewCDNPTimer(7.3, 374885, nil, nil, nil, 3)
+local timerWildEruptionCD					= mod:NewCDNPTimer(12.1, 375652, nil, nil, nil, 3)
 
 local yellSpellfrostBreath					= mod:NewShortYell(391118, nil, nil, nil, "YELL") --Дыхание магического льда
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
 local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGBook", true)
-
---local playerName = UnitName("player")
-
---Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
 
 function mod:SpellfrostBreathTarget(targetname, uId)
 	if not targetname then return end
@@ -74,6 +81,10 @@ function mod:SpellfrostBreathTarget(targetname, uId)
 		warSpellfrostBreath:Show(targetname)
 	end
 end
+
+--local playerName = UnitName("player")
+
+--Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -87,18 +98,27 @@ function mod:SPELL_CAST_START(args)
 				warnShoulderSlam:Show()
 			end
 		end
-	elseif spellId == 370764 and self:AntiSpam(5, 4) then
-		warnPiercingShards:Show()
-	elseif spellId == 396991 and self:AntiSpam(4, 3) then
-		warnBestialRoar:Show()
+	elseif spellId == 370764 then
+		timerPiercingShardsCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(5, 4) then
+			warnPiercingShards:Show()
+		end
+	elseif spellId == 396991 then
+		timerBestialRoarCD:Start(nil, args.sourceGUID)
+		if  self:AntiSpam(4, 3) then
+			warnBestialRoar:Show()
+		end
 	elseif spellId == 377105 and self:AntiSpam(3, 4) then
 		warnIceCutter:Show()
-	elseif spellId == 386526 and self:AntiSpam(3, 2) then
-		if self.Options.SpecWarn386526dodge then
-			specWarnNullStomp:Show()
-			specWarnNullStomp:Play("watchstep")
-		else
-			warnNullStomp:Show()
+	elseif spellId == 386526 then
+		timerNullStompCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(3, 2) then
+			if self.Options.SpecWarn386526dodge then
+				specWarnNullStomp:Show()
+				specWarnNullStomp:Play("watchstep")
+			else
+				warnNullStomp:Show()
+			end
 		end
 	elseif spellId == 370766 and self:AntiSpam(3, 2) then
 		specWarnCrystallineRupture:Show()
@@ -111,12 +131,18 @@ function mod:SPELL_CAST_START(args)
 		elseif self:AntiSpam(3, 5) then
 			warnMysticVapors:Show()
 		end
+	elseif spellId == 389804 then
+		timerHeavyTomeCD:Start(nil, args.sourceGUID)
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnHeavyTome:Show(args.sourceName)
+			specWarnHeavyTome:Play("kickcast")
+		end
 	elseif spellId == 386546 then
-		timerWakingBaneCD:Start(20, args.sourceGUID)
+		timerWakingBaneCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnWakingBane:Show(args.sourceName)
 			specWarnWakingBane:Play("kickcast")
-		elseif self:AntiSpam(2, 5) then
+		elseif self:AntiSpam(3, 5) then
 			warnWakingBane:Show()
 		end
 	elseif spellId == 377488 then
@@ -124,17 +150,21 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnIcyBindings:Show(args.sourceName)
 			specWarnIcyBindings:Play("kickcast")
-		elseif self:AntiSpam(2, 5) then
+		elseif self:AntiSpam(3, 5) then
 			warnIcyBindings:Show()
 		end
 	elseif spellId == 387067 then
 		timerArcaneBashCD:Start(nil, args.sourceGUID)
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(1.5, 5) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(2, 5) then
 			specWarnArcaneBash:Show()
 			specWarnArcaneBash:Play("shockwave")
-		elseif self:AntiSpam(1.5, spellId) then
+		elseif self:AntiSpam(2, spellId) then
 			warnArcaneBash:Show()
 		end
+	elseif spellId == 374885 then
+		timerUnstablePowerCD:Start(nil, args.sourceGUID)
+	elseif spellId == 375652 then
+		timerWildEruptionCD:Start(nil, args.sourceGUID)
 	elseif spellId == 391118 then --Дыхание магического льда
 		self:BossTargetScanner(args.sourceGUID, "SpellfrostBreathTarget", 0.1, 2)
 	end
@@ -197,14 +227,24 @@ function mod:UNIT_DIED(args)
 		timerArcaneBashCD:Stop(args.destGUID)
 	elseif cid == 187240 then--Drakonid Breaker
 		timerShoulderSlamCD:Stop(args.destGUID)
+		timerBestialRoarCD:Stop(args.destGUID)
 	elseif cid == 186741 then--Drakonid Breaker
 		timerWakingBaneCD:Stop(args.destGUID)
 	elseif cid == 196115 or cid == 191164 then--Arcane Tender (one by entrance is diff id than ones before boss)
 		timerErraticGrowthCD:Stop(args.destGUID)
+		timerWildEruptionCD:Stop(args.destGUID)
 	elseif cid == 187155 then--Rune Seal Keeper
 		timerIcyBindingsCD:Stop(args.destGUID)
 	elseif cid == 196102 then--Murchal Ochk Shlyaper
 		timerMysticVaporsCD:Stop(args.destGUID)
+	elseif cid == 187154 then--Unstable Curator
+		timerHeavyTomeCD:Stop(args.destGUID)
+	elseif cid == 187246 then--The frogs (too lazy to look up mob name)
+		timerNullStompCD:Stop(args.destGUID)
+	elseif cid == 196116 then--Another mob name I didn't look up
+		timerPiercingShardsCD:Stop(args.destGUID)
+	elseif cid == 189555 then--Yet another i didn't look up
+		timerUnstablePowerCD:Stop(args.destGUID)
 	end
 end
 
