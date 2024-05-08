@@ -1,6 +1,6 @@
 ## Interface: 100107
 ## X-Min-Interface: 80000
-## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffc030c0Dungeons (Cata)|r
+## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (Cata)|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Groupe-Cata|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Gruppe-Cata|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0隊伍首領-浩劫與重生|r
