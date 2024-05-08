@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2495, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240505023247")
 mod:SetCreatureID(191736)
 mod:SetEncounterID(2564)
 mod:SetHotfixNoticeRev(20221127000000)
@@ -31,8 +31,8 @@ local warnPlayBall								= mod:NewSpellAnnounce(377182, 2, nil, nil, nil, nil, 
 local specWarnFirestorm							= mod:NewSpecialWarningDodge(376448, nil, nil, nil, 2, 2) --Огненная буря
 local specWarnOverpoweringGust					= mod:NewSpecialWarningDodge(377034, nil, nil, nil, 2, 2)
 local specWarnDeafeningScreech					= mod:NewSpecialWarningMoveAwayCount(377004, "-SpellCaster", nil, nil, 2, 2) --Оглушительный визг
-local specWarnSavagePeck						= mod:NewSpecialWarningDefensive(376997, nil, nil, nil, 1, 2)
 local specWarnDeafeningScreech2					= mod:NewSpecialWarningCast(377004, "SpellCaster", nil, nil, 2, 2) --Оглушительный визг
+local specWarnSavagePeck						= mod:NewSpecialWarningDefensive(376997, nil, nil, nil, 1, 2)
 
 local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Огненная буря
 local timerOverpoweringGustCD					= mod:NewCDTimer(28.2, 377034, nil, nil, nil, 3)
@@ -113,8 +113,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 376781 then
 		timerFirestorm:Start()
 		--Regardless of time remaining, crawth will cast these coming out of stun
-		timerOverpoweringGustCD:Restart(12)
-		timerDeafeningScreechCD:Restart(16.7, 1)
+		--Season 4 seems to have swapped these? or spell queue is now happening and either can be cast at 12?
+		timerDeafeningScreechCD:Restart(12, 1)
+		timerOverpoweringGustCD:Restart(12)--Screech and gust can swap, whatever one is 12 the other is ~17
 		timerSavagePeckCD:Stop()--24.6, This one probably restarts too but also gets wierd spell queue and MIGHT not happen
 	elseif spellId == 181089 then
 		if args:GetDestCreatureID() == 191736 then--Crawth getting buff is play ball starting

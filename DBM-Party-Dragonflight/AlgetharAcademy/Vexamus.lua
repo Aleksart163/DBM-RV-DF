@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2509, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(194181)
 mod:SetEncounterID(2562)
 mod:SetUsedIcons(8)
@@ -54,7 +54,6 @@ local yellManaBomb								= mod:NewYell(386181, nil, nil, nil, "YELL")
 local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8}) --Волна тайной магии
-
 mod:AddInfoFrameOption(391977, true)
 
 --mod:GroupSpells(386173, 386181)--Mana Bombs with Mana Bomb
@@ -83,10 +82,10 @@ function mod:OnCombatStart(delay)
 	self.vb.fissureCount = 0
 	timerArcaneOrbsCD:Start(2.1-delay, 1)
 	timerArcaneExpulsionCD:Start(12.1-delay)
-	timerManaBombsCD:Start(23.9-delay)
+	timerManaBombsCD:Start(23.9-delay, 1)
 	timerArcaneFissureCD:Start(40.7-delay, 1)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(391977))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(391977))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 391977)
 	end
 end

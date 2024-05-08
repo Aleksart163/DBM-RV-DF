@@ -29,11 +29,7 @@ local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 3)
 
 local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2)
 local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2)
-local yellBlazinAegis							= mod:NewYell(374842)
-local yellBlazinAegisFades						= mod:NewShortFadesYell(374842)
 local specWarnHeatedSwings						= mod:NewSpecialWarningMoveAway(374534, nil, nil, nil, 1, 2)
-local yellHeatedSwings							= mod:NewYell(374534)
-local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534)
 local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2)
 
 --All timers are 30-31 ish
@@ -41,6 +37,11 @@ local timerMightoftheForgeCD					= mod:NewNextCountTimer(30.3, 374635, nil, nil,
 local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, nil, 3)
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Tracked by all since it has 8 yard splash damage
 local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2)
+
+local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL")
+local yellBlazinAegis							= mod:NewYell(374842, nil, nil, nil, "YELL")
+local yellHeatedSwings							= mod:NewYell(374534, nil, nil, nil, "YELL")
+local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL")
 
 mod.vb.setCount = 0
 

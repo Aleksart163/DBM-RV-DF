@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2485, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240126090958")
 mod:SetCreatureID(189232)
 mod:SetEncounterID(2609)
 --mod:SetHotfixNoticeRev(20220322000000)
@@ -29,14 +29,14 @@ mod:RegisterEventsInCombat(
  or (ability.id = 373017 or ability.id = 373087) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-
+local warnBurnout								= mod:NewCastAnnounce(373087, 4)
 local warnInferno								= mod:NewCastAnnounce(384823, 3)
 local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8)
 local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8)
 
 local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 3, 2)
 local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
-local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitch(372863, nil, nil, nil, 1, 2)
+local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitchCount(372863, nil, nil, nil, 1, 2)
 local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, 2, 1, 2)
 local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2) --Выгорание
 local specWarnBurnout2							= mod:NewSpecialWarningDodge(373087, nil, nil, nil, 2, 2) --Выгорание
@@ -44,12 +44,15 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 
 
 local timerBurnout								= mod:NewCastTimer(5, 373087, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Выгорание
 local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
-local timerMoltenBoulderCD						= mod:NewCDTimer(16.9, 372107, nil, nil, nil, 3)
-local timerRitualofBlazebindingCD				= mod:NewCDTimer(33.9, 372863, nil, nil, nil, 1)
+local timerMoltenBoulderCD						= mod:NewCDCountTimer(16.9, 372107, nil, nil, nil, 3)
+local timerRitualofBlazebindingCD				= mod:NewCDCountTimer(33.9, 372863, nil, nil, nil, 1)
 
 local yellMoltenBoulder							= mod:NewYell(372107, nil, nil, nil, "YELL")
 
 local castsPerGUID = {}
+
+mod.vb.ritualCount = 0
+mod.vb.boulderCount = 0
 
 function mod:BoulderTarget(targetname)
 	if not targetname then return end
@@ -59,9 +62,11 @@ function mod:BoulderTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.ritualCount = 0
+	self.vb.boulderCount = 0
 	table.wipe(castsPerGUID)
-	timerRitualofBlazebindingCD:Start(6.9-delay)
-	timerMoltenBoulderCD:Start(14.2-delay)
+	timerRitualofBlazebindingCD:Start(6.9-delay, 1)
+	timerMoltenBoulderCD:Start(14.2-delay, 1)
 	timerSearingBlowsCD:Start(21.4-delay)
 end
 
@@ -73,14 +78,16 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 372107 then
 		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "BoulderTarget", 0.1, 8, true)
-		specWarnMoltenBoulder:Show()
+		self.vb.boulderCount = self.vb.boulderCount + 1
+		specWarnMoltenBoulder:Show(self.vb.boulderCount)
 		specWarnMoltenBoulder:Play("shockwave")
-		timerMoltenBoulderCD:Start()
+		timerMoltenBoulderCD:Start(nil, self.vb.boulderCount+1)
 		warnBaitBoulder:ScheduleVoice(13.4, "bait")--3.5 seconds before
 	elseif spellId == 372863 then
-		specWarnRitualofBlazebinding:Show()
+		self.vb.ritualCount = self.vb.ritualCount + 1
+		specWarnRitualofBlazebinding:Show(self.vb.ritualCount)
 		specWarnRitualofBlazebinding:Play("killmob")
-		timerRitualofBlazebindingCD:Start()
+		timerRitualofBlazebindingCD:Start(nil, self.vb.ritualCount+1)
 		warnBaitAdd:ScheduleVoice(29.2, "bait")--3.5 seconds before
 	elseif spellId == 373017 then
 		if not castsPerGUID[args.sourceGUID] then
@@ -102,8 +109,9 @@ function mod:SPELL_CAST_START(args)
 		else
 			specWarnRoaringBlaze:Play("kickcast")
 		end
-	elseif spellId == 373087 and self:AntiSpam(1, "Burnout") then
-		if self:IsMelee() then
+	elseif spellId == 373087 then
+		warnBurnout:Show()
+		if self.Options.SpecWarn373087run then
 			specWarnBurnout:Show()
 			specWarnBurnout:Play("justrun")
 		else

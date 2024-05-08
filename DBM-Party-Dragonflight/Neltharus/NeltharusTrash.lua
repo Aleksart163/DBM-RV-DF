@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NeltharusTrash", "DBM-Party-Dragonflight", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20240412191704")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -48,13 +48,10 @@ local specWarnThrowLava						= mod:NewSpecialWarningDodge(379406, nil, nil, nil,
 local specWarnPierceMarrow					= mod:NewSpecialWarningDodge(372262, nil, nil, nil, 2, 2)
 local specWarnBindingSpear					= mod:NewSpecialWarningDodge(372561, nil, nil, nil, 2, 2)
 local specWarnConflagrantBattery			= mod:NewSpecialWarningDodge(372296, nil, nil, nil, 2, 2)
-local yellBindingSpear						= mod:NewYell(372561)
 local specWarnScorchingFusillade			= mod:NewSpecialWarningMoveAway(372543, nil, nil, nil, 1, 2)
-local yellScorchingFusillade				= mod:NewYell(372543)
 local specWarnMoteofCombustionYou			= mod:NewSpecialWarningYou(384161, nil, nil, nil, 1, 2)
-local yellMoteofCombustion					= mod:NewYell(384161)
 local specWarnBoldAmbush					= mod:NewSpecialWarningYou(372566, nil, nil, nil, 1, 2)
-local yellBoldAmbush						= mod:NewYell(372566)
+
 local specWarnImbuedMagma					= mod:NewSpecialWarningDispel(372461, "RemoveMagic", nil, nil, 1, 2)
 local specWarnFiredUp						= mod:NewSpecialWarningDispel(371875, "RemoveEnrage", nil, nil, 2, 2)
 local specWarnMoltenCore					= mod:NewSpecialWarningInterrupt(378282, "HasInterrupt", nil, nil, 1, 2)
@@ -82,6 +79,11 @@ local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, nil, nil, ni
 --local timerReverbSlamCD					= mod:NewCDNPTimer(17, 372971, nil, nil, nil, 3)--8-17? needs further review
 local timerCandescentTempestCD				= mod:NewCDNPTimer(27.8, 381663, nil, nil, nil, 2)
 local timerForgestompCD						= mod:NewCDNPTimer(17.3, 384623, nil, nil, nil, 2)
+
+local yellBindingSpear						= mod:NewYell(372561, nil, nil, nil, "YELL")
+local yellScorchingFusillade				= mod:NewYell(372543, nil, nil, nil, "YELL")
+local yellMoteofCombustion					= mod:NewYell(384161, nil, nil, nil, "YELL")
+local yellBoldAmbush						= mod:NewYell(372566, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGBuffs", true)
 
@@ -225,6 +227,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 376169 and self:AntiSpam(5, 8) then--Throw Experimental Concoction
+		---@diagnostic disable-next-line: dbm-sync-checker
 		magmaMod:SendSync("TuskRP")
 	elseif spellId == 372296 then
 		timerConflagrantBatteryCD:Start(nil, args.sourceGUID)

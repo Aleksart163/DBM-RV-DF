@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2504, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240412075414")
 mod:SetCreatureID(189719)
 mod:SetEncounterID(2615)
 mod:SetHotfixNoticeRev(20230507000000)
@@ -30,8 +30,6 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25745))
 local warnPowerLoverload						= mod:NewTargetAnnounce(389179, 3)
 
 local specWarnPowerOverload						= mod:NewSpecialWarningMoveAway(389179, nil, nil, nil, 1, 2)
-local yellPowerOverload							= mod:NewYell(389179)
-local yellPowerOverloadFades					= mod:NewShortFadesYell(389179)
 local specWarnSparkVolley						= mod:NewSpecialWarningDodge(384351, nil, nil, nil, 2, 2)
 local specWarnStaticSurge						= mod:NewSpecialWarningCount(384014, nil, nil, nil, 2, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389181, nil, nil, nil, 1, 8)
@@ -47,6 +45,9 @@ local warnAblativeBarrier						= mod:NewSpellAnnounce(383840, 2)
 local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1)
 local warnNullifyingPulse						= mod:NewCastAnnounce(389446, 4)
 local warnPurifyingBlast						= mod:NewTargetNoFilterAnnounce(389443, 3, nil, false)
+
+local yellPowerOverload							= mod:NewYell(389179, nil, nil, nil, "YELL")
+local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL")
 
 mod.vb.surgeCount = 0
 
@@ -103,7 +104,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerTitanicFistCD:Stop()
 		end
 	elseif spellId == 389443 then
-		warnPurifyingBlast:CombinedShow(1, args.destname)
+		warnPurifyingBlast:CombinedShow(1, args.destName)
 	end
 end
 

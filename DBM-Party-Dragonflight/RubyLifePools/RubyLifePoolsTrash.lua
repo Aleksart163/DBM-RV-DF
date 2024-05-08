@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20240504141048")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 372087 391726 391723 373614 392395 372696 384194 392486 392394 392640 392451 372047 372735",
-	"SPELL_CAST_SUCCESS 385536",
+	"SPELL_CAST_SUCCESS 385536 372743",
 	"SPELL_AURA_APPLIED 373693 392641 373972 391050",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 373693 391050",
@@ -20,14 +20,12 @@ mod:RegisterEvents(
  or ability.id = 391050 and (type = "applybuff" or type = "removebuff")
 --]]
 local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3)
-local warnBurnout							= mod:NewCastAnnounce(373614, 4)
 local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3)
 local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer")
 local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Healer") --Ураган стали
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4)
 local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3)
 local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3)
-local warnBlazeboundDestroyerLeft			= mod:NewAnnounce("warnBlazeboundDestroyer", 2, 373614)
 
 local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
@@ -46,7 +44,7 @@ local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterr
 local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterrupt", nil, nil, 1, 2)
 
 local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
-local timerExcavatingBlastCD				= mod:NewCDNPTimer(17, 372696, nil, nil, nil, 3)
+local timerExcavatingBlastCD				= mod:NewCDNPTimer(16.5, 372696, nil, nil, nil, 3)
 local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, nil, nil, nil, 3)
 local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, nil, nil, nil, 3)
@@ -57,17 +55,17 @@ local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, n
 local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5)--17-21
 local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerIcyShieldCD						= mod:NewCDNPTimer(21.9, 372743, nil, nil, nil, 5)--17-21
 
 local yellSteelBarrage						= mod:NewShortYell(372047, nil, nil, nil, "YELL") --Ураган стали
 local yellLivingBomb						= mod:NewShortYell(373693, nil, nil, nil, "YELL")
 local yellLivingBombFades					= mod:NewShortFadesYell(373693, nil, nil, nil, "YELL")
 local yellStormBreath						= mod:NewShortYell(391726, nil, nil, nil, "YELL")
 local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL")
+
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
-
-mod.vb.wardens = 4
 
 function mod:SteelBarrageTarget(targetname, uId)
 	if not targetname then return end
@@ -107,13 +105,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnStormBreath:Show()
 			specWarnStormBreath:Play("breathsoon")
 		end
-	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
 	elseif spellId == 391723 then
 		if self:AntiSpam(2, "FlameBreath") then
 			specWarnFlameBreath:Show()
 			specWarnFlameBreath:Play("breathsoon")
 		end
-	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
 	elseif spellId == 373614 and self:AntiSpam(1, "Burnout") then
 		if self:IsMelee() then
 			specWarnBurnout:Show()
@@ -122,7 +120,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnBurnout2:Show()
 			specWarnBurnout2:Play("watchstep")
 		end
-		warnBurnout:Show()
 		timerBurnout:Start()
 	elseif spellId == 372696 then
 		timerExcavatingBlastCD:Start(17, args.sourceGUID)
@@ -188,6 +185,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnFlameDance:Show()
 			warnFlameDance:Play("crowdcontrol")
 		end
+	elseif spellId == 372743 then
+		timerIcyShieldCD:Start(nil, args.sourceGUID)
 	end
 end
 
@@ -245,18 +244,7 @@ function mod:UNIT_DIED(args)
 		timerFlameDanceCD:Stop(args.destGUID)
 	elseif cid == 187969 then--Flashfrost Earthshaper
 		timerTectonicSlamCD:Stop(args.destGUID)
-	elseif cid == 190034 then
-		DBM:Debug("Murchal proshlyap", 2)
-	--	self:SendSync("BlazeboundDestroyer")
-	end
-end
-
-function mod:OnSync(msg)
-	if msg == "BlazeboundDestroyer" then
-		self.vb.wardens = self.vb.wardens - 1
-		warnBlazeboundDestroyerLeft:Show(self.vb.wardens)
-		if self.vb.wardens == 4 then
-			self.vb.wardens = 0
-		end
+	elseif cid == 188067 then--Flashfrost Chillweaver
+		timerIcyShieldCD:Stop(args.destGUID)
 	end
 end

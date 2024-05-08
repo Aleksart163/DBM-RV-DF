@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2488, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240504141048")
 mod:SetCreatureID(188252)
 mod:SetEncounterID(2609)
 mod:SetHotfixNoticeRev(20221126000000)
@@ -28,20 +28,21 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 385518
 --]]
-local warnChillstorm							= mod:NewTargetNoFilterAnnounce(372851, 4) --Ледяная буря
+local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(373022, 4, nil, "Healer")
+local warnChillstorm							= mod:NewTargetNoFilterAnnounce(372851, 3) --Ледяная буря
 local warnIceBulwark							= mod:NewSpellAnnounce(372988, 4) --Ледяной бастион
 
 local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagic", nil, nil, 3, 4) --Полная заморозка
 local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 4, nil, nil, 1, 6) --Древний холод
 local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
 local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 4, 4) --Ледяная буря
-local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, nil, 3, 4) --Ледяная перегрузка
+local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, 2, 1, 3, 4) --Ледяная перегрузка
 local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2) --Пробуждение дракончиков
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8) --Ледяная буря
 
 local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Ледяная буря
 local timerHailbombsCD							= mod:NewCDTimer(20, 396044, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывные градины
-local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка Cast after each whelps, which is health based
+local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка
 
 local yellFrozenSolid							= mod:NewShortYell(373022, nil, nil, nil, "YELL") --Полная заморозка
 local yellChillstorm							= mod:NewYell(372851, nil, nil, nil, "YELL") --Ледяная буря
@@ -56,7 +57,7 @@ function mod:OnCombatStart(delay)
 	timerHailbombsCD:Start(4-delay) --
 	timerChillstormCD:Start(14.2-delay) --
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(372682))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(372682))
 		DBM.InfoFrame:Show(5, "table", chillStacks, 1)
 	end
 end
@@ -104,9 +105,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellFrozenSolid:Yell()
 		else
-			specWarnFrozenSolid:Show(args.destName)
+			specWarnFrozenSolid:CombinedShow(0.5, args.destName)
 			specWarnFrozenSolid:Play("helpdispel")
 		end
+		warnFrozenSolid:CombinedShow(1, args.destName)--Slower aggregation to reduce spam
 	elseif spellId == 373680 then
 		if not self:IsMythic() then--Interruptable at any time on non mythic
 			specWarnFrostOverload:Show(args.destName)

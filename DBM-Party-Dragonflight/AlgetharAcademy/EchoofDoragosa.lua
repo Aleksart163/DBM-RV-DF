@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2514, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240501102915")
 mod:SetCreatureID(190609)
 mod:SetEncounterID(2565)
 mod:SetHotfixNoticeRev(20221015000000)
@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 --Notes, Power Vaccume triggers 4 second ICD, Energy Bomb Triggers 8.5 ICD on Vaccuum but only 7 second ICD on Breath, Astraol breath triggers 7.5 ICD
 --Notes, All of ICD adjustments can be done but for a 5 man boss with 3 abilities it seems overkill. Only perform correction on one case for now
 --[[
-(ability.id = 374361 or ability.id = 388822) and type = "begincast"
+(ability.id = 374361 or ability.id = 388822 or ability.id = 439488) and type = "begincast"
  or ability.id = 374343 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
@@ -41,7 +41,7 @@ local yellEnergyBombFades						= mod:NewShortFadesYell(374352)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389007, nil, nil, nil, 1, 8)
 
 local timerAstralBreathCD						= mod:NewCDTimer(26.3, 374361, nil, nil, nil, 3)--26-32
-local timerPowerVacuumCD						= mod:NewCDTimer(21.8, 388822, nil, nil, nil, 2)--22-29
+local timerPowerVacuumCD						= mod:NewCDTimer(21, 388822, nil, nil, nil, 2)--22-29
 local timerEnergyBombCD							= mod:NewCDTimer(14.1, 374352, nil, nil, nil, 3)--14.1-20
 
 mod:AddInfoFrameOption(389011, true)
@@ -53,7 +53,7 @@ function mod:OnCombatStart(delay)
 	timerPowerVacuumCD:Start(24.9-delay)
 	timerAstralBreathCD:Start(28.1-delay)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(389011))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(389011))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 389011)
 	end
 end
@@ -100,7 +100,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEnergyBomb:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnEnergyBomb:Show()
-			if playerDebuffCount == 2 then--Will spawn rift when it expires, runout
+			if playerDebuffCount == 3 then--Will spawn rift when it expires, runout
 				specWarnEnergyBomb:Play("runout")
 			else
 				specWarnEnergyBomb:Play("scatter")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2490, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240501102915")
 mod:SetCreatureID(189340)
 mod:SetEncounterID(2613)
 mod:SetHotfixNoticeRev(20230703000000)
@@ -34,7 +34,6 @@ local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 1)--Boss Only
 
 local specWarnMagmaWave							= mod:NewSpecialWarningDodge(373742, nil, nil, nil, 2, 2)
 local specWarnGroundingSpear					= mod:NewSpecialWarningYou(373424, nil, nil, nil, 1, 2)
-local yellGroundingSpear						= mod:NewYell(373424)
 local specWarnFieryFocus						= mod:NewSpecialWarningInterrupt(375056, nil, nil, nil, 1, 13)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 8)
 
@@ -43,6 +42,8 @@ local timerMagmaWaveCD							= mod:NewCDCountTimer(12.1, 373742, nil, nil, nil, 
 local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3)
 local timerFetter								= mod:NewTargetTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerFieryFocusCD							= mod:NewCDCountTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+
+local yellGroundingSpear						= mod:NewYell(373424, nil, nil, nil, "YELL")
 
 mod.vb.magmawaveCount = 0
 mod.vb.dragonCount = 0
@@ -126,6 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -134,7 +136,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerFetter:Stop(args.destName)
 		--Fetter on other hand does seem to hard reset things, to an extent
 		if not self.vb.focusInProgress then
-			timerMagmaWaveCD:Start(9, self.vb.magmawaveCount+1)
+			timerMagmaWaveCD:Start(8.7, self.vb.magmawaveCount+1)
 			timerDragonStrikeCD:Start(15.1, self.vb.dragonCount+1)
 			timerGroundingSpearCD:Start(27.2)
 			timerFieryFocusCD:Start(30.9, self.vb.focusCount+1)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2494, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240412191704")
 mod:SetCreatureID(181861)
 mod:SetEncounterID(2610)
 mod:SetHotfixNoticeRev(20230507000000)
@@ -32,9 +32,7 @@ local warnLavaSpray								= mod:NewTargetNoFilterAnnounce(375251, 3)
 
 local specWarnMagmaLob							= mod:NewSpecialWarningDodge(375068, false, nil, 2, 2, 2)
 local specWarnLavaSpray							= mod:NewSpecialWarningDodge(375251, nil, nil, nil, 2, 2)
-local yellLavaSpray								= mod:NewYell(375251)
 local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, nil, nil, 2, 2)
-local yellBlazingCharge							= mod:NewYell(375436)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(375204, nil, nil, nil, 1, 8)
 
 local timerRP									= mod:NewRPTimer(9.9)
@@ -42,6 +40,9 @@ local timerVolatileMutationCD					= mod:NewCDCountTimer(27.9, 374365, nil, nil, 
 --local timerMagmaLobCD							= mod:NewCDTimer(6.5, 375068, nil, nil, nil, 3)--8 unless delayed by other casts
 local timerLavaSrayCD							= mod:NewCDTimer(19.4, 375251, nil, nil, nil, 3)
 local timerBlazingChargeCD						= mod:NewCDTimer(23, 375436, nil, nil, nil, 3)
+
+local yellLavaSpray								= mod:NewYell(375251, nil, nil, nil, "YELL")
+local yellBlazingCharge							= mod:NewYell(375436, nil, nil, nil, "YELL")
 
 mod.vb.mutationCount = 0
 
@@ -107,6 +108,7 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:OnSync(msg)
+	---@diagnostic disable-next-line: dbm-sync-checker
 	if msg == "TuskRP" and self:AntiSpam(10, 9) then--Sync sent from trash mod since trash mod is already monitoring out of combat CLEU events
 		timerRP:Start(9.9)
 	end

@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(2528, "DBM-Party-Dragonflight", 9, 1209)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231102055900")
+mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
+
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(198996)
 mod:SetEncounterID(2667)
 mod:SetUsedIcons(1, 2)
@@ -20,11 +22,16 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_MISSED"
 )
 
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
 --[[
 (ability.id = 405696 or ability.id = 405431 or ability.id = 414303 or ability.id = 414307) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, more data, but I need to figure out what causes the fluke non 30.3 timers (one higher by 7 seconds, and one lower by 7 seconds)
+--TODO, Add RP timer, still missing for this boss
 --NOTE: 10.2 seems to have utterly deleted "Unwind" from encounter. For now its commented but kept in case this is an error or still around but not noted
 local warnChronoFaded								= mod:NewTargetCountAnnounce(405696, 3)
 
@@ -32,16 +39,15 @@ local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, 
 local yellChronofaded								= mod:NewShortPosYell(405696)
 local yellChronofadedFades							= mod:NewIconFadesYell(405696)
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2)
---local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, nil, nil, nil, 1, 2)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
+local timerRP										= mod:NewRPTimer(13.3)
 local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 3)
---local timerUnwindCD									= mod:NewCDCountTimer(30.3, 414303, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-mod:AddSetIconOption("SetIconOnChronoFaded", 405696, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnChronoFaded", 405696, true, 0, {1, 2})
 
-local fastTime = DBM:GetSpellInfo(403912)
+local fastTime = DBM:GetSpellName(403912)
 mod.vb.DebuffIcon = 1
 mod.vb.fadedCount = 0
 mod.vb.fragmentsCount = 0
@@ -116,3 +122,15 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.PrePullRP or msg:find(L.PrePullRP)) then
+		self:SendSync("MTRP")--Syncing to help unlocalized clients
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "MTRP" and self:AntiSpam(10, 2) then
+		timerRP:Start()
+	end
+end

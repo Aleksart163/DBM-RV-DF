@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2471, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240503080930")
 mod:SetCreatureID(186122, 186124, 186125)
 mod:SetEncounterID(2570)
 mod:SetBossHPInfoToHighest()
@@ -33,8 +33,8 @@ local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4)
 local warnBladestorm							= mod:NewTargetNoFilterAnnounce(377827, 3)
 
 local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, nil, nil, 1, 2)
-local yellSavageCharge							= mod:NewYell(381461)
 local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 1, 2)
+local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 1, 2)
 
 local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON)
 local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3)
@@ -60,6 +60,8 @@ local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "
 local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
+local yellSavageCharge							= mod:NewYell(381461, nil, nil, nil, "YELL")
+
 mod.vb.healingRapidsCount = 0
 mod.vb.frenzyCount = 0
 mod.vb.markedCount = 0
@@ -74,10 +76,10 @@ local function scanBosses(self, delay)
 				timerBladestormCD:Start(19.2-delay, bossGUID)
 				timerSavageChargeCD:Start(48.3-delay, bossGUID)
 			elseif cid == 186124 then--Gashtooth
-				timerGashFrenzyCD:Start(2.7-delay, 1, bossGUID)
+				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID)
 				timerDecayedSensesCD:Start(45.8-delay, bossGUID)
 				if self:IsMythic() then
-					timerMarkedforButcheryCD:Start(12.4-delay, 1, bossGUID)
+					timerMarkedforButcheryCD:Start(12.1-delay, 1, bossGUID)
 				end
 			else--Tricktotem
 				timerGreaterHealingRapidsCD:Start(10.7-delay, 1, bossGUID)
@@ -125,7 +127,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.healingRapidsCount % 3 == 0 then
 			timerGreaterHealingRapidsCD:Start(15.8, self.vb.healingRapidsCount+1, args.sourceGUID)
 		else
-			timerGreaterHealingRapidsCD:Start(21.8, self.vb.healingRapidsCount+1, args.sourceGUID)
+			timerGreaterHealingRapidsCD:Start(19.4, self.vb.healingRapidsCount+1, args.sourceGUID)
 		end
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnGreaterHealingRapids:Show(args.sourceName)
@@ -163,7 +165,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if spellId == 381835 then
 			timerBladestormCD:Start(nil, args.sourceGUID)
 		end
-		warnBladestorm:Show(args.destName)
+		if args:IsPlayer() and not self:IsTank() and self:AntiSpam(3, 1) then
+			specWarnBladestorm:Show()
+			specWarnBladestorm:Play("whirlwind")
+		else
+			warnBladestorm:Show(args.destName)
+		end
 	elseif args:IsSpellID(381387, 381379) and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") then
 		specWarnDecayedSenses:Show(args.destName)
 		specWarnDecayedSenses:Play("helpdispel")
