@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2448, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(175663)
 mod:SetEncounterID(2426)
 mod:SetUsedIcons(1, 2)
@@ -52,7 +52,7 @@ local timerVaultPurifierCD			= mod:NewCDTimer(29.1, -23004, nil, nil, nil, 1, "1
 local timerPurifyingBurstCD			= mod:NewCDTimer(23.1, 353312, nil, nil, nil, 2)
 local timerTitanicInsight			= mod:NewTargetTimer(15, 346427, nil, nil, nil, 5)
 
-mod:AddSetIconOption("SetIconOnAdds", "ej23004", true, true, {1, 2})
+mod:AddSetIconOption("SetIconOnAdds", "ej23004", true, 5, {1, 2})
 
 mod.vb.cycleCount = 0
 mod.vb.burstCount = 0
@@ -134,7 +134,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 358131 then
-		warnLightningNova:Show(args.destname)
+		warnLightningNova:Show(args.destName)
 	elseif spellId == 346427 then
 		warnTitanicInsight:Show(args.destName)
 		timerTitanicInsight:Start(args.destName)

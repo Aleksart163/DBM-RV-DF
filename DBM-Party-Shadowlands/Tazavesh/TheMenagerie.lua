@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2454, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(176556, 176555, 176705)
 mod:SetEncounterID(2441)
 mod:SetUsedIcons(1)
@@ -44,7 +44,7 @@ local specWarnGrandConsumption		= mod:NewSpecialWarningDodge(349663, nil, nil, n
 local timerGripofHungerCD			= mod:NewCDTimer(23, 349663, nil, nil, nil, 2)--23-30
 local timerGrandconsumptionCD		= mod:NewCDTimer(30.3, 349797, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnGluttony", 349627, true, false, {1})
+mod:AddSetIconOption("SetIconOnGluttony", 349627, true, 0, {1})
 --Achillite
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(23231))
 local specWarnVentingProtocol		= mod:NewSpecialWarningDodge(349987, nil, nil, nil, 2, 2)

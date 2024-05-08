@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2407, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(162099)
 mod:SetEncounterID(2363)
 
@@ -40,7 +40,7 @@ local timerGloomSquallCD			= mod:NewCDTimer(37.7, 322903, nil, nil, nil, 2, nil,
 
 mod.vb.rushCast = 0
 mod.vb.blurCast = 1
-local shelter = DBM:GetSpellInfo(324086)
+local shelter = DBM:GetSpellName(324086)
 
 function mod:OnCombatStart(delay)
 	self.vb.rushCast = 0

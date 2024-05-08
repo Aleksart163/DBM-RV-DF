@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2451, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(175806)
 mod:SetEncounterID(2437)
 mod:SetHotfixNoticeRev(20220405000000)
@@ -38,7 +38,7 @@ local timerRP						= mod:NewRPTimer(24)
 local timerShurlCD					= mod:NewCDTimer(15, 347481, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerQuickbladeCD				= mod:NewCDTimer(15, 347623, nil, nil, nil, 3)
 
-local relocator = DBM:GetSpellInfo(347426)
+local relocator = DBM:GetSpellName(347426)
 mod.vb.techRemaining = 0
 mod.vb.divideCount = 0
 

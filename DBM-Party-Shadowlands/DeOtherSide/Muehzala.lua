@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2410, "DBM-Party-Shadowlands", 7, 1188)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240106080507")
 mod:SetCreatureID(169769)
 mod:SetEncounterID(2396)
 
@@ -36,9 +36,7 @@ local warnShatterReality			= mod:NewCastAnnounce(326171, 4)
 --Stage 1: The Master of Death
 local specWarnMasterofDeath			= mod:NewSpecialWarningDodge(325258, nil, nil, nil, 2, 2)
 local specWarnCosmicArtifice		= mod:NewSpecialWarningMoveAway(325725, nil, nil, nil, 1, 2)
-local yellCosmicArtifice			= mod:NewYell(325725)
-local yellCosmicArtificeFades		= mod:NewShortFadesYell(325725)
-local specWarnSoulcrusher			= mod:NewSpecialWarningDefensive(327646, "Tank", nil, nil, 2, 2)
+local specWarnSoulcrusher			= mod:NewSpecialWarningDefensive(327646, nil, nil, nil, 2, 2)
 local specWarnDeathgate				= mod:NewSpecialWarningMoveTo(324698, nil, nil, nil, 3, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 --Stage 2: Shattered Reality
@@ -52,9 +50,14 @@ local timerShatterReality			= mod:NewCastTimer(10, 326171, nil, nil, nil, 2, nil
 --Stage 2: Shattered Reality
 local timerCoalescing				= mod:NewCastTimer(25, 334970, nil, nil, nil, 6)
 
+local yellCosmicArtifice			= mod:NewYell(325725, nil, nil, nil, "YELL")
+local yellCosmicArtificeFades		= mod:NewShortFadesYell(325725, nil, nil, nil, "YELL")
+
 --mod.vb.addsLeft = 3
 mod.vb.cosmicCount = 0
 mod.vb.soulCount = 0
+
+local Deathgate = DBM:GetSpellName(324698)
 
 function mod:OnCombatStart(delay)
 	self.vb.cosmicCount = 0
@@ -73,8 +76,10 @@ function mod:SPELL_CAST_START(args)
 		timerMasterofDeathCD:Start()
 	elseif spellId == 327646 then
 		self.vb.soulCount = self.vb.soulCount + 1
-		specWarnSoulcrusher:Show()
-		specWarnSoulcrusher:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnSoulcrusher:Show()
+			specWarnSoulcrusher:Play("defensive")
+		end
 		if self.vb.soulCount % 2 == 0 then
 			timerSoulcrusherCD:Start(10, self.vb.soulCount+1)
 		else
@@ -86,7 +91,7 @@ function mod:SPELL_CAST_START(args)
 		timerSoulcrusherCD:Stop()
 		warnShatterReality:Show()
 		timerShatterReality:Start()
-		specWarnDeathgate:Schedule(4)
+		specWarnDeathgate:Schedule(4, Deathgate)
 		specWarnDeathgate:ScheduleVoice(4, "findshelter")
 	end
 end

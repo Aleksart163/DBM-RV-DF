@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2402, "DBM-Party-Shadowlands", 3, 1184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231020041658")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(164501)
 mod:SetEncounterID(2392)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -35,23 +35,29 @@ local specWarnFixate				= mod:NewSpecialWarningRun(321891, nil, nil, nil, 4, 2)
 local specWarnPattyCake				= mod:NewSpecialWarningInterrupt(321828, nil, nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerDodgeBallCD				= mod:NewCDTimer(14.6, 321834, nil, nil, nil, 3)--14.6-18
-local timerFreezeTagCD				= mod:NewCDTimer(21.9, 321873, nil, nil, nil, 3)
-local timerPattyCakeCD				= mod:NewCDTimer(20.6, 321828, nil, nil, nil, 3)--20-26
+local timerDodgeBallCD				= mod:NewCDCountTimer(14.6, 321834, nil, nil, nil, 3)--14.6-18
+local timerFreezeTagCD				= mod:NewCDCountTimer(21.9, 321873, nil, nil, nil, 3)
+local timerPattyCakeCD				= mod:NewCDCountTimer(20.6, 321828, nil, nil, nil, 3)--20-26
 
 mod:AddNamePlateOption("NPAuraOnFixate", 321891)
-mod:AddSetIconOption("SetIconOnAdds2", -21691, false, true, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnAdds2", -21691, false, 5, {1, 2, 3, 4})
 --mod:GroupSpells(321873, 321891)--Freeze Tag and associated fixate
 
 local seenAdds = {}
 mod.vb.addIcon = 1
+mod.vb.dodgeballCount = 0
+mod.vb.tagCount = 0
+mod.vb.pattyCount = 0
 
 function mod:OnCombatStart(delay)
 	table.wipe(seenAdds)
 	self.vb.addIcon = 1
-	timerDodgeBallCD:Start(8.1-delay)
-	timerPattyCakeCD:Start(13.4-delay)
-	timerFreezeTagCD:Start(18.4-delay)--Sometimes cast is skipped?
+	self.vb.dodgeballCount = 0
+	self.vb.tagCount = 0
+	self.vb.pattyCount = 0
+	timerDodgeBallCD:Start(8.1-delay, 1)
+	timerPattyCakeCD:Start(13.4-delay, 1)
+	timerFreezeTagCD:Start(18.4-delay, 1)--Sometimes cast is skipped?
 	if self.Options.NPAuraOnFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
@@ -70,19 +76,22 @@ function mod:SPELL_CAST_START(args)
 		self.vb.addIcon = 1
 		warnGuessingGame:Show()
 	elseif spellId == 321834 and self:AntiSpam(8, 1) then
-		specWarnDodgeBall:Show()
+		self.vb.dodgeballCount = self.vb.dodgeballCount + 1
+		specWarnDodgeBall:Show(self.vb.dodgeballCount)
 		specWarnDodgeBall:Play("farfromline")
 		--timerDodgeBallCD:Start()--Outside of first case, rest are too chaotic
 	elseif spellId == 321873 then
-		warnFreezeTag:Show()
-		timerFreezeTagCD:Start()
+		self.vb.tagCount = self.vb.tagCount + 1
+		warnFreezeTag:Show(self.vb.tagCount)
+		timerFreezeTagCD:Start(nil, self.vb.tagCount+1)
 	elseif spellId == 321828 then
+		self.vb.pattyCount = self.vb.pattyCount + 1
 		if self:IsTanking("player", "boss1", nil, true, nil, true) then
 			--Only target of spell can interrupt it
 			specWarnPattyCake:Show(args.sourceName)
 			specWarnPattyCake:Play("kickcast")
 		end
-		timerPattyCakeCD:Start()
+		timerPattyCakeCD:Start(nil, self.vb.pattyCount+1)
 	elseif spellId == 321669 then
 		if not seenAdds[args.sourceGUID] then
 			seenAdds[args.sourceGUID] = true

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SanguineDepthsTrash", "DBM-Party-Shadowlands", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240426175442")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -41,7 +41,7 @@ local specWarnVolatileTrap					= mod:NewSpecialWarningDodge(334558, nil, nil, ni
 
 --local timerShiningRadiance					= mod:NewCDTimer(35, 324086, nil, nil, nil, 5)
 
-local shelter = DBM:GetSpellInfo(324086)
+local shelter = DBM:GetSpellName(324086)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
 

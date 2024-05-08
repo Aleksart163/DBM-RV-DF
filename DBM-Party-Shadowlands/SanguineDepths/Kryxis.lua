@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2388, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221230022007")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(162100)
 mod:SetEncounterID(2360)
 
@@ -25,7 +25,7 @@ mod:RegisterEventsInCombat(
  --]]
 --local warnBlackPowder				= mod:NewTargetAnnounce(257314, 4)
 
-local specWarnViciousHeadbutt		= mod:NewSpecialWarningDefensive(319650, "Tank", nil, nil, 1, 2)
+local specWarnViciousHeadbutt		= mod:NewSpecialWarningDefensive(319650, nil, nil, nil, 1, 2)
 local specWarnHungeringDrain		= mod:NewSpecialWarningInterruptCount(319654, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSeveringSmash			= mod:NewSpecialWarningSpell(319685, nil, nil, nil, 2, 2)
 local specWarnJuggernautRush		= mod:NewSpecialWarningYou(319713, nil, nil, nil, 1, 2)
@@ -39,7 +39,7 @@ local timerHungeringDrainCD			= mod:NewCDTimer(19.4, 319654, nil, nil, nil, 4, n
 local timerSeveringSmashCD			= mod:NewCDTimer(38.9, 319685, nil, nil, nil, 6)
 local timerJuggernautRushCD			= mod:NewCDTimer(18.2, 319713, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnJuggernaut", 319713, true, false, {1})
+mod:AddSetIconOption("SetIconOnJuggernaut", 319713, true, 0, {1})
 
 mod.vb.interruptCount = 0
 mod.vb.headbuttCount = 0
@@ -57,8 +57,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 319650 then
 		self.vb.headbuttCount = self.vb.headbuttCount + 1
-		specWarnViciousHeadbutt:Show()
-		specWarnViciousHeadbutt:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnViciousHeadbutt:Show()
+			specWarnViciousHeadbutt:Play("defensive")
+		end
 		if timerSeveringSmashCD:GetRemaining() >= 18.2 then
 			timerViciousHeadbuttCD:Start()
 		end
