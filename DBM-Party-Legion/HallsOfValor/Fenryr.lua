@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20230708234551")
 mod:SetCreatureID(95674, 99868)--First engage, Second engage
 mod:SetEncounterID(1807)
+mod:SetUsedIcons(8)
 mod:DisableEEKillDetection()--ENCOUNTER_END fires a wipe when fenryr casts stealth and runs to new location (P2)
 mod:SetHotfixNoticeRev(20230306000000)
 --mod.sendMainBossGUID = true--Boss does lots of on fly timer adjustments, lets not overwhelm external handlers just yet
@@ -30,13 +31,14 @@ local specWarnFixate					= mod:NewSpecialWarningRun(196838, nil, nil, nil, 4, 2)
 local specWarnWolves					= mod:NewSpecialWarningSwitch(-12600, "Tank|Dps", nil, nil, 1, 2) --Эбеновый ворг
 
 local timerLeapCD						= mod:NewCDTimer(31, 197556, nil, nil, nil, 3) --Хищный прыжок
-local timerClawFrenzyCD					= mod:NewCDCountTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Бешеные когти
+local timerClawFrenzyCD					= mod:NewCDTimer(9.7, 196512, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Бешеные когти
 local timerHowlCD						= mod:NewCDTimer(31.5, 196543, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пугающий вой
 local timerScentCD						= mod:NewCDTimer(37.6, 196838, nil, nil, nil, 7) --Запах крови
 
 local yellLeap							= mod:NewYell(197556, nil, nil, nil, "YELL") --Хищный прыжок
 local yellFixate						= mod:NewYell(196838, nil, nil, nil, "YELL") --Запах крови
 
+mod:AddSetIconOption("SetIconOnFixate", 196838, true, 0, {8}) --Запах крови
 mod:AddRangeFrameOption(10, 197556)
 
 mod.vb.phase = 1
@@ -50,12 +52,16 @@ local allProshlyapationsOfMurchalTimers = {
 		[196543] = {4.4, 28.8, 28, 32.7, 35.2, 35.3, 35.2, 35.2, 35.2, 35.2, 35.2},
 		--Хищный прыжок
 		[197558] = {8.3, 35.2, 35.2, 35.2, 35.2, 35.2, 35.1, 35.3},
+		--Бешеные когти
+		[196512] = {20, 9.7, 9.7, 15.8, 10.4, 9.7, 15, 9.7, 9.7, 15.8, 9.7, 9.7, 15.8, 9.7, 9.7, 15.7, 9.7, 9.7, 15.8},
 	},
 	[2] = {
 		--Пугающий вой
 		[196543] = {4.4, 37.4, 40.7, 40.8, 40.7, 40.7, 40.8, 40.7, 40.7, 40.7, 40.7},
 		--Хищный прыжок
-		[197558] = {8.3, 40.7, 40.7, 40.8, 40.8, 40.7, 40.7, 40.7, 40.7, 40.7, 40.7},
+		[197558] = {9.5, 40.7, 40.7, 40.8, 40.8, 40.7, 40.7, 40.7, 40.7, 40.7, 40.7},
+		--Бешеные когти
+		[196512] = {20.3, 26.3, 14.3, 26.3, 14.3, 26.4, 14.4, 26.3, 14.3, 26.3, 14.3, 26.3, 14.3, 26.3, 14.3},
 	},
 }
 
@@ -71,6 +77,9 @@ function mod:FixateTarget(targetname, uId)
 			warnFixate:Show(targetname)
 		end
 	end
+	if self.Options.SetIconOnFixate then
+		self:SetIcon(targetname, 8, 10)
+	end
 end
 
 function mod:OnCombatStart(delay)
@@ -83,7 +92,7 @@ function mod:OnCombatStart(delay)
 	--Claw frenzy can be 2nd or 3rd as well, depending on spell queue. for most part initial timers can't be fully trusted until first 2 of 3 casts happen and correct them
 	timerHowlCD:Start(4.4-delay) --
 	timerLeapCD:Start(8.3-delay) --
-	timerClawFrenzyCD:Start(17-delay, 1)
+	timerClawFrenzyCD:Start(20-delay, 1)
 end
 
 function mod:OnCombatEnd()
@@ -98,9 +107,6 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 196838 then --Запах крови
 		timerScentCD:Start(40.7)
 		self:BossTargetScanner(args.sourceGUID, "FixateTarget", 0.2, 6)--Target scanning used to grab target 2-3 seconds faster. Doesn't seem to anymore?
-	--	timerHowlCD:Start(18.1)
-	--	timerLeapCD:Start(26.3)
-		timerClawFrenzyCD:Restart(22.9, self.vb.clawCount+1)
 	elseif spellId == 196543 then --Пугающий вой
 		self.vb.howlCount = self.vb.howlCount + 1
 		specWarnHowl:Show()
@@ -109,21 +115,19 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHowlCD:Start(timer, self.vb.howlCount+1)
 		end
-	--	timerHowlCD:Start(60)
 	elseif spellId == 197558 then --Хищный прыжок
 		self.vb.leapCount = self.vb.leapCount + 1
-		timerClawFrenzyCD:Stop()
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, self.vb.phase, spellId, self.vb.leapCount+1)
 		if timer then
 			timerLeapCD:Start(timer, self.vb.leapCount+1)
 		end
-	--	timerLeapCD:Start(60)
-		timerClawFrenzyCD:Restart(11, self.vb.clawCount+1)
-	elseif spellId == 196512 and self:AntiSpam(3, 1) then
+	elseif spellId == 196512 and self:AntiSpam(3, 1) then --Бешеные когти
 		self.vb.clawCount = self.vb.clawCount + 1
 		warnClawFrenzy:Show()
-	--	timerClawFrenzyCD:Start(self.vb.phase == 2 and 8.5 or 9.7, self.vb.clawCount+1)
-		timerClawFrenzyCD:Start(9.7, self.vb.clawCount+1)
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, self.vb.phase, spellId, self.vb.clawCount+1)
+		if timer then
+			timerClawFrenzyCD:Start(timer, self.vb.clawCount+1)
+		end
 	end
 end
 
@@ -171,6 +175,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnFixate:Show(args.destName)
 			end
 		end
+		if self.Options.SetIconOnFixate then
+			self:SetIcon(args.destName, 8, 10)
+		end
 	end
 end
 
@@ -195,8 +202,8 @@ function mod:ENCOUNTER_START(encounterID)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
 		timerHowlCD:Start(4.4)
-		timerLeapCD:Start(8.3)--9.3-15
-		timerClawFrenzyCD:Start(20.5, 1)--12-45 (massive variation cause if it's not cast immediately it gets spell queued behind leap, howl and then casts at 22-25 unless scent also spell queues it then it's 42-45sec ater p2 start
+		timerLeapCD:Start(9.5)--9.3-15
+		timerClawFrenzyCD:Start(20.3, 1)--12-45 (massive variation cause if it's not cast immediately it gets spell queued behind leap, howl and then casts at 22-25 unless scent also spell queues it then it's 42-45sec ater p2 start
 		timerScentCD:Start(23.7)--20-27.8
 	end
 end
