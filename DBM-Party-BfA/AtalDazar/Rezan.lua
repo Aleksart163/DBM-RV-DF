@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2083, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231128045828")
+mod:SetRevision("20240123233936")
 mod:SetCreatureID(122963)
 mod:SetEncounterID(2086)
 mod:SetHotfixNoticeRev(20231023000000)
@@ -30,8 +30,8 @@ mod:RegisterEventsInCombat(
 --TODO, no two pulls are same timer wise. pursuit kinda fucks timers to hell. makes it hard to learn ACTUAL cds since spells get delayed by ICDs and spell queues
 local warnPursuit				= mod:NewTargetAnnounce(257407, 2)
 
-local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, "Tank", nil, nil, 1, 2)
-local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, nil, nil, 3, 2)--Dodge warning on purpose, you dodge it by LOS behind pillar
+local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, nil, nil, nil, 1, 2)
+local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, nil, nil, 3, 13)
 local yellPursuit				= mod:NewYell(257407)
 local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 2)
 local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2)
@@ -106,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 255371 then
 		self.vb.fearCount = self.vb.fearCount + 1
 		specWarnFear:Show(DBM_COMMON_L.BREAK_LOS)
-		specWarnFear:Play("findshelter")
+		specWarnFear:Play("breaklos")
 		timerFearCD:Start(nil, self.vb.fearCount+1)
 		updateAllTimers(self, 9.5)
 	elseif spellId == 257407 then
@@ -122,8 +122,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 255434 then
 		self.vb.teethCount = self.vb.teethCount + 1
-		specWarnTeeth:Show()
-		specWarnTeeth:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnTeeth:Show()
+			specWarnTeeth:Play("defensive")
+		end
 		timerTeethCD:Start(nil, self.vb.teethCount+1)
 		updateAllTimers(self, 3.5)
 	end

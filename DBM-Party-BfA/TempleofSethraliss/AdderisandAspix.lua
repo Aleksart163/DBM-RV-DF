@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2142, "DBM-Party-BfA", 6, 1001)
+local mod	= DBM:NewMod(2142, "DBM-Party-BfA", 6, 1030)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(133379, 133944)
 mod:SetEncounterID(2124)
 mod:SetUsedIcons(8)
@@ -25,7 +25,7 @@ local warnLightningShield			= mod:NewTargetNoFilterAnnounce(263246, 3)
 
 mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(263246, true)
-mod:AddSetIconOption("SetIconOnNoLit", 263246, true, true, {8})
+mod:AddSetIconOption("SetIconOnNoLit", 263246, true, 5, {8})
 --Aspix
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(18484))
 ----Lighting

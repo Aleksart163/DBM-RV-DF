@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2355, "DBM-Party-BfA", 11, 1178)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240412075414")
 mod:SetCreatureID(150190)
 mod:SetEncounterID(2291)
 
@@ -31,7 +31,7 @@ local warnReinforcementRelay		= mod:NewSpellAnnounce(301351, 2)
 local warnFulminatingZap			= mod:NewTargetNoFilterAnnounce(302274, 2, nil, "Healer")
 
 local specWarnCannonBlast			= mod:NewSpecialWarningDodge(295536, nil, nil, nil, 2, 2)
-local specWarnWreck					= mod:NewSpecialWarningDefensive(302279, "Tank", nil, nil, 1, 2)
+local specWarnWreck					= mod:NewSpecialWarningDefensive(302279, nil, nil, nil, 1, 2)
 local specWarnFulminatingBurst		= mod:NewSpecialWarningMoveTo(303885, nil, nil, nil, 1, 2)
 local yellFulminatingBurst			= mod:NewYell(303885, nil, nil, nil, "YELL")
 local yellFulminatingBurstFades		= mod:NewShortFadesYell(303885, nil, nil, nil, "YELL")
@@ -97,32 +97,34 @@ function mod:OnCombatStart(delay)
 			for i = 1, 40 do
 				local UnitID = "nameplate"..i
 				local GUID = UnitGUID(UnitID)
-				local cid = self:GetCIDFromGUID(GUID)
-				if cid == 155645 or cid == 152703 then--Walkie Shockie X1 and X2
-					local unitPower = UnitPower(UnitID)
-					if not unitTracked[GUID] then unitTracked[GUID] = "None" end
-					if (unitPower > 90) then
-						if unitTracked[GUID] ~= "Green" then
-							unitTracked[GUID] = "Green"
-							DBM.Nameplate:Show(true, GUID, 276299, 463281)
-						end
-					elseif (unitPower > 60) then
-						if unitTracked[GUID] ~= "Yellow" then
-							unitTracked[GUID] = "Yellow"
-							DBM.Nameplate:Hide(true, GUID, 276299, 463281)
-							DBM.Nameplate:Show(true, GUID, 276299, 460954)
-						end
-					elseif (unitPower > 30) then
-						if unitTracked[GUID] ~= "Red" then
-							unitTracked[GUID] = "Red"
-							DBM.Nameplate:Hide(true, GUID, 276299, 460954)
-							DBM.Nameplate:Show(true, GUID, 276299, 463282)
-						end
-					elseif (unitPower > 10) then
-						if unitTracked[GUID] ~= "Critical" then
-							unitTracked[GUID] = "Critical"
-							DBM.Nameplate:Hide(true, GUID, 276299, 463282)
-							DBM.Nameplate:Show(true, GUID, 276299, 237521)
+				if GUID then
+					local cid = self:GetCIDFromGUID(GUID) or 0
+					if cid == 155645 or cid == 152703 then--Walkie Shockie X1 and X2
+						local unitPower = UnitPower(UnitID) or 0
+						if not unitTracked[GUID] then unitTracked[GUID] = "None" end
+						if (unitPower > 90) then
+							if unitTracked[GUID] ~= "Green" then
+								unitTracked[GUID] = "Green"
+								DBM.Nameplate:Show(true, GUID, 276299, 463281)
+							end
+						elseif (unitPower > 60) then
+							if unitTracked[GUID] ~= "Yellow" then
+								unitTracked[GUID] = "Yellow"
+								DBM.Nameplate:Hide(true, GUID, 276299, 463281)
+								DBM.Nameplate:Show(true, GUID, 276299, 460954)
+							end
+						elseif (unitPower > 30) then
+							if unitTracked[GUID] ~= "Red" then
+								unitTracked[GUID] = "Red"
+								DBM.Nameplate:Hide(true, GUID, 276299, 460954)
+								DBM.Nameplate:Show(true, GUID, 276299, 463282)
+							end
+						elseif (unitPower > 10) then
+							if unitTracked[GUID] ~= "Critical" then
+								unitTracked[GUID] = "Critical"
+								DBM.Nameplate:Hide(true, GUID, 276299, 463282)
+								DBM.Nameplate:Show(true, GUID, 276299, 237521)
+							end
 						end
 					end
 				end
@@ -159,8 +161,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnReinforcementRelay:Show()
 		timerReinforcementRelayCD:Start()
 	elseif spellId == 302279 then
-		specWarnWreck:Show()
-		specWarnWreck:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnWreck:Show()
+			specWarnWreck:Play("defensive")
+		end
 		timerWreckCD:Start()
 	elseif spellId == 301177 then--Lift Off (haywire ended, return to stage 1)
 		--TODO, need a log that didn't one phase him, might be harder to come by these days

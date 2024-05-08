@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2157, "DBM-Party-BfA", 8, 1001)
+local mod	= DBM:NewMod(2157, "DBM-Party-BfA", 8, 1022)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230504231118")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(131318)
 mod:SetEncounterID(2111)
 mod.sendMainBossGUID = true
@@ -34,7 +34,7 @@ function mod:OnCombatStart(delay)
 		timerSanguineFeastCD:Start(6.8-delay)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(260685))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(260685))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 260685, 1)
 	end
 end

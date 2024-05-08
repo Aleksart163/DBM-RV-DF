@@ -4,10 +4,10 @@ if UnitFactionGroup("player") == "Alliance" then
 else
 	dungeonID, creatureID, encounterID = 2133, 130834, 2097--Bainbridge
 end
-local mod	= DBM:NewMod(dungeonID, "DBM-Party-BfA", 5, 1001)
+local mod	= DBM:NewMod(dungeonID, "DBM-Party-BfA", 5, 1023)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240417180519")
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(encounterID)
 
@@ -16,12 +16,13 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 257459 260954 261428 256709",
 	"SPELL_CAST_START 257459 275107 257326 261428 260924",
-	"UNIT_DIED",
+--	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --TODO, cannon barrage detection
 --TODO, verify some other spellIds
+--TODO, why are all timers disabled, and can they be made active/better
 --Chopper Redhook
 local warnOntheHook					= mod:NewTargetNoFilterAnnounce(257459, 2)
 local warnMeatHook					= mod:NewCastAnnounce(275107, 2)

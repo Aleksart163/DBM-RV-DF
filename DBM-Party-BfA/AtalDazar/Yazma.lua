@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2030, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231128045828")
+mod:SetRevision("20240422020135")
 mod:SetCreatureID(122968)
 mod:SetEncounterID(2087)
 mod:SetHotfixNoticeRev(20231023000000)
@@ -26,15 +26,17 @@ mod:RegisterEventsInCombat(
 --]]
 --TODO: Verify CHAT_MSG_RAID_BOSS_EMOTE for soulrend. I know i saw it but not sure I got spellId right since chatlog only grabs parsed name
 local warnSoulRend					= mod:NewTargetAnnounce(259187, 4)
+local warnWrackingPain				= mod:NewTargetNoFilterAnnounce(250096, 4, nil, "Healer")
 
 local specWarnSoulRend				= mod:NewSpecialWarningRun(259187, nil, nil, nil, 4, 2)
 local yellSoulRend					= mod:NewYell(259187)
 local specWarnWrackingPain			= mod:NewSpecialWarningInterruptCount(250096, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, "Tank", nil, nil, 1, 2)
+local specWarnWrackingPainYou		= mod:NewSpecialWarningYou(250096, nil, nil, nil, 1, 2)
+local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, nil, nil, nil, 1, 2)
 local specWarnEchoes				= mod:NewSpecialWarningDodgeCount(250050, nil, nil, nil, 2, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(250036, nil, nil, nil, 1, 8)
 
-local timerSoulrendCD				= mod:NewCDCountTimer(39.5, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerSoulrendCD				= mod:NewCDCountTimer(38.4, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerWrackingPainCD			= mod:NewCDCountTimer(16.7, 250096, nil, nil, nil, 3)--17-23
 local timerSkewerCD					= mod:NewCDCountTimer(12, 249919, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerEchoesCD					= mod:NewCDCountTimer(31.2, 250050, nil, nil, nil, 3)
@@ -44,7 +46,7 @@ mod.vb.wrackCount = 0
 mod.vb.skewerCount = 0
 mod.vb.echoCount = 0
 
---Skewer trigger 3.5 ICD
+--Skewer trigger 2.4 ICD
 --Echos also triggers 3.5 ICD
 --Soulrend triggers 6 ICD
 --Wracking pain triggers 1.5 ICD+cast time before interrupt (not worth coding for)
@@ -76,6 +78,16 @@ local function updateAllTimers(self, ICD)
 	end
 end
 
+function mod:WrackingPainTarget(targetname)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnWrackingPainYou:Show(targetname)
+		specWarnWrackingPainYou:Play("targetyou")
+	else
+		warnWrackingPain:Show(targetname)
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.soulCount = 0
 	self.vb.wrackCount = 0
@@ -83,7 +95,7 @@ function mod:OnCombatStart(delay)
 	self.vb.echoCount = 0
 	timerWrackingPainCD:Start(3.5-delay, 1)
 	timerSkewerCD:Start(5-delay, 1)
-	timerSoulrendCD:Start(8.5-delay, 1)
+	timerSoulrendCD:Start(7-delay, 1)
 	timerEchoesCD:Start(15.6-delay, 1)
 end
 
@@ -103,13 +115,17 @@ function mod:SPELL_CAST_START(args)
 		if not self:IsMythic() and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnWrackingPain:Show(args.sourceName, self.vb.wrackCount+1)
 			specWarnWrackingPain:Play("kickcast")
+		else
+			self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "WrackingPainTarget", 0.1, 7, true)
 		end
 	elseif spellId == 249919 then
 		self.vb.skewerCount = self.vb.skewerCount + 1
-		specWarnSkewer:Show()
-		specWarnSkewer:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnSkewer:Show()
+			specWarnSkewer:Play("defensive")
+		end
 		timerSkewerCD:Start(nil, self.vb.skewerCount+1)
-		updateAllTimers(self, 3.5)
+		updateAllTimers(self, 2.4)
 	elseif spellId == 250050 then
 		self.vb.echoCount = self.vb.echoCount + 1
 		specWarnEchoes:Show(self.vb.echoCount)

@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2114, "DBM-Party-BfA", 7, 1001)
+local mod	= DBM:NewMod(2114, "DBM-Party-BfA", 7, 1012)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220209045257")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(129227)
 mod:SetEncounterID(2106)
 mod:DisableESCombatDetection()--ES fires for nearby trash even if boss isn't pulled
@@ -38,13 +38,13 @@ mod.vb.addCount = 0
 local updateInfoFrame
 do
 	local ccList = {
-		[1] = DBM:GetSpellInfo(257481),--Trap included with fight
-		[2] = DBM:GetSpellInfo(6770),--Rogue Sap
-		[3] = DBM:GetSpellInfo(9484),--Priest Shackle
-		[4] = DBM:GetSpellInfo(20066),--Paladin Repentance
-		[5] = DBM:GetSpellInfo(118),--Mage Polymorph
-		[6] = DBM:GetSpellInfo(51514),--Shaman Hex
-		[7] = DBM:GetSpellInfo(3355),--Hunter Freezing Trap
+		[1] = DBM:GetSpellName(257481),--Trap included with fight
+		[2] = DBM:GetSpellName(6770),--Rogue Sap
+		[3] = DBM:GetSpellName(9484),--Priest Shackle
+		[4] = DBM:GetSpellName(20066),--Paladin Repentance
+		[5] = DBM:GetSpellName(118),--Mage Polymorph
+		[6] = DBM:GetSpellName(51514),--Shaman Hex
+		[7] = DBM:GetSpellName(3355),--Hunter Freezing Trap
 	}
 	local lines = {}
 	local floor = math.floor
@@ -77,7 +77,7 @@ function mod:OnCombatStart(delay)
 		timerTectonicSmashCD:Start(5-delay)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(227909))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(227909))
 		DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true)
 	end
 end

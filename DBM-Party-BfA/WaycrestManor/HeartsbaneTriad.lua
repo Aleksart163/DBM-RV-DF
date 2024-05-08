@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2125, "DBM-Party-BfA", 10, 1001)
+local mod	= DBM:NewMod(2125, "DBM-Party-BfA", 10, 1021)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231116102800")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(135358, 135359, 135360, 131823, 131824, 131825)--All versions so we can pull boss
 mod:SetEncounterID(2113)
 mod:DisableESCombatDetection()--ES fires For entryway trash pull sometimes, for some reason.
@@ -48,7 +48,7 @@ local specWarnSoulManipulation		= mod:NewSpecialWarningSwitch(260907, nil, nil, 
 
 local timerSoulManipulationCD		= mod:NewCDTimer(12.5, 260907, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON)--Always tank? if not, remove tank icon
 --Focusing Iris
-mod:AddTimerLine(DBM:GetSpellInfo(260805))
+mod:AddTimerLine(DBM:GetSpellName(260805))
 local warnActiveTriad				= mod:NewTargetNoFilterAnnounce(260805, 2)
 
 local specWarnRitual				= mod:NewSpecialWarningSpell(260773, nil, nil, nil, 3, 2)
@@ -58,7 +58,7 @@ local timerRitualCD					= mod:NewCDTimer(12.5, 260773, nil, nil, nil, 2, nil, DB
 mod:AddSetIconOption("SetIconOnTriad", 260805, true, 5, {8})
 mod:AddInfoFrameOption(260773, false)
 
-local IrisBuff = DBM:GetSpellInfo(260805)
+local IrisBuff = DBM:GetSpellName(260805)
 
 function mod:NettlesTargetQuestionMark(targetname)
 	if not targetname then return end
@@ -147,7 +147,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerSoulManipulationCD:Start(8, args.destGUID)--CAST START (8-11)
 		end
 		if self.Options.SetIconOnTriad then
-			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "SetIconOnTriad", nil, nil, nil, true)
+			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 6, "SetIconOnTriad", nil, nil, nil, true)
 		end
 	elseif spellId == 260703 then
 		warnUnstableMark:CombinedShow(0.3, args.destName)

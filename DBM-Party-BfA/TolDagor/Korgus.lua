@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2096, "DBM-Party-BfA", 9, 1001)
+local mod	= DBM:NewMod(2096, "DBM-Party-BfA", 9, 1002)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220217031102")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(127503)
 mod:SetEncounterID(2104)
 mod:SetUsedIcons(1)
@@ -34,7 +34,7 @@ local timerDeadeyeCD				= mod:NewCDTimer(23, 256038, nil, nil, nil, 3)
 local timerExplosiveBurstCD			= mod:NewCDTimer(44.8, 256105, nil, nil, nil, 3)
 local timerMassiveBlastCD			= mod:NewCDTimer(21.8, 263345, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnDeadeye", 256038, true, false, {1})
+mod:AddSetIconOption("SetIconOnDeadeye", 256038, true, 0, {1})
 mod:AddInfoFrameOption(256038)
 mod:AddRangeFrameOption(5, 256105)
 
@@ -50,7 +50,7 @@ function mod:OnCombatStart(delay)
 	timerMassiveBlastCD:Start(17-delay)
 	timerDeadeyeCD:Start(23.1-delay)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(256044))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(256044))
 		DBM.InfoFrame:Show(5, "reverseplayerbaddebuffbyspellid", 256044)--Must match spellID to filter other debuffs out
 	end
 end
