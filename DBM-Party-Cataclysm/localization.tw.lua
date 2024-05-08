@@ -682,10 +682,6 @@ L:SetTimerLocalization{
 	TimerCombatStart	= "戰鬥開始"
 }
 
-L:SetOptionLocalization{
-	TimerCombatStart	= "為戰鬥開始顯示計時器"
-}
-
 L:SetMiscLocalization{
 	Event		= "現身吧!",
 	Pull		= "暮光的軍隊開始出現在峽谷邊緣。"
@@ -705,61 +701,6 @@ L:SetMiscLocalization{
 ---------------------------
 L= DBM:GetModLocalization(341)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "戰鬥開始"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "為戰鬥開始顯示計時器"
-}
-
 L:SetMiscLocalization{
 	Event		= "現在呢，薩滿，把巨龍之魂交給我吧。"
-}
-
---------------------
---  World Bosses  --
--------------------------
--- Akma'hat --
--------------------------
-L = DBM:GetModLocalization("Akmahat")
-
-L:SetGeneralLocalization{
-	name = "阿克瑪哈特"
-}
-
------------
--- Garr --
-----------
-L = DBM:GetModLocalization("Garr")
-
-L:SetGeneralLocalization{
-	name = "加爾(浩劫與重生)"
-}
-
-----------------
--- Julak-Doom --
-----------------
-L = DBM:GetModLocalization("JulakDoom")
-
-L:SetGeneralLocalization{
-	name = "毀滅祖拉克"
-}
-
------------
--- Mobus --
------------
-L = DBM:GetModLocalization("Mobus")
-
-L:SetGeneralLocalization{
-	name = "莫比斯"
-}
-
------------
--- Xariona --
------------
-L = DBM:GetModLocalization("Xariona")
-
-L:SetGeneralLocalization{
-	name = "克薩瑞歐納"
 }

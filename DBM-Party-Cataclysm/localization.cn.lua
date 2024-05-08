@@ -668,14 +668,6 @@ L:SetMiscLocalization{
 --------------
 L= DBM:GetModLocalization(322)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "战斗即将开始"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "计时条：战斗即将开始"
-}
-
 L:SetMiscLocalization{
 	Event		= "现身吧！",
 	Pull		= "你不过是个凡人。现在，像个凡人那样卑微地死去吧。"
@@ -695,58 +687,3 @@ L:SetMiscLocalization{
 -- Archbishop Benedictus --
 ---------------------------
 L= DBM:GetModLocalization(341)
-
-L:SetTimerLocalization{
-	TimerCombatStart	= "战斗即将开始"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "计时条：战斗即将开始"
-}
-
---------------------
---  World Bosses  --
--------------------------
--- Akma'hat --
--------------------------
-L = DBM:GetModLocalization("Akmahat")
-
-L:SetGeneralLocalization{
-	name = "阿卡玛哈特"
-}
-
------------
--- Garr --
-----------
-L = DBM:GetModLocalization("Garr")
-
-L:SetGeneralLocalization{
-	name = "加尔（大地的裂变）"
-}
-
-----------------
--- Julak-Doom --
-----------------
-L = DBM:GetModLocalization("JulakDoom")
-
-L:SetGeneralLocalization{
-	name = "厄运尤拉克"
-}
-
------------
--- Mobus --
------------
-L = DBM:GetModLocalization("Mobus")
-
-L:SetGeneralLocalization{
-	name = "魔布斯"
-}
-
--------------
--- Xariona --
--------------
-L = DBM:GetModLocalization("Xariona")
-
-L:SetGeneralLocalization{
-	name = "埃克萨妮奥娜"
-}

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(52053)
 mod:SetEncounterID(1181)
 mod:SetUsedIcons(8)
@@ -28,10 +28,10 @@ local timerZanzilGas		= mod:NewBuffActiveTimer(7, 96338, nil, nil, nil, 2)
 local timerGaze				= mod:NewTargetTimer(17, 96342, nil, nil, nil, 3)
 local timerZanzilElixir		= mod:NewCDTimer(30, 96316, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconOnGaze", 96342, false, false, {8})
+mod:AddSetIconOption("SetIconOnGaze", 96342, false, 0, {8})
 mod:AddBoolOption("InfoFrame", "Healer")--on by default for healers, so they know what numpties to heal through gas
 
-local frameDebuff = DBM:GetSpellInfo(96328)
+local frameDebuff = DBM:GetSpellName(96328)
 
 function mod:GazeTarget()
 	local targetname = self:GetBossTarget(52054)

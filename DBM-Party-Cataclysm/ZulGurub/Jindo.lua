@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20230424022226")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(52148)
 mod:SetEncounterID(1182)
 mod:SetUsedIcons(8)
@@ -33,10 +33,10 @@ local timerDeadzone				= mod:NewNextTimer(21, 97170, nil, nil, nil, 3)
 local timerShadowsOfHakkar		= mod:NewBuffActiveTimer(10, 97172, nil, nil, nil, 2)
 local timerShadowsOfHakkarNext	= mod:NewNextTimer(21, 97172, nil, nil, nil, 2)
 
-mod:AddSetIconOption("BodySlamIcon", 97597, true, false, {8})
+mod:AddSetIconOption("BodySlamIcon", 97597, true, 0, {8})
 
 mod.vb.barrier = 3
-local zoneName = DBM:GetSpellInfo(97170)
+local zoneName = DBM:GetSpellName(97170)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)

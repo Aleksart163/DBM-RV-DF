@@ -698,14 +698,6 @@ L:SetMiscLocalization{
 --------------
 L= DBM:GetModLocalization(322)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Начало боя"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Показывать таймер до начала боя"
-}
-
 L:SetMiscLocalization{
 	Event		= "Покажи себя!",
 	Pull		= "На обрывах каньона появляются войска Сумрака."
@@ -725,61 +717,6 @@ L:SetMiscLocalization{
 ---------------------------
 L= DBM:GetModLocalization(341)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Начало боя"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Показать таймер до начала боя"
-}
-
 L:SetMiscLocalization{
 	Event		= "А теперь, шаман, ты отдашь Душу Дракона МНЕ."
-}
-
---------------------
---  World Bosses  --
--------------------------
--- Akma'hat --
--------------------------
-L = DBM:GetModLocalization("Akmahat")
-
-L:SetGeneralLocalization{
-	name = "Акма'хат"
-}
-
------------
--- Garr --
-----------
-L = DBM:GetModLocalization("Garr")
-
-L:SetGeneralLocalization{
-	name = "Гарр"
-}
-
-----------------
--- Julak-Doom --
-----------------
-L = DBM:GetModLocalization("JulakDoom")
-
-L:SetGeneralLocalization{
-	name = "Джулак-Рок"
-}
-
------------
--- Mobus --
------------
-L = DBM:GetModLocalization("Mobus")
-
-L:SetGeneralLocalization{
-	name = "Мобус"
-}
-
------------
--- Xariona --
------------
-L = DBM:GetModLocalization("Xariona")
-
-L:SetGeneralLocalization{
-	name = "Зариона"
 }

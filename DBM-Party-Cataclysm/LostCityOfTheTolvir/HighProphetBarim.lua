@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240412075414")
 mod:SetCreatureID(43612)
 mod:SetEncounterID(1053)
 
@@ -85,3 +85,4 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnHeavenFury:Play("runaway")
 	end
 end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE

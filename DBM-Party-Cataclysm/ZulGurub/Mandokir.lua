@@ -4,7 +4,7 @@ local Ohgan	= DBM:EJ_GetSectionInfo(2615)
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(52151)
 mod:SetEncounterID(1179)
 mod:SetUsedIcons(8)
@@ -35,7 +35,7 @@ local timerBloodletting		= mod:NewTargetTimer(10, 96776, nil, nil, nil, 5, nil, 
 local timerBloodlettingCD	= mod:NewCDTimer(25, 96776, nil, nil, nil, 3)
 local timerOhgan			= mod:NewCastTimer(2.5, 96724, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconOnOhgan", 96717, false, true, {8})
+mod:AddSetIconOption("SetIconOnOhgan", 96717, false, 5, {8})
 
 mod.vb.reviveCounter = 8
 mod.vb.ohganDiedOnce = false

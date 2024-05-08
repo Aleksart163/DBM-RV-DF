@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20231117105343")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(43873)
 mod:SetEncounterID(1041)
 mod:SetUsedIcons(8)
@@ -49,7 +49,7 @@ mod.vb.activeWind = "none"
 mod.vb.windCount = 0
 mod.vb.burstCount = 0
 mod.vb.breathCount = 0
-local tornado = DBM:GetSpellInfo(86133)
+local tornado = DBM:GetSpellName(86133)
 
 --[[
 function mod:BreathTarget()

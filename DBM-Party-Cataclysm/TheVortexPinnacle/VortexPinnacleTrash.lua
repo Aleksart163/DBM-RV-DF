@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("VortexPinnacleTrash", "DBM-Party-Cataclysm", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231112074425")
+mod:SetRevision("20240426175442")
 --mod:SetModelID(47785)
 mod:SetZone(657)
 
@@ -78,7 +78,7 @@ local timerGreaterHealCD						= mod:NewCDNPTimer(14.1, 87779, nil, nil, nil, 4, 
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 GTFO
 
-local groundingName = DBM:GetSpellInfo(87726)
+local groundingName = DBM:GetSpellName(87726)
 local playerGrounded = false
 
 function mod:LitTarget(targetname)

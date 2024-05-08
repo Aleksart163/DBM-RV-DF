@@ -5,7 +5,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20230621232728")
+mod:SetRevision("20240410220045")
 mod:SetCreatureID(43875)
 mod:SetEncounterID(1042)
 mod:SetHotfixNoticeRev(20230526000000)
@@ -82,9 +82,9 @@ function mod:SPELL_CAST_START(args)
 		--1.25 post nerf in classic, 1 sec pre nerf
 		--3 lol giga nerf in M+
 		warnStaticCling:Show()
-		specWarnStaticCling:Schedule(2.3)--delay message since jumping at start of cast is no longer correct in 4.0.6+
-		specWarnStaticCling:ScheduleVoice(2.3, "jumpnow")
-		timerStaticCling:Start(3)
+		specWarnStaticCling:Schedule(self:IsClassic() and 0.5 or 2.3)--delay message since jumping at start of cast is no longer correct in 4.0.6+
+		specWarnStaticCling:ScheduleVoice(self:IsClassic() and 0.5 or 2.3, "jumpnow")
+		timerStaticCling:Start(self:IsClassic() and 1.25 or 3)
 		local expectedTimer = self:IsMythicPlus() and 29.1 or 15.8
 		if timerGroundingFieldCD:GetRemaining() < expectedTimer then
 			timerStaticClingCD:Start(expectedTimer)

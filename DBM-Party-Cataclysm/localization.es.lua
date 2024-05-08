@@ -683,14 +683,6 @@ L:SetMiscLocalization{
 --------------
 L= DBM:GetModLocalization(322)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Comienza el encuentro"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar temporizador para el inicio del encuentro"
-}
-
 L:SetMiscLocalization{
 	Event		= "¡Muéstrate!",
 	Pull		= "Las fuerzas Crepusculares comienzan a aparecer en los bordes de los cañones."
@@ -710,66 +702,6 @@ L:SetMiscLocalization{
 --------------------------
 L= DBM:GetModLocalization(341)
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Comienza el encuentro"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar temporizador para el inicio del encuentro"
-}
-
 L:SetMiscLocalization{
 	Event		= "Y ahora, chamán, me entregarás el Alma de dragón."
-}
-
---------------------
--- Jefes de mundo --
---------------------
---------------
--- Akma'hat --
---------------
-L = DBM:GetModLocalization("Akmahat")
-
-L:SetGeneralLocalization{
-	name = "Akma'hat"
-}
-
-----------
--- Garr --
-----------
-L = DBM:GetModLocalization("Garr")
-
-L:SetGeneralLocalization{
-	name = "Garr"
-}
-
----------------------
--- Julak Fatalidad --
----------------------
-L = DBM:GetModLocalization("JulakDoom")
-
-L:SetGeneralLocalization{
-	name = "Julak Fatalidad"
-}
-
-L:SetOptionLocalization{
-	SetIconOnMC	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(93621)
-}
-
------------
--- Mobus --
------------
-L = DBM:GetModLocalization("Mobus")
-
-L:SetGeneralLocalization{
-	name = "Mobus"
-}
-
--------------
--- Xariona --
--------------
-L = DBM:GetModLocalization("Xariona")
-
-L:SetGeneralLocalization{
-	name = "Xariona"
 }

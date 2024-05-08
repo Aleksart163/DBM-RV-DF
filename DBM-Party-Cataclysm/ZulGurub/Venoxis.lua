@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(52155)
 mod:SetEncounterID(1178)
 mod:SetUsedIcons(7, 8)
@@ -34,7 +34,7 @@ local timerWhisperHethiss	= mod:NewTargetTimer(8, 96466, nil, nil, nil, 4, nil, 
 local timerBreathHethiss	= mod:NewNextTimer(12, 96509, nil, nil, nil, 3)
 local timerToxicLinkCD		= mod:NewNextTimer(14, 96477, nil, nil, nil, 3)--13-15 second variations, 14 will be a good medium
 
-mod:AddSetIconOption("SetIconOnToxicLink", 96477, true, false, {7, 8})
+mod:AddSetIconOption("SetIconOnToxicLink", 96477, true, 0, {7, 8})
 
 mod.vb.toxicLinkIcon = 8
 local toxicLinkTargets = {}
