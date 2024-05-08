@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240421062339")
 mod:SetCreatureID(56884)
 mod:SetEncounterID(1306)
 
@@ -55,7 +55,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 107356 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnRisingHate:Show(args.destName)
-		specWarnRisingHate:Play("kickast")
+		specWarnRisingHate:Play("kickcast")
 	end
 end
 

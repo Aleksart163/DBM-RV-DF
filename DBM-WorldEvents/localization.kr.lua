@@ -22,7 +22,8 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	TrioActiveTimer		= "각 보스 활성화 타이머 바 보기"
+	TrioActiveTimer		= "연금술사 삼인방 활성화 타이머 바 보기",
+	AGBoss				= "연금술사 삼인방 소환 대화 자동 선택"
 })
 
 L:SetMiscLocalization({
@@ -149,6 +150,18 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	MassiveWave		= "좀비의 총공격이 시작됐습니다!"
 })
+
+-- Quest
+L = DBM:GetModLocalization("EscortQuests")
+
+L:SetGeneralLocalization{
+	name = "퀘스트",
+}
+
+L:SetOptionLocalization{
+	Timers = "몇가지 호위 퀘스트의 타이머 바 보기"
+}
+
 
 --------------------------
 --  Demonic Invasions  --
@@ -310,6 +323,11 @@ L:SetGeneralLocalization({
 	name = "인간 대포알"
 })
 
+L = DBM:GetModLocalization("CannonClassic")
+
+L:SetGeneralLocalization({
+	name = "인간 대포알"
+})
 -------------
 --  Gnoll  --
 -------------

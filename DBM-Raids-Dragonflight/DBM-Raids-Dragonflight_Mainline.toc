@@ -23,7 +23,7 @@
 ## X-DBM-Mod-Name-zhCN: 团队副本（巨龙时代）
 ## X-DBM-Mod-Sort: 201
 ## X-DBM-Mod-MapID: 2549, 2569, 2522
-## X-DBM-Mod-MinCoreRevision: 20230617000000
+## X-DBM-Mod-MinCoreRevision: 20240426070000
 ## X-DBM-Mod-MinExpansion: 9
 ## X-Curse-Project-ID: 3358
 ## X-WoWI-ID: 8814

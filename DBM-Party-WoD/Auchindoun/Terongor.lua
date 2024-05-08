@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(77734)
 mod:SetEncounterID(1714)
 
@@ -66,7 +66,7 @@ local timerDemonicLeapCD		= mod:NewCDTimer(20, 157039, nil, nil, nil, 3)
 
 mod:AddRangeFrameOption(10, 156921)
 
-local seedDebuff = DBM:GetSpellInfo(156921)
+local seedDebuff = DBM:GetSpellName(156921)
 local DebuffFilter
 do
 	DebuffFilter = function(uId)

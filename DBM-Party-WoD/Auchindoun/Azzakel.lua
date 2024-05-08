@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20231117105343")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(75927)
 mod:SetEncounterID(1678)
 
@@ -44,7 +44,7 @@ mod:AddRangeFrameOption(5, 153396)
 
 mod.vb.debuffCount = 0
 mod.vb.flamesCast = 2
-local curtainDebuff = DBM:GetSpellInfo(153396)
+local curtainDebuff = DBM:GetSpellName(153396)
 local debuffFilter
 do
 	debuffFilter = function(uId)

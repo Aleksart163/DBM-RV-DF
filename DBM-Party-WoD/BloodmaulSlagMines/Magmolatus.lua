@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240412080134")
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
@@ -50,20 +50,22 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
-		local cid = self:GetCIDFromGUID(unitGUID)
-		if UnitExists(unitID) and not activeAddGUIDS[unitGUID] then
-			activeAddGUIDS[unitGUID] = true
-			--Ruination#Creature:0:3314:1175:11531:74570
-			if cid == 74570 then--Ruination
-				specWarnRuination:Show()
-				specWarnRuination:Play("mobsoon")
-			elseif cid == 74571 then--Calamity
-				specWarnCalamity:Show()
-				specWarnCalamity:Play("mobsoon")
-			elseif cid == 74475 then--Magmolatus
-				specWarnMagmolatus:Show()
-				specWarnMagmolatus:Play("bigmob")
-				timerMoltenImpactCD:Start(5)
+		if unitGUID then
+			local cid = self:GetCIDFromGUID(unitGUID) or 0
+			if UnitExists(unitID) and not activeAddGUIDS[unitGUID] then
+				activeAddGUIDS[unitGUID] = true
+				--Ruination#Creature:0:3314:1175:11531:74570
+				if cid == 74570 then--Ruination
+					specWarnRuination:Show()
+					specWarnRuination:Play("mobsoon")
+				elseif cid == 74571 then--Calamity
+					specWarnCalamity:Show()
+					specWarnCalamity:Play("mobsoon")
+				elseif cid == 74475 then--Magmolatus
+					specWarnMagmolatus:Show()
+					specWarnMagmolatus:Play("bigmob")
+					timerMoltenImpactCD:Start(5)
+				end
 			end
 		end
 	end

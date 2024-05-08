@@ -1,4 +1,5 @@
 ## Interface: 100107
+## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (DF)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Mazmorras (DF)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Mazmorras (DF)|r
@@ -23,7 +24,7 @@
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (巨龍崛起)
 ## X-DBM-Mod-Sort: 215
 ## X-DBM-Mod-MapID: 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527, 2579
-## X-DBM-Mod-MinCoreRevision: 20230716000000
+## X-DBM-Mod-MinCoreRevision: 20240426070000
 ## X-DBM-Mod-MinExpansion: 8
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904

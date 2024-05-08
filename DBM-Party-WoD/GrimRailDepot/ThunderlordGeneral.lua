@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20231117105343")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(80005)
 mod:SetEncounterID(1736)
 
@@ -42,7 +42,7 @@ local timerThunderousBreathCD	= mod:NewCDTimer(17.4, 171900, nil, nil, nil, 3)
 
 mod:AddRangeFrameOption(8, 163447)
 
-local debuffCheck = DBM:GetSpellInfo(163447)
+local debuffCheck = DBM:GetSpellName(163447)
 local debuffFilter
 do
 	debuffFilter = function(uId)

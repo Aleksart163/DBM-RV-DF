@@ -49,7 +49,7 @@ local timerAddsCD				= mod:NewCDTimer(27.5, 267813, nil, nil, nil, 1, -9466, DBM
 mod.vb.inhaleActive = false
 mod.vb.inhaleCount = 0
 
-local Pitch = DBM:GetSpellInfo(153692) --Некротическая слизь
+local Pitch = DBM:GetSpellName(153692) --Некротическая слизь
 local MurchalProshlyap = false
 
 function mod:OnCombatStart(delay)

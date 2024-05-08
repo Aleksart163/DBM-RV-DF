@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SkyreachTrash", "DBM-Party-WoD", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194132")
+mod:SetRevision("20240426175442")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -16,7 +16,7 @@ local specWarnSolarDetonation		= mod:NewSpecialWarningMoveAway(160288, nil, nil,
 mod:AddRangeFrameOption(3, 160288)--Range guessed. Maybe 5. one tooltip says 1.5 but it def seemed bigger then that. closer to 3-5
 
 mod.vb.debuffCount = 0
-local Debuff = DBM:GetSpellInfo(160288)
+local Debuff = DBM:GetSpellName(160288)
 local debuffFilter
 do
 	debuffFilter = function(uId)

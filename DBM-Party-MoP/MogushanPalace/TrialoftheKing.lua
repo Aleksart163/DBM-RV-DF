@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230307064655")
+mod:SetRevision("20231226124347")
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetEncounterID(1442)
 
@@ -80,7 +80,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerConflagCD:Cancel()
 		timerMeteorCD:Cancel()
 		timerTraumaticBlowCD:Cancel()
-		timerShockwaveCD:Start(19)--Not confirmed through multiple pulls, just one
+		timerShockwaveCD:Start(17.2)
 		timerRavageCD:Start(26)
 	elseif msg == L.Ming or msg:find(L.Ming) then
 		timerShockwaveCD:Cancel()

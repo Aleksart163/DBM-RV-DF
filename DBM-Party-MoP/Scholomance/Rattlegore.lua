@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20231024034207")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(59153)
 mod:SetEncounterID(1428)
 mod:SetZone(1007)
@@ -35,7 +35,7 @@ local timerRusting		= mod:NewBuffActiveTimer(15, 113765, nil, "Tank")
 
 mod:AddBoolOption("InfoFrame")
 
-local boned = DBM:GetSpellInfo(113996)
+local boned = DBM:GetSpellName(113996)
 
 function mod:BoneSpikeTarget()
 	local targetname = self:GetBossTarget(59153)

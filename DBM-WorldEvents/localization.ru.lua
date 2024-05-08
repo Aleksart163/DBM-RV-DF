@@ -23,7 +23,8 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	TrioActiveTimer		= "Отсчет времени до вступления Троих аптекарей в бой"
+	TrioActiveTimer		= "Отсчет времени до вступления Троих аптекарей в бой",
+	AGBoss				= "Автоматический выбор диалога для вызова Троих аптекарей"
 })
 
 L:SetMiscLocalization({
@@ -148,6 +149,18 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	MassiveWave		= "Приближается большая волна зомби!"
 })
+
+-- Quest
+L = DBM:GetModLocalization("EscortQuests")
+
+L:SetGeneralLocalization{
+	name = "Квест",
+}
+
+L:SetOptionLocalization{
+	Timers = "Показывать таймеры для некоторых квестов сопровождений"
+}
+
 
 --------------------------
 --  Demonic Invasions  --
@@ -312,6 +325,13 @@ L = DBM:GetModLocalization("Cannon")
 L:SetGeneralLocalization({
 	name = "Подрывайстер 5000"
 })
+
+L = DBM:GetModLocalization("CannonClassic")
+
+L:SetGeneralLocalization({
+	name = "Подрывайстер 5000"
+})
+
 
 -------------
 --  Gnoll  --
