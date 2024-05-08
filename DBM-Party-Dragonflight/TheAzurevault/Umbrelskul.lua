@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2508, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240426062327")
 mod:SetCreatureID(186738)
 mod:SetEncounterID(2584)
-mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230110000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -14,6 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 384978 385399 385075 388804 384699",
+	"SPELL_CAST_SUCCESS 384696 385399 388804",
 	"SPELL_AURA_APPLIED 384978",
 	"SPELL_AURA_REMOVED 384978"
 )
@@ -27,24 +27,26 @@ mod:RegisterEventsInCombat(
  or ability.id = 384696 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnArcaneEruption						= mod:NewSpellAnnounce(385075, 3) --Чародейское извержение
+local warnArcaneEruption						= mod:NewCountAnnounce(385075, 3) --Чародейское извержение
 
-local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 3, 2) --Удар дракона
+local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 3, 4) --Удар дракона
 local specWarnDragonStrikeDebuff				= mod:NewSpecialWarningDispel(384978, "RemoveMagic", nil, nil, 3, 2) --Удар дракона
-local specWarnCrystallineRoar					= mod:NewSpecialWarningDodge(384699, nil, nil, nil, 2, 2) --Кристаллический рев
-local specWarnUnleashedDestruction				= mod:NewSpecialWarningSpell(385399, nil, nil, nil, 2, 2) --Высвобожденное разрушение
+local specWarnCrystallineRoar					= mod:NewSpecialWarningDodgeCount(384699, nil, nil, nil, 3, 2) --Кристаллический рев
+local specWarnUnleashedDestruction				= mod:NewSpecialWarningCount(385399, nil, nil, nil, 2, 2) --Высвобожденное разрушение
 
-local timerDragonStrikeCD						= mod:NewCDTimer(15.9, 384978, nil, "Tank|Healer|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Удар дракона 7.3-24, probably delayed by CLEU events I couldn't see
-local timerCrystallineRoarCD					= mod:NewCDTimer(111.4, 384699, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристаллический рев
-local timerUnleashedDestructionCD				= mod:NewCDTimer(103.1, 385399, nil, nil, nil, 2) --Высвобожденное разрушение
-local timerArcaneEruptionCD						= mod:NewCDTimer(54, 385075, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Чародейское извержение
+local timerDragonStrikeCD						= mod:NewCDTimer(7.3, 384978, nil, "Tank|Healer|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)--Удар дракона 7.3-24, probably delayed by CLEU events I couldn't see
+local timerCrystallineRoarCD					= mod:NewCDCountTimer(111.6, 384699, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристаллический рев
+local timerUnleashedDestructionCD				= mod:NewCDCountTimer(103.1, 385399, nil, nil, nil, 2)--Высвобожденное разрушение 103-115
+local timerArcaneEruptionCD						= mod:NewCDCountTimer(54.6, 385075, nil, nil, nil, 3) --Чародейское извержение
 
 local yellDragonStrike							= mod:NewShortYell(384978, nil, nil, nil, "YELL") --Удар дракона
 
-mod:AddSetIconOption("SetIconOnDragonStrike", 384978, true, 0, {8})
+mod:AddSetIconOption("SetIconOnDragonStrike", 384978, true, 0, {8}) --Удар дракона
+mod:AddInfoFrameOption(388777, false)
 
+mod.vb.roarCount = 0
 mod.vb.unleashedCast = 0
-mod.vb.arcaneEruptionCount = 0
+mod.vb.eruptionCount = 0
 
 function mod:DragonStrikeTarget(targetname, uId)
 	if not targetname then return end
@@ -56,18 +58,13 @@ function mod:DragonStrikeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.roarCount = 0
 	self.vb.unleashedCast = 0
-	self.vb.arcaneEruptionCount = 0
+	self.vb.eruptionCount = 0
 	timerDragonStrikeCD:Start(10-delay)
-	timerCrystallineRoarCD:Start(12.5-delay)
-	timerArcaneEruptionCD:Start(29.5-delay)--28.9-37, Highly variable if it gets spell queued behind more tank casts
-	timerUnleashedDestructionCD:Start(43-delay)
-end
-
-function mod:OnCombatEnd()
-	if self.Options.InfoFrame then
-		DBM.InfoFrame:Hide()
-	end
+	timerCrystallineRoarCD:Start(12.5-delay, 1)
+	timerArcaneEruptionCD:Start(29.5-delay, 1)--28.9-37, Highly variable if it gets spell queued behind more tank casts
+	timerUnleashedDestructionCD:Start(43-delay, 1)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -75,22 +72,30 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 384978 then --Удар дракона
 		self:BossTargetScanner(args.sourceGUID, "DragonStrikeTarget", 0.1, 2)
 		timerDragonStrikeCD:Start()
-	elseif spellId == 385399 or spellId == 388804 then --Высвобожденное разрушение Easy, Hard
-		self.vb.unleashedCast = self.vb.unleashedCast + 1
-		--43, 114, 110
-		specWarnUnleashedDestruction:Show()
+	elseif spellId == 385399 or spellId == 388804 then--Высвобожденное разрушение Easy, Hard
+		specWarnUnleashedDestruction:Show(self.vb.unleashedCast+1)
 		specWarnUnleashedDestruction:Play("carefly")
-		timerUnleashedDestructionCD:Start()
 	elseif spellId == 385075 then --Чародейское извержение
-		--29.5, 54, 56, 58, 56
-		self.vb.arcaneEruptionCount = self.vb.arcaneEruptionCount + 1
-		warnArcaneEruption:Show()
-		timerArcaneEruptionCD:Start()
+		self.vb.eruptionCount = self.vb.eruptionCount + 1
+		warnArcaneEruption:Show(self.vb.eruptionCount)
+		timerArcaneEruptionCD:Start(nil, self.vb.eruptionCount+1)
 	elseif spellId == 384699 then --Кристаллический рев
-		--12.5, 111.4, 114
-		specWarnCrystallineRoar:Show()
+		self.vb.roarCount = self.vb.roarCount + 1
+		specWarnCrystallineRoar:Show(self.vb.roarCount)
 		specWarnCrystallineRoar:Play("shockwave")
-		timerCrystallineRoarCD:Start()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 384696 then
+	--	self.vb.roarCount = self.vb.roarCount + 1
+	--	specWarnCrystallineRoar:Show(self.vb.roarCount)
+	--	specWarnCrystallineRoar:Play("shockwave")
+		timerCrystallineRoarCD:Start(nil, self.vb.roarCount+1)
+	elseif spellId == 385399 or spellId == 388804 then--Easy, Hard
+		self.vb.unleashedCast = self.vb.unleashedCast + 1--Only increment cast count if it actually finishes
+		timerUnleashedDestructionCD:Start(100.1, self.vb.unleashedCast+1)--Even this cast can be interrupted kited boss around so we have to move timer to success
 	end
 end
 
