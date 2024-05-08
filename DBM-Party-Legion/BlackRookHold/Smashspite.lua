@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1664, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231124110430")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(98949)
 mod:SetEncounterID(1834)
 mod:SetUsedIcons(1)
@@ -34,15 +34,15 @@ local specWarnStomp					= mod:NewSpecialWarningSpell(198073, nil, nil, nil, 2, 2
 local specWarnHatefulGaze			= mod:NewSpecialWarningDefensive(198079, nil, nil, nil, 1, 2)
 local yellHatefulGaze				= mod:NewYell(198079)
 local specWarnBrutalHaymakerSoon	= mod:NewSpecialWarningSoon(198245, "Tank|Healer", nil, nil, 1, 2)--Face fuck soon
-local specWarnBrutalHaymaker		= mod:NewSpecialWarningDefensive(198245, "Tank", nil, nil, 3, 2)--Incoming face fuck
+local specWarnBrutalHaymaker		= mod:NewSpecialWarningDefensive(198245, nil, nil, nil, 3, 2)--Incoming face fuck
 local specWarnFelVomit				= mod:NewSpecialWarningMoveAway(198446, nil, nil, nil, 1, 2)
 local yellFelVomit					= mod:NewYell(198446)
 
-local timerStompCD					= mod:NewCDCountTimer(23, 198073, nil, nil, nil, 2)--Next timers but delayed by other casts (changed from 17 to 23 in DF)
+local timerStompCD					= mod:NewCDCountTimer(21.8, 198073, nil, nil, nil, 2)--Next timers but delayed by other casts (changed from 17 to 23 in DF)
 local timerHatefulGazeCD			= mod:NewCDCountTimer(25.4, 198079, nil, nil, nil, 3)--Next timers but delayed by other casts
 
 mod:AddInfoFrameOption(224188)
-mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true, false, {1})
+mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true, 0, {1})
 
 mod.vb.stompCount = 0
 mod.vb.gazeCount = 0
@@ -54,7 +54,7 @@ function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerHatefulGazeCD:Start(5-delay, 1)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(224188))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(224188))
 			DBM.InfoFrame:Show(5, "reverseplayerbaddebuffbyspellid", 224188)--Must match spellID to filter other debuffs out
 		end
 	end
@@ -76,8 +76,10 @@ function mod:SPELL_CAST_START(args)
 		timerStompCD:Start(nil, self.vb.stompCount+1)
 	elseif spellId == 198245 and not superWarned then--fallback, only 0.7 seconds warning vs 1.2 if power 100 works, but better than naught.
 		superWarned = true
-		specWarnBrutalHaymaker:Show()
-		specWarnBrutalHaymaker:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnBrutalHaymaker:Show()
+			specWarnBrutalHaymaker:Play("defensive")
+		end
 	end
 end
 
@@ -132,8 +134,10 @@ do
 			superWarned = false
 		elseif power == 100 and not superWarned then--Doing here is about 0.5 seconds faster than SPELL_CAST_START, when it works.
 			superWarned = true
-			specWarnBrutalHaymaker:Show()
-			specWarnBrutalHaymaker:Play("defensive")
+			if self:IsTanking("player", "boss1", nil, true) then
+				specWarnBrutalHaymaker:Show()
+				specWarnBrutalHaymaker:Play("defensive")
+			end
 		end
 	end
 end

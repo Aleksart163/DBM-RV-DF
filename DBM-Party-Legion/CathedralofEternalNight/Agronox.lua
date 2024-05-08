@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1905, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20240106080507")
 mod:SetCreatureID(117193)
 mod:SetEncounterID(2055)
 
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 --TODO, Fulminating and succulant lashers after first. Mythic pull logs I have too short
 local warnSpores					= mod:NewSpellAnnounce(236524, 2)
 
-local specWarnTimberSmash			= mod:NewSpecialWarningDefensive(235751, "Tank", nil, nil, 1, 2)
+local specWarnTimberSmash			= mod:NewSpecialWarningDefensive(235751, nil, nil, nil, 1, 2)
 local specWarnChokingVine			= mod:NewSpecialWarningRun(238598, nil, nil, nil, 4, 2)
 local specWarnSucculentSecretion	= mod:NewSpecialWarningMove(240065, nil, nil, nil, 1, 2)
 local specWarnFulminatingLashers	= mod:NewSpecialWarningSwitch(236527, "-Healer", nil, nil, 1, 2)
@@ -47,8 +47,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 235751 then
-		specWarnTimberSmash:Show()
-		specWarnTimberSmash:Play("carefly")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnTimberSmash:Show()
+			specWarnTimberSmash:Play("carefly")
+		end
 		timerTimberSmashCD:Start()
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1467, "DBM-Party-Legion", 10, 707)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220217011830")
+mod:SetRevision("20240106080507")
 mod:SetCreatureID(95885)
 mod:SetEncounterID(1815)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -23,7 +23,7 @@ mod:RegisterEventsInCombat(
 				["204151-Darkstrikes"] = "pull:47.0, 23.2",
 			},
 --]]
-local specWarnDarkStrikes			= mod:NewSpecialWarningDefensive(204151, "Tank", nil, nil, 3, 2)
+local specWarnDarkStrikes			= mod:NewSpecialWarningDefensive(204151, nil, nil, nil, 3, 2)
 local specWarnFuriousBlast			= mod:NewSpecialWarningInterrupt(191823, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFelMortar				= mod:NewSpecialWarningDodge(202913, nil, nil, nil, 2, 2)
 local specWarnFelMortarGTFO			= mod:NewSpecialWarningGTFO(202919, nil, nil, nil, 1, 8)
@@ -51,8 +51,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if (spellId == 204151 or spellId == 191941) and self:AntiSpam(3, 1) then--Why two Ids?
-		specWarnDarkStrikes:Show()
-		specWarnDarkStrikes:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnDarkStrikes:Show()
+			specWarnDarkStrikes:Play("defensive")
+		end
 	elseif spellId == 191823 then
 		specWarnFuriousBlast:Show(args.sourceName)
 		specWarnFuriousBlast:Play("kickcast")

@@ -1,4 +1,5 @@
 ## Interface: 100107
+## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (BfA)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Gruppe-BfA|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0던전 (격아)|r

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BRHTrash", "DBM-Party-Legion", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231206000353")
+mod:SetRevision("20240127063852")
 --mod:SetModelID(47785)
 mod:SetZone(1501)
 
@@ -27,9 +27,9 @@ mod:RegisterEvents(
 local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
 local warnSacrificeSoul				= mod:NewTargetNoFilterAnnounce(200105, 2)
 local warnSicBats					= mod:NewTargetNoFilterAnnounce(203163, 2)
-local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, nil, nil, nil, nil, 3)
-local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, nil, nil, nil, nil, 3)
-local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, nil, nil, nil, nil, 3)
+local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, "-Healer", 2, nil, nil, 3)
+local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, "-Healer", 2, nil, nil, 3)
+local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, "-Healer", 2, nil, nil, 3)
 local warnBloodthirstyLeap			= mod:NewSpellAnnounce(225962, 2, nil, false)--Instant cast, announcing it already happened doesn't affect much agency to player
 local warnGlaiveToss				= mod:NewCastAnnounce(196916, 3)
 local warnPhasedExplosion			= mod:NewCastAnnounce(200256, 3, nil, nil, false)--They basically spam cast it, so off by default
@@ -57,10 +57,11 @@ local specWarnSoulBlade				= mod:NewSpecialWarningDispel(200084, "RemoveMagic", 
 local specWarnDrainLife				= mod:NewSpecialWarningDispel(204896, "RemoveMagic", nil, nil, 1, 2)
 local specWarnEnrage				= mod:NewSpecialWarningDispel(8599, "RemoveEnrage", nil, 2, 1, 2)
 
+local timerRP						= mod:NewRPTimer(68)
 local timerSacrificeSoulCD			= mod:NewCDNPTimer(21.8, 200105, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerGlaiveTossCD				= mod:NewCDNPTimer(14.5, 196916, nil, nil, nil, 3)
 local timerStrikeDownCD				= mod:NewCDNPTimer(9.7, 225732, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 200261, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21, 200261, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerKnifeDanceCD				= mod:NewCDNPTimer(18.1, 200291, nil, nil, nil, 2)
 local timerArrowBarrageCD			= mod:NewCDNPTimer(20.6, 200343, nil, nil, nil, 3)--20.7-23
 local timerBloodthirstyLeapCD		= mod:NewCDNPTimer(14.5, 225962, nil, nil, nil, 3)
@@ -68,12 +69,22 @@ local timerDrainLifeCD				= mod:NewCDNPTimer(16.8, 204896, nil, nil, nil, 3)--16
 local timerBrutalAssaultCD			= mod:NewCDNPTimer(20.6, 201139, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerDrinkPotionCD			= mod:NewCDNPTimer(21.8, 200784, nil, nil, nil, 5)
 local timerSicBatsCD				= mod:NewCDNPTimer(21.8, 203163, nil, nil, nil, 5)
-local timerCoupdeGraceCD			= mod:NewCDNPTimer(9.7, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerRavensDiveCD				= mod:NewCDNPTimer(16.9, 214001, nil, nil, nil, 3)
+local timerCoupdeGraceCD			= mod:NewCDNPTimer(8.4, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerRavensDiveCD				= mod:NewCDNPTimer(16, 214001, nil, nil, nil, 3)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
 local blitzStacks = {}
+
+--"<2.04 23:10:40> [BOSS_KILL] 1832#Amalgam of Souls", -- [27]
+--"<2.07 23:10:40> [CLEU] UNIT_DIED##nil#Creature-0-4225-1501-17971-98542-00007A7FD4#Amalgam of Souls#-1#false#nil#nil", -- [28]
+--"<10.62 23:10:49> [CHAT_MSG_MONSTER_SAY] The darkness... it is gone.#Lady Velandras Ravencrest###Omegal##0#0##0#2108#nil#0#false#false#false#false", -- [37]
+--"<15.93 23:10:54> [CHAT_MSG_MONSTER_YELL] You... aren't the ones who did this?#Lord Etheldrin Ravencrest###Omegal##0#0##0#2109#nil#0#false#false#false#false", -- [38]
+--"<29.29 23:11:07> [CHAT_MSG_MONSTER_SAY] I... understand now. You... you must find Kur'talos. You must put a stop to this.#Lord Etheldrin Ravencrest###Darksøl##0#0##0#2110#nil#0#false#false#false#false", -- [39]
+--"<39.20 23:11:17> [ZONE_CHANGED_INDOORS] Black Rook Hold#Black Rook Hold#Hidden Passageway", -- [41]
+function mod:StartFirstRP()
+	timerRP:Start(35)--Adjusted based on twitch streams
+end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -160,7 +171,7 @@ function mod:SPELL_CAST_START(args)
 		warnPhasedExplosion:Show()
 	elseif spellId == 200291 then
 		timerKnifeDanceCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 6) then
+		if self:AntiSpam(5, 6) then
 			warnKnifeDance:Show()
 			warnKnifeDance:Play("crowdcontrol")
 		end
@@ -169,7 +180,7 @@ function mod:SPELL_CAST_START(args)
 		--ie it'll recast after 4.8 seconds if this cast is stopped
 		--But if it finishes casting, goes on ?? second CD
 		timerDrinkPotionCD:Start(4.8, args.sourceGUID)
-		if self:AntiSpam(3, 6) then
+		if self:AntiSpam(3.5, 6) then
 			warnDrinkPotion:Show()
 			warnDrinkPotion:Play("crowdcontrol")
 		end
@@ -187,7 +198,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 200343 then
 		timerArrowBarrageCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 6) then
+		if self:AntiSpam(5, 6) then
 			warnArrowBarrage:Show()
 			warnArrowBarrage:Play("crowdcontrol")
 		end
@@ -257,7 +268,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:SPELL_AURA_APPLIED(args)
+function mod:SPELL_AURA_REMOVED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 200248 then

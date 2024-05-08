@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "mythic,challenge"
 
-mod:SetRevision("20220217011830")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(114895)
 mod:SetEncounterID(2031)
 mod:SetUsedIcons(1)
@@ -47,12 +47,12 @@ local timerFearCD					= mod:NewCDTimer(43, 228837, nil, nil, nil, 2)--43-46
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
-mod:AddSetIconOption("SetIconOnIgnite", 228796, true, false, {1})
+mod:AddSetIconOption("SetIconOnIgnite", 228796, true, 0, {1})
 mod:AddInfoFrameOption(228829, true)
 
 mod.vb.interruptCount = 0
 
-local charredEarth, burningBones, filteredDebuff = DBM:GetSpellInfo(228808), DBM:GetSpellInfo(228829), DBM:GetSpellInfo(228796)
+local charredEarth, burningBones, filteredDebuff = DBM:GetSpellName(228808), DBM:GetSpellName(228829), DBM:GetSpellName(228796)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)

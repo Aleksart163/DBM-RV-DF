@@ -1,5 +1,5 @@
 ## Interface: 100107
-## X-Min-Interface: 80000
+## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (Cata)|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Groupe-Cata|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Gruppe-Cata|r

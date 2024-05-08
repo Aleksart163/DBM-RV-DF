@@ -132,7 +132,7 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
-
+	SkovaldRP		= "Nein! Auch ich habe mich bewiesen, Odyn. Ich bin Gottkönig Skovald! Diese Sterblichen werden mir die Aegis nicht streitig machen!"
 })
 
 -----------------------
@@ -141,7 +141,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1489)
 
 L:SetMiscLocalization({
-	tempestModeMessage		=	"Nicht Orkanabfolge: %s. Prüfe erneut in 8 Sekunden."
+	tempestModeMessage		=	"Nicht Orkanabfolge: %s. Prüfe erneut in 8 Sekunden.",
+	OdynRP					=	"Höchst beeindruckend! Ich hielt die Kräfte der Valarjar stets für unerreicht... und dennoch steht Ihr hier vor mir.."
 })
 
 -----------------------
@@ -151,14 +152,6 @@ L = DBM:GetModLocalization("HoVTrash")
 
 L:SetGeneralLocalization({
 	name =	"Trash der Hallen der Tapferkeit"
-})
-
-L:SetMiscLocalization({
-	RPSolsten 	= "Ihr entweiht dieses Ritual mit Eurer Anwesenheit, Sterbliche!",
-	RPSolsten2 	= "Hyrja... der Zorn des Sturms dient Eurem Wort!",
-	RPOlmyr 	= "Ihr werdet Hyrjas Aufstieg nicht stören!",
-	RPOlmyr2 	= "Das Licht erstrahlt auf ewig in Euch, Hyrja!",
-	RPOdyn 		= "Höchst beeindruckend! Ich hielt die Kräfte der Valarjar stets für unerreicht... und dennoch steht Ihr hier vor mir."
 })
 
 -----------------------

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,mythic,challenge"
 
-mod:SetRevision("20230521191200")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(113971)
 mod:SetEncounterID(1954)
 --mod:SetUsedIcons(1)
@@ -40,7 +40,7 @@ local timerHolyWrath				= mod:NewCastTimer(10, 227823, nil, nil, nil, 4, nil, DB
 mod:AddRangeFrameOption(8, 227809)--TODO, keep looking for a VALID 6 yard item/spell
 mod:AddInfoFrameOption(227817, true)
 
-local sacredGround = DBM:GetSpellInfo(227789)
+local sacredGround = DBM:GetSpellName(227789)
 
 function mod:OnCombatStart(delay)
 	timerSacredGroundCD:Start(10.9)

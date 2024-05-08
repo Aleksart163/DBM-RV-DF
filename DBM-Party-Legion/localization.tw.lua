@@ -149,7 +149,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		="不是耀眼風暴循環: %s。8秒後重新檢查。"
+	tempestModeMessage		="不是耀眼風暴循環: %s。8秒後重新檢查。",
+	OdynRP					= "了不起！"
 })
 
 -----------------------

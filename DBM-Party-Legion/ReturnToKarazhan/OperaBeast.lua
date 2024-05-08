@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,mythic,challenge"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240428124541")
 mod:SetCreatureID(114329, 114522, 114330, 114328)
 mod:SetEncounterID(1957)--Shared (so not used for encounter START since it'd fire 3 mods)
 mod:DisableESCombatDetection()--However, with ES disabled, EncounterID can be used for BOSS_KILL/ENCOUNTER_END
@@ -54,10 +54,10 @@ local timerDinnerBellCD				= mod:NewCDTimer(10.9, 227987, nil, nil, nil, 4, nil,
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
-mod:AddSetIconOption("SetIconOnDusting", 228221, true, false, {1})
+mod:AddSetIconOption("SetIconOnDusting", 228221, true, 0, {1})
 --mod:AddInfoFrameOption(198108, false)
 
-local burningBlaze = DBM:GetSpellInfo(228193)
+local burningBlaze = DBM:GetSpellName(228193)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)

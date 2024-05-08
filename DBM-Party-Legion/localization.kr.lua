@@ -65,6 +65,9 @@ L:SetGeneralLocalization({
 	name =	"어둠심장 숲 일반몹"
 })
 
+L:SetMiscLocalization({
+	GlaidalisRP	= "타락한 자들아... 너희 피에서 악몽의 냄새가 난다. 이 숲에서 꺼지지 않으면, 자연의 분노를 맛보게 되리라!"
+})
 
 -----------------------
 -- <<<Eye of Azshara>>> --
@@ -149,7 +152,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		=	"폭풍우 시퀀스 아님: %s. 8초 후 다시 검사합니다."
+	tempestModeMessage		=	"폭풍우 시퀀스 아님: %s. 8초 후 다시 검사합니다.",
+	OdynRP					= "정말 놀랍군! 발라리아르의 힘에 견줄 만큼 강력한 자를 보게 될 줄은 몰랐거늘, 이렇게 너희가 나타나다니."
 })
 
 -----------------------
@@ -608,4 +612,3 @@ L = DBM:GetModLocalization("SoTTrash")
 L:SetGeneralLocalization({
 	name =	"삼두정의 권좌 일반몹"
 })
-

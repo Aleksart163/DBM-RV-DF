@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1904, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(119542)--119883 Fel Portal Guardian 118834
 mod:SetEncounterID(2053)
 --mod:SetHotfixNoticeRev(15186)
@@ -30,7 +30,7 @@ local timerApproachingDoom			= mod:NewCastTimer(20, 241622, nil, nil, nil, 1)
 
 mod:AddInfoFrameOption(238410, true)
 
-local shield = DBM:GetSpellInfo(238410)
+local shield = DBM:GetSpellName(238410)
 
 function mod:OnCombatStart(delay)
 	timerFelsoulCleaveCD:Start(8.2-delay)

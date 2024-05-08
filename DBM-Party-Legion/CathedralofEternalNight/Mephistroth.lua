@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1878, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240426175442")
 mod:SetCreatureID(120793)
 mod:SetEncounterID(2039)
 
@@ -39,7 +39,7 @@ local timerShadowFadeCD				= mod:NewCDTimer(40, 233206, nil, nil, nil, 6)
 mod:AddRangeFrameOption(8, 234817)--5 yards probably too small, next lowest range on crap api is 8
 mod:AddInfoFrameOption(234217, true)
 
-local demonicUpheaval, darkSolitude = DBM:GetSpellInfo(233963), DBM:GetSpellInfo(234217)
+local demonicUpheaval, darkSolitude = DBM:GetSpellName(233963), DBM:GetSpellName(234217)
 local demonicUpheavalTable = {}
 local addsTable = {}
 
@@ -108,7 +108,7 @@ end
 
 function mod:UNIT_AURA_UNFILTERED(uId)
 	local hasDebuff = DBM:UnitDebuff(uId, demonicUpheaval)
-	local name = DBM:GetUnitFullName(uId)
+	local name = DBM:GetUnitFullName(uId) or "UNKNOWN"
 	if not hasDebuff and demonicUpheavalTable[name] then
 		demonicUpheavalTable[name] = nil
 	elseif hasDebuff and not demonicUpheavalTable[name] then
@@ -127,7 +127,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--"<51.81 19:21:30> [UNIT_SPELLCAST_SUCCEEDED] Unknown(??) [[nameplate1:Shadow of Mephistroth Cosmetic::3-3020-1677-21626-234034-00025D92FA:234034]]", -- [308]
 	if spellId == 234034 then--Only will trigger if nameplate is in range
 		local guid = UnitGUID(uId)
-		if not addsTable[guid] then
+		if guid and not addsTable[guid] then
 			addsTable[guid] = true
 			warnShadowAdd:Show()
 		end

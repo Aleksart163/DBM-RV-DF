@@ -136,6 +136,7 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
+	SkovaldRP		= 	"不！我也证明了自己，奥丁。我是神王斯科瓦尔德！这些凡人休想抢走我的圣盾！",
 	SkovaldRPTwo	= 	"如果这些所谓的“勇士”不肯放弃圣盾……那就让他们去死吧！"
 })
 
@@ -153,7 +154,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	tempestModeMessage		=	"非明光风暴序列: %s. 8秒后再检查."
+	tempestModeMessage		=	"非明光风暴序列: %s. 8秒后再检查.",
+	OdynRP					=	"真了不起！没想到还有人能对抗瓦拉加尔的力量……而他们就站在我面前。"
 })
 
 -----------------------
@@ -166,15 +168,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AGSkovaldTrash	= "与4个神王斯科瓦尔德的精英对话时自动开怪"
-})
-
-L:SetMiscLocalization({
-	RPSolsten 	= "你们的存在玷污了这场仪式，凡人！",
-	RPSolsten2 	= "赫娅……你来执掌风暴的怒火！",
-	RPOlmyr 	= "你休想妨碍赫娅的晋升！",
-	RPOlmyr2 	= "愿圣光永远照耀你，赫娅！",
-	RPOdyn 		= "真了不起！没想到还有人能对抗瓦拉加尔的力量……而他们就站在我面前。"
+	AGSkovaldTrash	= "与4个神王斯科瓦尔德的精英对话时自动开怪",
+	AGStartOdyn		= "与奥丁对话时自动开怪"
 })
 
 -----------------------
