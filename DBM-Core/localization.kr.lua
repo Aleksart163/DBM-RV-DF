@@ -165,7 +165,7 @@ L.WHISPER_COMBAT_END_KILL_STATS		= "%s님이 %s 전투에서 승리했습니다!
 L.WHISPER_COMBAT_END_WIPE_AT			= "%s님이 %s %s에서 전멸했습니다."
 L.WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s님이 %s %s에서 전멸했습니다. 이 난이도에서 총 %d회 전멸했습니다."
 --Scenarios (no percents. words like "fighting" or "wipe" changed to better fit scenarios)
-L.AUTO_RESPOND_WHISPER_SCENARIO		= "%s님이 %s 시나리오를 진행중입니다. (%d/%d 생존)"
+L.AUTO_RESPOND_WHISPER_SCENARIO		= "%s님은 %s 시나리오를 진행중입니다. (%d/%d 생존)"
 L.WHISPER_SCENARIO_END_KILL			= "%s님이 %s 시나리오를 완료했습니다!"
 L.WHISPER_SCENARIO_END_KILL_STATS	= "%s님이 %s 시나리오를 완료했습니다! 이 난이도를 %d회 완료했습니다!"
 L.WHISPER_SCENARIO_END_WIPE			= "%s님이 %s 시나리오를 완료하지 못했습니다."
@@ -279,7 +279,8 @@ L.TIMER_USAGE	= {
 }
 
 L.ERROR_NO_PERMISSION				= "이 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
-L.TIME_TOO_SHORT					= "풀링 타이머는 3초 이상으로 설정해야 합니다."
+L.PULL_TIME_TOO_SHORT					= "풀링 타이머는 3초 이상으로 설정해야 합니다."
+L.PULL_TIME_TOO_LONG							= "풀링 타이머는 60초 이상 설정할 수 없습니다."
 
 L.BREAK_USAGE				= "쉬는 시간은 60분을 초과할 수 없습니다. 쉬는 시간은 초단위가 아니라 분단위로 입력해야 합니다."
 L.BREAK_START				= "쉬는 시간 시작 -- %s 받았습니다! (%s|1이;가; 전송)"

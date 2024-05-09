@@ -283,7 +283,8 @@ L.TIMER_USAGE	= {
 }
 
 L.ERROR_NO_PERMISSION		= "No tienes permiso para hacer eso."
-L.TIME_TOO_SHORT			= "El temporizador de llamada debe durar más de 3 segundos."
+L.PULL_TIME_TOO_SHORT			= "El temporizador de llamada debe durar más de 3 segundos."
+L.PULL_TIME_TOO_LONG							= "Pull timer cannot be longer than 60 seconds"
 
 L.BREAK_USAGE				= "El temporizador de descanso no puede durar más de 60 minutos. Asegúrate de que has escrito el tiempo en minutos y no en segundos."
 L.BREAK_START				= "El descanso inicia ahora. ¡Tienes %s! (Enviado por %s)"
@@ -380,7 +381,7 @@ L.AUTO_SPEC_WARN_TEXTS.dodge		= "%s - ¡Esquiva!"
 L.AUTO_SPEC_WARN_TEXTS.dodgecount	= "%s (%%s) - ¡Esquiva!"
 L.AUTO_SPEC_WARN_TEXTS.dodgeloc		= "%s - ¡Esquiva por %%s!"
 L.AUTO_SPEC_WARN_TEXTS.moveaway		= "%s - ¡Aléjate de los demás!"
-L.AUTO_SPEC_WARN_TEXTS.moveawaycount= "%s (%%s) - ¡Aléjate de los demás"
+L.AUTO_SPEC_WARN_TEXTS.moveawaycount= "%s (%%s) - ¡Aléjate de los demás!"
 L.AUTO_SPEC_WARN_TEXTS.moveto		= "%s - ¡Ve a >%%s<!"
 L.AUTO_SPEC_WARN_TEXTS.soak			= "%s - ¡Absorbe!"
 L.AUTO_SPEC_WARN_TEXTS.soakcount	= "%s - ¡Absorbe! (%%s)"

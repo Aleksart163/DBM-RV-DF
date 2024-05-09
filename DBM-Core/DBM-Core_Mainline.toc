@@ -1,15 +1,15 @@
-## Interface: 100107
-## X-Min-Interface: 100107
+## Interface: 100207
+## X-Min-Interface: 100207
 
-## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Main Core|r
-## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0核心|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Ядро|r|cffffe00a>|r |cff69ccf0Основной модуль|r
-## Title-itIT:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Base|r
-## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0核心|r
-## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0핵심 모듈|r
-## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
-## Title-esMX:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
-## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Noyau|r
+## Title:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Main Core|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0核心|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Ядро|r|cffffe00a>|r |cff69ccf0Основной модуль|r
+## Title-itIT:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Base|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0核心|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0핵심 모듈|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
+## Title-esMX:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Núcleo|r
+## Title-frFR:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Noyau|r
 ## Notes: Deadly Boss Mods
 ## Dependencies: DBM-StatusBarTimers
 ## OptionalDependencies: LibStub, CallbackHandler-1.0, LibSharedMedia-3.0, LibChatAnims, LibDBIcon-1.0, LibDeflate, LibSerialize, LibSpecialization
@@ -19,11 +19,11 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 10.2.36
+## Version: 10.2.39
 ## X-Curse-Project-ID: 3358
 ## X-WoWI-ID: 8814
 ## X-Wago-ID: qv633o6b
-## X-Website: https://github.com/Aleksart163/DBM-RV-DF
+## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
@@ -61,6 +61,11 @@ commonlocal.kr.lua
 commonlocal.ru.lua
 
 # Pre-core modules
+modules\objects\PrototypeRegistry.lua
+modules\objects\GameVersion.lua
+modules\objects\StringUtils.lua
+modules\objects\TableUtils.lua
+modules\objects\StandardFont.lua
 modules\Modules.lua
 
 modules\SpecRole.lua
@@ -86,4 +91,12 @@ modules\Notes.lua
 modules\Sounds.lua
 modules\UpdateReminder.lua
 
+modules\objects\Difficulties.lua
+modules\objects\BossMod.lua
 modules\objects\Localization.lua
+modules\objects\VoicePacks.lua
+modules\objects\Timer.lua
+modules\objects\EnrageTimer.lua
+modules\objects\Announce.lua
+modules\objects\SpecialWarning.lua
+modules\objects\Yell.lua

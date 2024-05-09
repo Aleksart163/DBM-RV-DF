@@ -4,11 +4,10 @@ local private = select(2, ...)
 local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 
 ---@class DevToolsModule: DBMModule
-local module = private:NewModule("DevTools")
+local module = private:NewModule("DevToolsModule")
 
 ---@class DBM
-local DBM = private.DBM or {}
-private.DBM = DBM
+local DBM = private:GetPrototype("DBM")
 
 function module:OnModuleLoad()
 	self:OnDebugToggle()
@@ -27,7 +26,7 @@ do
 	end
 
 	function module:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-		local spellName = DBM:GetSpellInfo(spellId)
+		local spellName = DBM:GetSpellName(spellId)
 		DBM:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..spellId..")", 3)
 	end
 
@@ -64,8 +63,12 @@ do
 end
 
 do
-	--To speed up creating new mods.
 	local EJ_SetDifficulty, EJ_GetEncounterInfoByIndex = EJ_SetDifficulty, EJ_GetEncounterInfoByIndex
+	---Used to scan a range of instance IDs to find right one.
+	---<br>Returns GetRealZoneText for entire range
+	---@param low number?
+	---@param peak number?
+	---@param contains string?
 	function DBM:FindDungeonMapIDs(low, peak, contains)
 		local start = low or 1
 		local range = peak or 4000
@@ -80,6 +83,11 @@ do
 		end
 	end
 
+	---Used to scan a range of journal IDs to find right one.
+	---<br>Returns EJ_GetInstanceInfo for entire range
+	---@param low number?
+	---@param peak number?
+	---@param contains string?
 	function DBM:FindInstanceIDs(low, peak, contains)
 		local start = low or 1
 		local range = peak or 3000
@@ -94,6 +102,11 @@ do
 		end
 	end
 
+	---Used to scan a range of instance queue IDs to find right one.
+	---<br>Returns GetDungeonInfo for entire range
+	---@param low number?
+	---@param peak number?
+	---@param contains string?
 	function DBM:FindScenarioIDs(low, peak, contains)
 		local start = low or 1
 		local range = peak or 3000
