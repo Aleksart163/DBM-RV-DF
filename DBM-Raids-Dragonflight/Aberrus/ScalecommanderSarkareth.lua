@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2520, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240225174111")
+mod:SetRevision("20240502024538")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -250,7 +250,7 @@ local allTimers = {
 			--Void Slash
 			[408422] = {21, 36.2, 37.5, 85.0, 11.2, 61.3},
 			--Scouring Eternity
-			[403625] = {46.2, 77.7, 80.2, 77.9},
+			[403625] = {46.2, 76.5, 80.2, 77.9},
 			--Embrace of Nothingness
 			[403517] = {24.7, 111.2, 50.0},
 		},
@@ -386,14 +386,14 @@ function mod:OnCombatStart(delay)
 	if self.Options.InfoFrame then
 		if self.Options.InfoFrameBehaviorTwo == "OblivionOnly" then
 			oblivionDisabled = false
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(401951))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(401951))
 			DBM.InfoFrame:Show(20, "table", oblivionStacks, 1)
 		else
 			if self.Options.InfoFrameBehaviorTwo == "HowlOnly" then
 				oblivionDisabled = true--Means in phase 2 and 3 infoframe just closes
 				--If hybrid is enabled, oblivionDisabled will be set to false on stage 2 trigger
 			end
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(401383))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(401383))
 			DBM.InfoFrame:Show(20, "playerdebuffstacks", 401383)--Stacks aren't in combat log so has to use less efficient UnitAura method
 		end
 	end
@@ -971,7 +971,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			if self.Options.InfoFrameBehaviorTwo == "Hybrid" then
 				--Transition from Howl to Oblivion for phase 2 and phase 3
 				oblivionDisabled = false
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(401951))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(401951))
 				DBM.InfoFrame:Show(20, "table", oblivionStacks, 1)
 			else
 				--Just close it out, It was howl only

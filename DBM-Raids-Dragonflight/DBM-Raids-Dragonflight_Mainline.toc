@@ -1,6 +1,6 @@
 ## Interface: 100107
 ## X-Min-Interface: 100107
-## Version: 10.2.35
+## Version: 10.2.39
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010Raids (DF)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010공격대 (용군단)|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010團隊副本-巨龍崛起|r
@@ -44,14 +44,3 @@ VaultoftheIncarnates\KurogGrimtotem.lua
 VaultoftheIncarnates\BroodkeeperDiurna.lua
 VaultoftheIncarnates\RaszageththeStormEater.lua
 VaultoftheIncarnates\VaultoftheIncarnatesTrash.lua
-
-Aberrus\Kazzara.lua
-Aberrus\TheAmalgamationChamber.lua
-Aberrus\TheForgottenExperiments.lua
-Aberrus\AssaultoftheZaqali.lua
-Aberrus\Rashok.lua
-Aberrus\Zskarn.lua
-Aberrus\Magmorax.lua
-Aberrus\EchoofNeltharion.lua
-Aberrus\ScalecommanderSarkareth.lua
-Aberrus\AberrusTrash.lua

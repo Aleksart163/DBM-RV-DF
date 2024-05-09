@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2565, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240420060225")
+mod:SetRevision("20240428104643")
 mod:SetCreatureID(209090)--Primary ID
 mod:SetEncounterID(2786)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -58,7 +58,7 @@ local timerFallingStarsCD							= mod:NewNextCountTimer(49, 420236, nil, nil, ni
 local timerMassEntanglementCD						= mod:NewNextCountTimer(49, 424495, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3)
 local timerOwlCD									= mod:NewNextCountTimer(20, 425576, L.Feathers.." (%s)", nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Short name "Feathers"
 
-mod:AddSetIconOption("SetIconOnFieryGrowth", 424581, true, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnFieryGrowth", 424581, true, 0, {1, 2, 3, 4})
 ----Moonkin of the Flame
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27495))
 local warnIncarnationMoonkin						= mod:NewCountAnnounce(420540, 2)
