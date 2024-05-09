@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20240507051050")
 mod:SetCreatureID(190484, 190485)
 mod:SetEncounterID(2623)
+mod:SetUsedIcons(8)
 mod:SetBossHPInfoToHighest()
 mod:SetHotfixNoticeRev(20230109000000)
 --mod:SetMinSyncRevision(20211203000000)
@@ -40,16 +41,16 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25369))
 local warnWindsofChange							= mod:NewCountAnnounce(381517, 3, nil, nil, 227878)--Not actually a count timer, but has best localized text
 local warnCloudburst							= mod:NewSpellAnnounce(385558, 3)
 
-local specWarnStormslam							= mod:NewSpecialWarningDefensive(381512, nil, nil, nil, 3, 4) --Сметающая буря
-local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381512, "RemoveMagic", nil, nil, 3, 2) --Сметающая буря
+local specWarnStormslam							= mod:NewSpecialWarningDefensive(381515, nil, nil, nil, 3, 4) --Сметающая буря
+local specWarnStormslamDispel					= mod:NewSpecialWarningDispel(381515, "RemoveMagic", nil, nil, 3, 2) --Сметающая буря
 local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "SpellCaster", nil, nil, 2, 2, 4) --Прерывающая гроза
 
 local timerWindsofChangeCD						= mod:NewCDCountTimer(15.8, 381517, 227878, nil, nil, 3)--Not actually a count timer, but has best localized text
-local timerStormslamCD							= mod:NewCDTimer(17, 381512, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Сметающая буря
+local timerStormslamCD							= mod:NewCDTimer(17, 381515, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Сметающая буря
 local timerCloudburstCD							= mod:NewCDTimer(18.8, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
 
 local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
-local yellStormslam								= mod:NewShortYell(381512, nil, nil, nil, "YELL")
+local yellStormslam								= mod:NewShortYell(381515, nil, nil, nil, "YELL") --Сметающая буря
 
 mod:AddSetIconOption("SetIconOnStormslam", 381515, true, 0, {8})
 mod:AddInfoFrameOption(381862, false)--Infernocore
@@ -133,7 +134,7 @@ function mod:SPELL_CAST_START(args)
 		warnWindsofChange:Show(directions[self.vb.windDirection])
 	elseif spellId == 381512 then
 		self:BossTargetScanner(args.sourceGUID, "StormslamTarget", 0.1, 2)
-		timerStormslamCD:Start(ё, args.sourceGUID)--self:GetStage(1) and 10 or 14
+		timerStormslamCD:Start(nil, args.sourceGUID)--self:GetStage(1) and 10 or 14
 	elseif spellId == 385558 or spellId == 381516 then
 		if spellId == 381516 and self.Options.SpecWarn381516cast then--Mythic
 			specWarnInterruptingCloudburst:Show()
