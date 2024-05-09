@@ -33,7 +33,6 @@ local warnTimeSink								= mod:NewTargetAnnounce(377405, 1)
 
 local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil, 2, 2)
 local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2)
-local yellTimeSink								= mod:NewYell(377405)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8)
 local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 1, 2)
 
@@ -43,6 +42,8 @@ local timerRewindTimeflow						= mod:NewBuffActiveTimer(14, 376208, nil, nil, ni
 local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2)
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON)
 local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellTimeSink								= mod:NewYell(377405, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(5, 377405)
 

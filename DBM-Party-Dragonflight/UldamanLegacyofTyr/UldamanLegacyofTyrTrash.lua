@@ -41,7 +41,6 @@ local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, nil, nil, nil, 4
 local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2)
 local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2)
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
-local yellTrappedInStone					= mod:NewYell(369366)
 local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 1, 2)
 local specWarnTrappedinStone				= mod:NewSpecialWarningDispel(369366, "RemoveCurse", nil, nil, 1, 2)
 local specWarnDiseasedbite					= mod:NewSpecialWarningDispel(369818, "RemoveDisease", nil, nil, 1, 2)
@@ -71,6 +70,8 @@ local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3)
 local timerThunderousClapCD					= mod:NewCDNPTimer(19, 381593, nil, nil, nil, 2)
 local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerHastenCD							= mod:NewCDNPTimer(23, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+
+local yellTrappedInStone					= mod:NewYell(369366, nil, nil, nil, "YELL")
 
 --local playerName = UnitName("player")
 

@@ -34,14 +34,15 @@ local warnEarthenShards							= mod:NewTargetNoFilterAnnounce(372718, 3, nil, "H
 
 local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, nil, nil, 3, 2)
 local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2)
-local yellResonatingOrb							= mod:NewShortPosYell(382071)
-local yellResonatingOrbFades					= mod:NewIconFadesYell(382071)
 local specWarnCrushingStomp						= mod:NewSpecialWarningCount(372701, nil, nil, nil, 2, 2)
 
 local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerResonatingOrbCD						= mod:NewCDTimer(25.6, 382071, nil, nil, nil, 3, nil, nil, true)--25-30ish
 local timerCrushingStompCD						= mod:NewCDCountTimer(12.1, 372701, nil, nil, nil, 2, nil, nil, true)
 local timerEarthenShardsCD						= mod:NewCDTimer(6, 372718, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON, true)
+
+local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL")
+local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3})
 

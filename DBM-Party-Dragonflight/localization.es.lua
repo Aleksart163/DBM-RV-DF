@@ -284,3 +284,64 @@ L = DBM:GetModLocalization("HallsofInfusionTrash")
 L:SetGeneralLocalization({
 	name =	"Pulls de Salas de Infusión"
 })
+
+-----------------------
+-- Chronikar --
+-----------------------
+--L= DBM:GetModLocalization(2521)
+
+-----------------------
+-- Manifested Timeways --
+-----------------------
+L= DBM:GetModLocalization(2528)
+
+L:SetMiscLocalization({
+	PrePullMTRP	= "¡Ni siquiera el Aspecto del Tiempo puede perturbar las líneas temporales!"
+})
+
+-----------------------
+-- Blight of Galakrond --
+-----------------------
+--L= DBM:GetModLocalization(2535)
+
+-----------------------
+-- Iridikron the Stonescaled --
+-----------------------
+--L= DBM:GetModLocalization(2537)
+
+-----------------------
+-- Tyr, the infinite Keeper --
+-----------------------
+--L= DBM:GetModLocalization(2526)
+
+-----------------------
+-- Morchie --
+-----------------------
+--L= DBM:GetModLocalization(2536)
+
+-----------------------
+-- Time-Lost Battlefield  --
+-----------------------
+--L= DBM:GetModLocalization(2533)--Alliance ID used for both factions (2534 is horde id)
+
+L:SetGeneralLocalization({
+--	name =	"Time-Lost Battlefield"--Manual local because auto inserts Alliance or horde to name and mod combines them since singular encounter ID
+})
+
+L:SetMiscLocalization({
+--	customWAMessage = "Используйте |cff69ccf0%s|r для |cff4565ffАльянса|r и |cff69ccf0%s|r для |cffff0000Орды|r"
+})
+
+-----------------------
+-- Chrono-Lord Deios --
+-----------------------
+--L= DBM:GetModLocalization(2538)
+
+---------
+--Trash--
+---------
+--L = DBM:GetModLocalization("DawnoftheInfiniteTrash")
+
+L:SetGeneralLocalization({
+--	name =	"Трэш мобы Рассвет Бесконечности"
+})

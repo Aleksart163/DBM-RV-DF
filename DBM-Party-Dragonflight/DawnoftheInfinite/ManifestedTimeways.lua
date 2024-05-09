@@ -124,11 +124,11 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
 
---[[function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.PrePullRP or msg:find(L.PrePullRP)) then
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.PrePullMTRP or msg:find(L.PrePullMTRP)) then
 		self:SendSync("MTRP")--Syncing to help unlocalized clients
 	end
-end]]
+end
 
 function mod:OnSync(msg)
 	if msg == "MTRP" and self:AntiSpam(10, 2) then

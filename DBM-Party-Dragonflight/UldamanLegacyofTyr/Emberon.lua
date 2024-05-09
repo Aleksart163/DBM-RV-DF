@@ -36,13 +36,14 @@ local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false)--In cas
 
 local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2)
-local yellUnstableEmbers						= mod:NewYell(369110)
-local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110)
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 1, 2)
 
 local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6)--Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3)
 local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellUnstableEmbers						= mod:NewYell(369110, nil, nil, nil, "YELL")
+local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL")
 
 mod.vb.addsRemaining = 0
 mod.vb.embersCount = 0

@@ -317,7 +317,11 @@ L:SetOptionLocalization({
 -----------------------
 -- Manifested Timeways --
 -----------------------
---L= DBM:GetModLocalization(2528)
+L= DBM:GetModLocalization(2528)
+
+L:SetMiscLocalization({
+	PrePullMTRP	= "Даже Аспект Времени не должен менять временные пути!"
+})
 
 -----------------------
 -- Blight of Galakrond --

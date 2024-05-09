@@ -48,7 +48,6 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(24782))
 local warnRicochetingShield						= mod:NewTargetNoFilterAnnounce(369677, 3)
 
 local specWarnRicochetingShield					= mod:NewSpecialWarningYou(369677, nil, nil, nil, 1, 2)
-local yellRicochetingShield						= mod:NewYell(369677)
 local specWarnDefensiveBulwark					= mod:NewSpecialWarningInterrupt(369602, "HasInterrupt", nil, nil, 1, 2)
 
 local timerRicochetingShieldCD					= mod:NewCDTimer(16.9, 369677, nil, nil, nil, 3)
@@ -58,6 +57,8 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(24783))
 local timerLongboatRaidCD						= mod:NewCDTimer(27.4, 375924, nil, nil, nil, 6)
 
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377825, nil, nil, nil, 1, 8)
+
+local yellRicochetingShield						= mod:NewYell(369677, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(5, 369677)
 
