@@ -663,6 +663,7 @@ end
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
+--Свежие прошляпы Мурчаля Прошляпенко--
 local function sendSync(protocol, prefix, msg)
 	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
@@ -680,39 +681,9 @@ local function sendSync(protocol, prefix, msg)
 		if sendChannel == "SOLO" then
 			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
 		else
-		--	SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel)
-			--Per https://warcraft.wiki.gg/wiki/Patch_10.2.7/API_changes#Addon_messaging_changes
-			--We want to start watching for situations DBM exceeds it's 10 messages per 10 seconds limits
-			--While at it, catch other failure types too
-			local result = select(-1, SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel))
-			if type(result) == "number" and result ~= 0 then
-				DBM:Debug("sendSync failed with a result of " ..result.. " for prefix " .. prefix)
-			end
-		end
-	end
-end
-private.sendSync = sendSync
-
---На всякий случай для будущих прошляпов Мурчаля--
---[[local function sendSync(protocol, prefix, msg)
-	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
-		msg = msg or ""
-		local fullname = playerName .. "-" .. normalizedPlayerRealm
-		local sendChannel = "SOLO"
-		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
-			sendChannel = "INSTANCE_CHAT"
-		else
-			if IsInRaid() then
-				sendChannel = "RAID"
-			elseif IsInGroup(1) then
-				sendChannel = "PARTY"
-			end
-		end
-		if sendChannel == "SOLO" then
-			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
-		else
 			SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel)
-			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+		--	handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+			handleSync(sendChannel, playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
 			if (prefix == "V" or prefix == "H") and not isRetail then
 				--Also send V and H syncs to old DBM versions so we can force disable them and get them out of circulation
 				local oldPrefix = isWrath and "D5WC" or "D5C"
@@ -721,28 +692,14 @@ private.sendSync = sendSync
 		end
 	end
 end
-private.sendSync = sendSync]]
+private.sendSync = sendSync
 
 ---Customized syncing specifically for guild comms
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
-
+--Свежие прошляпы Мурчаля Прошляпенко--
 local function sendGuildSync(protocol, prefix, msg)
-	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
-		msg = msg or ""
-		local fullname = playerName .. "-" .. normalizedPlayerRealm
-	--	SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "GUILD")--Even guild syncs send realm so we can keep antispam the same across realid as well.
-		local result = select(-1, SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "GUILD"))--Even guild syncs send realm so we can keep antispam the same across realid as well.
-		if type(result) == "number" and result ~= 0 then
-			DBM:Debug("sendGuildSync failed with a result of " ..result.. " for prefix " .. prefix)
-		end
-	end
-end
-private.sendGuildSync = sendGuildSync
-
---На всякий случай для будущих прошляпов Мурчаля--
---[[local function sendGuildSync(protocol, prefix, msg)
 	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -754,39 +711,14 @@ private.sendGuildSync = sendGuildSync
 		end
 	end
 end
-private.sendGuildSync = sendGuildSync]]
+private.sendGuildSync = sendGuildSync
 
 ---Custom sync function that should only be used for user generated sync messages
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
+--Свежие прошляпы Мурчаля Прошляпенко--
 local function sendLoggedSync(protocol, prefix, msg)
-	if dbmIsEnabled then
-		msg = msg or ""
-		local fullname = playerName .. "-" .. normalizedPlayerRealm
-		local sendChannel = "SOLO"
-		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
-			sendChannel = "INSTANCE_CHAT"
-		else
-			if IsInRaid() then
-				sendChannel = "RAID"
-			elseif IsInGroup(1) then
-				sendChannel = "PARTY"
-			end
-		end
-		if sendChannel == "SOLO" then
-			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
-		else
-			local result = select(-1, C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel))
-			if type(result) == "number" and result ~= 0 then
-				DBM:Debug("sendLoggedSync failed with a result of " ..result.. " for prefix " .. prefix)
-			end
-		end
-	end
-end
-
---На всякий случай для будущих прошляпов Мурчаля--
---[[local function sendLoggedSync(protocol, prefix, msg)
 	if dbmIsEnabled then
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -802,7 +734,7 @@ end
 			end
 		end
 	end
-end]]
+end
 
 ---Sync Object specifically for out in the world sync messages that have different rules than standard syncs
 ---@param self DBM
