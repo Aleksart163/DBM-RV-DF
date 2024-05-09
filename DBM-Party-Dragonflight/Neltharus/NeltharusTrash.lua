@@ -51,7 +51,6 @@ local specWarnConflagrantBattery			= mod:NewSpecialWarningDodge(372296, nil, nil
 local specWarnScorchingFusillade			= mod:NewSpecialWarningMoveAway(372543, nil, nil, nil, 1, 2)
 local specWarnMoteofCombustionYou			= mod:NewSpecialWarningYou(384161, nil, nil, nil, 1, 2)
 local specWarnBoldAmbush					= mod:NewSpecialWarningYou(372566, nil, nil, nil, 1, 2)
-
 local specWarnImbuedMagma					= mod:NewSpecialWarningDispel(372461, "RemoveMagic", nil, nil, 1, 2)
 local specWarnFiredUp						= mod:NewSpecialWarningDispel(371875, "RemoveEnrage", nil, nil, 2, 2)
 local specWarnMoltenCore					= mod:NewSpecialWarningInterrupt(378282, "HasInterrupt", nil, nil, 1, 2)

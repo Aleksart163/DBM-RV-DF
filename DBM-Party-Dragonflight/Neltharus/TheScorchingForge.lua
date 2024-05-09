@@ -38,8 +38,8 @@ local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, ni
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Tracked by all since it has 8 yard splash damage
 local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2)
 
-local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL")
 local yellBlazinAegis							= mod:NewYell(374842, nil, nil, nil, "YELL")
+local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL")
 local yellHeatedSwings							= mod:NewYell(374534, nil, nil, nil, "YELL")
 local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL")
 

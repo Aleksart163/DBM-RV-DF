@@ -36,13 +36,14 @@ local warnEnergyBomb							= mod:NewTargetAnnounce(374352, 3)
 local specWarnAstralBreath						= mod:NewSpecialWarningDodge(374361, nil, nil, nil, 2, 2)
 local specWarnPowerVacuum						= mod:NewSpecialWarningRun(388822, nil, nil, nil, 4, 2)
 local specWarnEnergyBomb						= mod:NewSpecialWarningMoveAway(374352, nil, nil, nil, 1, 2)
-local yellEnergyBomb							= mod:NewYell(374352)
-local yellEnergyBombFades						= mod:NewShortFadesYell(374352)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389007, nil, nil, nil, 1, 8)
 
 local timerAstralBreathCD						= mod:NewCDTimer(26.3, 374361, nil, nil, nil, 3)--26-32
 local timerPowerVacuumCD						= mod:NewCDTimer(21, 388822, nil, nil, nil, 2)--22-29
 local timerEnergyBombCD							= mod:NewCDTimer(14.1, 374352, nil, nil, nil, 3)--14.1-20
+
+local yellEnergyBomb							= mod:NewYell(374352, nil, nil, nil, "YELL")
+local yellEnergyBombFades						= mod:NewShortFadesYell(374352, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(389011, true)
 

@@ -197,7 +197,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnGaleArrow:Show()
 			specWarnGaleArrow:Play("defensive")
-		else
+		elseif self:AntiSpam(2, "GaleArrow") then
 			specWarnGaleArrow2:Show()
 			specWarnGaleArrow2:Play("watchstep")
 		end

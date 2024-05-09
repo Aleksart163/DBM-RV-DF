@@ -33,7 +33,6 @@ local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3)
 local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2)
 
 local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2)--Trap going out
-local yellEnsnaringTrap							= mod:NewYell(384148, nil, false)--Trap going out
 local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2)--Buff on mob
 local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, nil, nil, 4, 2)--Debuff on player
 local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInterrupt", nil, nil, 1, 2)
@@ -45,6 +44,8 @@ local timerMeatTossCD							= mod:NewCDTimer(21.8, 384416, nil, nil, nil, 3)
 local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1)
 --local timerMastersCallCD						= mod:NewCDTimer(35, 384638, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Doesn't seem to have an actual CD?
 local timerGutShotCD							= mod:NewCDTimer(18.2, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellEnsnaringTrap							= mod:NewYell(384148, nil, false, nil, "YELL")--Trap going out
 
 mod:AddRangeFrameOption(4, 384558)
 mod:AddNamePlateOption("NPAuraOnFixate", 384725)

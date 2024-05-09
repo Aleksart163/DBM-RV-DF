@@ -48,7 +48,6 @@ mod:AddSetIconOption("SetIconOnAdd", 386320, true, 5, {8})
 mod.vb.eruptionCount = 0
 mod.vb.shardsCount = 0
 mod.vb.addCount = 0
-local addsTimers = {6, 32.7, 40}
 
 function mod:OnCombatStart(delay)
 	self.vb.eruptionCount = 0
