@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2493, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108030027")
+mod:SetRevision("20240426070000")
 mod:SetCreatureID(190245)
 mod:SetEncounterID(2614)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
-mod:SetHotfixNoticeRev(20230226000000)
-mod:SetMinSyncRevision(20230226000000)
+mod:SetHotfixNoticeRev(20240426070000)
+mod:SetMinSyncRevision(20240426070000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -95,8 +95,8 @@ local timerIonizingChargeCD						= mod:NewCDNPTimer(10, 375630, nil, nil, nil, 3
 
 --mod:AddInfoFrameOption(361651, true)
 mod:AddNamePlateOption("NPFixate", 376330, true)
-mod:AddSetIconOption("SetIconOnMages", "ej25144", true, true, {6, 5, 4})
-mod:AddSetIconOption("SetIconOnStormbringers", "ej25139", true, true, {8, 7})
+mod:AddSetIconOption("SetIconOnMages", "ej25144", true, 0, {6, 5, 4})
+mod:AddSetIconOption("SetIconOnStormbringers", "ej25139", true, 0, {8, 7})
 
 mod:GroupSpells(385618, "ej25144", "ej25139")--Icon Marking with general adds announce
 --Stage Two: A Broodkeeper Scorned
