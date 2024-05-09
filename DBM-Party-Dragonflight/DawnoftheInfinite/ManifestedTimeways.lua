@@ -36,14 +36,15 @@ mod:RegisterEvents(
 local warnChronoFaded								= mod:NewTargetCountAnnounce(405696, 3)
 
 local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2)
-local yellChronofaded								= mod:NewShortPosYell(405696)
-local yellChronofadedFades							= mod:NewIconFadesYell(405696)
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
 local timerRP										= mod:NewRPTimer(13.3)
 local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 3)
+
+local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL")
+local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnChronoFaded", 405696, true, 0, {1, 2})
 
@@ -123,11 +124,11 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
 
-function mod:CHAT_MSG_MONSTER_YELL(msg)
+--[[function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.PrePullRP or msg:find(L.PrePullRP)) then
 		self:SendSync("MTRP")--Syncing to help unlocalized clients
 	end
-end
+end]]
 
 function mod:OnSync(msg)
 	if msg == "MTRP" and self:AntiSpam(10, 2) then

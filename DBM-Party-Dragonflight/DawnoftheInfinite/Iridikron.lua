@@ -39,7 +39,6 @@ local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1)
 local warnCataclysmicObliteration				= mod:NewSpellAnnounce(414184, 4)
 
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 2, 2)--Warn everyone
-local yellExtinctionBlast						= mod:NewYell(409261)--But have target of it do yell
 local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2)
 local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8)
@@ -50,6 +49,8 @@ local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2)
+
+local yellExtinctionBlast						= mod:NewYell(409261, nil, nil, nil, "YELL")--But have target of it do yell
 
 mod.vb.surgeCount = 0
 
@@ -130,11 +131,12 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --"<416.01 22:15:59> [CHAT_MSG_MONSTER_SAY] It looks kind of like the Dragon Soul, but even more ancient.#Chromie###Alphal##0#0##0#14600#nil#0#false#false#false#false", -- [2645]
 --"<423.68 22:16:07> [CHAT_MSG_MONSTER_YELL] A hunger lost to the ages. One which I shall reclaim!#Iridikron###Alphal##0#0##0#14601#nil#0#false#false#false#false", -- [2646]
 --"<437.69 22:16:21> [DBM_Debug] ENCOUNTER_START event fired: 2669 Iridikron 8 5#nil", -- [2655]
-function mod:CHAT_MSG_MONSTER_YELL(msg)
+
+--[[function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.PrePullRP or msg:find(L.PrePullRP)) then
 		self:SendSync("IridikronRP")--Syncing to help unlocalized clients
 	end
-end
+end]]
 
 function mod:OnSync(msg)
 	if msg == "IridikronRP" and self:AntiSpam(10, 2) then

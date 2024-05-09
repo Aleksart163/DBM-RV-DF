@@ -42,7 +42,6 @@ local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, ni
 local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, nil, 2, 2)
 local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, nil, 2, 2)
 local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil, nil, 1, 2)
-local yellSparkofTyr								= mod:NewShortPosYell(400681)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8)
 
 --These 3 are shared timers tied to Infinite Hand Technique
@@ -54,6 +53,8 @@ local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, nil, nil, nil
 local timerRP										= mod:NewRPTimer(8)
 local timerSparkofTyrCD								= mod:NewCDCountTimer(60.7, 400681, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, nil, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON)
+
+local yellSparkofTyr								= mod:NewShortPosYell(400681, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnSparkofTyr", 400681, true, 0, {1, 2})
 

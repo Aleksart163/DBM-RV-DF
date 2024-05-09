@@ -42,13 +42,11 @@ local warnCorruptedMind						= mod:NewTargetNoFilterAnnounce(418346, 4)
 
 local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, nil, nil, 1, 2)
 local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 1, 2)
-local yellCorrosion							= mod:NewYell(407406)
 local yellCorrosionFades					= mod:NewShortFadesYell(407406, nil, nil, nil, "YELL")--WHen countdown shows, it needs to be passed, so it's a share yell not an avoid one, IE red text
 local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 1, 2)
 local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, nil, 2, 2)
 local specWarnNecroticWinds					= mod:NewSpecialWarningDodgeCount(407978, nil, nil, nil, 1, 2)
 local specWarnNecrofrost					= mod:NewSpecialWarningSwitchCount(408029, "Dps", nil, nil, 1, 2)
-local yellNecrofrost						= mod:NewYell(408029, nil, nil, nil, "YELL")
 local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodgeCount(408141, nil, nil, nil, 1, 2)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
 
@@ -57,6 +55,9 @@ local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, nil, nil, 
 local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, nil, nil, nil, 2)
 local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, nil, nil, nil, 3)
+
+local yellCorrosion							= mod:NewYell(407406, nil, nil, nil, "YELL")
+local yellNecrofrost						= mod:NewYell(408029, nil, nil, nil, "YELL")
 
 mod.vb.corrosiveCount = 0
 mod.vb.reclaimCount = 0

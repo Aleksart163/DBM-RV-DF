@@ -52,17 +52,14 @@ local specWarnUntwist						= mod:NewSpecialWarningDodge(413529, nil, nil, nil, 2
 local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, nil, 2, 2)
 local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil, 2, 2)
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2)--High Prio
-local yellOrbofContemplation				= mod:NewShortYell(412129)--targets off a player, but everyone needs to dodge the orb
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
 local specWarnVolatileMortar				= mod:NewSpecialWarningDodge(407205, nil, nil, nil, 2, 2)
 local specWarnBronzeExhalation				= mod:NewSpecialWarningDodge(419351, nil, nil, nil, 2, 2)--High Prio
 local specWarnShroudingSandstorm			= mod:NewSpecialWarningDodge(412215, nil, nil, nil, 2, 2)--High Prio
 local specWarnBombingRun					= mod:NewSpecialWarningDodge(412156, nil, nil, nil, 2, 2)
 local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2)
-local yellEnervate							= mod:NewShortYell(415437)
 --local yellAstralBombFades					= mod:NewShortFadesYell(387843)
 local specWarnChronoburst					= mod:NewSpecialWarningDispel(415769, "RemoveMagic", nil, nil, 1, 2)
-local yellChronoburst						= mod:NewShortYell(415769)
 local specWarnEnervateDispel				= mod:NewSpecialWarningDispel(415437, "RemoveMagic", nil, nil, 1, 2)
 local specWarnBloom							= mod:NewSpecialWarningDispel(413544, "RemoveMagic", nil, nil, 1, 2)
 local specWarnInfiniteBoltVolley			= mod:NewSpecialWarningInterrupt(415770, "HasInterrupt", nil, nil, 1, 2)--High Prio
@@ -117,6 +114,10 @@ local timerVolatileMortarCD					= mod:NewCDNPTimer(19.5, 407205, nil, nil, nil, 
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
 local timerBronzeExhalationCD				= mod:NewCDNPTimer(19.8, 419351, nil, nil, nil, 3)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+
+local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL")--targets off a player, but everyone needs to dodge the orb
+local yellEnervate							= mod:NewShortYell(415437, nil, nil, nil, "YELL")
+local yellChronoburst						= mod:NewShortYell(415769, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AutoRift", true)
 

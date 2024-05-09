@@ -46,7 +46,7 @@ local yellIcyDevastator							= mod:NewShortYell(387151, nil, nil, nil, "YELL") 
 mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
 
 
-local vaultRuin = DBM:GetSpellInfo(388072)
+local vaultRuin = DBM:GetSpellName(388072)
 
 function mod:DevastatorTarget(targetname)
 	if not targetname then return end
