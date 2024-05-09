@@ -167,7 +167,7 @@ mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {8}) --Магн
 mod:AddSetIconOption("SetIconOnThunderousBlast", 386410, true, 0, {7}) --Громовой заряд
 mod:GroupSpells(386410, 391285)--Thunderous Blast and associated melted armor debuff
 
-local StaticField = DBM:GetSpellInfo(377662) 
+local StaticField = DBM:GetSpellName(377662) 
 --P1
 mod.vb.energyCount = 0--Reused for the 100 energy special in stage 1/2 and mythic storm eater mechanic in stage 3
 mod.vb.chargeCount = 0--Static Charge/Fulminating Charge

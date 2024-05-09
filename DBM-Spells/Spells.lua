@@ -140,7 +140,7 @@ mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
 
-local Rebirth = DBM:GetSpellInfo(20484) 
+local Rebirth = DBM:GetSpellName(20484) 
 local typeInstance = nil
 local DbmRV = "[DBM RV] "
 
