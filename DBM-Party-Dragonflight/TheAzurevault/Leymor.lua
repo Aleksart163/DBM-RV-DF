@@ -64,7 +64,6 @@ function mod:InfusedStrikeTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnInfusedStrike:Show()
 		specWarnInfusedStrike:Play("defensive")
-		yellArcaneExpulsion:Yell()
 	end
 end
 
