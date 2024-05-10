@@ -30,14 +30,15 @@ local warnVolatilePods				= mod:NewSpellAnnounce(273271, 3)
 local specWarnFesteringHarvest		= mod:NewSpecialWarningDodgeCount(259732, nil, nil, nil, 2, 2)
 local specWarnShockwave				= mod:NewSpecialWarningSpell(272457, "Tank", nil, nil, 1, 2)
 local specWarnUpheaval				= mod:NewSpecialWarningMoveAway(259718, nil, nil, nil, 1, 2)
-local yellUpheaval					= mod:NewYell(259718)
-local yellUpheavalFades				= mod:NewShortFadesYell(259718)
 
 local timerFesteringHarvestCD		= mod:NewCDCountTimer(50.9, 259732, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerBoundlessRotCD			= mod:NewCDTimer(13, 259830, nil, nil, nil, 3)
 local timerVolatilePodsCD			= mod:NewCDTimer(25.1, 273271, nil, nil, nil, 3)
 local timerShockwaveCD				= mod:NewCDTimer(14.6, 272457, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerUpheavalCD				= mod:NewCDTimer(15.8, 259718, nil, nil, nil, 3)--15.8-20
+
+local yellUpheaval					= mod:NewYell(259718, nil, nil, nil, "YELL")
+local yellUpheavalFades				= mod:NewShortFadesYell(259718, nil, nil, nil, "YELL")
 
 mod.vb.festeringCount = 0
 

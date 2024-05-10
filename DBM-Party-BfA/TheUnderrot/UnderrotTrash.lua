@@ -35,12 +35,10 @@ local warnVoidSpit					= mod:NewCastAnnounce(272180, 2, nil, nil, false)--AKA Da
 local warnDarkEchoes				= mod:NewCastAnnounce(413044, 4)
 
 local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2)
-local yellBloodHarvest				= mod:NewShortYell(265016)--Pre Savage Cleave target awareness
 local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2)
 local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2)
 local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2)
 local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 1, 2)
-local yellDarkOmen					= mod:NewShortYell(265568)
 local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, nil, nil, 4, 2)
 local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2)
@@ -75,6 +73,9 @@ local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4,
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--25.4-27.7
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3)
 local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3)--15.7-17
+
+local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL")--Pre Savage Cleave target awareness
+local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL")
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then

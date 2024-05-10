@@ -38,7 +38,6 @@ local specWarnStaticCling		= mod:NewSpecialWarningJump(87618, nil, nil, nil, 1, 
 local specWarnNova				= mod:NewSpecialWarningSwitchCount(isRetail and 413263 or 96260, "-Healer", nil, nil, 1, 2)
 local specWarnGroundingField	= mod:NewSpecialWarningMoveTo(86911, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(86911), nil, nil, 3)
 local specWarnChainLit			= mod:NewSpecialWarningMoveAway(87622, nil, nil, nil, 1, 2)
-local yellChainLit				= mod:NewYell(87622)
 
 local timerChainLightningCD		= mod:NewCDTimer(13.4, 87622, nil, nil, nil, 3)
 local timerStaticClingCD		= mod:NewCDTimer(15.8, 87618, nil, nil, nil, 2)
@@ -46,6 +45,8 @@ local timerStaticCling			= mod:NewCastTimer(10, 87618, nil, nil, nil, 5)
 local timerStorm				= mod:NewCastTimer(10, 86930, nil, nil, nil, 2)
 local timerGroundingFieldCD		= mod:NewCDCountTimer(45.7, 86911, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerNovaCD				= mod:NewCDCountTimer(12.1, isRetail and 413263 or 96260, nil, nil, nil, 1)
+
+local yellChainLit				= mod:NewYell(87622, nil, nil, nil, "YELL")
 
 mod.vb.groundingCount = 0
 mod.vb.novaCount = 0

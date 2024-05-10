@@ -35,7 +35,6 @@ local warnGreasy					= mod:NewCountAnnounce(257829, 2)
 local warnRearm						= mod:NewSpellAnnounce(256489, 4)
 
 local specWarnSharkToss				= mod:NewSpecialWarningYou(256358, nil, nil, nil, 1, 2)
-local yellSharkToss					= mod:NewYell(256358)
 local specWarnSharknado				= mod:NewSpecialWarningRun(256405, nil, nil, nil, 4, 2)
 --local specWarnRearm					= mod:NewSpecialWarningDodge(256489, nil, nil, nil, 2, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(256552, nil, nil, nil, 1, 8)
@@ -44,6 +43,8 @@ local timerRP						= mod:NewRPTimer(68)
 --local timerSharkTossCD			= mod:NewCDTimer(31.5, 194956, nil, nil, nil, 3)--Disabled until more data, seems highly variable, even pull to pull
 local timerSharknadoCD				= mod:NewCDTimer(26.7, 256405, nil, nil, nil, 3)--Only timer that's really accurate
 local timerRearmCD					= mod:NewCDCountTimer("d19", 256489, nil, nil, nil, 3)--heavily affected by spell queues and may be disabled again if it leads to confusion/complaints
+
+local yellSharkToss					= mod:NewYell(256358, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(8, 256358)
 

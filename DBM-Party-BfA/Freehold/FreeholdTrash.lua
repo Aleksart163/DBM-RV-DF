@@ -37,8 +37,6 @@ local warnFrostBlast					= mod:NewCastAnnounce(257784, 3)
 local warnRicochetingThrow				= mod:NewTargetAnnounce(272402, 2)
 local warnSabrousBite					= mod:NewStackAnnounce(274555, 2, nil, "Tank|Healer")
 
-local yellRicochetingThrow				= mod:NewYell(272402)
-local yellDuelistDash					= mod:NewYell(274400)
 local specWarnOiledBladeSelf			= mod:NewSpecialWarningDefensive(257908, nil, nil, nil, 1, 2)
 local specWarnVileBombardment			= mod:NewSpecialWarningDodge(257272, nil, nil, nil, 2, 2)
 local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, nil, 2, 2)
@@ -83,6 +81,9 @@ local timerBladeBarrageCD				= mod:NewCDNPTimer(18.2, 257870, nil, nil, nil, 5, 
 local timerThunderingSquallCD			= mod:NewCDNPTimer(27.8, 257736, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+
+local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL")
+local yellDuelistDash					= mod:NewYell(274400, nil, nil, nil, "YELL")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 extremely unique but unthrottled (except with itself)
 
