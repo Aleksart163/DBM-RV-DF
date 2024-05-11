@@ -36,7 +36,7 @@ local specWarnGaleArrow							= mod:NewSpecialWarningDefensive(382670, nil, nil,
 local specWarnGaleArrow2						= mod:NewSpecialWarningDodge(382670, nil, nil, nil, 2, 4) --Ураганная стрела
 local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
-local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7) --Ураганная стрела
+local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Ураганная стрела
 local timerRepelCD								= mod:NewCDCountTimer(60, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Отпор
 local timerSpiritLeapCD							= mod:NewCDTimer(20.4, 385434, nil, nil, nil, 3) --Прыжок духа 20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
 
@@ -64,7 +64,7 @@ mod.vb.leapCount = 0
 mod.vb.roarCount = 0
 mod.vb.brutalizeCount = 0
 
-local allProshlyapationsOfMurchalTimers = {
+local allProshlyapationsOfMurchal = {
 	--Прыжок духа
 	[385434] = {5.4, 22.4, 21.1, 20.3, 18.5, 21.1, 20.3, 19.2, 21, 20.7, 17.7, 21.1, 21.4, 17.8, 21.3, 20.5},
 	--Ураганная стрела
@@ -107,6 +107,13 @@ local function scanBosses(self, delay)
 	end
 end
 
+local function startProshlyapationsOfMurchal(self)
+	if self:AntiSpam(2, "GaleArrow") then
+		specWarnGaleArrow2:Show()
+		specWarnGaleArrow2:Play("watchstep")
+	end
+end
+
 function mod:OnCombatStart(delay)
 	--Static Counts
 	self.vb.galeCount = 0
@@ -133,7 +140,8 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 382670 then --Ураганная стрела
 		self.vb.galeCount = self.vb.galeCount + 1
 		warnGaleArrow:Show(self.vb.galeCount)
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.galeCount+1) or 60.5
+		self:Schedule(1.5, startProshlyapationsOfMurchal, self)
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.galeCount+1) or 60.5
 		if timer then
 			timerGaleArrowCD:Start(timer, self.vb.galeCount+1, args.sourceGUID)
 		end
@@ -147,7 +155,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFrightfulRoar:Play("justrun")
 			specWarnFrightfulRoar:ScheduleVoice(1, "fearsoon")
 		end
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.roarCount+1) or 19
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.roarCount+1) or 19
 		if timer then
 			timerFrightfulRoarCD:Start(timer, self.vb.roarCount+1, args.sourceGUID)
 		end
@@ -155,7 +163,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.splitterCount = self.vb.splitterCount + 1
 		specWarnEarthsplitter:Show(self.vb.splitterCount)
 		specWarnEarthsplitter:Play("watchstep")
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.splitterCount+1) or 60.5
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.splitterCount+1) or 60.5
 		if timer then
 			timerEarthSplitterCD:Start(timer, self.vb.splitterCount+1, args.sourceGUID)
 		end
@@ -163,20 +171,20 @@ function mod:SPELL_CAST_START(args)
 		self.vb.repelCount = self.vb.repelCount + 1
 		warnRepel:Show(self.vb.repelCount)
 		warnRepel:Play("carefly")
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.repelCount+1) or 60.5
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.repelCount+1) or 60.5
 		if timer then
 			timerRepelCD:Start(timer, self.vb.repelCount+1, args.sourceGUID)
 		end
 	elseif spellId == 385434 then --Прыжок духа
 		self.vb.leapCount = self.vb.leapCount + 1
 		warnSpiritLeap:Show()
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.leapCount+1) or 17.5
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.leapCount+1) or 17.5
 		if timer then
 			timerSpiritLeapCD:Start(timer, self.vb.leapCount+1, args.sourceGUID)
 		end
 	elseif spellId == 382836 then --Свирепый удар
 		self.vb.brutalizeCount = self.vb.brutalizeCount + 1
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.brutalizeCount+1) or 7.5
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.brutalizeCount+1) or 7.5
 		if timer then
 			timerBrutalizeCD:Start(timer, self.vb.brutalizeCount+1, args.sourceGUID)
 		end
@@ -194,12 +202,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
 	elseif spellId == 392151 then --Ураганная стрела
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(2, "GaleArrow") then
 			specWarnGaleArrow:Show()
 			specWarnGaleArrow:Play("defensive")
-		elseif self:AntiSpam(2, "GaleArrow") then
-			specWarnGaleArrow2:Show()
-			specWarnGaleArrow2:Play("watchstep")
 		end
 	end
 end
