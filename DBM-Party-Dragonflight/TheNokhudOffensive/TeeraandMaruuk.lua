@@ -140,7 +140,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 382670 then --Ураганная стрела
 		self.vb.galeCount = self.vb.galeCount + 1
 		warnGaleArrow:Show(self.vb.galeCount)
-		self:Schedule(1, startProshlyapationsOfMurchal, self)
+		self:Schedule(0.5, startProshlyapationsOfMurchal, self)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.galeCount+1) or 60.5
 		if timer then
 			timerGaleArrowCD:Start(timer, self.vb.galeCount+1, args.sourceGUID)
