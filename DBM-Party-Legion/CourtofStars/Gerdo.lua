@@ -12,8 +12,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 207261 207815 207806",
-	"SPELL_CAST_SUCCESS 207278 219488"
+	"SPELL_CAST_START 207261 207815",
+	"SPELL_CAST_SUCCESS 207278 219488 207806"
 )
 
 --[[
@@ -28,15 +28,18 @@ local specWarnResonantSlash			= mod:NewSpecialWarningDodge(207261, nil, nil, nil
 local specWarnArcaneLockdown		= mod:NewSpecialWarningJump(207278, nil, nil, nil, 2, 6)
 local specWarnBeacon				= mod:NewSpecialWarningSwitch(207806, nil, nil, nil, 1, 2)
 
-local timerStreetsweeperCD			= mod:NewCDTimer(6, 219488, nil, nil, nil, 3)
-local timerResonantSlashCD			= mod:NewCDTimer(12.1, 207261, nil, nil, nil, 3)
-local timerArcaneLockdownCD			= mod:NewCDTimer(27.9, 207278, nil, nil, nil, 3)
+local timerStreetsweeperCD			= mod:NewCDTimer(6, 219488, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дворник
+local timerResonantSlashCD			= mod:NewCDTimer(12.1, 207261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Резонирующий удар сплеча
+local timerArcaneLockdownCD			= mod:NewCDCountTimer(27.9, 207278, nil, nil, nil, 7) --Чародейская изоляция
+
+mod.vb.arcaneLockdownCount = 0
 
 function mod:OnCombatStart(delay)
+	self.vb.arcaneLockdownCount = 0
 	self:SetStage(1)
 	timerResonantSlashCD:Start(6.2-delay)
 	timerStreetsweeperCD:Start(11.1)
-	timerArcaneLockdownCD:Start(15-delay)
+	timerArcaneLockdownCD:Start(15-delay, 1)
 	--Allow trash mod to enable in combat since it's not uncommon to pull boss with some trash (usually by accident)
 	local trashMod = DBM:GetModByName("CoSTrash")
 	if trashMod then
@@ -61,28 +64,32 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerResonantSlashCD:Start()
 		end
-	elseif spellId == 207815 then
+	elseif spellId == 207815 then --Настой священной ночи
+		self.vb.arcaneLockdownCount = 0
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
-	elseif spellId == 207806 then
-		specWarnBeacon:Show()
-		specWarnBeacon:Play("mobsoon")
+		timerResonantSlashCD:Start(6.2)
+		timerArcaneLockdownCD:Start(15, 1)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 207278 then--Success since jumping on cast start too early
+		self.vb.arcaneLockdownCount = self.vb.arcaneLockdownCount + 1
 		specWarnArcaneLockdown:Show()
 		specWarnArcaneLockdown:Play("keepjump")
 		if self:GetStage(2) then
-			timerArcaneLockdownCD:Start(26.7)
+			timerArcaneLockdownCD:Start(26.7, self.vb.arcaneLockdownCount+1)
 		else
-			timerArcaneLockdownCD:Start(27.9)
+			timerArcaneLockdownCD:Start(27.9, self.vb.arcaneLockdownCount+1)
 		end
 	elseif spellId == 219488 then
 		warnStreetsweeper:Show(args.destName)
 		timerStreetsweeperCD:Start()
+	elseif spellId == 207806 then
+		specWarnBeacon:Show()
+		specWarnBeacon:Play("mobsoon")
 	end
 end
