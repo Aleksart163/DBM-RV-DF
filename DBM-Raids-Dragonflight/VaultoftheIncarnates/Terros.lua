@@ -21,38 +21,38 @@ mod:RegisterEventsInCombat(
 --[[
 (ability.id = 380487 or ability.id = 377166 or ability.id = 377505 or ability.id = 383073 or ability.id = 376279 or ability.id = 396351) and type = "begincast"
 --]]
-local warnRockBlast								= mod:NewTargetNoFilterAnnounce(380487, 3)
+local warnRockBlast								= mod:NewTargetNoFilterAnnounce(380487, 4) --Каменный выброс
 local warnAwakenedEarth							= mod:NewTargetNoFilterAnnounce(381253, 3)
 local warnConcussiveSlam						= mod:NewStackAnnounce(376279, 2, nil, "Tank|Healer") --Оглушающий удар
 local warnConcussiveSlam2						= mod:NewTargetNoFilterAnnounce(376279, 4) --Оглушающий удар
 
-local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 3, 4)
+local specWarnRockBlast							= mod:NewSpecialWarningYou(380487, nil, nil, nil, 3, 4) --Каменный выброс
 local specWarnBrutalReverberation				= mod:NewSpecialWarningDodge(386400, nil, nil, nil, 2, 2)
-local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 4)
-local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2)
+local specWarnAwakenedEarth						= mod:NewSpecialWarningYou(381253, nil, nil, nil, 1, 4) --Пробужденная земля
+local specWarnResonatingAnnihilation			= mod:NewSpecialWarningCount(377166, nil, 307421, nil, 2, 2) --Резонирующая аннигиляция
 local specWarnShatteringImpact					= mod:NewSpecialWarningDodge(383073, nil, nil, nil, 2, 2) --Дробящий удар
 local specWarnConcussiveSlam					= mod:NewSpecialWarningDefensive(376279, nil, nil, nil, 3, 2) --Оглушающий удар
 local specWarnConcussiveSlamTaunt				= mod:NewSpecialWarningTaunt(376279, nil, nil, nil, 1, 2) --Оглушающий удар
-local specWarnFrenziedDevastation				= mod:NewSpecialWarningSpell(377505, nil, nil, nil, 3, 2)
-local specWarnInfusedFallout					= mod:NewSpecialWarningYou(391592, nil, nil, nil, 1, 2)
+local specWarnFrenziedDevastation				= mod:NewSpecialWarningSpell(377505, nil, nil, nil, 3, 2) --Бешеное опустошение
+local specWarnInfusedFallout					= mod:NewSpecialWarningYou(391592, nil, nil, nil, 1, 2) --Заряженное облако пыли
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(382458, nil, nil, nil, 1, 8)
 
-local timerInfusedFalloutCD						= mod:NewNextCountTimer(35, 391592, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerRockBlastCD							= mod:NewNextCountTimer(35, 380487, nil, nil, nil, 3)
-local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 7, nil, nil, nil, 1, 5)
-local timerResonatingAnnihilation				= mod:NewCastTimer(5.5, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerInfusedFalloutCD						= mod:NewNextCountTimer(35, 391592, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Заряженное облако пыли
+local timerRockBlastCD							= mod:NewNextCountTimer(35, 380487, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Каменный выброс
+local timerResonatingAnnihilationCD				= mod:NewNextCountTimer(96.4, 377166, 307421, nil, nil, 7, nil, nil, nil, 1, 5) --Резонирующая аннигиляция
+local timerResonatingAnnihilation				= mod:NewCastTimer(5.5, 377166, 307421, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Резонирующая аннигиляция
 local timerShatteringImpactCD					= mod:NewNextCountTimer(35, 383073, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий удар
 local timerConcussiveSlamCD						= mod:NewNextCountTimer(35, 376279, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар
-local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--Berserk timer basically
+local timerFrenziedDevastationCD				= mod:NewNextTimer(387.9, 377505, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Бешеное опустошение
 
 local yellConcussiveSlam						= mod:NewShortYell(376279, nil, nil, nil, "YELL") --Оглушающий удар
-local yellInfusedFallout						= mod:NewIconRepeatYell(391592, nil, nil, nil, "YELL")
-local yellRockBlast								= mod:NewShortYell(380487, nil, nil, nil, "YELL")
-local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YELL")
-local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL")
-local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL")
+local yellInfusedFallout						= mod:NewIconRepeatYell(391592, nil, nil, nil, "YELL") --Заряженное облако пыли
+local yellRockBlast								= mod:NewShortYell(380487, nil, nil, nil, "YELL") --Каменный выброс
+local yellRockBlastFades						= mod:NewShortFadesYell(380487, nil, nil, nil, "YELL") --Каменный выброс
+local yellAwakenedEarth							= mod:NewShortPosYell(381253, nil, nil, nil, "YELL") --Пробужденная земля
+local yellAwakenedEarthFades					= mod:NewIconFadesYell(381253, nil, nil, nil, "YELL") --Пробужденная земля
 
-mod:AddSetIconOption("SetIconOnRockBlast", 380487, true, false, {8})
+mod:AddSetIconOption("SetIconOnRockBlast", 380487, true, false, {8}) --Каменный выброс
 mod:AddSetIconOption("SetIconOnConcussiveSlam", 376279, true, 0, {8}) --Оглушающий удар
 --mod:AddInfoFrameOption(361651, true)--Likely will be used for dust
 --mod:AddSetIconOption("SetIconOnAwakenedEarth", 381253, true, false, {1, 2, 3, 4, 5, 6, 7, 8})

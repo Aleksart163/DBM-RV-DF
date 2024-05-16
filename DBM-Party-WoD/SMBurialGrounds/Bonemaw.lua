@@ -44,7 +44,8 @@ local timerBodySlamCD			= mod:NewCDTimer(23, 154175, nil, nil, nil, 3, nil, DBM_
 local timerInhale				= mod:NewBuffActiveTimer(9.5, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerInhaleCD				= mod:NewCDTimer(22.1, 153804, nil, nil, nil, 7, nil, nil, nil, 3, 3) --Вдох
 local timerCorpseBreathCD		= mod:NewCDTimer(30.8, 165578, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Трупное дыхание
-local timerAddsCD				= mod:NewCDTimer(27.5, 267813, nil, nil, nil, 1, -9466, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
+--local timerAddsCD				= mod:NewCDTimer(27.5, 267813, nil, nil, nil, 1, -9466, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
+local timerAddsCD				= mod:NewCDTimer(27.5, 267813, -9466, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Червь-трупоед
 
 mod.vb.inhaleActive = false
 mod.vb.inhaleCount = 0
