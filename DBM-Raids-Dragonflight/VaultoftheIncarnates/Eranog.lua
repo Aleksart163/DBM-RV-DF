@@ -75,7 +75,7 @@ mod:AddSetIconOption("SetIconOnCaptain", 396039, true, 5, {8})
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26004))
 local specWarnCollapsingArmy					= mod:NewSpecialWarningCount(370307, nil, nil, nil, 3, 4) --Армия пламени
 
-local timerCollapsingArmy						= mod:NewCastTimer(27.5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerCollapsingArmy						= mod:NewCastTimer(27.5, 370307, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 local timerCollapsingArmyCD						= mod:NewCDCountTimer(94, 370307, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Армия пламени
 
 mod.vb.armyCount = 0
