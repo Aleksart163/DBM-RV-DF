@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991 389804 374885 375652 391118",
 	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136",
-	"SPELL_AURA_APPLIED 371007 395492 375596 374778",
+	"SPELL_AURA_APPLIED 371007 395492 375596 374778 386549",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
 --	"SPELL_AURA_REMOVED 339525",
 	"UNIT_DIED",
@@ -35,7 +35,8 @@ local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
 local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
 local warnArcaneBash						= mod:NewCastAnnounce(387067, 3) --Оглушение тайной магией
 local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинственные испарения
-local warSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
+local warnSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
+local warnWakingBane						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
 
 local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
@@ -48,14 +49,14 @@ local specWarnArcaneBash					= mod:NewSpecialWarningDodge(387067, nil, nil, nil,
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 1, 2)
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2) --Ледяные путы
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2) --Таинственные испарения
-local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHeavyTome						= mod:NewSpecialWarningInterrupt(389804, "HasInterrupt", nil, nil, 1, 2)
+local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2) --Изгнание в сон
+local specWarnHeavyTome						= mod:NewSpecialWarningInterrupt(389804, "HasInterrupt", nil, nil, 1, 2) --Тяжелый фолиант
 local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
 
 local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Ледяные путы
-local timerWakingBaneCD						= mod:NewCDNPTimer(18.2, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerWakingBaneCD						= mod:NewCDNPTimer(18.2, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Изгнание в сон
 local timerMysticVaporsCD					= mod:NewCDNPTimer(12.3, 387564, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Таинственные испарения
-local timerHeavyTomeCD						= mod:NewCDNPTimer(14.6, 389804, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerHeavyTomeCD						= mod:NewCDNPTimer(10.1, 389804, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Тяжелый фолиант
 local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, nil, nil, nil, 3)
 local timerArcaneBashCD						= mod:NewCDNPTimer(17.5, 387067, nil, "Melee", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оглушение тайной магией
@@ -68,6 +69,7 @@ local timerWildEruptionCD					= mod:NewCDNPTimer(12.1, 375652, nil, nil, nil, 3)
 local yellSpellfrostBreath					= mod:NewShortYell(391118, nil, nil, nil, "YELL") --Дыхание магического льда
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
 local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
+local yellWakingBane						= mod:NewYell(386549, nil, nil, nil, "YELL") --Изгнание в сон
 
 mod:AddBoolOption("AGBook", true)
 
@@ -78,7 +80,7 @@ function mod:SpellfrostBreathTarget(targetname, uId)
 		specWarnSpellfrostBreath:Play("defensive")
 		yellSpellfrostBreath:Yell()
 	else
-		warSpellfrostBreath:Show(targetname)
+		warnSpellfrostBreath:Show(targetname)
 	end
 end
 
@@ -198,16 +200,23 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSplinteringShards:Play("runout")
 			yellSplinteringShards:Yell()
 		end
-	elseif spellId == 395492 then
+	elseif spellId == 395492 then --Скорость насмешника
 		warScornfulHaste:CombinedShow(0.3, args.destName)
-	elseif spellId == 375596 then
-		warnErraticGrowth:CombinedShow(0.3, args.destName)
+	elseif spellId == 375596 then --Беспорядочный рост
 		if args:IsPlayer() then
 			yellErraticGrowth:Yell()
+		else
+			warnErraticGrowth:CombinedShow(0.3, args.destName)
 		end
-	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
+	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then --Сверкающая чешуя
 		specWarnBrilliantScales:Show(args.destName)
 		specWarnBrilliantScales:Play("helpdispel")
+	elseif spellId == 386549 then --Изгнание в сон
+		if args:IsPlayer() then
+			yellWakingBane:Yell()
+		else
+			warnErraticGrowth:CombinedShow(0.5, args.destName)
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

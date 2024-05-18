@@ -51,7 +51,7 @@ local specWarnEnvelopingWebs					= mod:NewSpecialWarningYou(372082, nil, nil, ni
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 2, nil, nil, 1, 6)
 local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(139496, nil, 373405, nil, 4, 12) --Взрыв паутины
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
-local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2)
+local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2) --Мерзлое дыхание
 
 local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, nil, 3) --Леденящий взрыв
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3) --Опутывающие сети
@@ -59,7 +59,7 @@ local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil,
 local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
 local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 332313, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 3, 5) --Хладодыщащий арахнид
-local timerFreezingBreathCD						= mod:NewCDTimer(16, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerFreezingBreathCD						= mod:NewCDTimer(14.5, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мерзлое дыхание
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 
 local yellChillingBlast							= mod:NewShortYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв

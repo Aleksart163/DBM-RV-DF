@@ -9,9 +9,9 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 393783 393787 392635 392280",
 	"SPELL_CAST_SUCCESS 393787 392280",
-	"SPELL_AURA_APPLIED 395273 396439 397052",
+	"SPELL_AURA_APPLIED 395273 396439 397052 396993",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
-	"SPELL_AURA_REMOVED 396439",
+	"SPELL_AURA_REMOVED 396439 396993",
 	"GOSSIP_SHOW"
 )
 
@@ -41,6 +41,7 @@ local specWarnIgnite2							= mod:NewSpecialWarningDodge(393787, nil, nil, nil, 
 
 local yellMeteorStrike							= mod:NewYell(396439, nil, nil, nil, "YELL") --Падение метеора
 local yellConductiveCharge						= mod:NewYell(397052, nil, nil, nil, "YELL") --Проводящий заряд
+local yellConductiveCharge2						= mod:NewYell(396993, nil, nil, nil, "YELL") --Проводящий заряд2
 local yellMeteorStrike2							= mod:NewShortFadesYell(396439, nil, nil, nil, "YELL") --Падение метеора
 local yellElectricSurge							= mod:NewShortYell(395273, nil, nil, nil, "YELL") --Электрический импульс
 local yellElectricSurge2						= mod:NewShortFadesYell(395273, nil, nil, nil, "YELL") --Электрический импульс
@@ -140,6 +141,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellConductiveCharge:Yell()
 		else
 			warnConductiveCharge:CombinedShow(0.5, args.destName)
+		end
+	elseif spellId == 396993 then --Проводящий заряд2
+		if args:IsPlayer() then
+			specWarnConductiveCharge:Show()
+			specWarnConductiveCharge:Play("runaway")
+			yellConductiveCharge2:Yell()
 		end
 	end
 end
