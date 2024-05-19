@@ -41,6 +41,7 @@ local timerFeelingInferiority		= mod:NewBuffActiveTimer(20, 396152, nil, nil, ni
 
 local yellFeelingSuperiority		= mod:NewYell(396150, nil, nil, nil, "YELL") --Чувство превосходства
 
+mod:AddInfoFrameOption(113315, true)
 mod:AddSetIconOption("SetIconOnFeelingSuperiority", 396150, true, false, {8}) --Чувство превосходства
 
 mod.vb.bossesDead = 0
