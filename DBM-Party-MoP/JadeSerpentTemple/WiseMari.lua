@@ -23,25 +23,27 @@ ability.id = 397783 and type = "begincast"
  or ability.id = 397797 and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnCorruptedVortex			= mod:NewTargetAnnounce(397797, 3)
-local warnCorruptedGeyser			= mod:NewCountAnnounce(397793, 3)
+local warnCorruptedVortex			= mod:NewTargetNoFilterAnnounce(397797, 3) --Проклятый водоворот
+local warnCorruptedGeyser			= mod:NewCountAnnounce(397793, 3) --Оскверненный гейзер 
 local warnBubbleBurst				= mod:NewCastAnnounce(106612, 3)
-local warnAddsLeft					= mod:NewAddsLeftAnnounce(-5616, 2, 106526)
+local warnAddsLeft					= mod:NewAddsLeftAnnounce(-5616, 2, 106526) --Призыв воды
 
 local specWarnLivingWater			= mod:NewSpecialWarningSwitch(-5616, "-Healer", nil, nil, 1, 2)
-local specWarnWashAway				= mod:NewSpecialWarningDodge(397783, nil, nil, nil, 2, 2)
-local specWarnCorruptedVortex		= mod:NewSpecialWarningMoveAway(397797, nil, nil, nil, 1, 2)
-local yellCorruptedVortex			= mod:NewYell(397797)
-local yellCorruptedVortexFades		= mod:NewShortFadesYell(397797)
+local specWarnWashAway				= mod:NewSpecialWarningDodge(397783, nil, nil, nil, 2, 2) --Сметающий поток
+local specWarnCorruptedVortex		= mod:NewSpecialWarningMoveAway(397797, nil, nil, nil, 4, 2) --Проклятый водоворот
 local specWarnHydrolance			= mod:NewSpecialWarningInterrupt(397801, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(397799, nil, nil, nil, 1, 8)
 
-local timerWashAwayCD				= mod:NewCDTimer(41.3, 397783, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--41-44
-local timerCorruptedVortexCD		= mod:NewCDTimer(13, 397797, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
-local timerCorruptedGeyserCD		= mod:NewCDCountTimer("d5", 397793, nil, nil, nil, 3)
-local timerLivingWater				= mod:NewCastTimer(5.5, 106526, nil, nil, nil, 1)
+local timerWashAwayCD				= mod:NewCDTimer(41.3, 397783, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Сметающий поток 41-44
+local timerCorruptedVortexCD		= mod:NewCDTimer(13, 397797, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Проклятый водоворот
+local timerCorruptedGeyserCD		= mod:NewCDCountTimer("d5", 397793, nil, nil, nil, 3) --Оскверненный гейзер 
+local timerBurstCD					= mod:NewCDTimer(60, 388635, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв
+local timerLivingWater				= mod:NewCastTimer(5.5, 106526, nil, nil, nil, 1) --Призыв воды
 
---mod:AddSetIconOption("SetIconOnAdds", "ej5616", false, true, {8})--FIXME, where the fuck did scanner go?
+local yellCorruptedVortex			= mod:NewYell(397797, nil, nil, nil, "YELL") --Проклятый водоворот
+local yellCorruptedVortexFades		= mod:NewShortFadesYell(397797, nil, nil, nil, "YELL") --Проклятый водоворот
+
+mod:AddSetIconOption("SetIconOnCorruptedVortex", 397797, true, false, {8}) --Проклятый водоворот
 
 mod.vb.addsRemaining = 4--Also 4 on heroic?
 mod.vb.firstAdd = false
@@ -53,6 +55,7 @@ function mod:OnCombatStart(delay)
 		timerWashAwayCD:Start(20.6-delay)
 		self:RegisterShortTermEvents(
 			"SPELL_CAST_START 397783 397801",
+			"SPELL_CAST_SUCCESS 397793",
 			"SPELL_AURA_APPLIED 397797 397799",
 			"SPELL_AURA_REMOVED 397797"
 		)
@@ -110,6 +113,14 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 397793 then
+		DBM:Debug("Murchal proshlyap", 2)
+		timerBurstCD:Start()
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 397797 then
@@ -121,6 +132,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCorruptedVortex:Play("runout")
 			yellCorruptedVortex:Yell()
 			yellCorruptedVortexFades:Countdown(spellId)
+		end
+		if self.Options.SetIconOnCorruptedVortex then
+			self:SetIcon(args.destName, 8, 6)
 		end
 	elseif (spellId == 106653 or spellId == 397799) and args:IsPlayer() and self:AntiSpam(3, 2) then
 		specWarnGTFO:Show(args.spellName)

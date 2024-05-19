@@ -6,13 +6,14 @@ mod.statTypes = "normal,heroic,challenge,timewalker"
 mod:SetRevision("20230410103707")
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
 mod:SetEncounterID(1417)
+mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 113309 396150 396152",
+	"SPELL_AURA_APPLIED 113315 113309 396150 396152",
 	"SPELL_AURA_APPLIED_DOSE 113315 396150",
-	"SPELL_AURA_REMOVED 113309",
+	"SPELL_AURA_REMOVED 113315 113309 396150",
 	"SPELL_CAST_SUCCESS 122714",
 	"UNIT_DIED"
 )
@@ -26,23 +27,37 @@ mod:RegisterEvents(
 -------------------------------------------
 local warnFeelingSuperiority		= mod:NewTargetNoFilterAnnounce(396150, 4) --Чувство превосходства
 local warnFeelingSuperiority2		= mod:NewStackAnnounce(396150, 4) --Чувство превосходства
-local warnIntensity					= mod:NewStackAnnounce(113315, 3) --Напряженность
 local warnUltimatePower				= mod:NewTargetNoFilterAnnounce(113309, 2) --Первичная мощь
 
 local specWarnFeelingSuperiority	= mod:NewSpecialWarningYou(396150, nil, nil, nil, 3, 6) --Чувство превосходства
 local specWarnFeelingSuperiority2	= mod:NewSpecialWarningStack(396150, nil, 4, nil, nil, 1, 4) --Чувство превосходства
 local specWarnFeelingInferiority	= mod:NewSpecialWarningYou(396152, nil, nil, nil, 1, 2) --Чувство неполноценности
 local specWarnIntensity				= mod:NewSpecialWarningTargetCount(113315, "-Healer", nil, nil, 3, 6) --Напряженность
-local specWarnUltimatePower			= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 2, 2) --Первичная мощь
+local specWarnUltimatePower			= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 1, 2) --Первичная мощь
 
 local timerRP						= mod:NewRPTimer(17.4)
 local timerUltimatePower			= mod:NewTargetTimer(15, 113309, nil, nil, nil, 5)
 local timerFeelingInferiority		= mod:NewBuffActiveTimer(20, 396152, nil, nil, nil, 3) --Чувство неполноценности
 
+local yellFeelingSuperiority		= mod:NewYell(396150, nil, nil, nil, "YELL") --Чувство превосходства
+
+mod:AddSetIconOption("SetIconOnFeelingSuperiority", 396150, true, false, {8}) --Чувство превосходства
+
 mod.vb.bossesDead = 0
 
+local murchalProshlyapStacks = {}
+
 function mod:OnCombatStart(delay)
+	table.wipe(murchalProshlyapStacks)
 	self.vb.bossesDead = 0
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(113315))
+		DBM.InfoFrame:Show(3, "table", murchalProshlyapStacks, 1)
+	end
+end
+
+function mod:OnCombatEnd()
+	table.wipe(murchalProshlyapStacks)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -55,15 +70,30 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 113309 then --Первичная мощь
+		warnUltimatePower:Show(args.destName)
 		specWarnUltimatePower:Show(args.destName)
 		specWarnUltimatePower:Play("aesoon")
 		timerUltimatePower:Start(args.destName)
 	elseif spellId == 396150 then --Чувство превосходства
-		if args:IsPlayer() then
-			specWarnFeelingSuperiority:Show()
-			specWarnFeelingSuperiority:Play("targetyou")
-		else
-			warnFeelingSuperiority:Show(args.destName)
+		local amount = args.amount or 1
+		if amount == 1 then
+			if args:IsPlayer() then
+				specWarnFeelingSuperiority:Show()
+				specWarnFeelingSuperiority:Play("targetyou")
+				yellFeelingSuperiority:Yell()
+			else
+				warnFeelingSuperiority:Show(args.destName)
+			end
+			if self.Options.SetIconOnFeelingSuperiority then
+				self:SetIcon(args.destName, 8)
+			end
+		elseif amount >= 4 and amount % 2 == 0 then
+			if args:IsPlayer() then
+				specWarnFeelingSuperiority2:Show(amount)
+				specWarnFeelingSuperiority2:Play("stackhigh")
+			else
+				warnFeelingSuperiority2:Show(args.destName, amount)
+			end
 		end
 	elseif spellId == 396152 then --Чувство неполноценности
 		if args:IsPlayer() then
@@ -71,38 +101,33 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFeelingInferiority:Play("targetyou")
 			timerFeelingInferiority:Start()
 		end
-	end
-end
-
-function mod:SPELL_AURA_APPLIED_DOSE(args)
-	local spellId = args.spellId
-	if spellId == 113315 then --Напряженность
+	elseif spellId == 113315 then --Напряженность
 		local amount = args.amount or 1
+		murchalProshlyapStacks[args.destName] = amount
 		if amount == 7 then--Start point of special warnings subject to adjustment based on live tuning.
 			specWarnIntensity:Show(amount, args.destName)
 			specWarnIntensity:Play("targetchange")
-		elseif amount % 2 == 0 then
-			warnIntensity:Show(args.destName or "", amount)
 		end
-	elseif spellId == 396150 then --Чувство превосходства
-		local amount = args.amount or 1
-		if args:IsPlayer() then
-			if amount >= 4 and amount % 2 == 0 then
-				specWarnFeelingSuperiority2:Show(amount)
-				specWarnFeelingSuperiority2:Play("stackhigh")
-			end
-		else
-			if amount >= 4 and amount % 2 == 0 then
-				warnFeelingSuperiority2:Show(args.destName, amount)
-			end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 113309 then
 		timerUltimatePower:Stop(args.destName)
+	elseif spellId == 396150 then --Чувство превосходства
+		if self.Options.SetIconOnFeelingSuperiority then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 113315 then --Напряженность
+		murchalProshlyapStacks[args.destName] = nil
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
+		end
 	end
 end
 
