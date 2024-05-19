@@ -69,6 +69,14 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2493)
 
+L:SetTimerLocalization({
+	timerMurchalProshlyapator = "쫄 (%s)"
+})
+
+L:SetOptionLocalization({
+	timerMurchalProshlyapator = "쫄 등장 타이머 바 보기"
+})
+
 L:SetMiscLocalization({
 	staff	= "지팡이",
 	eStaff	= "강화된 지팡이"

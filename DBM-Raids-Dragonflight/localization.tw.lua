@@ -69,6 +69,14 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2493)
 
+L:SetTimerLocalization({
+	timerMurchalProshlyapator = "小怪 (%s)"
+})
+
+L:SetOptionLocalization({
+	timerMurchalProshlyapator = "計時條：小怪出現"
+})
+
 L:SetMiscLocalization({
 	staff		= "巨杖",
 	eStaff	= "強化巨杖"
