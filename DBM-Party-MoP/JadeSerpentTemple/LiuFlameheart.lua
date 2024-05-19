@@ -80,7 +80,7 @@ function mod:SPELL_CAST_START(args)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		timerDragonStrikeCD:Cancel()
-		timerJadeDragonStrikeCD:Start(2.7)
+		timerJadeDragonStrikeCD:Start(1.7)
 		self:RegisterShortTermEvents(
 			"INSTANCE_ENCOUNTER_ENGAGE_UNIT"
 		)

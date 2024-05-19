@@ -76,6 +76,7 @@ local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", 
 local specWarnImpendingDoom			= mod:NewSpecialWarningMoveAway(397907, nil, nil, nil, 1, 4) --Надвигающийся рок
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(209512, nil, nil, nil, 1, 8)
 
+local timerVampiricClawsCD			= mod:NewCDNPTimer(14, 373364, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Когти вампира
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(19, 214692, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, 3, 5) --Залп стрел Тьмы
 local timerQuellingStrikeCD			= mod:NewCDNPTimer(10, 209027, nil, "Tank", nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Подавляющий удар
 local timerFortificationCD			= mod:NewCDNPTimer(18.1, 209033, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Укрепление
@@ -237,6 +238,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShadowBoltVolley:Play("breaklos")
 	elseif spellId == 373364 then --Когти вампира
 		self:BossTargetScanner(args.sourceGUID, "VampiricClawsTarget", 0.1, 2)
+		timerVampiricClawsCD:Start(nil, args.sourceGUID)
 	end
 end
 
@@ -311,6 +313,7 @@ function mod:UNIT_DIED(args)
 		timerCrushingLeapCD:Stop(args.destGUID)
 	elseif cid == 108151 or cid == 107435 then --Герент Зловещий
 		timerShadowBoltVolleyCD:Stop(args.destGUID)
+		timerVampiricClawsCD:Stop(args.destGUID)
 	end
 end
 
