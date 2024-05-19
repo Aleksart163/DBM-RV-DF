@@ -1,7 +1,6 @@
 -- *********************************************************
--- **               Deadly Boss Mods - Core               **
--- **              https://deadlybossmods.com             **
--- **          https://patreon.com/deadlybossmods         **
+-- **              Dungeon Boss Master - Core             **
+-- **        https://github.com/Aleksart163/DBM-RV-DF     **
 -- *********************************************************
 --
 -- This addon is written and copyrighted by:
@@ -17,6 +16,12 @@
 --    * koKR: Elnarfim					---
 --    * zhCN: Mini Dragon				projecteurs@gmail.com
 --
+-- *********************************************************
+-- **                      Firestorm                      **
+-- ** 			enGB/enUS/ruRU: Aleksart163			      **
+-- **	 https://www.donationalerts.com/r/aleksart163     **
+-- **         https://www.youtube.com/@aleksart163        **
+-- *********************************************************
 --
 -- Special thanks to:
 --    * Arta
@@ -39,6 +44,7 @@ local CL = DBM_COMMON_L
 local stringUtils = private:GetPrototype("StringUtils")
 local tableUtils = private:GetPrototype("TableUtils")
 local difficulties = private:GetPrototype("Difficulties")
+local test = private:GetPrototype("DBMTest")
 
 -------------------------------
 --  Globals/Default Options  --
@@ -74,15 +80,15 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20240509070000")
+DBM.Revision = parseCurseDate("20240519070000")
 
-local fakeBWVersion, fakeBWHash = 326, "ec8db89"--326.1
+local fakeBWVersion, fakeBWHash = 329, "e3dbf73"--329.2
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
-DBM.DisplayVersion = "10.2.39"--Core version
+DBM.DisplayVersion = "10.2.42"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2024, 5, 8) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2024, 5, 19) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 

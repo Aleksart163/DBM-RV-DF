@@ -30,7 +30,7 @@
 ## X-DBM-Mod-Name-frFR: Groupe (MoP)
 ## X-DBM-Mod-Sort: 702
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
-## X-DBM-Mod-MinCoreRevision: 20240426070000
+## X-DBM-Mod-MinCoreRevision: 20240519070000
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
@@ -45,6 +45,7 @@ localization.ru.lua
 localization.tw.lua
 localization.cn.lua
 localization.br.lua
+
 JadeSerpentTemple\WiseMari.lua
 JadeSerpentTemple\LibraryEvent.lua
 JadeSerpentTemple\LiuFlameheart.lua

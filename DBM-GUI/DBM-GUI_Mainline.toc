@@ -1,4 +1,5 @@
 ## Interface: 100107
+## Version: 10.2.42
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Options GUI|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0GUI für Einstellungen|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0设置界面|r
@@ -26,7 +27,7 @@
 ## LoadOnDemand: 1
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 10.2.39
+## X-DBM-Mod-MinCoreRevision: 20240519070000
 ## X-Website: https://github.com/Aleksart163/DBM-RV-DF
 
 localization.en.lua
