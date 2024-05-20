@@ -1,5 +1,5 @@
 ## Interface: 100107
-## Version: 10.2.42
+## Version: 10.2.41
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Affixes|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010신화+ 어픽스|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Мод|r|cffffe00a>|r |cffff6010М+ Аффиксы|r

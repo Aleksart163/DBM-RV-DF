@@ -55,7 +55,7 @@ local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступлен�
 local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрождение
 --local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
 --другое
-local warnRitualofSummoning			= mod:NewSpellAnnounce(698, 1) --Ритуал призыва
+local warnRitualofSummoning			= mod:NewTargetSourceAnnounce2(698, 1) --Ритуал призыва
 --еда и поты
 local warnYusasHeartyStew			= mod:NewTargetSourceAnnounce2(382423, 1) --Сытная похлебка Юсы
 local warnGrandBanquet				= mod:NewTargetSourceAnnounce2(382427, 1) --Большой калуакский банкет
@@ -130,17 +130,17 @@ local yellPotionCauldronofPower2	= mod:NewYell(406963, L.SpellNameYell, nil, nil
 mod:AddBoolOption("YellOnMassRes", true) --масс рес
 --mod:AddBoolOption("YellOnHeroism", true) --героизм
 --mod:AddBoolOption("YellOnPortal", true) --порталы
-mod:AddBoolOption("YellOnSoulwell", true)
-mod:AddBoolOption("YellOnSoulstone", true)
-mod:AddBoolOption("YellOnRitualofSummoning", true)
+--mod:AddBoolOption("YellOnSoulwell", true)
+--mod:AddBoolOption("YellOnSoulstone", true)
+--mod:AddBoolOption("YellOnRitualofSummoning", true)
 mod:AddBoolOption("YellOnSummoning", true)
 --mod:AddBoolOption("YellOnLavish", true) --еда
 --mod:AddBoolOption("YellOnBank", true) --банк
-mod:AddBoolOption("YellOnRepair", true) --починка
+--mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
 
-local Rebirth = DBM:GetSpellInfo(20484) 
+local Rebirth = DBM:GetSpellName(20484) 
 local typeInstance = nil
 local DbmRV = "[DBM RV] "
 
@@ -921,7 +921,7 @@ function mod:SPELL_CREATE(args)
 		if args:IsPlayerSource() then
 			yellRitualSummoning:Yell(SpellLinks(spellId))
 		else
-			warnRitualofSummoning:Show(sourceName)
+			warnRitualofSummoning:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnRitualofSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRitualofSummoning then

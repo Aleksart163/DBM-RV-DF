@@ -1,5 +1,5 @@
 ## Interface: 100107
-## Version: 10.2.42
+## Version: 10.2.41
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Options GUI|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0GUI für Einstellungen|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0设置界面|r
