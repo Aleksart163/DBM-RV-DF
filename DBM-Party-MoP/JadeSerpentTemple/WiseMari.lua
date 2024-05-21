@@ -37,7 +37,6 @@ local specWarnGTFO					= mod:NewSpecialWarningGTFO(397799, nil, nil, nil, 1, 8)
 local timerWashAwayCD				= mod:NewCDTimer(41.3, 397783, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Сметающий поток 41-44
 local timerCorruptedVortexCD		= mod:NewCDTimer(13, 397797, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Проклятый водоворот
 local timerCorruptedGeyserCD		= mod:NewCDCountTimer("d5", 397793, nil, nil, nil, 3) --Оскверненный гейзер 
-local timerBurstCD					= mod:NewCDTimer(60, 388635, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв
 local timerLivingWater				= mod:NewCastTimer(5.5, 106526, nil, nil, nil, 1) --Призыв воды
 
 local yellCorruptedVortex			= mod:NewYell(397797, nil, nil, nil, "YELL") --Проклятый водоворот
@@ -55,7 +54,6 @@ function mod:OnCombatStart(delay)
 		timerWashAwayCD:Start(20.6-delay)
 		self:RegisterShortTermEvents(
 			"SPELL_CAST_START 397783 397801",
-			"SPELL_CAST_SUCCESS 397793",
 			"SPELL_AURA_APPLIED 397797 397799",
 			"SPELL_AURA_REMOVED 397797"
 		)
@@ -110,14 +108,6 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 106612 then--Bubble Burst (phase 2)
 		warnBubbleBurst:Show()
 		timerWashAwayCD:Start()
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 397793 then
-		DBM:Debug("Murchal proshlyap", 2)
-		timerBurstCD:Start()
 	end
 end
 
