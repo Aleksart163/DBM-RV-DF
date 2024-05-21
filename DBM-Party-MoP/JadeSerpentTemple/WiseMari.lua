@@ -132,6 +132,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCorruptedVortex:Play("runout")
 			yellCorruptedVortex:Yell()
 			yellCorruptedVortexFades:Countdown(spellId)
+		else
+			warnCorruptedVortex:Show(args.destName)
 		end
 		if self.Options.SetIconOnCorruptedVortex then
 			self:SetIcon(args.destName, 8, 6)
