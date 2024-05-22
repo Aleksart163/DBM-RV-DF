@@ -42,6 +42,7 @@ local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2)
 local warnRushingDarkness						= mod:NewIncomingCountAnnounce(407221, 2)
 local warnRushingDarknessWallTarget				= mod:NewTargetCountAnnounce(407221, 2, nil, nil, nil, nil, nil, nil, true)
 local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180)--This is using count object instead of incoming count because weak auras are scanning for "Bombs (number")
+local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4) --Гибельный удар
 
 --local specWarnVolcanicHeart					= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 1, 2)
 --local yellVolcanicHeart						= mod:NewShortPosYell(410953)
@@ -49,10 +50,8 @@ local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180
 local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2)--Twisted earth spawn+Dodge for Volcanic Blast
 local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2)
 local specWarnRushingDarkness					= mod:NewSpecialWarningDodgeCount(407221, nil, nil, nil, 2, 2)
-local yellRushingDarkness						= mod:NewYell(407221, L.WallBreaker)
-local yellRushingDarknessFades					= mod:NewIconFadesYell(407221)
-local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 1, 2)
-local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2)
+local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 3, 4) --Гибельный удар
+local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2) --Гибельный удар
 --local specWarnPyroBlast						= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
@@ -60,7 +59,7 @@ local timerVolcanicHeartCD						= mod:NewNextCountTimer(26.2, 410953, 167180, ni
 local timerTwistedEarthCD						= mod:NewCDCountTimer(26.2, 402902, nil, nil, nil, 3)
 local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2)
 local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, nil, 3)
-local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Гибельный удар
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddPrivateAuraSoundOption(407182, true, 407221, 1)--Rushing Darkness
@@ -79,7 +78,6 @@ local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2)
-local yellCorruption							= mod:NewShortYell(401010)
 local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
@@ -99,6 +97,11 @@ local specWarnEbonDestructionMove				= mod:NewSpecialWarningMoveTo(407917, nil, 
 local timerSunderRealityCD						= mod:NewCDCountTimer(35.1, 407936, 109401, nil, nil, 5)--"Portals"
 local timerSunderReality						= mod:NewCastTimer(12, 407936, 109401, nil, nil, 5)--"Portals"
 local timerEbonDestructionCD					= mod:NewCDCountTimer(35.2, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--"Big Bang"
+
+local yellCalamitousStrike						= mod:NewShortYell(401998, nil, nil, nil, "YELL") --Гибельный удар
+local yellRushingDarkness						= mod:NewYell(407221, L.WallBreaker, nil, nil, "YELL")
+local yellRushingDarknessFades					= mod:NewIconFadesYell(407221, nil, nil, nil, "YELL")
+local yellCorruption							= mod:NewShortYell(401010, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(407919, true)
 
@@ -125,6 +128,16 @@ local mythicTwistedP2Timers = {41.6, 18.2, 12.1, 29.2, 13.4, 14.6}
 local volcanicP2Timers = {21.3, 15.7, 17.0, 14.8, 17.3, 16.7, 18, 14.5}
 local volcanicP2LFRTimers = {21.3, 15.6, 16.9, 17, 12, 16.9, 12, 16.9, 12, 17}
 
+function mod:CalamitousStrikeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnCalamitousStrike:Show()
+		specWarnCalamitousStrike:Play("carefly")
+		yellCalamitousStrike:Yell()
+	else
+		warnCalamitousStrike:Show(targetname)
+	end
+end
 
 local function checkRealityOnSelf(self)
 	if not playerReality then
@@ -199,10 +212,7 @@ function mod:SPELL_CAST_START(args)
 		timerEchoingFissureCD:Start(nil, self.vb.fissureCount+1)
 	elseif spellId == 406222 or spellId == 401022 then
 		self.vb.tankCount = self.vb.tankCount + 1
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
-			specWarnCalamitousStrike:Show()
-			specWarnCalamitousStrike:Play("carefly")
-		end
+		self:BossTargetScanner(args.sourceGUID, "CalamitousStrikeTarget", 0.1, 2)
 		timerCalamitousStrikeCD:Start(self:GetStage(1) and 36.3 or 35.2, self.vb.tankCount+1)
 	elseif spellId == 407790 then
 		self.vb.tankCount = self.vb.tankCount + 1

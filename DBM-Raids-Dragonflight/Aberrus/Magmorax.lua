@@ -39,8 +39,6 @@ local specWarnBlazingTantrum						= mod:NewSpecialWarningMove(407879, "Tank", ni
 local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, 188832, nil, 2, 2)
 local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, 149213, nil, 2, 2)
 local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402994, nil, 80801, nil, 1, 2)
-local yellMoltenSpittle								= mod:NewShortPosYell(402994, "%s", nil, nil, "YELL")
-local yellMoltenSpittleFades						= mod:NewIconFadesYell(402994, nil, nil, nil, "YELL")
 local specWarnBlazingBreath							= mod:NewSpecialWarningDodge(409093, nil, 18357, nil, 2, 2)
 local specWarnIncineratingMaws						= mod:NewSpecialWarningStack(404846, nil, 2, nil, nil, 1, 6)
 local specWarnIncineratingMawsSwap					= mod:NewSpecialWarningTaunt(404846, nil, nil, nil, 1, 2)
@@ -52,6 +50,9 @@ local timerIngitingRoarCD							= mod:NewCDCountTimer(28.9, 403740, 188832, nil,
 local timerOverpoweringStompCD						= mod:NewCDCountTimer(101.7, 403671, 149213, nil, nil, 2)--"Knockback"
 local timerBlazingBreathCD							= mod:NewCDCountTimer(29.9, 409093, 18357, nil, nil, 3)
 local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellMoltenSpittle								= mod:NewShortPosYell(402994, "%s", nil, nil, "YELL")
+local yellMoltenSpittleFades						= mod:NewIconFadesYell(402994, nil, nil, nil, "YELL")
 
 --local berserkTimer								= mod:NewBerserkTimer(600)
 

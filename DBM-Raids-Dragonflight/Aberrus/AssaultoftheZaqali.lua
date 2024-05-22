@@ -53,8 +53,9 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26209))
 local warnHeavyCudgel								= mod:NewStackAnnounce(401258, 2, nil, "Tank|Healer")
 local warnMagmaMystic								= mod:NewCountAnnounce(397383, 3)
 local warnWallClimber								= mod:NewCountAnnounce("ej26221", 2, 163789, false, 2)
+local warnHeavyCudgel2								= mod:NewTargetNoFilterAnnounce(401258, 4) --Тяжелая дубина
 
-local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, nil, 1, 2)
+local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, nil, 3, 2) --Тяжелая дубина
 local specWarnHeavyCudgelStack						= mod:NewSpecialWarningStack(401258, nil, 2, nil, nil, 1, 6)
 local specWarnHeavyCudgelSwap						= mod:NewSpecialWarningTaunt(401258, nil, nil, nil, 1, 2)
 local specWarnDevastatingLeap						= mod:NewSpecialWarningDodgeCount(408959, nil, 67382, nil, 2, 2)
@@ -81,8 +82,6 @@ local warnScorchingRoar								= mod:NewCastAnnounce(408620, 4)
 local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4)
 
 local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2)
-local yellVolcanicShield							= mod:NewShortYell(401867)
-local yellVolcanicShieldFades						= mod:NewShortFadesYell(401867)
 
 local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2)
 local timerVolcanicShieldCD							= mod:NewCDTimer(30.3, 401867, nil, nil, nil, 3)--30-40
@@ -91,8 +90,6 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26213))
 local warnBlazingSpear								= mod:NewTargetAnnounce(401401, 3)
 
 local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, nil, nil, 1, 2)
-local yellBlazingSpear								= mod:NewShortYell(401401)
-local yellBlazingSpearFades							= mod:NewShortFadesYell(401401)
 
 --local timerBlazingSpearCD							= mod:NewAITimer(29.9, 401401, nil, nil, nil, 3)
 --Stage Two: Warlord's Will
@@ -108,6 +105,12 @@ local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, n
 --local timerIgnarasFuryCD							= mod:NewAITimer(29.9, 406585, nil, nil, nil, 2)
 local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5)
 local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
+local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL")
+local yellVolcanicShieldFades						= mod:NewShortFadesYell(401867, nil, nil, nil, "YELL")
+local yellBlazingSpear								= mod:NewShortYell(401401, nil, nil, nil, "YELL")
+local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil, "YELL")
 
 --mod:AddInfoFrameOption(361651, true)
 --mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
@@ -126,6 +129,17 @@ mod.vb.wallClimberCount = 0
 --The timer assumptions below follow pattern perfectly and should be pretty dang close if not dead on
 --local magmaTimers = {21.7, 80, 135, 180, 235, 280, 335, 380}--21.7, 78.3, 131.9, 178.1, 232.6, 277.5, 334.4, 381.4
 --local climbersTimers = {31.6, 80, 140, 180, 240, 280, 340}--34.3, 82.5, 141.9, 180.1, 242.9, 281.6, 341.7
+
+function mod:HeavyCudgelTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnHeavyCudgel:Show(self.vb.cudgelCount+1)
+		specWarnHeavyCudgel:Play("defensive")
+		yellHeavyCudgel:Yell()
+	else
+		warnHeavyCudgel2:Show(targetname)
+	end
+end
 
 local function magmaLoop(self)
 	self.vb.magmaMysticCount = self.vb.magmaMysticCount + 1
@@ -183,10 +197,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 401258 then
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnHeavyCudgel:Show(self.vb.cudgelCount+1)
-			specWarnHeavyCudgel:Play("defensive")
-		end
+		self:BossTargetScanner(args.sourceGUID, "HeavyCudgelTarget", 0.1, 2)
 		--Timers moved to success event
 	elseif spellId == 401867 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
 		warnVolcanicShield:Show()
