@@ -33,29 +33,31 @@ local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2)
 local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2)
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1)
 
-local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2)
-local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2)
-local yellSearingSlam								= mod:NewShortYell(405821)
-local yellSearingSlamFades							= mod:NewShortFadesYell(405821)
-local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, nil, 2, 2)
-local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodgeCount(406333, nil, nil, nil, 2, 2)
-local specWarnChargedSmash							= mod:NewSpecialWarningCount(400777, nil, nil, nil, 2, 2)
-local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 1, 2)
-local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 1, 2)
-local specWarnEarthenCrush							= mod:NewSpecialWarningDefensive(407597, nil, nil, nil, 1, 2)
-local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, nil, nil, nil, 1, 2)
+local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
+local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар
+local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, nil, 2, 2) --Огни рока
+local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodgeCount(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
+local specWarnChargedSmash							= mod:NewSpecialWarningCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
+local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
+local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 1, 2) --Огненный взмах
+local specWarnEarthenCrush							= mod:NewSpecialWarningDefensive(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
+local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, nil, nil, nil, 1, 2) --Земляное сокрушение
 
 local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 98565, nil, 2, 2, 4)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1, 8)
 
-local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3)
-local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5)
-local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3)
-local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 3)
+local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Древняя ярость
+local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3) --Обжигающий удар
+local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
+local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3) --Взрыв темной лавы
+local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)--"Burning Orbs"
 --local berserkTimer								= mod:NewBerserkTimer(600)
+
+local yellFlamingSlash								= mod:NewShortYell(407547, nil, nil, nil, "YELL") --Огненный взмах
+local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
+local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 
 mod:AddInfoFrameOption(405827)
 mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {1})
@@ -72,6 +74,15 @@ mod.vb.comboCount = 0--Combos within cast
 mod.vb.firstHitTank = ""
 mod.vb.shadowflameCount = 0
 local overchargedStacks = {}
+
+function mod:FlamingSlashTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnFlamingSlash:Show()
+		specWarnFlamingSlash:Play("defensive")
+		yellFlamingSlash:Yell()
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -137,6 +148,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 407544 then--407544 cast start ID
 		self.vb.comboCount = self.vb.comboCount + 1
+	--	self:BossTargetScanner(args.sourceGUID, "FlamingSlashTarget", 0.1, 2)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnFlamingSlash:Show()
 			specWarnFlamingSlash:Play("defensive")
