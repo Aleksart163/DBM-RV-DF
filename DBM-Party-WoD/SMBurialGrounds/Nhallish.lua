@@ -62,7 +62,7 @@ end
 
 function mod:OnCombatStart(delay)
 	timerVoidBlastCD:Start(10.5-delay) --
-	timerPlanarShiftCD:Start(25.5-delay) --
+	timerPlanarShiftCD:Start(25.2-delay) --
 	timerVoidVortexCD:Start(27.5-delay) --
 	timerSoulStealCD:Start(37-delay) --
 	timerVoidDevastationCD:Start(65.3-delay)
