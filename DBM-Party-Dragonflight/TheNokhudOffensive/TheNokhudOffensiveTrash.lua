@@ -11,6 +11,8 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 395035 334610 386223 345561",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
 --	"SPELL_AURA_REMOVED 339525",
+	"SPELL_PERIODIC_DAMAGE 386912",
+	"SPELL_PERIODIC_MISSED 386912"
 	"UNIT_DIED"
 )
 
@@ -48,13 +50,14 @@ local specWarnDeathBoltVolley				= mod:NewSpecialWarningInterrupt(387411, "HasIn
 local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2)
 local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
+local specWarnGTFO							= mod:NewSpecialWarningGTFO(386912, nil, nil, nil, 1, 8) --Туча энергии бури
 
 local timerThunderClapCD					= mod:NewCDNPTimer(19.5, 386028, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар грома
 local timerRallytheClanCD					= mod:NewCDNPTimer(20, 383823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Клич клана 20-23
 local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
 local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
 local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Прерывающий крик 20-30ish
-local timerTempestCD						= mod:NewCDNPTimer(20.6, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря20-25
+local timerTempestCD						= mod:NewCDNPTimer(20, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря20-25
 local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющий рык
 local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел смерти
 local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровожадный вопль
@@ -213,3 +216,11 @@ function mod:UNIT_DIED(args)
 		timerThunderClapCD:Stop(args.destGUID)
 	end
 end
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+	if spellId == 386912 and destGUID == UnitGUID("player") and self:AntiSpam(2, "StormsurgeCloud") then
+		specWarnGTFO:Show(spellName)
+		specWarnGTFO:Play("watchfeet")
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

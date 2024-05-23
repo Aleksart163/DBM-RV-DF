@@ -53,7 +53,7 @@ mod.vb.wardens = 4
 
 local Proshlyap = nil
 local Perephase = nil
-local allProshlyapationsOfMurchalTimers = {
+local allProshlyapationsOfMurchal = {
 	--Удар тайной магии
 	[372222] = {8, 13, 15, 15},
 	--Призыв драконьей иллюзии
@@ -95,7 +95,7 @@ function mod:SPELL_CAST_START(args)
 		if not Proshlyap and self.vb.proshlyapsMurchalCount < 2 then
 			timerArcaneCleaveCD:Start(nil, self.vb.proshlyapsMurchalCount+1)
 		elseif Proshlyap then
-			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.proshlyapsMurchalCount+1)
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.proshlyapsMurchalCount+1)
 			if timer then
 				timerArcaneCleaveCD:Start(timer, self.vb.proshlyapsMurchalCount+1)
 			end
@@ -115,7 +115,7 @@ function mod:SPELL_CAST_START(args)
 		if not Proshlyap and self.vb.proshlyapsMurchalCount2 < 2 then
 			timerSummonDraconicImageCD:Start(nil, self.vb.proshlyapsMurchalCount2+1)
 		elseif Proshlyap then
-			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchalTimers, false, false, spellId, self.vb.proshlyapsMurchalCount2+1)
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.proshlyapsMurchalCount2+1)
 			if timer then
 				timerSummonDraconicImageCD:Start(timer, self.vb.proshlyapsMurchalCount2+1)
 			end
