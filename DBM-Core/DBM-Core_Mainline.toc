@@ -1,6 +1,6 @@
 ## Interface: 100107
 ## X-Min-Interface: 100107
-## Version: 10.2.41
+## Version: 10.2.42
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Main Core|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0核心|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Ядро|r|cffffe00a>|r |cff69ccf0Основной модуль|r
@@ -61,6 +61,7 @@ commonlocal.ru.lua
 
 # Pre-core modules
 modules\objects\PrototypeRegistry.lua
+modules\objects\Testing.lua
 modules\objects\GameVersion.lua
 modules\objects\StringUtils.lua
 modules\objects\TableUtils.lua

@@ -60,6 +60,8 @@ if private.isRetail then
 		[2286] = {60, 2}, [2289] = {60, 2}, [2290] = {60, 2}, [2287] = {60, 2}, [2285] = {60, 2}, [2293] = {60, 2}, [2291] = {60, 2}, [2284] = {60, 2}, [2441] = {60, 2},--Shadowlands Dungeons
 		[2520] = {70, 2}, [2451] = {70, 2}, [2516] = {70, 2}, [2519] = {70, 2}, [2526] = {70, 2}, [2515] = {70, 2}, [2521] = {70, 2}, [2527] = {70, 2}, [2579] = {70, 2},--Dragonflight Dungeons
 		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2},--War Within Dungeons
+		--Delves
+		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}--War Within Delves
 	}
 elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata dungeons, it has it's own table and it's NOT using retail table cause the dungeons reworked in Mop are still vanilla dungeons in classic (plus diff level caps)
 	instanceDifficultyBylevel = {
@@ -115,6 +117,8 @@ end
 function difficulties:RefreshCache(force)
 	if force or not self.savedDifficulty or not self.difficultyText or not self.difficultyIndex then
 		self.savedDifficulty, self.difficultyText, self.difficultyIndex, groupSize, self.difficultyModifier = DBM:GetCurrentInstanceDifficulty()
+		DBM:Debug(("GetInstanceInfo() = %s, %s, %s, %s, %s, %s, %s, %s, %s"):format(tostringall(GetInstanceInfo())), 3, nil, true)
+		DBM:Debug(("DBM:GetCurrentInstanceDifficulty() = %s, %s, %s, %s, %s"):format(tostringall(self.savedDifficulty, self.difficultyText, self.difficultyIndex, groupSize, self.difficultyModifier)), 3, nil, true)
 	end
 end
 
@@ -138,7 +142,7 @@ end
 function DBM:IsTrivial(customLevel)
 	local lastInstanceMapId = DBM:GetCurrentArea()
 	--if timewalking or chromie time or challenge modes. it's always non trivial content
-	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
+	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or self:IsRemix() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
 		return false
 	end
 	--if custom level passed, we always hard check that level for trivial vs non trivial
@@ -169,6 +173,21 @@ function DBM:IsFated()
 end
 bossModPrototype.IsFated = DBM.IsFated
 
+---Function for verifying whether a timerunning season is active.
+---@param self DBM|DBMMod
+---@param match number? Use if you need to know if it's a SPECIFIC season (otherwise it returns true for any active season)
+---@return boolean
+function DBM:IsRemix(match)
+	local seasonID = PlayerGetTimerunningSeasonID and PlayerGetTimerunningSeasonID() or 0
+	if match and seasonID == match then
+		return true
+	elseif seasonID >= 1 then
+		return true
+	end
+	return false
+end
+bossModPrototype.IsRemix = DBM.IsRemix
+
 function bossModPrototype:IsDifficulty(...)
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	for i = 1, select("#", ...) do
@@ -184,31 +203,31 @@ function bossModPrototype:IsLFR()
 	return diff == "lfr" or diff == "lfr25"
 end
 
---Dungeons: follower, normal. (Raids excluded)
+---Dungeons: follower, normal. (Raids excluded)
 function bossModPrototype:IsEasyDungeon()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "normal5" or diff == "follower5"
 end
 
---Dungeons: Any 5 man dungeon
+---Dungeons: Any 5 man dungeon
 function bossModPrototype:IsDungeon()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "heroic5" or diff == "mythic5" or diff == "challenge5" or diff == "normal5"
 end
 
---Dungeons: follower, normal, heroic. Raids: LFR, normal (rescope this to exclude heroic now that heroic5 is the new mythic 0?)
+---Dungeons: follower, normal, heroic. Raids: LFR, normal (rescope this to exclude heroic now that heroic5 is the new mythic 0?)
 function bossModPrototype:IsEasy()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower5"
 end
 
---Dungeons: mythic, mythic+. Raids: heroic, mythic
+---Dungeons: mythic, mythic+. Raids: heroic, mythic
 function bossModPrototype:IsHard()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "mythic" or diff == "mythic5" or diff == "challenge5" or diff == "heroic" or diff == "humilityscenario"
 end
 
---Pretty much ANYTHING that has a normal mode
+---Pretty much ANYTHING that has a normal mode
 function bossModPrototype:IsNormal()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "normal" or diff == "normal5" or diff == "normal10" or diff == "normal20" or diff == "normal25" or diff == "normal40" or diff == "normalisland" or diff == "normalwarfront"
@@ -220,13 +239,13 @@ function bossModPrototype:IsFollower()
 	return diff == "follower"
 end
 
---Pretty much ANYTHING that has a heroic mode
+---Pretty much ANYTHING that has a heroic mode
 function bossModPrototype:IsHeroic()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "heroic" or diff == "heroic5" or diff == "heroic10" or diff == "heroic25" or diff == "heroicisland" or diff == "heroicwarfront"
 end
 
---Pretty much ANYTHING that has mythic mode, with mythic+ included
+---Pretty much ANYTHING that has mythic mode, with mythic+ included
 function bossModPrototype:IsMythic()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "mythic" or diff == "challenge5" or diff == "mythicisland" or diff == "mythic5"
@@ -265,7 +284,7 @@ end
 
 --TODO C_IslandsQueue.GetIslandDifficultyInfo(), if 38-40 don't work
 function DBM:GetCurrentInstanceDifficulty()
-	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = GetInstanceInfo()
+	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = private.GetInstanceInfo()
 	if difficulty == 0 or difficulty == 172 or (difficulty == 1 and instanceType == "none") or (C_Garrison and C_Garrison:IsOnGarrisonMap()) then--draenor field returns 1, causing world boss mod bug.
 		return "worldboss", RAID_INFO_WORLD_BOSS .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 1 or difficulty == 173 or difficulty == 184 or difficulty == 150 or difficulty == 201 then--5 man Normal Dungeon / 201 is SoD 5 man ID for a dungeon that's also a 10/20 man SoD Raid

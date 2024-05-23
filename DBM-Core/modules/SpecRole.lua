@@ -2,10 +2,6 @@
 local private = select(2, ...)
 DBMExtraGlobal = {}
 
-local _, _, _, wowTOC = GetBuildInfo()
-local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
-local isCata = WOW_PROJECT_ID == (WOW_PROJECT_CATACLYSM_CLASSIC or 14)
-
 ---@alias SpecFlag
 ---|"Tank"
 ---|"Dps"
@@ -38,7 +34,7 @@ local specRoleTable
 
 function DBMExtraGlobal:rebuildSpecTable()
 	-- Retail
-	if isRetail then
+	if private.isRetail then
 		specRoleTable = {
 			[62] = {	--Arcane Mage
 				["Dps"] = true,
@@ -487,7 +483,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["HasImmunity"] = true,
 			},
 			["PALADIN3"] = {	--Retribution Paladin
-				["Tank"] = true,
+				["Tank"] = private.isClassic and true or false,
 				["Dps"] = true,
 				["Melee"] = true,
 				["MeleeDps"] = true,
@@ -501,7 +497,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 			},
 			["WARRIOR1"] = {	--Arms Warrior
 				["Dps"] = true,
-				["Tank"] = true,
+				["Tank"] = private.isClassic and true or false,
 				["Melee"] = true,
 				["MeleeDps"] = true,
 				["Physical"] = true,
@@ -633,13 +629,13 @@ function DBMExtraGlobal:rebuildSpecTable()
 			["DEATHKNIGHT1"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
 				["Tank"] = true,
 				["Melee"] = true,
-				["Dps"] = isCata and false or true,
+				["Dps"] = private.isCata and false or true,
 				["MeleeDps"] = true,
 				["Physical"] = true,
 				["HasInterrupt"] = true,
 			},
 			["DEATHKNIGHT2"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
-				["Tank"] = isCata and false or true,
+				["Tank"] = private.isCata and false or true,
 				["Melee"] = true,
 				["Dps"] = true,
 				["MeleeDps"] = true,
@@ -647,7 +643,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["HasInterrupt"] = true,
 			},
 			["DEATHKNIGHT3"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
-				["Tank"] = isCata and false or true,
+				["Tank"] = private.isCata and false or true,
 				["Melee"] = true,
 				["Dps"] = true,
 				["MeleeDps"] = true,
