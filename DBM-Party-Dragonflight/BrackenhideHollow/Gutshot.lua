@@ -36,7 +36,7 @@ local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, ni
 local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2)--Buff on mob
 local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, nil, nil, 4, 2)--Debuff on player
 local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 1, 2)--Trap going out
+local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 3, 2)--Trap going out
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 local timerEnsnaringTrapCD						= mod:NewCDTimer(17, 384148, nil, nil, nil, 3)--Trap going out

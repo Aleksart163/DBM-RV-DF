@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(184125)
 mod:SetEncounterID(2559)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230510000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -30,28 +31,45 @@ mod:RegisterEventsInCombat(
 local warnEternalOrb							= mod:NewCountAnnounce(376292, 3, nil, false)
 local warnRewindTimeflow						= mod:NewCountAnnounce(376208, 1)
 local warnTimeSink								= mod:NewTargetAnnounce(377405, 1)
+local warnSandBreath							= mod:NewTargetNoFilterAnnounce(375727, 4) --Дыхание песка
 
 local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil, 2, 2)
 local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8)
-local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 1, 2)
+local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 3, 4) --Дыхание песка
 
 local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3)--3-9
 local timerRewindTimeflowCD						= mod:NewCDCountTimer(42.3, 376208, nil, nil, nil, 6)
 local timerRewindTimeflow						= mod:NewBuffActiveTimer(14, 376208, nil, nil, nil, 5)--12+2sec cast
 local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2)
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON)
-local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 
+local yellSandBreath							= mod:NewShortYell(375727, nil, nil, nil, "YELL") --Дыхание песка
 local yellTimeSink								= mod:NewYell(377405, nil, nil, nil, "YELL")
 
 mod:AddRangeFrameOption(5, 377405)
+mod:AddSetIconOption("SetIconOnSandBreath", 375727, true, 0, {8}) --Дыхание песка
 
 mod.vb.orbSet = 0
 mod.vb.rewindCount = 0
 mod.vb.breathCount = 0
 mod.vb.buffetCount = 0
 --mod.vb.sinkCount = 0--It's only once per rotation, no reason to count that
+
+function mod:SandBreathTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSandBreath:Show()
+		specWarnSandBreath:Play("defensive")
+		yellSandBreath:Yell()
+	else
+		warnSandBreath:Show(targetname)
+	end
+	if self.Options.SetIconOnSandBreath then
+		self:SetIcon(targetname, 8, 3)
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.orbSet = 0
@@ -106,10 +124,11 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 375727 then
 		self.vb.breathCount = self.vb.breathCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+		self:BossTargetScanner(args.sourceGUID, "SandBreathTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSandBreath:Show()
 			specWarnSandBreath:Play("defensive")
-		end
+		end]]
 		local maxBreath = (self.vb.rewindCount == 0) and 2 or 3
 		if self.vb.breathCount < maxBreath then
 			timerSandBreathCD:Start(nil, self.vb.breathCount+1)

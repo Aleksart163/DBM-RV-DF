@@ -17,10 +17,11 @@ mod:RegisterEventsInCombat(
 --TODO, is razorshards 29 seconds now?
 local warnShatter					= mod:NewCountAnnounce(188114, 2)
 
-local specWarnRazorShards			= mod:NewSpecialWarningSpell(188169, "Tank", nil, nil, 1, 2)
+local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, nil, 2, 4) --Дробление
+local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, "Tank", nil, nil, 3, 4)
 local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8)
 
-local timerShatterCD				= mod:NewCDTimer(24.2, 188114, nil, nil, nil, 2)
+local timerShatterCD				= mod:NewCDTimer(24.2, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerRazorShardsCD			= mod:NewCDTimer(29, 188169, nil, "Tank", nil, 5)
 
 mod.vb.shatterCount = 0
@@ -37,9 +38,11 @@ function mod:SPELL_CAST_START(args)
 		specWarnRazorShards:Show()
 		specWarnRazorShards:Play("shockwave")
 		timerRazorShardsCD:Start()
-	elseif spellId == 188114 then
+	elseif spellId == 188114 then --Дробление
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		warnShatter:Show(self.vb.shatterCount)
+		specWarnShatter:Show()
+		specWarnShatter:Play("defensive")
 		timerShatterCD:Start(nil, self.vb.shatterCount+1)
 	end
 end

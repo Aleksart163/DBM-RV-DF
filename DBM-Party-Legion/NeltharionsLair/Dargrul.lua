@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 local warnCrystalSpikes				= mod:NewSpellAnnounce(200551, 2)
 local warnBurningHatred				= mod:NewTargetAnnounce(200154, 2)
 
-local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 2)
+local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 2) --Магматический удар
 local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil, 1, 2)
 local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitchCount(200637, "Dps", nil, nil, 1, 2)
 local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, nil, nil, nil, 2, 2)
@@ -39,6 +39,14 @@ mod.vb.waveCount = 0
 mod.vb.crashCount = 0
 mod.vb.addCount = 0
 
+function mod:MoltenCrashTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnMoltenCrash:Show()
+		specWarnMoltenCrash:Play("defensive")
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.waveCount = 0
 	self.vb.crashCount = 0
@@ -54,10 +62,11 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 200732 then
 		self.vb.crashCount = self.vb.crashCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+		self:BossTargetScanner(args.sourceGUID, "MoltenCrashTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnMoltenCrash:Show(self.vb.crashCount)
 			specWarnMoltenCrash:Play("defensive")
-		end
+		end]]
 		timerMoltenCrashCD:Start(nil, self.vb.crashCount+1)
 	elseif spellId == 200551 then
 		warnCrystalSpikes:Show()

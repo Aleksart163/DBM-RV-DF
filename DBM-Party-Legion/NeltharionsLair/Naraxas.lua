@@ -30,7 +30,7 @@ local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2)
 local specWarnSpikedTongue			= mod:NewSpecialWarningRunCount(199176, nil, nil, nil, 4, 2)
 local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8)
 
-local timerSpikedTongueCD			= mod:NewNextCountTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.TANK_ICON)
+local timerSpikedTongueCD			= mod:NewNextCountTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 local timerAddsCD					= mod:NewCDCountTimer(65, 199817, nil, nil, nil, 1, 226361)
 local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2)
 local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3)

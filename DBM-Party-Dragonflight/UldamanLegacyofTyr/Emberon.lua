@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20231029212301")
 mod:SetCreatureID(184422)
 mod:SetEncounterID(2558)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230810000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -36,19 +37,34 @@ local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false)--In cas
 
 local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2)
-local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 1, 2)
+local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
 
 local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6)--Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3)
-local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающий хлопок
 
+local yellSearingClap							= mod:NewShortYell(369061, nil, nil, nil, "YELL") --Обжигающий хлопок
 local yellUnstableEmbers						= mod:NewYell(369110, nil, nil, nil, "YELL")
 local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL")
+
+mod:AddSetIconOption("SetIconOnSearingClap", 369061, true, 0, {8}) --Дыхание песка
 
 mod.vb.addsRemaining = 0
 mod.vb.embersCount = 0
 mod.vb.purgingCount = 0
 mod.vb.tankCount = 0
+
+function mod:SearingClapTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnSearingClap:Show()
+		specWarnSearingClap:Play("defensive")
+		yellSearingClap:Yell()
+	end
+	if self.Options.SetIconOnSearingClap then
+		self:SetIcon(targetname, 8, 3)
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.addsRemaining = 0
@@ -72,10 +88,11 @@ function mod:SPELL_CAST_START(args)
 		timerUnstableEmbersCD:Start(12, self.vb.embersCount+1)
 	elseif spellId == 369061 then
 		self.vb.tankCount = self.vb.tankCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+		self:BossTargetScanner(args.sourceGUID, "SearingClapTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSearingClap:Show()
 			specWarnSearingClap:Play("defensive")
-		end
+		end]]
 		timerSearingClapCD:Start(nil, self.vb.tankCount+1)
 	end
 end

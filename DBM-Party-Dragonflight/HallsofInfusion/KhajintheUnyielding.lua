@@ -25,7 +25,7 @@ mod:RegisterEventsInCombat(
 --TODO, review heroic logs in 10.1 to see if timer changes affect that mode
 local warnFrostCyclone							= mod:NewCountAnnounce(390111, 3)
 
-local specWarnHailstorm							= mod:NewSpecialWarningMoveTo(386757, nil, nil, nil, 2, 2)
+local specWarnHailstorm							= mod:NewSpecialWarningMoveTo(386757, nil, nil, nil, 3, 2)
 local specWarnGlacialSurge						= mod:NewSpecialWarningDodgeCount(386559, nil, nil, nil, 2, 2)
 local specWarnFrostCyclone						= mod:NewSpecialWarningCount(390111, false, nil, nil, 2, 2)--Optional emphasis for it
 local specWarnFrostShock						= mod:NewSpecialWarningDispel(385963, "RemoveMagic", nil, nil, 1, 2)
