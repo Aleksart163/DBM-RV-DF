@@ -33,7 +33,7 @@ mod:RegisterEventsInCombat(
 local warnInfusedStrikes							= mod:NewStackAnnounce(406311, 2, nil, "Tank|Healer")
 local warnInfusedExplosion							= mod:NewCountAnnounce(407302, 4, nil, "Tank|Healer")
 
-local specWarnInfusedStrikesSelf					= mod:NewSpecialWarningStack(406311, nil, 6, nil, nil, 1, 6)
+local specWarnInfusedStrikesSelf					= mod:NewSpecialWarningStack(406311, nil, 6, nil, nil, 3, 6)
 local specWarnInfusedStrikesTaunt					= mod:NewSpecialWarningTaunt(406311, nil, nil, nil, 1, 2)
 local specWarnInfusedStrikesHug						= mod:NewSpecialWarningMoveTo(406311, nil, nil, nil, 1, 2)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
@@ -61,7 +61,6 @@ local warnUnstableEssence							= mod:NewCastAnnounce(407327, 3)
 local warnUnstableEssenceTargets					= mod:NewTargetAnnounce(407327, 2)
 
 local specWarnUnstableEssence						= mod:NewSpecialWarningYou(407327, nil, nil, nil, 1, 2)
-local yellUnstableEssence							= mod:NewShortYell(407327, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell)
 local specWarnVolatileSpew							= mod:NewSpecialWarningDodgeCount(405492, nil, nil, nil, 2, 2)
 local specWarnViolentEruption						= mod:NewSpecialWarningCount(405375, nil, nil, nil, 2, 2)
 
@@ -78,11 +77,13 @@ local warnDisintegrate								= mod:NewTargetAnnounce(405392, 2)
 
 local specWarnDeepBreath							= mod:NewSpecialWarningDodgeCount(406227, nil, 18357, nil, 2, 2)
 local specWarnDisintegrate							= mod:NewSpecialWarningMoveAway(405392, nil, nil, nil, 1, 2)
-local yellDisintegrate								= mod:NewShortYell(405392)
 
 local timerDeepBreathCD								= mod:NewCDCountTimer(42.7, 406227, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
 local timerTemporalAnomalyCD						= mod:NewCDCountTimer(43.7, 407552, nil, nil, nil, 5)
 local timerDisintegrateCD							= mod:NewCDCountTimer(43.7, 405392, nil, nil, nil, 3)
+
+local yellUnstableEssence							= mod:NewShortYell(407327, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, nil, nil, "YELL")
+local yellDisintegrate								= mod:NewShortYell(405392, nil, nil, nil, "YELL")
 
 mod.vb.rendingCount = 0
 mod.vb.massiveSlamCount = 0

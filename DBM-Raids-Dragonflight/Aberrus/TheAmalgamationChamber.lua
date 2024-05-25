@@ -42,8 +42,6 @@ local warnUmbralDetonation						= mod:NewTargetCountAnnounce(405036, 3, nil, nil
 
 local specWarnCoalescingVoid					= mod:NewSpecialWarningCount(403459, nil, nil, nil, 2, 2)--Possibly use a run away warning if idea is to actualy move away? Something tells me falloff is just designed to scope damage to players on THIS boss only
 local specWarnUmbralDetonation					= mod:NewSpecialWarningYou(405036, nil, 49685, nil, 1, 2)
-local yellUmbralDetonation						= mod:NewShortYell(405036, 49685)--"Bomb"
-local yellUmbralDetonationFades					= mod:NewShortFadesYell(405036)
 local specWarnShadowsConvergence				= mod:NewSpecialWarningDodgeCount(407640, nil, nil, nil, 2, 2, 3)
 
 local timerCoalescingVoidCD						= mod:NewCDCountTimer(21.9, 403459, nil, nil, nil, 2)
@@ -76,22 +74,36 @@ local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3)
 
 local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, nil, 2, 2)
 local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2)
-local yellBlisteringTwilight					= mod:NewShortYell(405642, 49685)
-local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642)
 local specWarnConvergentEruption				= mod:NewSpecialWarningCount(408193, nil, nil, nil, 2, 2)
-local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, nil, nil, 1, 2)
-local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 1, 2)
-local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, false, 2)
+local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
+local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 1, 2) --Иссушающая слабость
 
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3)
 local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3)--"Bombs"
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5)
-local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--35-40
+local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
 local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Might be redundant if always after crushing
 
+local yellWitheringVulnerability				= mod:NewShortYell(405914, nil, nil, nil, "YELL") --Иссушающая слабость
+local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --"Bomb"
+local yellUmbralDetonationFades					= mod:NewShortFadesYell(405036, nil, nil, nil, "YELL")
+local yellBlisteringTwilight					= mod:NewShortYell(405642, 49685, nil, nil, "YELL")
+local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642, nil, nil, nil, "YELL")
+local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, false, 2, "YELL")
+
+mod:AddSetIconOption("SetIconOnWitheringVulnerability", 405914, true, 0, {8}) --Иссушающая слабость
 mod:AddSetIconOption("SetIconOnBlistering", 405642, false, 0, {1, 2, 3, 4})
+
+function mod:WitheringVulnerabilityTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnWitheringVulnerability:Show()
+		specWarnWitheringVulnerability:Play("defensive")
+		yellWitheringVulnerability:Yell()
+	end
+end
 
 local nearKroz, nearMolt = true, true
 mod.vb.coalescingCount = 0
@@ -460,10 +472,11 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 405914 then
 		self.vb.witheringVulnCount = self.vb.witheringVulnCount + 1
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+		self:BossTargetScanner(args.sourceGUID, "WitheringVulnerabilityTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnWitheringVulnerability:Show()
 			specWarnWitheringVulnerability:Play("defensive")
-		end
+		end]]
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.witheringVulnCount+1) or altTimers[difficultyName][spellId]
 		if timer then
 			timerWitheringVulnerabilityCD:Start(timer, self.vb.witheringVulnCount+1)
@@ -573,6 +586,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif (spellId == 413597 or spellId == 405914) and not args:IsPlayer() then
 		specWarnWitheringVulnerabilityTaunt:Show(args.destName)
 		specWarnWitheringVulnerabilityTaunt:Play("tauntboss")
+		if self.Options.SetIconOnWitheringVulnerability then
+			self:SetIcon(args.destName, 8, 10)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

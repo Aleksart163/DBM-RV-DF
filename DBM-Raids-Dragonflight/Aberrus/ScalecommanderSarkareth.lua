@@ -62,8 +62,6 @@ local specWarnGlitteringSurge					= mod:NewSpecialWarningCount(401810, nil, nil,
 local specWarnScorchingBomb						= mod:NewSpecialWarningCount(401500, nil, 167180, nil, 2, 2)
 
 local specWarnMassDisintegrateYou				= mod:NewSpecialWarningYou(401680, nil, 405391, nil, 1, 2)
-local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391)
-local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680)
 local specWarnSearingBreath						= mod:NewSpecialWarningCount(402050, nil, 18357, nil, 2, 2)
 local specWarnBurningClaws						= mod:NewSpecialWarningDefensive(401330, nil, nil, nil, 1, 2)
 local specWarnBurningClawsTaunt					= mod:NewSpecialWarningTaunt(401330, nil, nil, nil, 1, 2)
@@ -85,18 +83,14 @@ local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, 167180, nil, 2, 2)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404218, nil, nil, nil, 1, 2)--Maybe change to MoveTo alert to say move to emptyness?
-local yellVoidFractureFades						= mod:NewShortFadesYell(404218)
 local specWarnAbyssalBreath						= mod:NewSpecialWarningCount(404456, nil, 18357, nil, 2, 2)
 local specWarnEmptyStrike						= mod:NewSpecialWarningDefensive(404769, nil, nil, nil, 1, 2, 4)
 local specWarnCosmicVolley						= mod:NewSpecialWarningInterruptCount(411302, "HasInterrupt", 31295, nil, 1, 2, 4)
 local specWarnBlastingScream					= mod:NewSpecialWarningInterruptCount(404754, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDesolateBlossom					= mod:NewSpecialWarningDodgeCount(404403, nil, nil, nil, 2, 2)
 local specWarnInfiniteDuressYou					= mod:NewSpecialWarningYou(404288, nil, nil, nil, 1, 2, 3)
-local yellInfiniteDuress						= mod:NewShortPosYell(404288)
-local yellInfiniteDuressFades					= mod:NewIconFadesYell(404288)
 local specWarnVoidClaws							= mod:NewSpecialWarningDefensive(411241, nil, nil, nil, 1, 2)
 local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil, nil, 1, 2)--For Void Blast (411238) effect
-local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859)--For Void Blast (411238) effect
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2)
 
 local timerEndExistenceCast						= mod:NewCastTimer(15, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -125,15 +119,10 @@ local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil,
 
 local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 161862, nil, 2, 2)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2)
-local yellHurtlingBarrage						= mod:NewShortPosYell(405486)
-local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486)
 local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 123244, nil, 3, 2)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 1, 2)
-local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL")
-local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL")
-local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 1, 2)
+local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 2)
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 1, 2)
-local yellVoidSlashFades						= mod:NewShortFadesYell(408429)
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2)
 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 161862, nil, nil, 1)
@@ -143,6 +132,18 @@ local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 123244, ni
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3)--"Black Hole"
 local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON)--AOE damage from expiring
+
+local yellVoidFractureFades						= mod:NewShortFadesYell(404218, nil, nil, nil, "YELL")
+local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL")
+local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680, nil, nil, nil, "YELL")
+local yellInfiniteDuress						= mod:NewShortPosYell(404288, nil, nil, nil, "YELL")
+local yellInfiniteDuressFades					= mod:NewIconFadesYell(404288, nil, nil, nil, "YELL")
+local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YELL")
+local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL")
+local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL")
+local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL")
+local yellVoidSlashFades						= mod:NewShortFadesYell(408429, nil, nil, nil, "YELL")
+local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859, nil, nil, "YELL")--For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4})--2 on heroic
 

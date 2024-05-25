@@ -41,7 +41,6 @@ local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil,
 local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, 149213, nil, 2, 2)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2)
-local yellUnstableEmbers						= mod:NewShortYell(404010)
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 2)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
@@ -54,6 +53,8 @@ local timerUnstableEmbersCD						= mod:NewCDCountTimer(20.7, 404010, 264364, nil
 local timerEliminationProtocol					= mod:NewCastTimer(10, 409942, 207544, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--"Beams"
 local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, nil, nil, nil, 3)
 local berserkTimer								= mod:NewBerserkTimer(600)
+
+local yellUnstableEmbers						= mod:NewShortYell(404010, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnGolems", 405812, true, 5, {8, 7, 6, 5})
 mod:AddSetIconOption("SetIconOnEmbers", 404010, false, 0, {1, 2, 3, 4})
