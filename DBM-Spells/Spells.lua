@@ -144,7 +144,7 @@ mod:AddBoolOption("YellOnSummoning", true)
 --mod:AddBoolOption("YellOnLavish", true) --еда
 --mod:AddBoolOption("YellOnBank", true) --банк
 --mod:AddBoolOption("YellOnRepair", true) --починка
---mod:AddBoolOption("YellOnToys", true) --игрушки
+mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
 
 local Rebirth = DBM:GetSpellName(20484) 
@@ -754,10 +754,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 391776 then --Шкафчик с множеством плащей
 		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-		if args:IsPlayerSource() then
-			yellEndlessCloaks:Yell(SpellLinks(spellId))
-		else
-			warnEndlessCloaks:Show(sourceName, spellName)
+		if self.Options.YellOnToys then
+			if args:IsPlayerSource() then
+				yellEndlessCloaks:Yell(SpellLinks(spellId))
+			else
+				warnEndlessCloaks:Show(sourceName, spellName)
+			end
 		end
 		timerEndlessCloaks:Start()
 	end
@@ -1038,10 +1040,12 @@ function mod:SPELL_SUMMON(args)
 			warnAncestralProtectionTotem:Show(sourceName, spellName)
 		end
 	elseif spellId == 256153 then --Портативный трансмогрификатор
-		if args:IsPlayerSource() then
-			yellRearranger:Yell(SpellLinks(spellId))
-		else
-			warnRearranger:Show(sourceName, spellName)
+		if self.Options.YellOnToys then
+			if args:IsPlayerSource() then
+				yellRearranger:Yell(SpellLinks(spellId))
+			else
+				warnRearranger:Show(sourceName, spellName)
+			end
 		end
 		timerRearranger:Start()
 	end
