@@ -7,10 +7,10 @@ mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 31821 61994 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 391776 31821 61994 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
-	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399",
+	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399 256153",
 	"SPELL_CREATE 698 201351 185709 88304 61031 49844 382423 371515 371519 371521 406963 406964 406965 383063 382427",
 --	"SPELL_RESURRECT 20484 95750 61999",
 	"PLAYER_DEAD",
@@ -21,6 +21,7 @@ mod:RegisterEvents(
 --Прошляпанное очко Мурчаля Прошляпенко на рейдовых спеллах [✔✔✔]
 local warnMisdirection				= mod:NewYouAnnounce(34477, 1) --Перенаправление
 local warnTricksTheTrade			= mod:NewYouAnnounce(57934, 1) --Маленькие хитрости
+
 local warnMassres1					= mod:NewTargetSourceAnnounce2(212040, 1) --Ободрение (друид) --
 local warnMassres2					= mod:NewTargetSourceAnnounce2(212056, 1) --Отпущение (пал) --
 local warnMassres3					= mod:NewTargetSourceAnnounce2(212036, 1) --Массовое воскрешение (прист) --
@@ -56,6 +57,9 @@ local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрожде�
 --local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
 --другое
 local warnRitualofSummoning			= mod:NewTargetSourceAnnounce2(698, 1) --Ритуал призыва
+local warnEndlessCloaks				= mod:NewTargetSourceAnnounce2(391789, 1) --Шкафчик с множеством плащей
+local warnRearranger				= mod:NewTargetSourceAnnounce2(256155, 1) --Портативный трансмогрификатор
+
 --еда и поты
 local warnYusasHeartyStew			= mod:NewTargetSourceAnnounce2(382423, 1) --Сытная похлебка Юсы
 local warnGrandBanquet				= mod:NewTargetSourceAnnounce2(382427, 1) --Большой калуакский банкет
@@ -81,7 +85,6 @@ local warnMobileBanking				= mod:NewTargetSourceAnnounce2(83958, 1) --Мобил
 --local warnMobileBanking				= mod:NewAnnounce("MobileBanking", 1, 83958) --Мобильный банк
 
 local specWarnSoulstone				= mod:NewSpecialWarningYou(20707, nil, nil, nil, 1, 2) --Камень души
-
 local specWarnBlessingSpellwarding	= mod:NewSpecialWarningYou(204018, nil, nil, nil, 1, 2) --Благословение защиты от заклинаний
 local specWarnBlessingSacrifice		= mod:NewSpecialWarningYou(6940, nil, nil, nil, 1, 2) --Жертвенное благословение
 local specWarnSourceofMagic			= mod:NewSpecialWarningYou(369459, nil, nil, nil, 1, 2) --Магический источник
@@ -100,8 +103,12 @@ local specWarnSymbolHope 			= mod:NewSpecialWarningYou(64901, nil, nil, nil, 1, 
 local specWarnSymbolHope2			= mod:NewSpecialWarningEnd(64901, nil, nil, nil, 1, 2) --Символ надежды
 local specWarnManaTea2				= mod:NewSpecialWarningEnd(197908, nil, nil, nil, 1, 2) --Маначай
 
+local timerEndlessCloaks			= mod:NewCastTimer(300, 391789, nil, nil, nil, 7) --Шкафчик с множеством плащей
+local timerRearranger				= mod:NewCastTimer(120, 256155, nil, nil, nil, 7) --Портативный трансмогрификатор
 --local timerRallyingCry				= mod:NewBuffActiveTimer(10, 97462, nil, nil, nil, 7) --Ободряющий клич
 
+local yellEndlessCloaks				= mod:NewYell(391776, L.SpellNameYell, nil, nil, "YELL") --Шкафчик с множеством плащей
+local yellRearranger				= mod:NewYell(256153, L.SpellNameYell, nil, nil, "YELL") --Портативный трансмогрификатор
 local yellMobileBanking				= mod:NewYell(83958, L.SpellNameYell, nil, nil, "YELL") --Мобильный банк
 local yellTimeWarp					= mod:NewYell(80353, L.SpellNameYell, nil, nil, "YELL") --Искажение времени
 local yellFuryoftheAspects			= mod:NewYell(390386, L.SpellNameYell, nil, nil, "YELL") --Ярость Аспектов
@@ -137,7 +144,7 @@ mod:AddBoolOption("YellOnSummoning", true)
 --mod:AddBoolOption("YellOnLavish", true) --еда
 --mod:AddBoolOption("YellOnBank", true) --банк
 --mod:AddBoolOption("YellOnRepair", true) --починка
-mod:AddBoolOption("YellOnToys", true) --игрушки
+--mod:AddBoolOption("YellOnToys", true) --игрушки
 mod:AddBoolOption("AutoSpirit", false)
 
 local Rebirth = DBM:GetSpellName(20484) 
@@ -272,7 +279,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres1_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 212056 and self:AntiSpam(15, "massres") then --Отпущение (пал)
 		if self.Options.YellOnMassRes then
 			warnMassres2:Show(sourceName, spellName)
@@ -281,7 +287,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres2_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 212036 and self:AntiSpam(15, "massres") then --Массовое воскрешение (прист)
 		if self.Options.YellOnMassRes then
 			warnMassres3:Show(sourceName, spellName)
@@ -290,7 +295,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres3_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 212048 and self:AntiSpam(15, "massres") then --Древнее видение (шаман)
 		if self.Options.YellOnMassRes then
 			warnMassres4:Show(sourceName, spellName)
@@ -299,7 +303,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres4_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 212051 and self:AntiSpam(15, "massres") then --Повторное пробуждение (монк)
 		if self.Options.YellOnMassRes then
 			warnMassres5:Show(sourceName, spellName)
@@ -308,7 +311,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres5_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 361178 and self:AntiSpam(15, "massres") then --Массовое возвращение (драктир)
 		if self.Options.YellOnMassRes then
 			warnMassres6:Show(sourceName, spellName)
@@ -317,7 +319,6 @@ function mod:SPELL_CAST_START(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
 			prepareMessage(self, "premsg_Spells_massres6_rw", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 --[[	elseif spellId == 7720 then --Ритуал призыва
 		if self.Options.YellOnSummoning then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSummoning then
@@ -751,6 +752,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if args:IsPlayerSource() then
 			yellAuraMastery:Yell(SpellLinks(spellId))
 		end
+	elseif spellId == 391776 then --Шкафчик с множеством плащей
+		if typeInstance ~= "party" and typeInstance ~= "raid" then return end
+		if args:IsPlayerSource() then
+			yellEndlessCloaks:Yell(SpellLinks(spellId))
+		else
+			warnEndlessCloaks:Show(sourceName, spellName)
+		end
+		timerEndlessCloaks:Start()
 	end
 end
 
@@ -1028,6 +1037,13 @@ function mod:SPELL_SUMMON(args)
 		else
 			warnAncestralProtectionTotem:Show(sourceName, spellName)
 		end
+	elseif spellId == 256153 then --Портативный трансмогрификатор
+		if args:IsPlayerSource() then
+			yellRearranger:Yell(SpellLinks(spellId))
+		else
+			warnRearranger:Show(sourceName, spellName)
+		end
+		timerRearranger:Start()
 	end
 end
 
