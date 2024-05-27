@@ -583,7 +583,7 @@ private.IsEncounterInProgress = IsEncounterInProgress
 local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS-- for Phanx' Class Colors
 
 -- Polyfill for C_AddOns, Classic and Retail have the fully featured table, Wrath has only Metadata (as of Dec 15th 2023)
---[[local C_AddOns
+local C_AddOns
 do
 	local cachedAddOns = nil
 	C_AddOns = {
@@ -606,7 +606,7 @@ do
 			return cachedAddOns[addon]
 		end,
 	}
-end]]
+end
 
 ---------------------------------
 --  General (local) functions  --
