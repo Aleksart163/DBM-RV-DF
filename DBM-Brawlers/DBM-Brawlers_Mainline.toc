@@ -30,7 +30,6 @@
 ## X-DBM-Mod-Sort: 217
 ## X-DBM-Mod-MapID: 369,1043
 ## X-DBM-Mod-MinCoreRevision: 20240519070000
-
 localization.en.lua
 localization.kr.lua
 localization.de.lua
@@ -41,7 +40,6 @@ localization.fr.lua
 localization.ru.lua
 localization.br.lua
 localization.it.lua
-
 Brawlers.lua
 Rank1.lua
 Rank2.lua

@@ -80,15 +80,15 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20240526070000")
+DBM.Revision = parseCurseDate("20240527070000")
 
 local fakeBWVersion, fakeBWHash = 330, "8c25119"--330.1
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
-DBM.DisplayVersion = "10.2.42"--Core version
+DBM.DisplayVersion = "10.2.43"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2024, 5, 26) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2024, 5, 27) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -528,7 +528,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 -----------------
 local LibSpec
 do
-	if private.isRetail and LibStub then
+	if (private.isRetail or private.isCata) and LibStub then
 		LibSpec = LibStub("LibSpecialization", true)
 		if LibSpec then
 			local function update(specID, _, _, playerName)
@@ -583,7 +583,7 @@ private.IsEncounterInProgress = IsEncounterInProgress
 local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS-- for Phanx' Class Colors
 
 -- Polyfill for C_AddOns, Classic and Retail have the fully featured table, Wrath has only Metadata (as of Dec 15th 2023)
-local C_AddOns
+--[[local C_AddOns
 do
 	local cachedAddOns = nil
 	C_AddOns = {
@@ -606,7 +606,7 @@ do
 			return cachedAddOns[addon]
 		end,
 	}
-end
+end]]
 
 ---------------------------------
 --  General (local) functions  --
@@ -703,6 +703,35 @@ local function sendSync(protocol, prefix, msg)
 end
 private.sendSync = sendSync
 
+--[[local function sendSync(protocol, prefix, msg)
+	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
+		msg = msg or ""
+		local fullname = playerName .. "-" .. normalizedPlayerRealm
+		local sendChannel = "SOLO"
+		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+			sendChannel = "INSTANCE_CHAT"
+		else
+			if IsInRaid() then
+				sendChannel = "RAID"
+			elseif IsInGroup(1) then
+				sendChannel = "PARTY"
+			end
+		end
+		if sendChannel == "SOLO" then
+			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+		else
+			--Per https://warcraft.wiki.gg/wiki/Patch_10.2.7/API_changes#Addon_messaging_changes
+			--We want to start watching for situations DBM exceeds it's 10 messages per 10 seconds limits
+			--While at it, catch other failure types too
+			local result = select(-1, SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel))
+			if type(result) == "number" and result ~= 0 then
+				DBM:Debug("|cffff0000sendSync failed with a result of " ..result.. " for prefix |r" .. prefix)
+			end
+		end
+	end
+end
+private.sendSync = sendSync]]
+
 ---Customized syncing specifically for guild comms
 ---@param protocol number
 ---@param prefix string
@@ -721,6 +750,18 @@ local function sendGuildSync(protocol, prefix, msg)
 	end
 end
 private.sendGuildSync = sendGuildSync
+
+--[[local function sendGuildSync(protocol, prefix, msg)
+	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
+		msg = msg or ""
+		local fullname = playerName .. "-" .. normalizedPlayerRealm
+		local result = select(-1, SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "GUILD"))--Even guild syncs send realm so we can keep antispam the same across realid as well.
+		if type(result) == "number" and result ~= 0 then
+			DBM:Debug("|cffff0000sendGuildSync failed with a result of " ..result.. " for prefix |r" .. prefix)
+		end
+	end
+end
+private.sendGuildSync = sendGuildSync]]
 
 ---Custom sync function that should only be used for user generated sync messages
 ---@param protocol number
@@ -745,12 +786,38 @@ local function sendLoggedSync(protocol, prefix, msg)
 	end
 end
 
+--[[local function sendLoggedSync(protocol, prefix, msg)
+	if dbmIsEnabled then
+		msg = msg or ""
+		local fullname = playerName .. "-" .. normalizedPlayerRealm
+		local sendChannel = "SOLO"
+		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+			sendChannel = "INSTANCE_CHAT"
+		else
+			if IsInRaid() then
+				sendChannel = "RAID"
+			elseif IsInGroup(1) then
+				sendChannel = "PARTY"
+			end
+		end
+		if sendChannel == "SOLO" then
+			handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+		else
+			local result = select(-1, C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel))
+			if type(result) == "number" and result ~= 0 then
+				DBM:Debug("|cffff0000sendLoggedSync failed with a result of " ..result.. " for prefix |r" .. prefix)
+			end
+		end
+	end
+end]]
+
 ---Sync Object specifically for out in the world sync messages that have different rules than standard syncs
 ---@param self DBM
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
 ---@param noBNet boolean?
+--Свежие прошляпы Мурчаля Прошляпенко--
 local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 	if not dbmIsEnabled then return end--Block all world syncs if force disabled
 	DBM:Debug("SendWorldSync running for " .. prefix)
@@ -806,6 +873,62 @@ local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 		end
 	end
 end
+
+--[[local function SendWorldSync(self, protocol, prefix, msg, noBNet)
+	if not dbmIsEnabled then return end--Block all world syncs if force disabled
+	DBM:Debug("SendWorldSync running for " .. prefix)
+	local fullname = playerName .. "-" .. normalizedPlayerRealm
+	local sendChannel = "SOLO"
+	if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+		sendChannel = "INSTANCE_CHAT"
+	else
+		if IsInRaid() then
+			sendChannel = "RAID"
+		elseif IsInGroup(1) then
+			sendChannel = "PARTY"
+		end
+	end
+	if sendChannel == "SOLO" then
+		handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
+	else
+		local result = select(-1, SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, sendChannel))
+		if type(result) == "number" and result ~= 0 then
+			DBM:Debug("|cffff0000SendWorldSync failed with a result of " ..result.. " for prefix |r" .. prefix)
+		end
+	end
+	if IsInGuild() then
+		SendAddonMessage(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "GUILD")--Even guild syncs send realm so we can keep antispam the same across realid as well.
+	end
+	if self.Options.EnableWBSharing and not noBNet then
+		local _, numBNetOnline = BNGetNumFriends()
+		local connectedServers = GetAutoCompleteRealms()
+		for i = 1, numBNetOnline do
+			local gameAccountID, isOnline, realmName
+			local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+			if accountInfo then
+				gameAccountID, isOnline, realmName = accountInfo.gameAccountInfo.gameAccountID, accountInfo.gameAccountInfo.isOnline, accountInfo.gameAccountInfo.realmName
+			end
+			if gameAccountID and isOnline and realmName then
+				local sameRealm = false
+				if connectedServers then
+					for j = 1, #connectedServers do
+						if realmName == connectedServers[j] then
+							sameRealm = true
+							break
+						end
+					end
+				else
+					if realmName == playerRealm or realmName == normalizedPlayerRealm then
+						sameRealm = true
+					end
+				end
+				if sameRealm then
+					BNSendGameData(gameAccountID, DBMPrefix, DBMSyncProtocol .. "\t" .. prefix .. "\t" .. msg)--Just send users realm for pull, so we can eliminate connectedServers checks on sync handler
+				end
+			end
+		end
+	end
+end]]
 
 -- sends a whisper to a player by their character name or BNet presence id
 -- returns true if the message was sent, nil otherwise
@@ -1644,13 +1767,6 @@ do
 							local mapIdTable = {strsplit(",", C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-MapID") or "")}
 
 							local minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface") or 0)
-							if private.isBCC then
-								minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface-BCC") or minToc)
-							elseif private.isCata then
-								minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface-Cata") or minToc)
-							elseif private.isWrath then
-								minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface-Wrath") or minToc)
-							end
 
 							local firstMapId = mapIdTable[1]
 							local firstMapName
@@ -3150,6 +3266,8 @@ function DBM:LoadModOptions(modId, inCombat, first)
 			local stats = savedStats[id]
 			stats.followerKills = stats.followerKills or 0
 			stats.followerPulls = stats.followerPulls or 0
+			stats.storyKills = stats.storyKills or 0
+			stats.storyPulls = stats.storyPulls or 0
 			stats.normalKills = stats.normalKills or 0
 			stats.normalPulls = stats.normalPulls or 0
 			stats.heroicKills = stats.heroicKills or 0
@@ -3450,6 +3568,8 @@ function DBM:CreateDefaultModStats()
 	local defaultStats = {}
 	defaultStats.followerKills = 0
 	defaultStats.followerPulls = 0
+	defaultStats.storyKills = 0
+	defaultStats.storyPulls = 0
 	defaultStats.normalKills = 0
 	defaultStats.normalPulls = 0
 	defaultStats.heroicKills = 0
@@ -4611,8 +4731,8 @@ do
 				else
 					classicSubVers = L.MOD_MISSING
 				end
-				forceDisable = tonumber(forceDisable) or 0
 			end
+			forceDisable = tonumber(forceDisable) or 0
 		elseif protocol >= 2 then
 			--Protocol 2 did not send classicSubVers
 			VPVersion = classicSubVers
@@ -5189,7 +5309,7 @@ do
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size .. " " .. success)
 		if self:AntiSpam(5, "FM") then
-			self:AddMsg(L.DBM_FORUMS_MESSAGE)
+			self:AddMsg(L.DBM_RV_FORUMS_MESSAGE)
 		end
 		if success == 0 then
 			--Only nag on wipes (in any content)
@@ -5500,7 +5620,9 @@ do
 		["event5"] = "normal",
 		["event20"] = "lfr25",
 		["event40"] = "lfr25",
+		["quest"] = "follower",--For now, unless a conflict arises
 		["follower"] = "follower",
+		["story"] = "story",
 		["normal5"] = "normal",
 		["heroic5"] = "heroic",
 		["challenge5"] = "challenge",
@@ -6264,7 +6386,7 @@ do
 		["EVOKER"] = 1465,
 	}
 
-	function DBM:SetCurrentSpecInfo()
+	function DBM:SetCurrentSpecInfo(useEraFallback)
 		if private.isRetail then
 			currentSpecGroup = GetSpecialization() or 1
 			if GetSpecializationInfo(currentSpecGroup) then
@@ -6272,6 +6394,14 @@ do
 				currentSpecID = tonumber(currentSpecID)
 			else
 				currentSpecID, currentSpecName = fallbackClassToRole[playerClass], playerClass
+			end
+		elseif private.isCata and not useEraFallback then
+			currentSpecGroup = GetPrimaryTalentTree() or 1
+			if GetTalentTabInfo(currentSpecGroup) then
+				currentSpecID, currentSpecName = GetTalentTabInfo(currentSpecGroup)--give temp first spec id for non-specialization char. no one should use dbm with no specialization, below level 10, should not need dbm.
+				currentSpecID = tonumber(currentSpecID)
+			else
+				currentSpecID = playerClass .. tostring(1)--Probably low level, or initially loading into world
 			end
 		else
 			local numTabs = GetNumTalentTabs()
@@ -7436,7 +7566,7 @@ do
 		if uId then--This version includes ONLY melee dps
 			local name = GetUnitName(uId, true)
 			--First we check if we have acccess to specID (ie remote player is using DBM or Bigwigs)
-			if private.isRetail and raid[name].specID then--We know their specId
+			if (private.isRetail or private.isCata) and raid[name].specID then--We know their specId
 				local specID = raid[name].specID
 				return private.specRoleTable[specID]["MeleeDps"]
 			else
@@ -7487,7 +7617,7 @@ do
 			end
 			--Now we check if we have acccess to specID (ie remote player is using DBM or Bigwigs)
 			local name = GetUnitName(uId, true)
-			if private.isRetail and raid[name].specID then--We know their specId
+			if (private.isRetail or private.isCata) and raid[name].specID then--We know their specId
 				local specID = raid[name].specID
 				return private.specRoleTable[specID]["Melee"]
 			else
@@ -7522,7 +7652,7 @@ do
 	function DBM:IsRanged(uId)
 		if uId then
 			local name = GetUnitName(uId, true)
-			if private.isRetail and raid[name].specID then--We know their specId
+			if (private.isRetail or private.isCata) and raid[name].specID then--We know their specId
 				local specID = raid[name].specID
 				return private.specRoleTable[specID]["Ranged"]
 			else
@@ -7540,7 +7670,7 @@ do
 	function bossModPrototype:IsSpellCaster(uId)
 		if uId then
 			local name = GetUnitName(uId, true)
-			if private.isRetail and raid[name].specID then--We know their specId
+			if (private.isRetail or private.isCata) and raid[name].specID then--We know their specId
 				local specID = raid[name].specID
 				return private.specRoleTable[specID]["SpellCaster"]
 			else
@@ -7557,7 +7687,7 @@ do
 	function bossModPrototype:IsMagicDispeller(uId)
 		if uId then
 			local name = GetUnitName(uId, true)
-			if private.isRetail and raid[name].specID then--We know their specId
+			if (private.isRetail or private.isCata) and raid[name].specID then--We know their specId
 				local specID = raid[name].specID
 				return private.specRoleTable[specID]["MagicDispeller"]
 			else
@@ -7683,7 +7813,7 @@ do
 		if not private.isRetail then
 			if private.specRoleTable[currentSpecID]["Tank"] then
 				-- 17 defensive stance, 5487 bear form, 9634 dire bear, 25780 righteous fury
-				if playerIsTank or GetShapeshiftFormID() == 18 or DBM:UnitBuff('player', 5487, 9634) then
+				if playerIsTank or GetShapeshiftFormID() == 18 or DBM:UnitBuff("player", 5487, 9634) then
 					playerIsTank = true
 					return true
 				end
@@ -8142,7 +8272,16 @@ function bossModPrototype:AddSetIconOption(name, spellId, default, iconType, ico
 	end
 end
 
+---Still used for situations we may use static arrows to point for a specific way to move. Legacy arrows also supported toward/away from specific player units
+---@meta
+---@alias arrowTypes
+---|1: Shows an arrow pointing toward player target
+---|2: Shows an arrow pointing away from player target
+---|3: Shows an arrow pointing toward specific location
+---@param name string Option name
+---@param spellId number if used, auto localizes using spell or journal id. if left blank uses generic description
 ---@param default SpecFlags|boolean?
+---@param isRunTo arrowTypes|number
 function bossModPrototype:AddArrowOption(name, spellId, default, isRunTo)
 	if isRunTo == true then isRunTo = 2 end--Support legacy
 	self.DefaultOptions[name] = (default == nil) or default
@@ -8161,6 +8300,9 @@ function bossModPrototype:AddArrowOption(name, spellId, default, isRunTo)
 	end
 end
 
+---Legacy object at this point. Range checks aren't added to new modules due to no longer being usable inside raids. they should NOT be removed from old modules in event blizzard ever adds built in functionality we can automate
+---@param range number|string Non optional, should be number if fixed ranged or string with custom string such as "various" or "10/6"
+---@param spellId number? if used, auto localizes using spell or journal id. if left blank uses generic description
 ---@param default SpecFlags|boolean?
 function bossModPrototype:AddRangeFrameOption(range, spellId, default)
 	self.DefaultOptions["RangeFrame"] = (default == nil) or default
@@ -8177,6 +8319,9 @@ function bossModPrototype:AddRangeFrameOption(range, spellId, default)
 	self:SetOptionCategory("RangeFrame", "misc")
 end
 
+---Legacy object at this point. HUD checks aren't added to new modules due to no longer being usable inside raids.
+---@param name string Option name
+---@param spellId number? if used, auto localizes using spell or journal id. if left blank uses generic description
 ---@param default SpecFlags|boolean?
 function bossModPrototype:AddHudMapOption(name, spellId, default)
 	self.DefaultOptions[name] = (default == nil) or default
@@ -8193,7 +8338,10 @@ function bossModPrototype:AddHudMapOption(name, spellId, default)
 	self:SetOptionCategory(name, "misc")
 end
 
+---@param name string Option name
+---@param spellId number if used, auto localizes using spell or journal id. if left blank uses generic description
 ---@param default SpecFlags|boolean?
+---@param forceDBM boolean? Used in very rare cases we need to use nameplate feature without a clean place to use enable/disable callbacks for 3rd party NP addons
 function bossModPrototype:AddNamePlateOption(name, spellId, default, forceDBM)
 	if not spellId then
 		error("AddNamePlateOption must provide valid spellId", 2)
@@ -8208,6 +8356,7 @@ function bossModPrototype:AddNamePlateOption(name, spellId, default, forceDBM)
 	self.localization.options[name] = forceDBM and L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED:format(spellId) or L.AUTO_NAMEPLATE_OPTION_TEXT:format(spellId)
 end
 
+---@param spellId number? if used, auto localizes using spell or journal id. if left blank uses generic description
 ---@param default SpecFlags|boolean?
 function bossModPrototype:AddInfoFrameOption(spellId, default, optionVersion, optionalThreshold)
 	local oVersion = ""
