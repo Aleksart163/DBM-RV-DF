@@ -28,31 +28,34 @@ mod:RegisterEventsInCombat(
  or ability.id = 401419 and (type = "applybuff" or type = "removebuff") or ability.id = 405825 or ability.id = 407641
 --]]
 --TODO, https://www.wowhead.com/ptr/spell=407706/molten-wrath seems passive, but still maybe have a 15 second timer with right script
-local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4)
-local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2)
-local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2)
-local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1)
+local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4) --Обжигающий удар
+local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2) --Проводник старейшины
+local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Проводник старейшины
+local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
+--22 06 26 919
+--22 08 02 654
 
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, nil, 2, 2) --Огни рока
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodgeCount(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
-local specWarnChargedSmash							= mod:NewSpecialWarningCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
+local specWarnChargedSmash							= mod:NewSpecialWarningSoakCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
 local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
-local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 1, 2) --Огненный взмах
+local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 3, 2) --Огненный взмах
 local specWarnEarthenCrush							= mod:NewSpecialWarningDefensive(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
-local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, nil, nil, nil, 1, 2) --Земляное сокрушение
+local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
 
-local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 98565, nil, 2, 2, 4)
+local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 98565, nil, 2, 2, 4) --Высвобождение пламени Тьмы(Горящие шары)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1, 8)
 
-local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Древняя ярость
+local timerUnyieldingRage							= mod:NewBuffActiveTimer(96, 406165, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Тлеющая ярость
+local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
 local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3) --Обжигающий удар
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
 local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3) --Взрыв темной лавы
 local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
-local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)--"Burning Orbs"
+local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
+local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 local yellFlamingSlash								= mod:NewShortYell(407547, nil, nil, nil, "YELL") --Огненный взмах
@@ -60,7 +63,7 @@ local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") -
 local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 
 mod:AddInfoFrameOption(405827)
-mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {1})
+mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {1}) --Обжигающий удар
 --mod:AddNamePlateOption("NPAuraOnAscension", 385541)
 mod:AddDropdownOption("TankSwapBehavior", {"DoubleSoak", "MinMaxSoak", "OnlyIfDanger"}, "DoubleSoak", "misc", nil, 407641)
 --mod:GroupSpells(390715, 396094)
@@ -73,20 +76,29 @@ mod.vb.tankCombo = 0--Cast
 mod.vb.comboCount = 0--Combos within cast
 mod.vb.firstHitTank = ""
 mod.vb.shadowflameCount = 0
-local overchargedStacks = {}
+mod.vb.proshlyapMurchalCount = 0
+mod.vb.combatCount = 1
 
-function mod:FlamingSlashTarget(targetname, uId)
-	if not targetname then return end
-	if targetname == UnitName("player") then
-		specWarnFlamingSlash:Show()
-		specWarnFlamingSlash:Play("defensive")
-		yellFlamingSlash:Yell()
+local overchargedStacks = {}
+local firstMurchalProshlyapTimers = {30.1, 13.8, 32.9}
+local secondMurchalProshlyapTimers = {31.1, 14.9, 33.9}
+
+local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
+	self.vb.firstHitTank = ""
+	self.vb.comboCount = 0
+	self.vb.proshlyapMurchalCount = self.vb.proshlyapMurchalCount + 1
+	local proshlyap = self.vb.combatCount == 1 and firstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self.vb.combatCount == 2 and secondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	if proshlyap then
+		timerVolcanicComboCD:Start(proshlyap, self.vb.proshlyapMurchalCount+1)
+		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
 	end
 end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	table.wipe(overchargedStacks)
+	self.vb.proshlyapMurchalCount = 0
+	self.vb.combatCount = 1
 	self.vb.slamCount = 0
 	self.vb.doomCount = 0
 	self.vb.blastCount = 0
@@ -97,10 +109,11 @@ function mod:OnCombatStart(delay)
 	self.vb.shadowflameCount = 0
 	timerSearingSlamCD:Start(9.1-delay, 1)
 	timerChargedSmashCD:Start(21.1-delay, 1)
-	timerVolcanicComboCD:Start(29.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
 	timerShadowlavaBlastCD:Start(95-delay, 1)
-	timerAncientFuryCD:Start(100-delay)
+	timerAncientFuryCD:Start(115-delay)
+	timerVolcanicComboCD:Start(30.1-delay, 1)
+	self:Schedule(30.1, startProshlyapationOfMurchal, self)
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
 		if self.Options.InfoFrame then
@@ -114,6 +127,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
+	self:Unschedule(startProshlyapationOfMurchal)
 	self:UnregisterShortTermEvents()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
@@ -146,12 +160,13 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.smashCount == 1 then
 			timerChargedSmashCD:Start(45.9, self.vb.smashCount+1)
 		end
-	elseif spellId == 407544 then--407544 cast start ID
+	elseif spellId == 407544 then --Огненный взмах
 		self.vb.comboCount = self.vb.comboCount + 1
-	--	self:BossTargetScanner(args.sourceGUID, "FlamingSlashTarget", 0.1, 2)
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnFlamingSlash:Show()
-			specWarnFlamingSlash:Play("defensive")
+			if self:AntiSpam(3.5, "ComboProshlyap") then
+				specWarnFlamingSlash:Show()
+				specWarnFlamingSlash:Play("defensive")
+			end
 		else
 			--Other tank has this debuff already and it will NOT be gone when cast finishes, TAUNT NOW!
 			--This doesn't check TankSwapBehavior dropdown because this always validates that the player about to get hit by this, shouldn't be hit by it
@@ -163,11 +178,13 @@ function mod:SPELL_CAST_START(args)
 				end
 			end
 		end
-	elseif spellId == 407596 then--407596 cast start ID
+	elseif spellId == 407596 then --Земляное сокрушение
 		self.vb.comboCount = self.vb.comboCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnEarthenCrush:Show()
-			specWarnEarthenCrush:Play("defensive")
+			if self:AntiSpam(3.5, "ComboProshlyap") then
+				specWarnEarthenCrush:Show()
+				specWarnEarthenCrush:Play("defensive")
+			end
 		else
 			--Other tank has this debuff already and it will NOT be gone when cast finishes, TAUNT NOW!
 			--This doesn't check TankSwapBehavior dropdown because this always validates that the player about to get hit by this, shouldn't be hit by it
@@ -194,13 +211,21 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 407641 then
-		self.vb.firstHitTank = ""
+		DBM:Debug("Murchal not proshlyap", 2)
+--[[	self.vb.firstHitTank = ""
 		self.vb.tankCombo = self.vb.tankCombo + 1
 		self.vb.comboCount = 0
 		local timer = (self.vb.tankCombo == 1) and 14.9 or (self.vb.tankCombo == 2) and 32.9
 		if timer then
 			timerVolcanicComboCD:Start(timer, self.vb.tankCombo+1)
-		end
+		end]]
+		--22.04.14.379 Пулл босса (обычка)
+		--22.04.44.502 1 каст комбы
+		--22.04.58.400 2 каст комбы
+		--22.05.31.320 3 каст комбы
+		--22.06.57.025 4 каст комбы
+		--22.07.12.001 5 каст комбы
+		--22.07.45.938 6 каст комбы
 	end
 end
 
@@ -248,11 +273,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFlamingSlashTaunt:Show(args.destName)
 			specWarnFlamingSlashTaunt:Play("tauntboss")
 		end
-	elseif spellId == 401419 then
+	elseif spellId == 401419 then --Проводник старейшины
+		self:Unschedule(startProshlyapationOfMurchal)
+		timerVolcanicComboCD:Stop()
 		warnSiphonEnergyApplied:Show(args.destName)
 		timerSearingSlamCD:Stop()
 		timerChargedSmashCD:Stop()
-		timerVolcanicComboCD:Stop()
 		timerDoomFlameCD:Stop()
 		timerShadowlavaBlastCD:Stop()
 		timerAncientFuryCD:Stop()
@@ -281,7 +307,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(overchargedStacks)
 		end
-	elseif spellId == 401419 then
+	elseif spellId == 401419 then --Проводник старейшины
+		self.vb.combatCount = self.vb.combatCount + 1
+		self.vb.proshlyapMurchalCount = 0
 		self:SetStage(0)--I don't nessesarily agree with this, but needed for WA compatability.
 		warnSiphonEnergyRemoved:Show(args.destName)
 		self.vb.slamCount = 0
@@ -296,10 +324,12 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		timerSearingSlamCD:Start(11.2, 1)
 		timerChargedSmashCD:Start(23.2, 1)
-		timerVolcanicComboCD:Start(31.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(97, 1)
-		timerAncientFuryCD:Start(102)
+		timerAncientFuryCD:Start(115)
+		timerVolcanicComboCD:Start(31.1, 1)
+		self:Schedule(31.1, startProshlyapationOfMurchal, self)
+		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
 	end
