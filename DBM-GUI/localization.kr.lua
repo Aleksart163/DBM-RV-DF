@@ -18,6 +18,7 @@ L.OTabOptions					= "핵심 설정"
 L.OTabAbout						= "소개"
 
 L.FOLLOWER						= "추종자"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
+L.STORY					    		= "이야기"--i.e. the new dungeon type in 11.0.0. I haven't found a translated string yet
 
 L.TabCategory_CURRENT_SEASON		= "현재 시즌"
 
@@ -114,13 +115,13 @@ L.RecordOnlyBosses			= "일반몹 기록 안함 (보스만 기록합니다. 보�
 L.DoNotLogLFG				= "던전 찾기와 공격대 찾기 기록 안함 (대기열 등록 콘텐트)"
 --Auto Logging: Recorded Content types
 L.Area_AutoLoggingContent	= "자동으로 기록할 콘텐트"
-L.LogCurrentMythicRaids		= "현재 확장팩 신화 레이드"--Retail Only
-L.LogCurrentRaids			= "현재 확장팩 비 신화 레이드 (영웅, 일반 그리고 던전 찾기와 공찾 기록 안함 옵션이 꺼져있을 경우엔 공찾까지)"
-L.LogTWRaids				= "시간여행 또는 크로미의 시간 레이드"--Retail Only
+L.LogCurrentMythicRaids		= "현재 확장팩 (또는 리믹스) 신화 레이드"--Retail Only
+L.LogCurrentRaids			= "현재 확장팩 (또는 리믹스) 비 신화 레이드 (영웅, 일반 그리고 던전 찾기와 공찾 기록 안함 옵션이 꺼져있을 경우엔 공찾까지)"
+L.LogTWRaids				= "시간여행 또는 크로미의 시간 레이드 (리믹스 제외)"--Retail Only
 L.LogTrivialRaids			= "구 레이드 (이전 확장팩)"
-L.LogCurrentMPlus			= "현재 확장팩 신화+ 던전"--Retail Only
-L.LogCurrentMythicZero		= "현재 확장팩 신화 0단 던전"--Retail Only
-L.LogTWDungeons				= "시간여행 또는 크로미의 시간 레이드"--Retail Only
+L.LogCurrentMPlus			= "현재 확장팩 (또는 리믹스) 신화+ 던전"--Retail Only
+L.LogCurrentMythicZero		= "현재 확장팩 (또는 리믹스) 신화 0단 던전"--Retail Only
+L.LogTWDungeons				= "시간여행 또는 크로미의 시간 던전 (리믹스 제외)"--Retail Only
 L.LogCurrentHeroic			= "현재 확장팩 영웅 던전 (알림: 던전 찾기를 통해 영던을 돌면서 로그를 기록하고 싶다면 던전 찾기 기록 안함 옵션을 끄세요)"
 
 -- Panel: Extra Features

@@ -3,13 +3,13 @@ if not DBM_CORE_L then DBM_CORE_L = {} end
 
 local L = DBM_CORE_L
 
+L.DBM_RV_FORUMS_MESSAGE				= "Нашли баг или неправильный таймер? Считаете что какому-то модулю требуется дополнительное предупреждение, таймер, особенность или локализация?\nПо всем вопросам можете обращаться на discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r или оставлять запросы на |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
+
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
 	L.DEADLY_BOSS_MODS					= "Harmless Minion Mods"
 	L.DBM								= "HMM"
 end
-
-L.DBM_RV_FORUMS_MESSAGE				= "Нашли баг или неправильный таймер? Считаете что какому-то модулю требуется дополнительное предупреждение, таймер, особенность или локализация?\nПо всем вопросам можете обращаться на discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r или оставлять запросы на |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
 
 L.HOW_TO_USE_MOD					= "Добро пожаловать в " .. L.DBM .. ". Наберите /dbm help, чтобы получить список поддерживаемых команд. Для доступа к настройкам наберите /dbm в чате. Загрузите конкретные зоны вручную, чтобы настроить определённых боссов на свой вкус. " .. L.DBM .. " установит настройки по умолчанию для Вашей специализации, но Вы, возможно, захотите настроить их более тонко."
 L.SILENT_REMINDER					= "Напоминание: " .. L.DBM .. " всё ещё в тихом режиме."

@@ -80,16 +80,16 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20240527070000")
+DBM.Revision = parseCurseDate("20240529070000")
 
 local fakeBWVersion, fakeBWHash = 330, "8c25119"--330.1
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
-DBM.DisplayVersion = "10.2.43"--Core version
+DBM.DisplayVersion = "10.2.45"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2024, 5, 27) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
+DBM.ReleaseRevision = releaseDate(2024, 5, 29) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+PForceDisable = private.isCata and 11 or 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
 -- support for github downloads, which doesn't support curse keyword expansion
@@ -3754,7 +3754,7 @@ do
 		self:Schedule(2, throttledTalentCheck, self)
 	end
 	--Throttle this api too.
-	DBM.PLAYER_TALENT_UPDATE = DBM.CHARACTER_POINTS_CHANGED -- Wrath support
+	DBM.PLAYER_TALENT_UPDATE = DBM.CHARACTER_POINTS_CHANGED -- Wrath/Cata support
 end
 
 do
@@ -6386,23 +6386,39 @@ do
 		["EVOKER"] = 1465,
 	}
 
-	function DBM:SetCurrentSpecInfo(useEraFallback)
+	--In event api fails to pull any data at all, just assign classes to generic DPS role (typically unspecced players such as sub level 11)
+	local catafallbackClassToRole = {
+		["MAGE"] = 799,--Arcane Mage
+		["PALADIN"] = 855,--Ret Paladin
+		["WARRIOR"] = 746,--Arms Warrior
+		["DRUID"] = 752,--Balance druid
+		["DEATHKNIGHT"] = 251,--Frost DK
+		["HUNTER"] = 811,--Beastmaster Hunter
+		["PRIEST"] = 795,--Shadow Priest
+		["ROGUE"] = 182,--Assassination Rogue
+		["SHAMAN"] = 263,--Enhancement Shaman
+		["WARLOCK"] = 871,--Affliction Warlock
+	}
+
+	function DBM:SetCurrentSpecInfo()
 		if private.isRetail then
-			currentSpecGroup = GetSpecialization() or 1
-			if GetSpecializationInfo(currentSpecGroup) then
-				currentSpecID, currentSpecName = GetSpecializationInfo(currentSpecGroup)--give temp first spec id for non-specialization char. no one should use dbm with no specialization, below level 10, should not need dbm.
+			currentSpecGroup = GetSpecialization()
+			if currentSpecGroup and GetSpecializationInfo(currentSpecGroup) then
+				currentSpecID, currentSpecName = GetSpecializationInfo(currentSpecGroup)
 				currentSpecID = tonumber(currentSpecID)
 			else
-				currentSpecID, currentSpecName = fallbackClassToRole[playerClass], playerClass
+				currentSpecID, currentSpecName = fallbackClassToRole[playerClass], playerClass--give temp first spec id for non-specialization char. no one should use dbm with no specialization, below level 10, should not need dbm.
 			end
-		elseif private.isCata and not useEraFallback then
-			currentSpecGroup = GetPrimaryTalentTree() or 1
-			if GetTalentTabInfo(currentSpecGroup) then
-				currentSpecID, currentSpecName = GetTalentTabInfo(currentSpecGroup)--give temp first spec id for non-specialization char. no one should use dbm with no specialization, below level 10, should not need dbm.
+			DBM:Debug("Current specID set to: "..currentSpecID, 2)
+		elseif private.isCata then
+			currentSpecGroup = GetPrimaryTalentTree()
+			if currentSpecGroup and GetTalentTabInfo(currentSpecGroup) then
+				currentSpecID, currentSpecName = GetTalentTabInfo(currentSpecGroup)
 				currentSpecID = tonumber(currentSpecID)
 			else
-				currentSpecID = playerClass .. tostring(1)--Probably low level, or initially loading into world
+				currentSpecID, currentSpecName = catafallbackClassToRole[playerClass], playerClass--give temp first spec id for non-specialization char. no one should use dbm with no specialization, below level 10, should not need dbm.
 			end
+			DBM:Debug("Current specID set to: "..currentSpecID, 2)
 		else
 			local numTabs = GetNumTalentTabs()
 			local highestPointsSpent = 0
@@ -6422,6 +6438,10 @@ do
 			--If 0 talents are spent, then just set them to first spec to prevent nil errors
 			--This should only happen for a level 1 player or someone who's in middle of respecing
 			if not currentSpecID then currentSpecID = playerClass .. tostring(1) end
+		end
+		if not InCombatLockdown() and currentSpecID and not private.specRoleTable[currentSpecID] then
+			--Refresh entire spec table if not in combat and it's still missing for some reason
+			DBMExtraGlobal:rebuildSpecTable()
 		end
 	end
 end
@@ -7328,12 +7348,16 @@ function DBM:RoleCheck(ignoreLoot)
 		if not currentSpecID then
 			DBM:SetCurrentSpecInfo()
 		end
-		if private.specRoleTable[currentSpecID]["Healer"] then
-			role = "HEALER"
-		elseif private.specRoleTable[currentSpecID]["Tank"] then
-			role = "TANK"
-		else
-			role = "DAMAGER"
+		if currentSpecID and private.specRoleTable[currentSpecID] then
+			if private.specRoleTable[currentSpecID]["Healer"] then
+				role = "HEALER"
+			elseif private.specRoleTable[currentSpecID]["Tank"] then
+				role = "TANK"
+			else
+				role = "DAMAGER"
+			end
+		else--By some miracle, despite excessive redundancy, it still failed because classic spagetti code.
+			role = "DAMAGER"--Set default role (which is what cataclysm does btw, it sets everyone to damager on raid join unless changed by our mod)
 		end
 	end
 	if not InCombatLockdown() and not IsFalling() and ((IsPartyLFG() and (difficulties.difficultyIndex == 14 or difficulties.difficultyIndex == 15)) or not IsPartyLFG()) then

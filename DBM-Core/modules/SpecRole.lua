@@ -498,7 +498,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 			},
 			[746] = {	--Arms Warrior
 				["Dps"] = true,
-				["Tank"] = private.isClassic and true or false,
+				["Tank"] = false,
 				["Melee"] = true,
 				["MeleeDps"] = true,
 				["Physical"] = true,
@@ -512,7 +512,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["MagicDispeller"] = (IsSpellKnown(23922) or IsSpellKnown(23923) or IsSpellKnown(23924) or IsSpellKnown(23925) or IsSpellKnown(25258) or IsSpellKnown(30356)),--Shield Slam
 			},
 			[752] = {	--Balance Druid
-				["Healer"] = private.isClassic and true or false,
+				["Healer"] = false,
 				["Dps"] = true,
 				["Ranged"] = true,
 				["RangedDps"] = true,
@@ -522,9 +522,9 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["RemoveCurse"] = true,
 			},
 			[750] = { --Feral Druid
-				["Healer"] = private.isClassic and true or false,
+				["Healer"] = false,
 				["Dps"] = true,
-				["Tank"] = IsPlayerSpell(23922) and true or private.isClassic and true or false,--Only sets true if Nuturing Instinct is learned for non vanilla
+				["Tank"] = IsPlayerSpell(23922) and true or false,--Only sets true if Nuturing Instinct is learned for non vanilla
 				["Melee"] = true,
 				["MeleeDps"] = true,
 				["Physical"] = true,
@@ -626,7 +626,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["SpellCaster"] = true,
 				["CasterDps"] = true,
 			},
-			[250] = {--Blood DK
+			[398] = {--Blood DK
 				["Tank"] = true,
 				["Melee"] = true,
 				["Dps"] = false,
@@ -634,7 +634,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["Physical"] = true,
 				["HasInterrupt"] = true,
 			},
-			[251] = {--Frost DK
+			[399] = {--Frost DK
 				["Tank"] = false,
 				["Melee"] = true,
 				["Dps"] = true,
@@ -642,7 +642,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["Physical"] = true,
 				["HasInterrupt"] = true,
 			},
-			[252] = {--Unholy DK
+			[400] = {--Unholy DK
 				["Tank"] = false,
 				["Melee"] = true,
 				["Dps"] = true,
