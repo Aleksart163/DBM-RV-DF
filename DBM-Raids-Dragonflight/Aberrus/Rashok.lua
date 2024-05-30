@@ -32,8 +32,6 @@ local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4) --Обж
 local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2) --Проводник старейшины
 local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Проводник старейшины
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
---22 06 26 919
---22 08 02 654
 
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар

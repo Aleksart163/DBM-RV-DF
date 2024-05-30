@@ -6,7 +6,7 @@ mod:SetRevision("20240305165926")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 409612 406911",
+	"SPELL_CAST_START 409612 406911 411755",
 --	"SPELL_CAST_SUCCESS 413785",
 	"SPELL_AURA_APPLIED 411808 413785",
 --	"SPELL_AURA_APPLIED_DOSE",
@@ -18,6 +18,7 @@ mod:RegisterEvents(
 (ability.id = 409612 or ability.id = 406911) and type = "begincast"
  or ability.id = 413785 and type = "cast"
 ]]--
+local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, nil, 2, 2) --Истребление
 local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2)
 local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil, nil, 1, 2)
 local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2)
@@ -47,6 +48,9 @@ function mod:SPELL_CAST_START(args)
 			specWarnBrutalCauterization:Show(args.sourceName)
 			specWarnBrutalCauterization:Play("kickcast")
 		end
+	elseif spellId == 411755 and self:AntiSpam(2, "Eradicate") then
+		specWarnEradicate:Show()
+		specWarnEradicate:Play("shockwave")
 	end
 end
 
