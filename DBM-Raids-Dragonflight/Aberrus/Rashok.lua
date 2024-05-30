@@ -51,7 +51,7 @@ local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, 
 local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3) --Обжигающий удар
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
 local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3) --Взрыв темной лавы
-local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
+local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
 --local berserkTimer								= mod:NewBerserkTimer(600)
@@ -78,17 +78,29 @@ mod.vb.proshlyapMurchalCount = 0
 mod.vb.combatCount = 1
 
 local overchargedStacks = {}
-local firstMurchalProshlyapTimers = {30.1, 13.8, 32.9}
-local secondMurchalProshlyapTimers = {31.1, 14.9, 33.9}
+local normalFirstMurchalProshlyapTimers = {30.1, 13.8, 32.9}
+local normalSecondMurchalProshlyapTimers = {31.1, 14.9, 33.9}
+local normalThirdMurchalProshlyapTimers = {30.2, 15.9, 33}
+local heroicFirstMurchalProshlyapTimers = {29.1, 15, 33}
+local heroicSecondMurchalProshlyapTimers = {31.1, 15, 33}
+local heroicThirdMurchalProshlyapTimers = {30.2, 15.9, 33}
 
 local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	self.vb.firstHitTank = ""
 	self.vb.comboCount = 0
 	self.vb.proshlyapMurchalCount = self.vb.proshlyapMurchalCount + 1
-	local proshlyap = self.vb.combatCount == 1 and firstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self.vb.combatCount == 2 and secondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap  = self:IsMythic() and self.vb.combatCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 1 and normalFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap2 = self:IsMythic() and self.vb.combatCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 2 and normalSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap3 = self:IsMythic() and self.vb.combatCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 3 and normalThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
 	if proshlyap then
 		timerVolcanicComboCD:Start(proshlyap, self.vb.proshlyapMurchalCount+1)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
+	elseif proshlyap2 then
+		timerVolcanicComboCD:Start(proshlyap2, self.vb.proshlyapMurchalCount+1)
+		self:Schedule(proshlyap2, startProshlyapationOfMurchal, self)
+	elseif proshlyap3 then
+		timerVolcanicComboCD:Start(proshlyap3, self.vb.proshlyapMurchalCount+1)
+		self:Schedule(proshlyap3, startProshlyapationOfMurchal, self)
 	end
 end
 
@@ -109,11 +121,11 @@ function mod:OnCombatStart(delay)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
 	timerShadowlavaBlastCD:Start(95-delay, 1)
-	timerAncientFuryCD:Start(115-delay)
-	timerVolcanicComboCD:Start(30.1-delay, 1)
-	self:Schedule(30.1, startProshlyapationOfMurchal, self)
+	timerAncientFuryCD:Start(120-delay)
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
+		timerVolcanicComboCD:Start(29.1-delay, 1)
+		self:Schedule(29.1, startProshlyapationOfMurchal, self)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM:GetSpellName(405827))
 			DBM.InfoFrame:Show(5, "table", overchargedStacks, 1)
@@ -121,9 +133,15 @@ function mod:OnCombatStart(delay)
 		self:RegisterShortTermEvents(
 			"SPELL_ENERGIZE 405825"
 		)
+	elseif self:IsHeroic() then
+		timerVolcanicComboCD:Start(29.1-delay, 1)
+		self:Schedule(29.1, startProshlyapationOfMurchal, self)
+	else
+		timerVolcanicComboCD:Start(30.1-delay, 1)
+		self:Schedule(30.1, startProshlyapationOfMurchal, self)
 	end
 end
-
+	
 function mod:OnCombatEnd()
 	self:Unschedule(startProshlyapationOfMurchal)
 	self:UnregisterShortTermEvents()
@@ -318,8 +336,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.shadowflameCount = 0
 		if self.vb.combatCount == 2 then
 			self:SetStage(2)
+			timerVolcanicComboCD:Start(31.1, 1)
 		elseif self.vb.combatCount == 3 then
 			self:SetStage(3)
+			timerVolcanicComboCD:Start(30.2, 1)
 		end
 		if self:IsMythic() then
 			timerUnleashedShadowflameCD:Start(6.2, 1)
@@ -329,7 +349,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(97, 1)
 		timerAncientFuryCD:Start(115)
-		timerVolcanicComboCD:Start(31.1, 1)
 		self:Schedule(31.1, startProshlyapationOfMurchal, self)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
