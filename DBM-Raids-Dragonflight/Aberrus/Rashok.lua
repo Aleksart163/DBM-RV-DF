@@ -310,7 +310,6 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 401419 then --Проводник старейшины
 		self.vb.combatCount = self.vb.combatCount + 1
 		self.vb.proshlyapMurchalCount = 0
-		self:SetStage(0)--I don't nessesarily agree with this, but needed for WA compatability.
 		warnSiphonEnergyRemoved:Show(args.destName)
 		self.vb.slamCount = 0
 		self.vb.doomCount = 0
@@ -319,6 +318,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.tankCombo = 0
 		self.vb.comboCount = 0
 		self.vb.shadowflameCount = 0
+		if self.vb.combatCount == 2 then
+			self:SetStage(2)
+		elseif self.vb.combatCount == 3 then
+			self:SetStage(3)
+		end
 		if self:IsMythic() then
 			timerUnleashedShadowflameCD:Start(6.2, 1)
 		end
