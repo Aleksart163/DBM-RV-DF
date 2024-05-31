@@ -32,6 +32,7 @@ local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4) --Обж
 local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2) --Проводник старейшины
 local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Проводник старейшины
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
+local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар
@@ -102,6 +103,7 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 		timerVolcanicComboCD:Start(proshlyap3, self.vb.proshlyapMurchalCount+1)
 		self:Schedule(proshlyap3, startProshlyapationOfMurchal, self)
 	end
+	warnWrathDjaruun:Show()
 end
 
 function mod:OnCombatStart(delay)
@@ -337,9 +339,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.vb.combatCount == 2 then
 			self:SetStage(2)
 			timerVolcanicComboCD:Start(31.1, 1)
+			self:Schedule(31.1, startProshlyapationOfMurchal, self)
 		elseif self.vb.combatCount == 3 then
 			self:SetStage(3)
 			timerVolcanicComboCD:Start(30.2, 1)
+			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 		end
 		if self:IsMythic() then
 			timerUnleashedShadowflameCD:Start(6.2, 1)
@@ -349,7 +353,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(97, 1)
 		timerAncientFuryCD:Start(115)
-		self:Schedule(31.1, startProshlyapationOfMurchal, self)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
