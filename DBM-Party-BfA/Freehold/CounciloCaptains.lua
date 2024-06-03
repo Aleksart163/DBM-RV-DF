@@ -30,13 +30,13 @@ mod:RegisterEventsInCombat(
 --General
 ----Announce Brews
 --text, color, icon, optionDefault, optionName, soundOption, spellID
-local warnGoodBrew					= mod:NewAnnounce("warnGoodBrew", 1, 265088, nil, nil, nil, 264605)
-local warnCausticBrew				= mod:NewCastAnnounce(265168, 4)
-local warnCausticBrewOnBoss			= mod:NewTargetNoFilterAnnounce(278467, 1)
+local warnGoodBrew					= mod:NewAnnounce("warnGoodBrew", 1, 265088, nil, nil, nil, 264605) --Обслуживание клиентов (анонс о баффах)
+local warnCausticBrew				= mod:NewCastAnnounce(265168, 4) --Едкое пойло Вольной Гавани
+--local warnCausticBrewOnBoss			= mod:NewTargetNoFilterAnnounce(278467, 1) --Едкое пойло Вольной Гавани
 
 local specWarnBrewOnBoss			= mod:NewSpecialWarning("specWarnBrewOnBoss", "Tank", nil, nil, 1, 2)
 
-local timerTendingBarCD				= mod:NewNextTimer(8, 264605, nil, nil, nil, 3)
+local timerTendingBarCD				= mod:NewNextTimer(8, 264605, nil, nil, nil, 3) --Обслуживание клиентов
 
 --mod:GroupSpells(264605, 265168)--Group good brew and bad brew with "tending Bar"
 --Jolly
@@ -219,11 +219,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBrewOnBoss:Show(args.destName)
 			specWarnBrewOnBoss:Play("moveboss")
 		end
-	elseif spellId == 278467 and self:AntiSpam(3, 2) then
+--[[	elseif spellId == 278467 and self:AntiSpam(3, 2) then
 		local unitId = self:GetUnitIdFromGUID(args.destGUID, true)
 		if unitId and UnitIsEnemy("player", unitId) then
 			warnCausticBrewOnBoss:Show(args.destName)
-		end
+		end]]
 	end
 end
 
