@@ -32,29 +32,29 @@ mod:RegisterEvents(
  or (ability.id = 368287 or ability.id = 383385 or ability.id = 382435 or ability.id = 384930 or ability.id = 372711) and type = "cast"
  or ability.id = 374057
 --]]
-local warnBurstofDecay						= mod:NewCastAnnounce(374544, 4)--Change to target scan?
-local warnHidiousCackle						= mod:NewCastAnnounce(367500, 4)
-local warnScreech							= mod:NewCastAnnounce(385029, 4)
+local warnBurstofDecay						= mod:NewCastAnnounce(374544, 4) --Взрыв разложения
+local warnHidiousCackle						= mod:NewCastAnnounce(367500, 4) --Ужасный смех
+local warnScreech							= mod:NewCastAnnounce(385029, 4) --Визг
 local warnDecayClaws						= mod:NewCastAnnounce(382787, 4, nil, nil, "Tank|Healer") --Разлагающие когти
 local warnSummonLashers						= mod:NewCastAnnounce(383062, 2, nil, nil, "Tank") --Призыв плеточников
-local warnDecayingRoots						= mod:NewCastAnnounce(373897, 3)
-local warnBurst								= mod:NewCastAnnounce(374569, 4)
-local warnWitheringContagion				= mod:NewTargetAnnounce(383087, 3)
-local warnWitheringBurst					= mod:NewTargetAnnounce(367503, 3)
-local warnInfuseCorruption					= mod:NewTargetNoFilterAnnounce(372711, 3)--Used as target warning but is off interrupt too
-local warnStealth							= mod:NewSpellAnnounce(384930, 3)
+local warnDecayingRoots						= mod:NewCastAnnounce(373897, 3) --Разлагающиеся корни
+local warnBurst								= mod:NewCastAnnounce(374569, 4) --Взрыв
+local warnWitheringContagion				= mod:NewTargetAnnounce(383087, 3) --Иссушающее заражение
+local warnWitheringBurst					= mod:NewTargetAnnounce(367503, 3) --Губительный прорыв
+local warnInfuseCorruption					= mod:NewTargetNoFilterAnnounce(372711, 3) --Насыщение порчей Used as target warning but is off interrupt too
+local warnStealth							= mod:NewSpellAnnounce(384930, 3) --Незаметность
 --local warnSummontotem						= mod:NewSpellAnnounce(374057, 4)--Despite tooltip showing cast time, only event in log is SPELL_SUMMON
 
 local specWarnViolentWhirlwind				= mod:NewSpecialWarningRun(388046, "Melee", nil, nil, 4, 2) --Убийственный вихрь
-local specWarnRottenMeatYou					= mod:NewSpecialWarningRun(384974, nil, nil, nil, 4, 2)
-local specWarnViciousClawmangle				= mod:NewSpecialWarningRun(367484, nil, nil, nil, 4, 2)
-local specWarnRagestorm						= mod:NewSpecialWarningRun(382555, "Melee", nil, nil, 4, 2)
-local specWarnRagestormDispel				= mod:NewSpecialWarningDispel(382555, "RemoveEnrage", nil, nil, 1, 2)
-local specWarnBloodyRage					= mod:NewSpecialWarningDispel(385827, "RemoveEnrage", nil, nil, 1, 2)
-local specWarnWitheringPoison				= mod:NewSpecialWarningDispel(385058, "RemovePoison", nil, nil, 1, 2)
-local specWarnRottenMeat					= mod:NewSpecialWarningDispel(384974, "RemovePoison", nil, nil, 1, 2)
-local specWarnWithering						= mod:NewSpecialWarningDispel(368081, false, nil, nil, 1, 2)
-local specWarnWitheringContagion			= mod:NewSpecialWarningMoveAway(383087, nil, nil, nil, 1, 2)
+local specWarnRottenMeatYou					= mod:NewSpecialWarningRun(384974, nil, nil, nil, 4, 2) --Протухшее мясо
+local specWarnViciousClawmangle				= mod:NewSpecialWarningRun(367484, nil, nil, nil, 4, 2) --Жестокий коготь
+local specWarnRagestorm						= mod:NewSpecialWarningRun(382555, "Melee", nil, nil, 4, 2) --Яростный вихрь
+local specWarnRagestormDispel				= mod:NewSpecialWarningDispel(382555, "RemoveEnrage", nil, nil, 1, 2) --Яростный вихрь
+local specWarnBloodyRage					= mod:NewSpecialWarningDispel(385827, "RemoveEnrage", nil, nil, 1, 2) --Кровавая ярость
+local specWarnWitheringPoison				= mod:NewSpecialWarningDispel(385058, "RemovePoison", nil, nil, 1, 2) --Иссушающий яд
+local specWarnRottenMeat					= mod:NewSpecialWarningDispel(384974, "RemovePoison", nil, nil, 1, 2) --Протухшее мясо
+local specWarnWithering						= mod:NewSpecialWarningDispel(368081, false, nil, nil, 1, 2) --Иссушение
+local specWarnWitheringContagion			= mod:NewSpecialWarningMoveAway(383087, nil, nil, nil, 4, 2) --Иссушающее заражение
 local specWarnStinkBreath					= mod:NewSpecialWarningDodge(388060, nil, nil, nil, 2, 2) --Вонючее дыхание
 local specWarnToxicTrap						= mod:NewSpecialWarningDodge(368287, nil, nil, nil, 2, 2)
 local specWarnRottingSurge					= mod:NewSpecialWarningDodge(383385, nil, nil, nil, 2, 2) --Гнилостный всплеск
@@ -63,15 +63,15 @@ local specWarnBloodthirstyCharge			= mod:NewSpecialWarningDodge(385832, nil, nil
 local specWarnSummontotem					= mod:NewSpecialWarningSwitch(374057, "Dps", nil, nil, 1, 2)
 local specWarnRotchantingTotem				= mod:NewSpecialWarningSwitch(382435, "Dps", nil, nil, 1, 2)
 local specWarnWitheringBurst				= mod:NewSpecialWarningYou(367503, nil, nil, nil, 1, 2) --Губительный прорыв
-local specWarnBurstofDecay					= mod:NewSpecialWarningInterrupt(374544, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHidiousCackle					= mod:NewSpecialWarningInterrupt(367500, "HasInterrupt", nil, nil, 1, 2)--46?
+local specWarnBurstofDecay					= mod:NewSpecialWarningInterrupt(374544, "HasInterrupt", nil, nil, 1, 2) --Взрыв разложения
+local specWarnHidiousCackle					= mod:NewSpecialWarningInterrupt(367500, "HasInterrupt", nil, nil, 1, 2) --Ужасный смех
 local specWarnDecaySurge					= mod:NewSpecialWarningInterrupt(382474, "HasInterrupt", nil, nil, 1, 2)
-local specWarnScreech						= mod:NewSpecialWarningInterrupt(385029, "HasInterrupt", nil, nil, 1, 2)
+local specWarnScreech						= mod:NewSpecialWarningInterrupt(385029, "HasInterrupt", nil, nil, 1, 2) --Визг
 local specWarnNecroticBreath				= mod:NewSpecialWarningSpell(382712, nil, nil, nil, 2, 2)--26.7-40?
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(383399, nil, nil, nil, 1, 8)
 
 local timerDecayClawsCD						= mod:NewCDNPTimer(8.9, 382787, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разлагающие когти
-local timerWitheringBurstCD					= mod:NewCDNPTimer(19.4, 367503, nil, nil, nil, 3) --Губительный прорыв 19-26
+local timerWitheringBurstCD					= mod:NewCDNPTimer(16.8, 367503, nil, nil, nil, 3) --Губительный прорыв 19-26
 local timerSummonLashersCD					= mod:NewCDNPTimer(12.2, 383062, nil, nil, nil, 1) --Призыв плеточников 12-15
 local timerStinkBreathCD					= mod:NewCDNPTimer(17, 388060, nil, nil, nil, 3) --Вонючее дыхание
 local timerViolentWhirlwindCD				= mod:NewCDNPTimer(17, 388046, nil, nil, nil, 2) --Убийственный вихрь
@@ -79,8 +79,10 @@ local timerStompCD							= mod:NewCDNPTimer(17, 373943, nil, nil, nil, 2) --То
 local timerRottingSurgeCD					= mod:NewCDNPTimer(19.1, 383385, nil, nil, nil, 3) --Гнилостный всплеск TODO, limited data
 --local timerRottenMeatCD						= mod:NewCDNPTimer(23, 384974, nil, nil, nil, 3, nil, DBM_COMMON_L.POISON_ICON)
 
-local yellWitheringContagion				= mod:NewYell(383087, nil, nil, nil, "YELL")
+local yellspecWarnWithering					= mod:NewYell(368081, nil, nil, nil, "YELL") --Иссушение
+local yellWitheringContagion				= mod:NewYell(383087, nil, nil, nil, "YELL") --Иссушающее заражение
 local yellWitheringBurst					= mod:NewYell(367503, nil, nil, nil, "YELL") --Губительный прорыв
+local yellRottenMeatYou						= mod:NewYell(384974, nil, nil, nil, "YELL") --Протухшее мясо
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
@@ -235,9 +237,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 385058 and args:IsDestTypePlayer() and self:CheckDispelFilter("poison") and self:AntiSpam(3, 3) then
 		specWarnWitheringPoison:Show(args.destName)
 		specWarnWitheringPoison:Play("helpdispel")
-	elseif spellId == 368081 and args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, 3) then
-		specWarnWithering:Show(args.destName)
-		specWarnWithering:Play("helpdispel")
+	elseif spellId == 368081 and args:IsDestTypePlayer() then --Иссушение
+		if args:IsPlayer() then
+			yellspecWarnWithering:Yell()
+		elseif self:AntiSpam(3, 3) then
+			if self:IsSpellCaster() then
+				specWarnWithering:Show(args.destName)
+				specWarnWithering:Play("helpdispel")
+			end
+		end
 	elseif spellId == 384974 and args:IsDestTypePlayer() then
 		if self.Options.SpecWarn384974dispel and self:CheckDispelFilter("poison") and self:AntiSpam(3, 3) then
 			specWarnRottenMeat:Show(args.destName)
@@ -245,6 +253,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif args:IsPlayer() and self:AntiSpam(4, 1) then
 			specWarnRottenMeatYou:Show()
 			specWarnRottenMeatYou:Play("justrun")
+			yellRottenMeatYou:Yell()
 		end
 	elseif spellId == 367484 and args:IsPlayer() and self:AntiSpam(4, 1) then
 		specWarnViciousClawmangle:Show()

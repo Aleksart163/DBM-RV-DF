@@ -29,38 +29,39 @@ mod:RegisterEventsInCombat(
 --]]
 --Rira Hackclaw
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24732))
-local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4)
-local warnBladestorm							= mod:NewTargetNoFilterAnnounce(377827, 3)
+local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4) --Дикий рывок
+local warnBladestorm							= mod:NewTargetNoFilterAnnounce(377827, 3) --Вихрь клинков
 
-local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, nil, nil, 1, 2)
-local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 1, 2)
-local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 1, 2)
+local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, nil, nil, 1, 2) --Дикий рывок
+local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 1, 2) --Дикий рывок
+local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 3, 2) --Вихрь клинков
 
-local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON)
-local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3)
+local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок
+local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вихрь клинков
 --Gashtooth
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24733))
-local warnMarkedforButchery						= mod:NewTargetCountAnnounce(378229, 4, nil, "Healer", nil, nil, nil, nil, true)
+local warnMarkedforButchery						= mod:NewTargetCountAnnounce(378229, 4, nil, "Healer", nil, nil, nil, nil, true) --Метка свежевателя
 
-local specWarnDecayedSenses						= mod:NewSpecialWarningDispel(381379, "RemoveMagic", nil, nil, 1, 2)
-local specWarnGashFrenzy						= mod:NewSpecialWarningCount(378029, "Healer", nil, nil, 2, 2)
-local specWarnMarkedforButchery					= mod:NewSpecialWarningDefensive(378229, nil, nil, nil, 3, 2)
+local specWarnDecayedSenses						= mod:NewSpecialWarningDispel(381379, "RemoveMagic", nil, nil, 3, 2) --Гниющие глаза
+local specWarnGashFrenzy						= mod:NewSpecialWarningCount(378029, "Healer", nil, nil, 2, 2) --Разрывающее бешенство
+local specWarnMarkedforButchery					= mod:NewSpecialWarningDefensive(378229, nil, nil, nil, 3, 2) --Метка свежевателя
 
-local timerDecayedSensesCD						= mod:NewCDTimer(59.4, 381379, nil, nil, nil, 3)
-local timerGashFrenzyCD							= mod:NewCDCountTimer(59.4, 378029, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.BLEED_ICON)
-local timerMarkedforButcheryCD					= mod:NewCDCountTimer(59.5, 378229, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
+local timerDecayedSensesCD						= mod:NewCDTimer(59.4, 381379, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Гниющие глаза
+local timerGashFrenzyCD							= mod:NewCDCountTimer(59.4, 378029, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.BLEED_ICON) --Разрывающее бешенство
+local timerMarkedforButcheryCD					= mod:NewCDCountTimer(59.5, 378229, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Метка свежевателя
 --Tricktotem
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24734))
-local warnHextrick								= mod:NewTargetNoFilterAnnounce(381466, 3)
-local warnBloodlust								= mod:NewSpellAnnounce(377965, 3)
+local warnHextrick								= mod:NewTargetNoFilterAnnounce(381466, 3) --Хитрый сглаз
+local warnBloodlust								= mod:NewSpellAnnounce(377965, 3) --Кровавое бешенство
 
-local specWarnHextrickTotem						= mod:NewSpecialWarningSwitch(381470, "-Healer", nil, nil, 1, 2)
-local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHextrickTotem						= mod:NewSpecialWarningSwitch(381470, "-Healer", nil, nil, 3, 2) --Тотем хитрого сглаза
+local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "HasInterrupt", nil, nil, 1, 2) --Великий исцеляющий поток
 
-local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Тотем хитрого сглаза
+local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Великий исцеляющий поток
 
-local yellSavageCharge							= mod:NewYell(381461, nil, nil, nil, "YELL")
+local yellBladestorm							= mod:NewYell(377827, nil, nil, nil, "YELL") --Вихрь клинков
+local yellSavageCharge							= mod:NewYell(381461, nil, nil, nil, "YELL") --Дикий рывок
 
 mod.vb.healingRapidsCount = 0
 mod.vb.frenzyCount = 0
@@ -73,22 +74,22 @@ local function scanBosses(self, delay)
 			local cid = self:GetUnitCreatureId(unitID)
 			local bossGUID = UnitGUID(unitID)
 			if cid == 186122 then--Rira Hackclaw
-				timerBladestormCD:Start(19.2-delay, bossGUID)
+				timerBladestormCD:Start(21.1-delay, bossGUID) --
 				timerSavageChargeCD:Start(48.3-delay, bossGUID)
 			elseif cid == 186124 then--Gashtooth
 				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID)
 				timerDecayedSensesCD:Start(45.8-delay, bossGUID)
 				if self:IsMythic() then
-					timerMarkedforButcheryCD:Start(12.1-delay, 1, bossGUID)
+					timerMarkedforButcheryCD:Start(12.5-delay, 1, bossGUID)
 				end
 			else--Tricktotem
-				timerGreaterHealingRapidsCD:Start(10.7-delay, 1, bossGUID)
+				timerGreaterHealingRapidsCD:Start(11.9-delay, 1, bossGUID) --
 				timerHexrickTotemCD:Start(44.8-delay, bossGUID)
 			end
 		end
 	end
 end
-
+--02 17 54 560
 function mod:MarkedTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -165,15 +166,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		if spellId == 381835 then
 			timerBladestormCD:Start(nil, args.sourceGUID)
 		end
-		if args:IsPlayer() and not self:IsTank() and self:AntiSpam(3, 1) then
+		if args:IsPlayer() and self:AntiSpam(3, 1) then
 			specWarnBladestorm:Show()
 			specWarnBladestorm:Play("whirlwind")
+			yellBladestorm:Yell()
 		else
 			warnBladestorm:Show(args.destName)
 		end
-	elseif args:IsSpellID(381387, 381379) and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") then
-		specWarnDecayedSenses:Show(args.destName)
-		specWarnDecayedSenses:Play("helpdispel")
+	elseif args:IsSpellID(381387, 381379) and args:IsDestTypePlayer() and not args:IsPlayer() then
+		if self:IsSpellCaster() then
+			specWarnDecayedSenses:Show(args.destName)
+			specWarnDecayedSenses:Play("helpdispel")
+		end
 --	elseif spellId == 378229 then
 --		if args:IsPlayer() then
 --			specWarnMarkedforButchery:Show()
