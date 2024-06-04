@@ -7,7 +7,7 @@ mod:SetEncounterID(2683)
 mod:SetUsedIcons(1, 2, 3, 8)
 mod:SetHotfixNoticeRev(20230619000000)
 --mod:SetMinSyncRevision(20221215000000)
-mod.respawnTime = 29
+mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
 
@@ -40,7 +40,8 @@ local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, 18883
 local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, 149213, nil, 2, 2)
 local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402994, nil, 80801, nil, 1, 2)
 local specWarnBlazingBreath							= mod:NewSpecialWarningDodge(409093, nil, 18357, nil, 2, 2)
-local specWarnIncineratingMaws						= mod:NewSpecialWarningStack(404846, nil, 2, nil, nil, 1, 6)
+local specWarnIncineratingMaws						= mod:NewSpecialWarningDefensive(404846, nil, nil, nil, 3, 4) --Обжигающие пасти
+local specWarnIncineratingMaws2						= mod:NewSpecialWarningStack(404846, nil, 2, nil, nil, 1, 6)
 local specWarnIncineratingMawsSwap					= mod:NewSpecialWarningTaunt(404846, nil, nil, nil, 1, 2)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(411633, nil, nil, nil, 1, 8)
 
@@ -49,8 +50,9 @@ local timerMoltenSpittleCD							= mod:NewCDCountTimer(29.9, 402994, 307031, nil
 local timerIngitingRoarCD							= mod:NewCDCountTimer(28.9, 403740, 188832, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--"Roar"
 local timerOverpoweringStompCD						= mod:NewCDCountTimer(101.7, 403671, 149213, nil, nil, 2)--"Knockback"
 local timerBlazingBreathCD							= mod:NewCDCountTimer(29.9, 409093, 18357, nil, nil, 3)
-local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 
+local yellIncineratingMaws							= mod:NewShortYell(404846, nil, nil, nil, "YELL") --Обжигающие пасти
 local yellMoltenSpittle								= mod:NewShortPosYell(402994, "%s", nil, nil, "YELL")
 local yellMoltenSpittleFades						= mod:NewIconFadesYell(402994, nil, nil, nil, "YELL")
 
@@ -67,6 +69,15 @@ mod.vb.stompCount = 0
 mod.vb.breathCount = 0
 mod.vb.mawCount = 0
 mod.vb.spitIcon = 1
+
+function mod:IncineratingMawsTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnIncineratingMaws:Show()
+		specWarnIncineratingMaws:Play("defensive")
+		yellIncineratingMaws:Yell()
+	end
+end
 
 function mod:OnCombatStart(delay)
 	table.wipe(heatStacks)
@@ -214,6 +225,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 404846 then
 		self.vb.mawCount = self.vb.mawCount + 1
+		self:BossTargetScanner(args.sourceGUID, "IncineratingMawsTarget", 0.1, 2)
 		if self:IsEasy() then
 			--22.2, 22.3, 22.2, 22.2, 22.2, 24.8, 21.8, 22.3, 22.2, 22.2, 24.5, 22.2, 22.3, 22.2
 			if self.vb.mawCount % 5 == 0 then
@@ -265,8 +277,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount % 3 == 0 then--Boss applies 3 stacks per cast
 			if args:IsPlayer() then
 				if amount >= 6 then--Only big alert if other tank misses a swap
-					specWarnIncineratingMaws:Show(amount)
-					specWarnIncineratingMaws:Play("stackhigh")
+					specWarnIncineratingMaws2:Show(amount)
+					specWarnIncineratingMaws2:Play("stackhigh")
 				else
 					warnIncineratingMaws:Show(args.destName, amount)
 				end

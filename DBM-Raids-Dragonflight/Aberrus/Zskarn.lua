@@ -7,7 +7,7 @@ mod:SetEncounterID(2689)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetHotfixNoticeRev(20230718000000)
 --mod:SetMinSyncRevision(20221215000000)
-mod.respawnTime = 29
+mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
 
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 404007 406725 405736 181113",
 	"SPELL_AURA_APPLIED 405592 404010 404942",
 	"SPELL_AURA_APPLIED_DOSE 404942",
-	"SPELL_AURA_REMOVED 404010",
+	"SPELL_AURA_REMOVED 404010 404942",
 	"SPELL_DAMAGE 404955",
 	"SPELL_MISSED 404955",
 --	"SPELL_PERIODIC_DAMAGE",
@@ -41,7 +41,8 @@ local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil,
 local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, 149213, nil, 2, 2)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2)
-local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 2)
+local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 6, nil, nil, 1, 4) --Обжигающие когти
+local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
 local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
@@ -56,9 +57,11 @@ local berserkTimer								= mod:NewBerserkTimer(600)
 
 local yellUnstableEmbers						= mod:NewShortYell(404010, nil, nil, nil, "YELL")
 
+mod:AddInfoFrameOption(404942, "Tank|Healer")
 mod:AddSetIconOption("SetIconOnGolems", 405812, true, 5, {8, 7, 6, 5})
 mod:AddSetIconOption("SetIconOnEmbers", 404010, false, 0, {1, 2, 3, 4})
 
+local murchalProshlyapStacks = {}
 local castsPerGUID = {}
 mod.vb.destructionCount = 0
 mod.vb.shrapnalSoakCount = 0
@@ -71,6 +74,7 @@ mod.vb.expectedBombs = 3
 mod.vb.addIcon = 8
 
 function mod:OnCombatStart(delay)
+	table.wipe(murchalProshlyapStacks)
 	table.wipe(castsPerGUID)
 	self.vb.destructionCount = 0
 	self.vb.shrapnalSoakCount = 0
@@ -106,7 +110,18 @@ function mod:OnCombatStart(delay)
 		timerAnimateGolemsCD:Start(35-delay, 1)
 		timerTacticalDestructionCD:Start(70-delay, 1)
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(404942))
+		DBM.InfoFrame:Show(3, "table", murchalProshlyapStacks, 1)
+	end
 	berserkTimer:Start(510-delay)--Confirm in LFR
+end
+
+function mod:OnCombatEnd()
+	table.wipe(murchalProshlyapStacks)
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -184,15 +199,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnEmbers then
 			self:SetUnsortedIcon(0.3, args.destName, 1, 4, false)
 		end
-	elseif spellId == 404942 and not args:IsPlayer() then
+	elseif spellId == 404942 then --Обжигающие когти
 		local amount = args.amount or 1
-		if amount % 3 == 0 then--Guessed, Filler
-			if amount >= 6 and not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+		murchalProshlyapStacks[args.destName] = amount
+		if amount >= 6 then
+			if args:IsPlayer() then
+				specWarnSearingClaws:Show(amount)
+				specWarnSearingClaws:Play("stackhigh")
+			end
+		else
+			if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 				specWarnSearingClawsTaunt:Show(args.destName)
 				specWarnSearingClawsTaunt:Play("tauntboss")
 			else
 				warnSearingClaws:Show(args.destName, amount)
 			end
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
 		end
 	end
 end
@@ -203,6 +227,11 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 404010 then
 		if self.Options.SetIconOnEmbers then
 			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 404942 then --Обжигающие когти
+		murchalProshlyapStacks[args.destName] = nil
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(murchalProshlyapStacks)
 		end
 	end
 end
