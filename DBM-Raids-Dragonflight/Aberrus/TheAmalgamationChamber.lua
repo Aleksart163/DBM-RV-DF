@@ -2,7 +2,7 @@ local mod	= DBM:NewMod(2529, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20240503055811")
-mod:SetCreatureID(201774, 201773, 201934)--Krozgoth, Moltannia, Molgoth
+mod:SetCreatureID(201774, 201773, 201934) --Сущность Тьмы, Вечный Пожар, Слияние пламени Тьмы
 mod:SetEncounterID(2687)
 mod:SetUsedIcons(1, 2, 3, 4)
 mod:SetBossHPInfoToHighest()
@@ -31,10 +31,12 @@ mod:RegisterEventsInCombat(
 --TODO, secondary alert for Swirling Shadowflame ?
 --TODO, if both tank abilities in P2 are a combo, just use generic tank combo timer
 --General
+
+local specWarnShadowSpike						= mod:NewSpecialWarningDefensive(403699, nil, nil, nil, 1, 3) --Теневой шип
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(405084, nil, nil, nil, 1, 8)
 
 mod:AddBoolOption("AdvancedBossFiltering", true, "misc")--May be default to off on live, but for testing purposes it needs to be forced
---Krozgoth
+--Сущность Тьмы
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26336))
 local warnCorruptingShadow						= mod:NewCountAnnounce(401809, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401809))
 local warnCorruptingShadowFades					= mod:NewFadesAnnounce(401809, 1)
@@ -51,11 +53,12 @@ local timerShadowSpikeCD						= mod:NewCDCountTimer(11, 403699, nil, "Tank|Heale
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("SetIconOnUmbral", 405036, false, 0, {1, 2, 3})
---Moltannia
+--Вечный Пожар
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26337))
 local warnBlazingHeat							= mod:NewCountAnnounce(402617, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(402617))
 local warnBlazingHeatFades						= mod:NewFadesAnnounce(402617, 1)
 
+local specWarnFlameSlash						= mod:NewSpecialWarningDefensive(403203, nil, nil, nil, 1, 3) --Пылающий взмах
 local specWarnFieryMeteor						= mod:NewSpecialWarningCount(404732, nil, nil, nil, 2, 2)
 local specWarnMoltenEruption					= mod:NewSpecialWarningCount(403101, nil, nil, nil, 2, 2, 3)
 local specWarnSwirlingFlame						= mod:NewSpecialWarningDodgeCount(404896, nil, 86189, nil, 2, 2)
@@ -64,7 +67,7 @@ local timerFieryMeteorCD						= mod:NewCDCountTimer(31.7, 404732, nil, nil, nil,
 local timerMoltenEruptionCD						= mod:NewCDCountTimer(22.3, 403101, nil, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerSwirlingFlameCD						= mod:NewCDCountTimer(20.7, 404896, 86189, nil, nil, 3)--"Tornados"
 local timerFlameSlashCD							= mod:NewCDCountTimer(11, 403203, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
---Molgoth
+--Слияние пламени Тьмы
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26338))
 local warnPhase2								= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnShadowandFlame						= mod:NewCastAnnounce(409385, 4)
@@ -76,7 +79,7 @@ local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, n
 local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2)
 local specWarnConvergentEruption				= mod:NewSpecialWarningCount(408193, nil, nil, nil, 2, 2)
 local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
-local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 1, 2) --Иссушающая слабость
+local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
 
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
@@ -96,7 +99,23 @@ local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, false, 2
 mod:AddSetIconOption("SetIconOnWitheringVulnerability", 405914, true, 0, {8}) --Иссушающая слабость
 mod:AddSetIconOption("SetIconOnBlistering", 405642, false, 0, {1, 2, 3, 4})
 
-function mod:WitheringVulnerabilityTarget(targetname, uId)
+function mod:ShadowSpikeTarget(targetname, uId) --Теневой шип
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnShadowSpike:Show()
+		specWarnShadowSpike:Play("defensive")
+	end
+end
+
+function mod:FlameSlashTarget(targetname, uId) --Пылающий взмах
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnFlameSlash:Show()
+		specWarnFlameSlash:Play("defensive")
+	end
+end
+
+function mod:WitheringVulnerabilityTarget(targetname, uId) --Иссушающая слабость
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnWitheringVulnerability:Show()
@@ -397,8 +416,9 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerShadowsConvergenceCD:Start(timer, self.vb.shadowConvergeCount+1)
 		end
-	elseif spellId == 403699 then
+	elseif spellId == 403699 then --Теневой шип
 		self.vb.shadowStrikeCount = self.vb.shadowStrikeCount + 1
+		self:BossTargetScanner(args.sourceGUID, "ShadowSpikeTarget", 0.1, 2)
 		--if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 
 		--end
@@ -437,8 +457,9 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerSwirlingFlameCD:Start(timer, self.vb.swirlingCount+1)
 		end
-	elseif spellId == 403203 then
+	elseif spellId == 403203 then --Пылающий взмах
 		self.vb.flameSlashCast = self.vb.flameSlashCast + 1
+		self:BossTargetScanner(args.sourceGUID, "FlameSlashTarget", 0.1, 2)
 		--if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 
 		--end

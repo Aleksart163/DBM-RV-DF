@@ -206,13 +206,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnSearingClaws:Show(amount)
 				specWarnSearingClaws:Play("stackhigh")
-			end
-		else
-			if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-				specWarnSearingClawsTaunt:Show(args.destName)
-				specWarnSearingClawsTaunt:Play("tauntboss")
 			else
-				warnSearingClaws:Show(args.destName, amount)
+				if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					specWarnSearingClawsTaunt:Show(args.destName)
+					specWarnSearingClawsTaunt:Play("tauntboss")
+				else
+					warnSearingClaws:Show(args.destName, amount)
+				end
 			end
 		end
 		if self.Options.InfoFrame then

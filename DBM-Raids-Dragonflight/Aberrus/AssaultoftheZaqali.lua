@@ -41,13 +41,13 @@ mod:RegisterEventsInCombat(
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26604))
 ----Ignara (Mythic Only)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26737))
-local warnPhoenixRush								= mod:NewCountAnnounce(401108, 3)
+local warnPhoenixRush								= mod:NewCountAnnounce(401108, 3) --Рывок феникса
 
-local specWarnAwakenedFocus							= mod:NewSpecialWarningRun(401381, nil, 374610, nil, 4, 2, 4)--"Fixate"
-local specWarnVigorousGale							= mod:NewSpecialWarningCount(407009, nil, nil, nil, 2, 13, 4)
+local specWarnAwakenedFocus							= mod:NewSpecialWarningRun(401381, nil, 374610, nil, 4, 2, 4) --Пылающее средоточие "Fixate"
+local specWarnVigorousGale							= mod:NewSpecialWarningCount(407009, nil, nil, nil, 2, 13, 4) --Могучий ветер
 
-local timerPhoenixRushCD							= mod:NewCDCountTimer(29.9, 401108, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerVigorousGaleCD							= mod:NewCDCountTimer(29.9, 407009, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerPhoenixRushCD							= mod:NewCDCountTimer(29.9, 401108, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Рывок феникса
+local timerVigorousGaleCD							= mod:NewCDCountTimer(29.9, 407009, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Могучий ветер
 ----Warlord Kagni
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26209))
 local warnHeavyCudgel								= mod:NewStackAnnounce(401258, 2, nil, "Tank|Healer")
@@ -68,9 +68,9 @@ local timerWallClimberCD							= mod:NewCDCountTimer(29.9, "ej26221", nil, false
 local timerGuardsandHuntsmanCD						= mod:NewTimer(30, "timerGuardsandHuntsmanCD", 285849, nil, nil, 1, nil, nil, nil, nil, nil, nil, nil, 404382)--Random guard banner
 ----Magma Mystic
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26217))
-local warnMoltenBarrier								= mod:NewCastAnnounce(397383, 4)
-local warnMagmaFlowCast								= mod:NewCastAnnounce(409271, 2)
-local warnMagmaFlow									= mod:NewTargetNoFilterAnnounce(409271, 2, nil, "RemoveMagic")
+local warnMoltenBarrier								= mod:NewCastAnnounce(397383, 4) --Раскаленный барьер
+local warnMagmaFlowCast								= mod:NewCastAnnounce(409271, 2) --Поток лавы
+local warnMagmaFlow									= mod:NewTargetNoFilterAnnounce(409271, 2, nil, "RemoveMagic") --Поток лавы
 
 local specWarnLavaBolt								= mod:NewSpecialWarningInterruptCount(397386, "HasInterrupt", nil, nil, 1, 2)--3.7 CD
 
@@ -217,7 +217,7 @@ function mod:SPELL_CAST_START(args)
 --	elseif spellId == 397383 then
 --		warnMoltenBarrier:Show()
 --		timerMoltenBarrierCD:Start(nil, args.sourceGUID)
-	elseif spellId == 409271 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
+	elseif spellId == 409271 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) and self:AntiSpam(2, "MagmaFlow") then
 		warnMagmaFlowCast:Show()
 --		timerMagmaFlowCD:Start(nil, args.sourceGUID)
 	elseif spellId == 401108 then
