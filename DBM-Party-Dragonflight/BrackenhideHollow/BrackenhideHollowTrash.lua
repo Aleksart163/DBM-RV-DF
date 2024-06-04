@@ -225,11 +225,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnBloodyRage:Show(args.destName)
 		specWarnBloodyRage:Play("enrage")
 	elseif spellId == 383087 then
-		warnWitheringContagion:CombinedShow(0.3, args.destName)
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(2, "WitheringContagion") then
 			specWarnWitheringContagion:Show()
 			specWarnWitheringContagion:Play("range5")
 			yellWitheringContagion:Yell()
+		else
+			warnWitheringContagion:CombinedShow(0.3, args.destName)
 		end
 	elseif spellId == 383399 and args:IsPlayer() and self:AntiSpam(3, 8) then
 		specWarnGTFO:Show(args.spellName)
