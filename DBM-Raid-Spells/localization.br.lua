@@ -7,7 +7,7 @@ local L
 -------------------
 -- Feitiços Raid --
 -------------------
-L= DBM:GetModLocalization("Spells")
+L= DBM:GetModLocalization("RaidSpells")
 
 L:SetGeneralLocalization({
 	name = "Feitiços Raid"

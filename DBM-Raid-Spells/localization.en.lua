@@ -5,7 +5,7 @@ local L
 ------------
 -- Spells --
 ------------
-L= DBM:GetModLocalization("Spells")
+L= DBM:GetModLocalization("RaidSpells")
 
 L:SetGeneralLocalization({
 	name = "Raid Spells"

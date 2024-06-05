@@ -37,4 +37,4 @@ localization.fr.lua
 localization.it.lua
 localization.br.lua
 
-Spells.lua
+RaidSpells.lua

@@ -7,7 +7,7 @@ local L
 ----------------------
 -- Incantesimi RAID --
 ----------------------
-L= DBM:GetModLocalization("Spells")
+L= DBM:GetModLocalization("RaidSpells")
 
 L:SetGeneralLocalization({
 	name = "Incantesimi RAID"

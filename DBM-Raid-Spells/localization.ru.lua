@@ -7,7 +7,7 @@ local L
 ----------------
 -- Заклинания --
 ----------------
-L= DBM:GetModLocalization("Spells")
+L= DBM:GetModLocalization("RaidSpells")
 
 L:SetGeneralLocalization({
 	name = "Рейдовые заклинания"

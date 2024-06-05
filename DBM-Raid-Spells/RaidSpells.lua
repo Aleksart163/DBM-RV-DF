@@ -1,4 +1,4 @@
-local mod	= DBM:NewMod("Spells", "DBM-Spells")
+local mod	= DBM:NewMod("RaidSpells", "DBM-Raid-Spells")
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20240305171148")
