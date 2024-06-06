@@ -35,7 +35,7 @@ local warnScatterTraps							= mod:NewCountAnnounce(406725, 2)
 local warnSalvageParts							= mod:NewTargetNoFilterAnnounce(405592, 1)
 local warnSearingClaws							= mod:NewStackAnnounce(404942, 2, nil, "Tank|Healer")
 
-local specWarnTacticalDestruction				= mod:NewSpecialWarningDodgeCount(406678, nil, nil, nil, 1, 2)
+local specWarnTacticalDestruction				= mod:NewSpecialWarningDodgeCount(406678, nil, nil, nil, 4, 2) --Тактическое разрушение
 local specWarnDragonDeezTraps					= mod:NewSpecialWarningDodgeCount(405736, nil, nil, nil, 1, 2)
 local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil, nil, nil, 1, 2)
 local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2)
@@ -45,7 +45,7 @@ local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 6, nil
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
-local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тактическое разрушение
 local timerShrapnalBombCD						= mod:NewCDCountTimer(42.5, 406725, 167180, nil, nil, 3)--"Bombs"
 local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2)--"Detonate"
 local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, nil, nil, nil, 1)
@@ -202,7 +202,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 404942 then --Обжигающие когти
 		local amount = args.amount or 1
 		murchalProshlyapStacks[args.destName] = amount
-		if amount >= 6 then
+		if amount >= 6 and amount % 2 == 0 then
 			if args:IsPlayer() then
 				specWarnSearingClaws:Show(amount)
 				specWarnSearingClaws:Play("stackhigh")
