@@ -106,6 +106,47 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	warnWrathDjaruun:Show()
 end
 
+local difficultyName = "normal"
+local allProshlyapationsOfMurchal = {
+	["mythic"] = {
+		[1] = {
+			--Обжигающий удар
+			[405821] = {9.1, 45.9, 32.9},
+		},
+		[2] = {
+			[405821] = {11.1, 45.9, 32.9},
+		},
+		[3] = {
+			[405821] = {9.1, 46, 32.9},
+		},
+	},
+	["heroic"] = {
+		[1] = {
+			--Обжигающий удар
+			[405821] = {9.1, 45.9, 32.9}, --
+		},
+		[2] = {
+			[405821] = {11.1, 45.9, 32.9}, --
+		},
+		[3] = {
+			[405821] = {9.1, 46, 32.9}, --третий удар пока неизвестно
+		},
+	},
+	["normal"] = {
+		[1] = {
+			--Обжигающий удар
+			[405821] = {9.1, 44.9, 32.9}, --
+		},
+		[2] = {
+			[405821] = {10.1, 45.9, 33.8}, --
+		},
+		[3] = {
+			--пока неточная информация
+			[405821] = {10.1, 45.9, 33.8},
+		},
+	},
+}
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	table.wipe(overchargedStacks)
@@ -135,12 +176,15 @@ function mod:OnCombatStart(delay)
 		self:RegisterShortTermEvents(
 			"SPELL_ENERGIZE 405825"
 		)
+		difficultyName = "mythic"
 	elseif self:IsHeroic() then
 		timerVolcanicComboCD:Start(29.1-delay, 1)
 		self:Schedule(29.1, startProshlyapationOfMurchal, self)
+		difficultyName = "heroic"
 	else
 		timerVolcanicComboCD:Start(30.1-delay, 1)
 		self:Schedule(30.1, startProshlyapationOfMurchal, self)
+		difficultyName = "normal"
 	end
 end
 	
@@ -152,16 +196,26 @@ function mod:OnCombatEnd()
 	end
 end
 
+function mod:OnTimerRecovery()
+	if self:IsMythic() then
+		difficultyName = "mythic"
+	elseif self:IsHeroic() then
+		difficultyName = "heroic"
+	else
+		difficultyName = "normal"
+	end
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 405316 then
 		specWarnAncientFury:Show()
 		specWarnAncientFury:Play("aesoon")
-	elseif spellId == 405821 then
+	elseif spellId == 405821 then --Обжигающий удар
 		self.vb.slamCount = self.vb.slamCount + 1
-		local timer = (self.vb.slamCount == 1) and 45.9 or (self.vb.slamCount == 2) and 32.9
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, difficultyName, self.vb.phase, spellId, self.vb.slamCount+1)
 		if timer then
-			timerSearingSlamCD:Start(nil, self.vb.slamCount+1)
+			timerSearingSlamCD:Start(timer, self.vb.slamCount+1)
 		end
 	elseif spellId == 406851 then
 		self.vb.doomCount = self.vb.doomCount + 1
@@ -181,16 +235,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407544 then --Огненный взмах
 		self.vb.comboCount = self.vb.comboCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			if self:AntiSpam(3.5, "ComboProshlyap") then
-				specWarnFlamingSlash:Show()
-				specWarnFlamingSlash:Play("defensive")
-			end
+			specWarnFlamingSlash:Show()
+			specWarnFlamingSlash:Play("defensive")
 		else
 			--Other tank has this debuff already and it will NOT be gone when cast finishes, TAUNT NOW!
 			--This doesn't check TankSwapBehavior dropdown because this always validates that the player about to get hit by this, shouldn't be hit by it
 			if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
 				local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407547)
-				if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) then
+				if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
 					specWarnFlamingSlashTaunt:Show(UnitName("boss1target"))
 					specWarnFlamingSlashTaunt:Play("tauntboss")
 				end
@@ -199,16 +251,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407596 then --Земляное сокрушение
 		self.vb.comboCount = self.vb.comboCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			if self:AntiSpam(3.5, "ComboProshlyap") then
-				specWarnEarthenCrush:Show()
-				specWarnEarthenCrush:Play("defensive")
-			end
+			specWarnEarthenCrush:Show()
+			specWarnEarthenCrush:Play("defensive")
 		else
 			--Other tank has this debuff already and it will NOT be gone when cast finishes, TAUNT NOW!
 			--This doesn't check TankSwapBehavior dropdown because this always validates that the player about to get hit by this, shouldn't be hit by it
 			if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
 				local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407597)
-				if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) then
+				if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
 					specWarnEarthenCrushTaunt:Show(UnitName("boss1target"))
 					specWarnEarthenCrushTaunt:Play("tauntboss")
 				end
@@ -340,15 +390,27 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetStage(2)
 			timerVolcanicComboCD:Start(31.1, 1)
 			self:Schedule(31.1, startProshlyapationOfMurchal, self)
+			if self:IsMythic() then
+				timerUnleashedShadowflameCD:Start(6.2, 1)
+				timerSearingSlamCD:Start(11.1, 1)
+			elseif self:IsHeroic() then
+				timerSearingSlamCD:Start(11.1, 1) --
+			else
+				timerSearingSlamCD:Start(10.1, 1) --
+			end
 		elseif self.vb.combatCount == 3 then
 			self:SetStage(3)
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
+			if self:IsMythic() then
+				timerUnleashedShadowflameCD:Start(6.2, 1)
+				timerSearingSlamCD:Start(11.1, 1)
+			elseif self:IsHeroic() then
+				timerSearingSlamCD:Start(10.1, 1) --
+			else
+				timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
+			end
 		end
-		if self:IsMythic() then
-			timerUnleashedShadowflameCD:Start(6.2, 1)
-		end
-		timerSearingSlamCD:Start(11.2, 1)
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(97, 1)
