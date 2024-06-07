@@ -224,6 +224,10 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Аберрий, Затененное Горнило"
 })
 
+L:SetMiscLocalization({
+	RP1 = "Великолепно. Поздравляю."
+})
+
 ---------------------------
 --  Amirdrassil, the Dream's Hope --
 ---------------------------

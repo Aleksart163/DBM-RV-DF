@@ -29,21 +29,21 @@ mod:RegisterEvents(
 --local warnRatTrap						= mod:NewCastAnnounce(274383, 2)
 local warnPoisoningStrike				= mod:NewCastAnnounce(257436, 2, nil, nil, "Tank|Healer")
 local warnHealingBalm					= mod:NewCastAnnounce(257397, 3)
-local warnShatteringBellow				= mod:NewCastAnnounce(257732, 4)
+local warnShatteringBellow				= mod:NewCastAnnounce(257732, 4) --Сотрясающий рев
 local warnPainfulMotivation				= mod:NewCastAnnounce(257899, 4)
 local warnThunderingSquall				= mod:NewCastAnnounce(257736, 3)
 local warnSlipperySuds					= mod:NewCastAnnounce(274507, 3)
 local warnFrostBlast					= mod:NewCastAnnounce(257784, 3)
-local warnRicochetingThrow				= mod:NewTargetAnnounce(272402, 2)
+local warnRicochetingThrow				= mod:NewTargetNoFilterAnnounce(272402, 2) --Рикошетящий бросок
 local warnSabrousBite					= mod:NewStackAnnounce(274555, 2, nil, "Tank|Healer")
 
 local specWarnOiledBladeSelf			= mod:NewSpecialWarningDefensive(257908, nil, nil, nil, 1, 2)
-local specWarnVileBombardment			= mod:NewSpecialWarningDodge(257272, nil, nil, nil, 2, 2)
-local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, nil, 2, 2)
+local specWarnVileBombardment			= mod:NewSpecialWarningDodge(257272, nil, nil, nil, 2, 2) --Гнусная бомбардировка
+local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, nil, 2, 2) --Крепкая оплеуха
 local specWarnAzeriteGrenade			= mod:NewSpecialWarningDodge(258672, nil, nil, nil, 2, 2)
 local specWarnDuelistDash				= mod:NewSpecialWarningDodge(274400, nil, nil, nil, 2, 2)
-local specWarnSeaSpout					= mod:NewSpecialWarningDodge(258777, nil, nil, nil, 2, 2)
-local specWarnRatTrap					= mod:NewSpecialWarningDodge(274383, nil, nil, nil, 2, 2)
+local specWarnSeaSpout					= mod:NewSpecialWarningDodge(258777, nil, nil, nil, 2, 2) --Струя морской воды
+local specWarnRatTrap					= mod:NewSpecialWarningDodge(274383, nil, nil, nil, 2, 2) --Мышеловки
 local specWarnBoulderThrow				= mod:NewSpecialWarningDodge(258181, nil, nil, nil, 2, 2)
 local specWarnBladeBarrage				= mod:NewSpecialWarningDodge(257870, nil, nil, nil, 2, 2)
 local specWarnShatteringToss			= mod:NewSpecialWarningSpell(274860, "Tank", nil, nil, 1, 12)
@@ -65,14 +65,14 @@ local specWarnOiledBlade				= mod:NewSpecialWarningDispel(257908, "RemoveMagic",
 local specWarnHealingBalmDispel			= mod:NewSpecialWarningDispel(257397, "MagicDispeller", nil, nil, 1, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerVileBombardmentCD			= mod:NewCDTimer(16, 257272, nil, nil, nil, 3)--Non nameplate on purpose, needs actual timer since bird way in sky
-local timerShatteringBellowCD			= mod:NewCDNPTimer(27.8, 257732, nil, nil, nil, 2)
-local timerBrutalBackhandCD				= mod:NewCDNPTimer(18.2, 257426, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerSeaSpoutCD					= mod:NewCDNPTimer(17, 258777, nil, nil, nil, 3)
-local timerRatTrapsCD					= mod:NewCDNPTimer(20.6, 274383, nil, nil, nil, 3)
-local timerRicochetingThrowCD			= mod:NewCDNPTimer(8.1, 272402, nil, nil, nil, 3)
-local timerEarthShakerCD				= mod:NewCDNPTimer(8.4, 257747, nil, nil, nil, 3)--Instance cast, not really worth announcing every 8 sec, but def worth having a timer for
-local timerGoinBanCD					= mod:NewCDNPTimer(17, 257756, nil, nil, nil, 3)
+local timerVileBombardmentCD			= mod:NewCDTimer(16, 257272, nil, nil, nil, 3) --Гнусная бомбардировка
+local timerShatteringBellowCD			= mod:NewCDNPTimer(27.8, 257732, nil, nil, nil, 2) --Сотрясающий рев
+local timerBrutalBackhandCD				= mod:NewCDNPTimer(18.2, 257426, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Крепкая оплеуха
+local timerSeaSpoutCD					= mod:NewCDNPTimer(17, 258777, nil, nil, nil, 3) --Струя морской воды
+local timerRatTrapsCD					= mod:NewCDNPTimer(20.6, 274383, nil, nil, nil, 3) --Мышеловки
+local timerRicochetingThrowCD			= mod:NewCDNPTimer(8.1, 272402, nil, nil, nil, 3) --Рикошетящий бросок
+local timerEarthShakerCD				= mod:NewCDNPTimer(8.4, 257747, nil, nil, nil, 3) --Землевержец Instance cast, not really worth announcing every 8 sec, but def worth having a timer for
+local timerGoinBanCD					= mod:NewCDNPTimer(16.5, 257756, nil, nil, nil, 2) --Помешательство
 local timerSlipperySudsCD				= mod:NewCDNPTimer(20.6, 274507, nil, nil, nil, 3)
 local timerGroundShatterCD				= mod:NewCDNPTimer(19.3, 258199, nil, nil, nil, 3)
 local timerBoulderThrowCD				= mod:NewCDNPTimer(19.3, 258181, nil, nil, nil, 3)
@@ -82,7 +82,7 @@ local timerThunderingSquallCD			= mod:NewCDNPTimer(27.8, 257736, nil, nil, nil, 
 local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
-local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL")
+local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
 local yellDuelistDash					= mod:NewYell(274400, nil, nil, nil, "YELL")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 extremely unique but unthrottled (except with itself)

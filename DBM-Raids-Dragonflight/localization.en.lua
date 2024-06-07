@@ -223,6 +223,10 @@ L:SetGeneralLocalization({
 	name =	"Aberrus Trash"
 })
 
+L:SetMiscLocalization({
+	RP1 = "How exemplary. Congratulations."
+})
+
 ---------------------------
 --  Amirdrassil, the Dream's Hope --
 ---------------------------

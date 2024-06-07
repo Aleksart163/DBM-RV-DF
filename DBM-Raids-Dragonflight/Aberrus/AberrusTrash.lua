@@ -8,9 +8,10 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 409612 406911 411755",
 --	"SPELL_CAST_SUCCESS 413785",
-	"SPELL_AURA_APPLIED 411808 413785",
+	"SPELL_AURA_APPLIED 411808 413785 409576",
 --	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 411808 413785"
+	"SPELL_AURA_REMOVED 411808 413785",
+	"CHAT_MSG_MONSTER_SAY"
 --	"UNIT_DIED"
 )
 
@@ -24,10 +25,12 @@ local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil
 local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2)
 local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "HasInterrupt", nil, nil, 1, 2)
 
+local timerRP								= mod:NewRPTimer(30)
+
 local yellSlimeInjection					= mod:NewYell(411808, nil, nil, nil, "YELL")
 local yellSlimeInjectionFades				= mod:NewShortFadesYell(411808, nil, nil, nil, "YELL")
-local yellDarkBindings						= mod:NewYell(413785, nil, nil, nil, "YELL")
-local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "YELL")
+local yellDarkBindings						= mod:NewShortYell(413785, nil, nil, nil, "YELL") --Темные путы
+local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "YELL") --Темные путы
 
 --local timerBrutalCauterizationCD			= mod:NewCDTimer(14.5, 406911, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
@@ -57,26 +60,34 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 411808 and args:IsPlayer() then
-		specWarnSlimeInjection:Show()
-		specWarnSlimeInjection:Play("scatter")
-		yellSlimeInjection:Yell()
-		yellSlimeInjectionFades:Countdown(spellId)
-	elseif spellId == 413785 and args:IsPlayer() then
-		specWarnDarkBindings:Show()
-		specWarnDarkBindings:Play("scatter")
-		yellDarkBindings:Yell()
-		yellDarkBindingsFades:Countdown(spellId)
+	if spellId == 411808 then --Разбрызгивание слизи
+		if args:IsPlayer() then
+			specWarnSlimeInjection:Show()
+			specWarnSlimeInjection:Play("scatter")
+			yellSlimeInjection:Yell()
+			yellSlimeInjectionFades:Countdown(spellId)
+		end
+	elseif spellId == 413785 or spellId == 409576 then --Темные путы
+		if args:IsPlayer() then
+			specWarnDarkBindings:Show()
+			specWarnDarkBindings:Play("scatter")
+			yellDarkBindings:Yell()
+			yellDarkBindingsFades:Countdown(spellId)
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 411808 and args:IsPlayer() then
-		yellSlimeInjectionFades:Cancel()
-	elseif spellId == 413785 and args:IsPlayer() then
-		yellDarkBindingsFades:Cancel()
+	if spellId == 411808 then --Разбрызгивание слизи
+		if args:IsPlayer() then
+			yellSlimeInjectionFades:Cancel()
+		end
+	elseif spellId == 413785 or spellId == 409576 then --Темные путы
+		if args:IsPlayer() then
+			yellDarkBindingsFades:Cancel()
+		end
 	end
 end
 
@@ -88,3 +99,15 @@ function mod:UNIT_DIED(args)
 	end
 end
 --]]
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.RP1 or msg:find(L.RP1)) then
+		self:SendSync("AberrusRP1")
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "AberrusRP1" and self:AntiSpam(10, "RP1") then
+		timerRP:Start(33.6)
+	end
+end
