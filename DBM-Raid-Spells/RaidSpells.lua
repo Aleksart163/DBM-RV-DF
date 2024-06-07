@@ -839,7 +839,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 10060 then --Придание сил
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
-		if args:IsPlayer() then
+	--	if args:IsPlayer() then
+		if not args:IsPlayerSource() then
 			specWarnPowerInfusion:Show()
 			specWarnPowerInfusion:Play("targetyou")
 		end
