@@ -4,8 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20240426174649")
 mod:SetCreatureID(201320)
 mod:SetEncounterID(2680)
-mod:SetUsedIcons(1)
-mod:SetHotfixNoticeRev(20230517000000)
+mod:SetUsedIcons(8)
+mod:SetHotfixNoticeRev(20240609070000)
 --mod:SetMinSyncRevision(20221215000000)
 mod.respawnTime = 30
 
@@ -37,7 +37,7 @@ local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, nil, 2, 2) --Огни рока
-local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodgeCount(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
+local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
 local specWarnChargedSmash							= mod:NewSpecialWarningSoakCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
 local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
 local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 3, 2) --Огненный взмах
@@ -49,20 +49,19 @@ local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1,
 
 local timerUnyieldingRage							= mod:NewBuffActiveTimer(96, 406165, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Тлеющая ярость
 local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
-local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3) --Обжигающий удар
+local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Обжигающий удар
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
-local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3) --Взрыв темной лавы
+local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв темной лавы
 local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
-local yellFlamingSlash								= mod:NewShortYell(407547, nil, nil, nil, "YELL") --Огненный взмах
 local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 
 mod:AddInfoFrameOption(405827)
-mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {1}) --Обжигающий удар
+mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {8}) --Обжигающий удар
 --mod:AddNamePlateOption("NPAuraOnAscension", 385541)
 mod:AddDropdownOption("TankSwapBehavior", {"DoubleSoak", "MinMaxSoak", "OnlyIfDanger"}, "DoubleSoak", "misc", nil, 407641)
 --mod:GroupSpells(390715, 396094)
@@ -163,7 +162,7 @@ function mod:OnCombatStart(delay)
 	timerSearingSlamCD:Start(9.1-delay, 1)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
-	timerShadowlavaBlastCD:Start(95-delay, 1)
+	timerShadowlavaBlastCD:Start(95.9-delay, 1)
 	timerAncientFuryCD:Start(120-delay)
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
@@ -223,7 +222,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDoomFlame:Play("helpsoak")
 	elseif spellId == 406333 or spellId == 406145 then
 		self.vb.blastCount = self.vb.blastCount + 1
-		specWarnShadowlavaBlast:Show(self.vb.blastCount)
+		specWarnShadowlavaBlast:Show()
 		specWarnShadowlavaBlast:Play("shockwave")
 	elseif spellId == 400777 then
 		self.vb.smashCount = self.vb.smashCount + 1
@@ -309,7 +308,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnSearingSlam:Show(args.destName)
 		end
 		if self.Options.SetIconOnSearingSlam then
-			self:SetIcon(args.destName, 1)
+			self:SetIcon(args.destName, 8)
 		end
 	elseif (spellId == 407597 or spellId == 407547) and not args:IsPlayer() then
 		local alertTaunt
@@ -381,7 +380,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnSiphonEnergyRemoved:Show(args.destName)
 		self.vb.slamCount = 0
 		self.vb.doomCount = 0
-		self.vb.blastCount = 0
 		self.vb.smashCount = 0
 		self.vb.tankCombo = 0
 		self.vb.comboCount = 0
@@ -413,7 +411,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
-		timerShadowlavaBlastCD:Start(97, 1)
+		timerShadowlavaBlastCD:Start(96.8, self.vb.blastCount+1) --2 каст в героике точно
 		timerAncientFuryCD:Start(115)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
