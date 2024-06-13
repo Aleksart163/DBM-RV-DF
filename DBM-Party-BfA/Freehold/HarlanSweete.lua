@@ -4,7 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20230804233648")
 mod:SetCreatureID(126983)
 mod:SetEncounterID(2096)
-mod:SetHotfixNoticeRev(20230505000000)
+mod:SetUsedIcons(8, 7, 6, 5, 4)
+mod:SetHotfixNoticeRev(20240610070000)
 mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
@@ -13,6 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 257402 257458 413145 413147 413131 413136",
 	"SPELL_CAST_SUCCESS 257316",--257278
 	"SPELL_AURA_APPLIED 257314 257305",
+	"SPELL_AURA_REMOVED 257314 257305",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -23,38 +25,62 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  --]]
 local warnPhase						= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, nil, 2)
-local warnBlackPowder				= mod:NewTargetAnnounce(257314, 4)
-local warnCannonBarrage				= mod:NewTargetAnnounce(257305, 3)
-local warnWhirlingDagger			= mod:NewCountAnnounce(413131, 3)
+local warnBlackPowder				= mod:NewTargetNoFilterAnnounce(257314, 3, nil, nil, 174716) --Бомба с черным порохом
+local warnCannonBarrage				= mod:NewTargetNoFilterAnnounce(257305, 4) --Обстрел
+local warnWhirlingDagger			= mod:NewCountAnnounce(413131, 3) --Вращающийся кинжал
 
-local specWarnBlackPowder			= mod:NewSpecialWarningRun(257314, nil, nil, nil, 4, 2)
-local specWarnSwiftwindSaber		= mod:NewSpecialWarningDodge(257278, nil, nil, nil, 2, 2)
-local specWarnCannonBarrage			= mod:NewSpecialWarningDodge(257305, nil, nil, nil, 3, 2)
+local specWarnBlackPowder			= mod:NewSpecialWarningRun(257314, nil, 174716, nil, 4, 2) --Бомба с черным порохом
+local specWarnSwiftwindSaber		= mod:NewSpecialWarningDodge(257278, nil, nil, nil, 2, 2) --Сабля повелителя пассатов
+local specWarnCannonBarrage			= mod:NewSpecialWarningDodge(257305, nil, nil, nil, 3, 2) --Обстрел
 
-local timerAvastyeCD				= mod:NewCDTimer(13, 257316, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerSwiftwindSaberCD			= mod:NewCDTimer(15.8, 257278, nil, nil, nil, 3)--Swap option key to 413147 if non M+ version also is changed
-local timerCannonBarrageCD			= mod:NewCDTimer(17.4, 257305, nil, nil, nil, 3)
-local timerWhirlingDaggerCD			= mod:NewCDCountTimer(18.8, 413131, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.BLEED_ICON)
+local timerAvastyeCD				= mod:NewCDTimer(13, 257314, 174716, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Бомба с черным порохом
+local timerSwiftwindSaberCD			= mod:NewCDTimer(15.8, 257278, nil, nil, nil, 3) --Сабля повелителя пассатов Swap option key to 413147 if non M+ version also is changed
+local timerCannonBarrageCD			= mod:NewCDTimer(17.4, 257305, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Обстрел
+local timerWhirlingDaggerCD			= mod:NewCDCountTimer(18.8, 413131, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.BLEED_ICON) --Вращающийся кинжал
 
-local yellBlackPowder				= mod:NewYell(257314, nil, nil, nil, "YELL")
-local yellCannonBarrage				= mod:NewYell(257305, nil, nil, nil, "YELL")
+local yellBlackPowder				= mod:NewShortYell(257314, nil, nil, nil, "YELL") --Бомба с черным порохом
+local yellCannonBarrage				= mod:NewShortYell(257305, nil, nil, nil, "YELL") --Обстрел
+
+mod:AddSetIconOption("SetIconOnBlackPowder", 257314, true, 0, {8}) --Бомба с черным порохом
+mod:AddSetIconOption("SetIconOnCannonBarrage", 257305, true, 0, {7, 6, 5, 4}) --Обстрел
 
 mod.vb.daggerCount = 0
+mod.vb.cannonBarrageIcon = 7
 
 function mod:OnCombatStart(delay)
 	self.vb.daggerCount = 0
+	self.vb.cannonBarrageIcon = 7
 	self:SetStage(1)
-	timerSwiftwindSaberCD:Start(10-delay)
-	timerCannonBarrageCD:Start(20-delay)
-	timerAvastyeCD:Start(31.2-delay)
+	timerSwiftwindSaberCD:Start(10.9-delay) --Сабля повелителя пассатов
+	timerCannonBarrageCD:Start(20.6-delay) --Обстрел
+	timerAvastyeCD:Start(32.7-delay) --Бомба с черным порохом
 	if self:IsMythicPlus() then
-		timerWhirlingDaggerCD:Start(12.9-delay, 1)
+		timerWhirlingDaggerCD:Start(14.1-delay, 1) --Вращающийся кинжал
 	end
 end
+--02.19.21.029 (фаза 1)
+--Обстрел
+--02.19.41.664 (20.6 с фазы 1)
+--02.20.07.076 (25.4 с 1 по 2)
+--Бомба
+--02.19.53.766 (32.7 с фазы 1)
+--02.20.19.283 (25.5 с 1 по 2)
+--02.20.30.991 (фаза 2)
+--Обстрел
+--02.20.46.685 (15.6 с фазы 2)
+--02.21.12.125 (25.4 с 1 по 2)
+--02.21.38.935 (26.8 с 2 по 3)
+--Бомба
+--02.20.52.809 1 бомба (21.8 с фазы 2)
+--02.21.20.816 2 бомба (28 с 1 по 2)
+
+--02.21.40.221 (фаза 3)
+--02.21.55.967 (обстрел)
+--02.22.02.059 (бомба)
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 257402 then--All Hands
+	if spellId == 257402 then--Шулерские кости: аврал! (2 фаза)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
@@ -62,13 +88,14 @@ function mod:SPELL_CAST_START(args)
 		timerAvastyeCD:Stop()
 		timerCannonBarrageCD:Stop()
 		timerWhirlingDaggerCD:Stop()
-		timerSwiftwindSaberCD:Start(10.9)
-		timerCannonBarrageCD:Start(15.7)
-		timerAvastyeCD:Start(21.8)
+		--1-ые таймеры с начала фазы 2 (всё ок)--
+		timerSwiftwindSaberCD:Start(10.8) --
+		timerCannonBarrageCD:Start(15.6) --
+		timerAvastyeCD:Start(21.8) --
 		if self:IsMythicPlus() then
-			timerWhirlingDaggerCD:Start(13.3, self.vb.daggerCount+1)
+			timerWhirlingDaggerCD:Start(13.9, self.vb.daggerCount+1) --
 		end
-	elseif spellId == 257458 then--ManOWar
+	elseif spellId == 257458 then--Шулерские кости: линкор (3 фаза)
 		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
@@ -76,11 +103,12 @@ function mod:SPELL_CAST_START(args)
 		timerAvastyeCD:Stop()
 		timerCannonBarrageCD:Stop()
 		timerWhirlingDaggerCD:Stop()
-		timerSwiftwindSaberCD:Start(10.5)
-		timerCannonBarrageCD:Start(15.7)
-		timerAvastyeCD:Start(21.8)
+		--1-ые таймеры с начала фазы 3 (всё ок)--
+		timerSwiftwindSaberCD:Start(10.8) --
+		timerCannonBarrageCD:Start(15.7) --
+		timerAvastyeCD:Start(21.8) --
 		if self:IsMythicPlus() then
-			timerWhirlingDaggerCD:Start(13.3, self.vb.daggerCount+1)
+			timerWhirlingDaggerCD:Start(14, self.vb.daggerCount+1) --
 		end
 	elseif spellId == 413145 or spellId == 413147 then--Shadowlands S2 version
 		specWarnSwiftwindSaber:Show()
@@ -118,35 +146,57 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 257314 and args:IsDestTypePlayer() then
-		warnBlackPowder:CombinedShow(0.5, args.destName)
+	if spellId == 257314 and args:IsDestTypePlayer() then --Бомба с черным порохом
 		if args:IsPlayer() then
 			specWarnBlackPowder:Show()
 			specWarnBlackPowder:Play("justrun")
 			yellBlackPowder:Yell()
+		else
+			warnBlackPowder:CombinedShow(0.5, args.destName)
 		end
-	elseif spellId == 257305 then
-		if self:GetStage(2, 2) then--Multiple targets
-			warnCannonBarrage:CombinedShow(0.3, args.destName)
+		if self.Options.SetIconOnBlackPowder then
+			self:SetIcon(args.destName, 8)
+		end
+	elseif spellId == 257305 then --Обстрел
+		local icon = self.vb.cannonBarrageIcon
+		if self.Options.SetIconOnCannonBarrage then
+			self:SetIcon(args.destName, icon)
 		end
 		if args:IsPlayer() then
 			specWarnCannonBarrage:Show()
 			specWarnCannonBarrage:Play("watchstep")
-			--specWarnCannonBarrage:ScheduleVoice(1.5, "keepmove")
 			yellCannonBarrage:Yell()
 		else
 			if self:GetStage(1) then--Only one target
 				warnCannonBarrage:Show(args.destName)
 			end
 		end
+		self.vb.cannonBarrageIcon = self.vb.cannonBarrageIcon - 1
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 257314 then --Бомба с черным порохом
+		if self.Options.SetIconOnBlackPowder then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 257305 then --Обстрел
+		if self.Options.SetIconOnCannonBarrage then
+			self:SetIcon(args.destName, 0)
+		end
+		self.vb.cannonBarrageIcon = self.vb.cannonBarrageIcon + 1
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257453 or spellId == 257304 then--Cannon Barrage (Stage 1), Cannon Barrage (Stage 2/3)
+		DBM:Debug("Murchal proshlyap", 2)
 		if self:GetStage(3) then
+			DBM:Debug("Murchal proshlyap 3", 2)
 			timerCannonBarrageCD:Start(15.5)
 		else
+			DBM:Debug("Murchal proshlyap 1 and 2", 2)
 			timerCannonBarrageCD:Start(25)
 		end
 	end
