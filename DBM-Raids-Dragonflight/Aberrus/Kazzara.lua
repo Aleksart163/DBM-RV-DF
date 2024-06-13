@@ -22,20 +22,20 @@ mod:RegisterEventsInCombat(
 --[[
 (ability.id = 401316 or ability.id = 401318 or ability.id = 401319 or ability.id = 406516 or ability.id = 407198 or ability.id = 407199 or ability.id = 407200 or ability.id = 407069 or ability.id = 400430 or ability.id = 403326 or ability.id = 404744) and type = "begincast"
 --]]
-local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3)
+local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3) --Ужасные разломы
 local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4)
-local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4) --Ужасные когти
+local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Tank|Healer") --Ужасные когти
 
 local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, nil, 2, 2)
-local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 1, 2)
-local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, nil, nil, 1, 2)
+local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
+local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, nil, nil, 4, 4) --Луч жестокой боли
 local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2)
 local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, nil, 2, 13)
 local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404743, nil, nil, nil, 1, 2) --Ужасные когти
 local specWarnTerrorClawsTaunt						= mod:NewSpecialWarningTaunt(404743, nil, nil, nil, 1, 2) --Ужасные когти
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(406530, nil, nil, nil, 1, 8)
 --
-local timerDreadRiftsCD								= mod:NewCDCountTimer(34, 407196, nil, nil, nil, 3)
+local timerDreadRiftsCD								= mod:NewCDCountTimer(34, 407196, nil, nil, nil, 3) --Ужасные разломы
 local timerRaysofAnguishCD							= mod:NewCDCountTimer(34, 407069, nil, nil, nil, 3)
 local timerHellbeamCD								= mod:NewCDCountTimer(35.5, 400430, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
 local timerWingsofExtinctionCD						= mod:NewCDCountTimer(34, 403326, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
@@ -43,9 +43,9 @@ local timerTerrorClawsCD							= mod:NewCDTimer(15.6, 404743, nil, "Tank|Healer"
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 local yellTerrorClaws								= mod:NewShortYell(404743, nil, nil, nil, "YELL") --Ужасные когти
-local yellDreadRift									= mod:NewShortPosYell(407196, nil, nil, nil, "YELL")
-local yellDreadRiftFades							= mod:NewIconFadesYell(407196, nil, nil, nil, "YELL")
-local yellRayofAnguish								= mod:NewShortYell(402253, nil, nil, nil, "YELL")
+local yellDreadRift									= mod:NewShortPosYell(407196, nil, nil, nil, "YELL") --Ужасные разломы
+local yellDreadRiftFades							= mod:NewIconFadesYell(407196, nil, nil, nil, "YELL") --Ужасные разломы
+local yellRayofAnguish								= mod:NewShortYell(402253, nil, nil, nil, "YELL") --Луч жестокой боли
 
 mod:AddSetIconOption("SetIconOnDreadRifts", 407196, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})--Default to off, players need to get used to this not existing
 mod:GroupSpells(407196, 406525)--Group Dread Rifts with Dread Rift

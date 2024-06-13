@@ -33,7 +33,7 @@ mod:AddTimerLine(DBM_COMMON_L.BOSS)
 local warnMarkCast								= mod:NewCountAnnounce(391686, 3) --Знак проводимости
 local warnRagingBurst							= mod:NewCountAnnounce(388302, 3, nil, nil, 86189) --Яростный импульс (Воронки)
 local warnZephyrSlam							= mod:NewStackAnnounce(375580, 2, nil, "Tank|Healer") --Удар южного ветра
-local warnZephyrSlam2							= mod:NewTargetNoFilterAnnounce(375580, 4) --Удар южного ветра
+local warnZephyrSlam2							= mod:NewTargetNoFilterAnnounce(375580, 4, nil, "Tank|Healer") --Удар южного ветра
 
 local specWarnCoalescingStorm					= mod:NewSpecialWarningSwitchCount(387849, nil, nil, nil, 2, 4) --Поднимающаяся буря
 local specWarnConductiveMark					= mod:NewSpecialWarningMoveAway(391686, nil, nil, nil, 1, 2) --Знак проводимости

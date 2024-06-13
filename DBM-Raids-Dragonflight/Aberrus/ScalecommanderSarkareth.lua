@@ -35,6 +35,7 @@ mod:RegisterEventsInCombat(
  or (ability.id = 401383 or ability.id = 401215 or ability.id = 403997 or ability.id = 407576 or ability.id = 401905 or ability.id = 401680 or ability.id = 401330 or ability.id = 404218 or ability.id = 410642 or ability.id = 404705 or ability.id = 407496 or ability.id = 404288 or ability.id = 411241 or ability.id = 405486 or ability.id = 403520 or ability.id = 408429) and type = "applydebuff"
 --]]
 --General
+local warnVoidEmpowerment					= mod:NewTargetNoFilterAnnounce(403284, 2) --Наделение силой Бездны
 local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnOblivionStack						= mod:NewCountAnnounce(401951, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401951))
 local warnMindFragment						= mod:NewAddsLeftAnnounce(403997, 1)--Not technically adds, but wording of option and alert text is ambigious that it doesn't matter, it fits
@@ -126,7 +127,7 @@ local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1) --Космическое вознесение (Воспарение)
-local timerAstralFormation						= mod:NewCDCountTimer(29.9, 403510, 370470, nil, nil, 5) --Звездная формация (Колонна) Shorttext Pillar
+local timerAstralFormation						= mod:NewCDTimer(29.9, 403510, 403510, nil, nil, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 123244, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --В поисках вечности (Спрятаться) Shortname "Hide"
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты
@@ -803,6 +804,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnEmbraceofNothingness:Show(self.vb.nothingnessCount, args.destName)
 		end
 	elseif spellId == 403284 then--Stage 1-2 Intermission
+		warnVoidEmpowerment:Show(args.destName)
 		DBM:Debug("Murchal proshlyap", 2)
 		timerOppressingHowlCD:Stop()
 		timerGlitteringSurgeCD:Stop()
@@ -813,6 +815,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 		timerPhaseCD:Start(15)
 	elseif spellId == 410654 then--Stage 2-3 Intermission
+		warnVoidEmpowerment:Show(args.destName)
 		DBM:Debug("Murchal proshlyap", 2)
 		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
@@ -919,14 +922,14 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerVoidSlashCD:Start(21, 1)
 			timerEmbraceofNothingnessCD:Start(24.7, 1)
 			timerVoidBombCD:Start(28.5, 1)
-			timerScouringEternityCD:Start(46.2, 1)
+			timerScouringEternityCD:Start(53.1, 1) --46.2
 		elseif self:IsNormal() then
 			timerCosmicAscensionCD:Start(7.7, 1)
 			timerHurtlingBarrageCD:Start(21, 1)
 			timerVoidSlashCD:Start(22.3, 1)
 			timerEmbraceofNothingnessCD:Start(26.3, 1)
 			timerVoidBombCD:Start(30.3, 1)
-			timerScouringEternityCD:Start(48.6, 1)
+			timerScouringEternityCD:Start(53.1, 1) --48.6
 		else--LFR
 			timerCosmicAscensionCD:Start(7.2, 1)
 			timerVoidSlashCD:Start(21, 1)

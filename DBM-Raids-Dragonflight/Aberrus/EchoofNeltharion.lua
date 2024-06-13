@@ -42,7 +42,7 @@ local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2)
 local warnRushingDarkness						= mod:NewIncomingCountAnnounce(407221, 2)
 local warnRushingDarknessWallTarget				= mod:NewTargetCountAnnounce(407221, 2, nil, nil, nil, nil, nil, nil, true)
 local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180)--This is using count object instead of incoming count because weak auras are scanning for "Bombs (number")
-local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4) --Гибельный удар
+local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4, nil, "Tank|Healer") --Гибельный удар
 
 --local specWarnVolcanicHeart					= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 1, 2)
 --local yellVolcanicHeart						= mod:NewShortPosYell(410953)
