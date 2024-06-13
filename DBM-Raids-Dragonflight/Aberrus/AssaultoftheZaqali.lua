@@ -78,13 +78,13 @@ local specWarnLavaBolt								= mod:NewSpecialWarningInterruptCount(397386, "Has
 --local timerMagmaFlowCD							= mod:NewCDTimer(20.7, 409271, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 ----Obsidian Guard
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26210))
-local warnScorchingRoar								= mod:NewCastAnnounce(408620, 4)
-local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4)
+local warnScorchingRoar								= mod:NewCastAnnounce(408620, 4) --Обжигающий рык
+local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4) --Вулканический щит
 
 local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2)
 
-local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2)
-local timerVolcanicShieldCD							= mod:NewCDTimer(30.3, 401867, nil, nil, nil, 3)--30-40
+local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2) --Обжигающий рык
+local timerVolcanicShieldCD							= mod:NewCDTimer(30.3, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
 ----Flamebound Huntsman
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26213))
 local warnBlazingSpear								= mod:NewTargetAnnounce(401401, 3)
@@ -199,9 +199,13 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 401258 then
 		self:BossTargetScanner(args.sourceGUID, "HeavyCudgelTarget", 0.1, 2)
 		--Timers moved to success event
-	elseif spellId == 401867 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
-		warnVolcanicShield:Show()
-		timerVolcanicShieldCD:Start(nil, args.sourceGUID)
+	elseif spellId == 401867 then
+		if self:AntiSpam(2, "VolcanicShield") then
+			warnVolcanicShield:Show()
+		end
+		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
+			timerVolcanicShieldCD:Start(nil, args.sourceGUID)
+		end
 	elseif spellId == 408959 then
 		self.vb.leapCount = self.vb.leapCount + 1
 		specWarnDevastatingLeap:Show(self.vb.leapCount)
@@ -217,8 +221,10 @@ function mod:SPELL_CAST_START(args)
 --	elseif spellId == 397383 then
 --		warnMoltenBarrier:Show()
 --		timerMoltenBarrierCD:Start(nil, args.sourceGUID)
-	elseif spellId == 409271 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) and self:AntiSpam(2, "MagmaFlow") then
-		warnMagmaFlowCast:Show()
+	elseif spellId == 409271 then
+		if self:AntiSpam(2, "MagmaFlow") then
+			warnMagmaFlowCast:Show()
+		end
 --		timerMagmaFlowCD:Start(nil, args.sourceGUID)
 	elseif spellId == 401108 then
 		self.vb.rushCount = self.vb.rushCount + 1
@@ -270,9 +276,13 @@ function mod:SPELL_CAST_START(args)
 				specWarnLavaBolt:Play("kickcast")
 			end
 		end
-	elseif spellId == 408620 and self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
-		warnScorchingRoar:Show()
-		timerScorchingRoarCD:Start(nil, args.sourceGUID)
+	elseif spellId == 408620 then
+		if self:AntiSpam(2, "ScorchingRoar") then
+			warnScorchingRoar:Show()
+		end
+		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
+			timerScorchingRoarCD:Start(nil, args.sourceGUID)
+		end
 	end
 end
 
