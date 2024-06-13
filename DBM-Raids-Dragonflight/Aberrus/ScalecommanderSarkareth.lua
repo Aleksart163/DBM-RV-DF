@@ -14,9 +14,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 401383 401810 401500 401642 402050 401325 404027 404456 404769 411302 404754 404403 411030 407496 404288 411236 403741 405022 403625 403517 408422 401704",
 	"SPELL_SUMMON 404505 404507",
-	"SPELL_AURA_APPLIED 401951 401215 403997 407576 401905 401680 401330 404218 404705 407496 404288 411241 405486 403520 408429 403284 410654 410625",
+	"SPELL_AURA_APPLIED 401951 401215 403997 407576 401905 401680 401330 404218 410642 404705 407496 404288 411241 405486 403520 408429 403284 410654 410625",
 	"SPELL_AURA_APPLIED_DOSE 401951 403997 407576 401330 404269 411241 408429",
-	"SPELL_AURA_REMOVED 401951 401680 401330 404218 404705 407496 404288 404269 411241 403520 408429 401215 405486 410654 410625",
+	"SPELL_AURA_REMOVED 401951 401680 401330 404218 410642 404705 407496 404288 404269 411241 403520 408429 401215 405486 410654 410625",
 	"SPELL_AURA_REMOVED_DOSE 401951",
 	"SPELL_DAMAGE 401621 402746 403524 404062 406428",
 	"SPELL_MISSED 401621 402746 403524 404062 406428",
@@ -78,12 +78,13 @@ local timerBurningClaws							= mod:NewTargetTimer(27, 401330, nil, "Tank|Healer
 mod:AddSetIconOption("SetIconOnMassDisintegrate", 401680, true, 0, {1, 2, 3, 4})
 --Stage Two: A Touch of the Forbidden
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
-local warnVoidFracture							= mod:NewTargetAnnounce(404218, 3, nil, false) --Раскол Бездны
+local warnVoidFracture							= mod:NewTargetAnnounce(404027, 3, nil, false) --Раскол Бездны
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true)
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
-local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, 167180, nil, 2, 2) --Бомба Бездны (Бомбы)
-local specWarnVoidFracture						= mod:NewSpecialWarningYou(404218, nil, nil, nil, 1, 2) --Раскол Бездны Maybe change to MoveTo alert to say move to emptyness?
+local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
+local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 4) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
+local specWarnVoidFracture2						= mod:NewSpecialWarningMoveTo(404027, nil, nil, nil, 4, 4) --Бомба Бездны
 local specWarnAbyssalBreath						= mod:NewSpecialWarningCount(404456, nil, 18357, nil, 2, 2)
 local specWarnEmptyStrike						= mod:NewSpecialWarningDefensive(404769, nil, nil, nil, 1, 2, 4)
 local specWarnCosmicVolley						= mod:NewSpecialWarningInterruptCount(411302, "HasInterrupt", 31295, nil, 1, 2, 4)
@@ -95,7 +96,7 @@ local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2)
 
 local timerEndExistenceCast						= mod:NewCastTimer(15, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerVoidBombCD							= mod:NewCDCountTimer(29.9, 404027, 167180, nil, nil, 3) --Бомба Бездны (Бомбы)
+local timerVoidBombCD							= mod:NewCDCountTimer(29.9, 404027, nil, nil, nil, 3) --Бомба Бездны (Бомбы)
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Mythic Add
 --local timerCosmicVolleyCD						= mod:NewCDTimer(4.8, 411302, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Mythic Add
@@ -134,7 +135,7 @@ local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, nil, ni
 local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
-local yellVoidFractureFades						= mod:NewShortFadesYell(404218, nil, nil, nil, "YELL") --Раскол Бездны
+local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
 local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция
 local yellInfiniteDuress						= mod:NewShortPosYell(404288, nil, nil, nil, "YELL") --Бесконечное заключение
@@ -147,6 +148,8 @@ local yellVoidSlashFades						= mod:NewShortFadesYell(408429, nil, nil, nil, "YE
 local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859, nil, nil, "YELL") --Когти пустоты (Бомбардировка) For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
+
+local BetweenStars = DBM:GetSpellName(401215) --Межзвездная пустота
 
 --P1 Variables
 mod.vb.surgeCount = 0
@@ -765,11 +768,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		timerVoidSlash:Restart(21, args.destName)--Needs to show for even non tanks getting hit though
-	elseif spellId == 404218 then
+	elseif spellId == 404218 or spellId == 410642 then
 		if args:IsPlayer() then
 			playerVoidFracture = true
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
+			specWarnVoidFracture2:Schedule(5, BetweenStars)
+			specWarnVoidFracture2:ScheduleVoice(5, "runout")
 			if self:IsMythic() then
 				--schedule for Dimensional Puncture
 				yellVoidFractureFades:Countdown(spellId)
@@ -872,9 +877,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellVoidClawsFades:Cancel()
 		end
 		timerVoidSlash:Stop(args.destName)--Needs to show for even non tanks getting hit though
-	elseif spellId == 404218 then
+	elseif spellId == 404218 or spellId == 410642 then
 		if args:IsPlayer() then
 			playerVoidFracture = false
+			specWarnVoidFracture2:Cancel()
+			specWarnVoidFracture2:CancelVoice()
 			yellVoidFractureFades:Cancel()
 		end
 	elseif spellId == 404705 then
@@ -914,7 +921,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerVoidSlashCD:Start(19.8, 1)
 			timerEmbraceofNothingnessCD:Start(23.3, 1)
 			timerVoidBombCD:Start(24.5, 1)
-			--timerScouringEternityCD:Start(46.2, 1)
+			timerScouringEternityCD:Start(53.1, 1) --46.2
 		elseif self:IsHeroic() then
 			timerInfiniteDuressCD:Start(4.7, 1)
 			timerCosmicAscensionCD:Start(7.2, 1)
