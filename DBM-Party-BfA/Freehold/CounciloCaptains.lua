@@ -41,44 +41,44 @@ local timerTendingBarCD				= mod:NewNextTimer(8, 264605, nil, nil, nil, 3) --О�
 --mod:GroupSpells(264605, 265168)--Group good brew and bad brew with "tending Bar"
 --Jolly
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17025))
-local warnLuckySevens				= mod:NewSpellAnnounce(257117, 1)
+local warnLuckySevens				= mod:NewSpellAnnounce(257117, 1) --Счастливые семерки
 
-local specWarnCuttingSurge			= mod:NewSpecialWarningDodge(267522, nil, nil, nil, 2, 2)
-local specWarnWhirlpoolofBlades		= mod:NewSpecialWarningDodge(267533, nil, nil, nil, 2, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(272397, nil, nil, nil, 1, 8)
+local specWarnCuttingSurge			= mod:NewSpecialWarningDodge(267522, nil, nil, nil, 2, 2) --Разрезающий рывок
+local specWarnWhirlpoolofBlades		= mod:NewSpecialWarningDodge(267533, nil, nil, nil, 2, 2) --Смерч клинков
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(272397, nil, nil, nil, 1, 8) --Смерч клинков
 
 ----Hostile
-local timerCuttingSurgeCD			= mod:NewCDTimer(22.7, 267522, nil, nil, nil, 3)
-local timerWhirlpoolofBladesCD		= mod:NewCDTimer(22.7, 267533, nil, nil, nil, 3)
+local timerCuttingSurgeCD			= mod:NewCDTimer(22.7, 267522, nil, nil, nil, 3) --Разрезающий рывок
+local timerWhirlpoolofBladesCD		= mod:NewCDTimer(22.7, 267533, nil, nil, nil, 3) --Смерч клинков
 ----Friendly
-local timerLuckySevensCD			= mod:NewNextTimer(29.1, 257117, nil, nil, nil, 5)
-local timerTradeWindsVigorCD		= mod:NewNextTimer(26.7, 281329, nil, nil, nil, 5)
+local timerLuckySevensCD			= mod:NewNextTimer(29.1, 257117, nil, nil, nil, 5) --Счастливые семерки
+local timerTradeWindsVigorCD		= mod:NewNextTimer(29, 281329, nil, nil, nil, 5) --Сила попутного ветра
 
 mod:AddRangeFrameOption(5, 267522)
 --Raoul
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17023))
-local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1)
+local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1) --Бочонок с краником
 
-local specWarnBarrelSmash			= mod:NewSpecialWarningRun(256589, "Melee", nil, nil, 4, 2)
-local specWarnBlackoutBarrel		= mod:NewSpecialWarningSwitch(258338, "-Healer", nil, 2, 1, 2)
+local specWarnBarrelSmash			= mod:NewSpecialWarningRun(256589, "Melee", nil, nil, 4, 2) --Удар бочкой
+local specWarnBlackoutBarrel		= mod:NewSpecialWarningSwitch(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
 
 ----Hostile
-local timerBarrelSmashCD			= mod:NewCDTimer(22.9, 256589, nil, "Melee", nil, 3)--22.9-24.5
-local timerBlackoutBarrelCD			= mod:NewCDTimer(46.1, 258338, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerBarrelSmashCD			= mod:NewCDTimer(22.9, 256589, nil, "Melee", nil, 3) --Удар бочкой 22.9-24.5
+local timerBlackoutBarrelCD			= mod:NewCDTimer(46.1, 258338, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Бочка черной пелены
 ----Friendly
-local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5)
+local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5) --Бочонок с краником
 --Eudora
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17024))
-local warnChainShot					= mod:NewSpellAnnounce(272902, 1)
-local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3)
+local warnChainShot					= mod:NewSpellAnnounce(272902, 1) --Выстрел цепью
+local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3) --Пороховой выстрел
 
-local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 2)
-local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2)
+local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 2) --Картечный залп
+local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2) --Пороховой выстрел
 
 ----Hostile
-local timerGrapeShotCD				= mod:NewNextTimer(30.2, 258381, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerGrapeShotCD				= mod:NewNextTimer(30.2, 258381, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
 ----Friendly
-local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5)
+local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --Выстрел цепью
 
 local function scanCaptains(self, isPull, delay)
 	local foundOne, foundTwo, foundThree
@@ -172,7 +172,6 @@ function mod:SPELL_CAST_START(args)
 		warnLuckySevens:Show()
 		timerLuckySevensCD:Start(nil, args.sourceGUID)
 	elseif spellId == 281329 then
-
 		timerTradeWindsVigorCD:Start(nil, args.sourceGUID)
 	elseif spellId == 267522 then
 		specWarnCuttingSurge:Show()
