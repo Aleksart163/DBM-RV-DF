@@ -21,61 +21,61 @@ mod:RegisterEvents(
 (ability.id = 413044 or ability.id = 272609 or ability.id = 266106 or ability.id = 265019 or ability.id = 265089 or ability.id = 265091 or ability.id = 265433 or ability.id = 265540 or ability.id = 272183 or ability.id = 278961 or ability.id = 265523 or ability.id = 278755 or ability.id = 265568 or ability.id = 265487 or ability.id = 272592 or ability.id = 265081 or ability.id = 272180 or ability.id = 266209 or ability.id = 265016) and type = "begincast"
  or (ability.id = 265668 or ability.id = 266107 or ability.id = 266201 or ability.id = 266265) and type = "cast"
 --]]
-local warnBloodHarvest				= mod:NewTargetNoFilterAnnounce(265016, 3)
-local warnGiftOfGhuun				= mod:NewCastAnnounce(265091, 3)
-local warnDarkReconstitution		= mod:NewCastAnnounce(265089, 3)
-local warnSonicSreech				= mod:NewCastAnnounce(266106, 3)
-local warnRaiseDead					= mod:NewCastAnnounce(272183, 3)--No longer exists in M+ but maybe still exists in timewalking/leveling version?
-local warnShadowBoltVolley			= mod:NewCastAnnounce(265487, 3)
-local warnWitheringCurse			= mod:NewCastAnnounce(265433, 3)
-local warnWarcry					= mod:NewCastAnnounce(265081, 4)
-local warnHarrowingDespair			= mod:NewCastAnnounce(278755, 3)
-local warnWickedFrenzy				= mod:NewCastAnnounce(266209, 3)
-local warnVoidSpit					= mod:NewCastAnnounce(272180, 2, nil, nil, false)--AKA Dark Bolt prior to 10.1
-local warnDarkEchoes				= mod:NewCastAnnounce(413044, 4)
+local warnBloodHarvest				= mod:NewTargetNoFilterAnnounce(265016, 3) --Кровавая жатва
+local warnGiftOfGhuun				= mod:NewCastAnnounce(265091, 3) --Дар Г'ууна
+local warnDarkReconstitution		= mod:NewCastAnnounce(265089, 3) --Темное восстановление
+local warnSonicSreech				= mod:NewCastAnnounce(266106, 3) --Ультразвуковой визг
+local warnRaiseDead					= mod:NewCastAnnounce(272183, 3) --Воскрешение мертвых No longer exists in M+ but maybe still exists in timewalking/leveling version?
+local warnShadowBoltVolley			= mod:NewCastAnnounce(265487, 3) --Залп стрел Тьмы
+local warnWitheringCurse			= mod:NewCastAnnounce(265433, 3) --Иссушающее проклятие
+local warnWarcry					= mod:NewCastAnnounce(265081, 4) --Боевой клич
+local warnHarrowingDespair			= mod:NewCastAnnounce(278755, 3) --Мучительное отчаяние
+local warnWickedFrenzy				= mod:NewCastAnnounce(266209, 3) --Жуткое бешенство
+local warnVoidSpit					= mod:NewCastAnnounce(272180, 2, nil, nil, false) --Плево Бездны AKA Dark Bolt prior to 10.1
+local warnDarkEchoes				= mod:NewCastAnnounce(413044, 4) --Темное эхо
 
-local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2)
-local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2)
-local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2)
-local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2)
-local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 1, 2)
-local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, nil, nil, 4, 2)
-local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGiftofGhuun			= mod:NewSpecialWarningInterrupt(265091, "HasInterrupt", nil, nil, 1, 2)
-local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(265487, "HasInterrupt", nil, nil, 1, 2)
-local specWarnWitheringCurse		= mod:NewSpecialWarningInterrupt(265433, "HasInterrupt", nil, nil, 1, 2)
-local specWarnRaiseDead				= mod:NewSpecialWarningInterrupt(272183, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDecayingMind			= mod:NewSpecialWarningInterrupt(278961, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHarrowingDespair		= mod:NewSpecialWarningInterrupt(278755, "HasInterrupt", nil, nil, 1, 2)
-local specWarnVoidSpit				= mod:NewSpecialWarningInterrupt(272180, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDarkEchoes			= mod:NewSpecialWarningInterrupt(413044, "HasInterrupt", nil, nil, 1, 2)
-local specWarnWickedFrenzy			= mod:NewSpecialWarningInterrupt(266209, "HasInterrupt", nil, nil, 1, 2)
-local specWarnWickedFrenzyDispel	= mod:NewSpecialWarningDispel(266209, "RemoveEnrage", nil, nil, 1, 2)
-local specWarnDecayingMindDispel	= mod:NewSpecialWarningDispel(278961, "RemoveDisease", nil, nil, 1, 2)
-local specWarnGiftofGhuunDispel		= mod:NewSpecialWarningDispel(265091, "MagicDispeller", nil, nil, 1, 2)
-local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDispeller", nil, nil, 1, 2)--Unlike BFA version, 10.1 version now instant cast, no interrupt just dispel
-local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8)
+local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2) --Сводящий с ума взор
+local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2) --Яростное рассечение
+local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2) --Гнилая желчь
+local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2) --Хватка Бездны
+local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 4, 2) --Темное знамение
+local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, nil, nil, 4, 2) --Кровожадность
+local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2) --Ультразвуковой визг
+local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
+local specWarnGiftofGhuun			= mod:NewSpecialWarningInterrupt(265091, "HasInterrupt", nil, nil, 1, 2) --Дар Г'ууна
+local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(265487, "HasInterrupt", nil, nil, 1, 2) --Залп стрел Тьмы
+local specWarnWitheringCurse		= mod:NewSpecialWarningInterrupt(265433, "HasInterrupt", nil, nil, 1, 2) --Иссушающее проклятие
+local specWarnRaiseDead				= mod:NewSpecialWarningInterrupt(272183, "HasInterrupt", nil, nil, 1, 2) --Воскрешение мертвых
+local specWarnDecayingMind			= mod:NewSpecialWarningInterrupt(278961, "HasInterrupt", nil, nil, 1, 2) --Гниющий разум
+local specWarnHarrowingDespair		= mod:NewSpecialWarningInterrupt(278755, "HasInterrupt", nil, nil, 1, 2) --Мучительное отчаяние
+local specWarnVoidSpit				= mod:NewSpecialWarningInterrupt(272180, "HasInterrupt", nil, nil, 1, 2) --Плево Бездны
+local specWarnDarkEchoes			= mod:NewSpecialWarningInterrupt(413044, "HasInterrupt", nil, nil, 1, 2) --Темное эхо
+local specWarnWickedFrenzy			= mod:NewSpecialWarningInterrupt(266209, "HasInterrupt", nil, nil, 1, 2) --Жуткое бешенство
+local specWarnWickedFrenzyDispel	= mod:NewSpecialWarningDispel(266209, "RemoveEnrage", nil, nil, 1, 2) --Жуткое бешенство
+local specWarnDecayingMindDispel	= mod:NewSpecialWarningDispel(278961, "RemoveDisease", nil, nil, 1, 2) --Гниющий разум
+local specWarnGiftofGhuunDispel		= mod:NewSpecialWarningDispel(265091, "MagicDispeller", nil, nil, 1, 2) --Дар Г'ууна
+local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDispeller", nil, nil, 1, 2) --Костяной щит Unlike BFA version, 10.1 version now instant cast, no interrupt just dispel
+local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2) --Призыв тотема поглощения духа
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
-local timerBloodHarvestCD			= mod:NewCDNPTimer(12.1, 265016, nil, nil, nil, 3)
-local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3)
-local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3)--Off by default to reduce clutter, but optional for those that want it
-local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2)
-local timerDecayingMindCD			= mod:NewCDNPTimer(27.7, 278961, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSonicScreechCD			= mod:NewCDNPTimer(25.4, 266106, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerBloodHarvestCD			= mod:NewCDNPTimer(12.1, 265016, nil, nil, nil, 3) --Кровавая жатва
+local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
+local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3) --Волна разложения Off by default to reduce clutter, but optional for those that want it
+local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2) --Боевой клич
+local timerDecayingMindCD			= mod:NewCDNPTimer(27.7, 278961, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Гниющий разум
+--local timerSonicScreechCD			= mod:NewCDNPTimer(25.4, 266106, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ультразвуковой визг
 --local timerVoidSpitCD				= mod:NewCDNPTimer(9.7, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBoneShieldCD				= mod:NewCDNPTimer(25.4, 266201, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerWickedFrenzyCD			= mod:NewCDNPTimer(25.4, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON)
-local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--25.4-27.7
-local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3)
-local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3)--15.7-17
+local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное эхо
+local timerBoneShieldCD				= mod:NewCDNPTimer(25, 266201, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Костяной щит
+local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Злые объятия
+local timerWickedFrenzyCD			= mod:NewCDNPTimer(7.2, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON) --Жуткое бешенство
+local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Плево Бездны
+local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел Тьмы 25.4-27.7
+local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
+local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
-local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL")--Pre Savage Cleave target awareness
-local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL")
+local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
+local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
@@ -104,7 +104,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnRottenBile:Play("shockwave")
 		end
 	elseif spellId == 266106 then
-		timerSonicScreechCD:Start(nil, args.sourceGUID)
+	--	timerSonicScreechCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn266106interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnSonicScreech:Show(args.sourceName)
 			specWarnSonicScreech:Play("kickcast")
@@ -259,7 +259,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 133870 then--Diseased Lasher
 		timerDecayingMindCD:Stop(args.destGUID)
 	elseif cid == 133835 then--Feral Bloodswarmer
-		timerSonicScreechCD:Stop(args.destGUID)
+	--	timerSonicScreechCD:Stop(args.destGUID)
 	elseif cid == 138187 then--Grotesque Horror
 --		timerVoidSpitCD:Stop(args.destGUID)
 		timerDarkEchoesCD:Stop(args.destGUID)
