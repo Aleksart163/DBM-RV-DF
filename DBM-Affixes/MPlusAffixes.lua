@@ -26,7 +26,7 @@ local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false) --�
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
-local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, 2, 1, 2) --Злобное преследование
+local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, 96306, nil, 1, 2) --Злобное преследование
 local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
 local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
 local specWarnMarkWind						= mod:NewSpecialWarningYou(396364, nil, nil, nil, 1, 2) --Метка ветра
