@@ -103,11 +103,15 @@ end
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if (msg == L.RP1 or msg:find(L.RP1)) then
 		self:SendSync("AberrusRP1")
+	elseif (msg == L.RP2 or msg:find(L.RP2)) then
+		self:SendSync("AberrusRP2")
 	end
 end
 
 function mod:OnSync(msg, targetname)
 	if msg == "AberrusRP1" and self:AntiSpam(10, "RP1") then
+		timerRP:Start(11.5) --пока неточно
+	elseif msg == "AberrusRP2" and self:AntiSpam(10, "RP2") then
 		timerRP:Start(33.6)
 	end
 end

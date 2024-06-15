@@ -224,7 +224,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
-	RP1 = "How exemplary. Congratulations."
+	RP1 = "Flame and shadow, both powerful, influential forces.",
+	RP2 = "How exemplary. Congratulations."
 })
 
 ---------------------------
