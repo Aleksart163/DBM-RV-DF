@@ -1992,12 +1992,12 @@ do
 				"LOADING_SCREEN_DISABLED",
 				"ZONE_CHANGED_NEW_AREA"
 			)
-			if private.newShit then
+		--[[	if private.newShit then
 				self:RegisterEvents(
 					"START_PLAYER_COUNTDOWN",
 					"CANCEL_PLAYER_COUNTDOWN"
 				)
-			end
+			end]]
 			if not private.isClassic then -- Retail, WoTLKC, and BCC
 				self:RegisterEvents(
 					"LFG_PROPOSAL_FAILED",
@@ -5172,7 +5172,7 @@ do
 		end
 	end
 
-	function DBM:START_PLAYER_COUNTDOWN(initiatedBy, timeSeconds)--totalTime
+--[[	function DBM:START_PLAYER_COUNTDOWN(initiatedBy, timeSeconds)--totalTime
 		--Ignore this event in combat
 		if #inCombat > 0 then return end
 --		if timeSeconds > 60 then--treat as a break timer
@@ -5186,7 +5186,7 @@ do
 		--when CANCEL_PLAYER_COUNTDOWN is called by ENCOUNTER_START, sender is nil
 --		breakTimerStart(self, 0, initiatedBy, true)
 		pullTimerStart(self, initiatedBy, 0, true)
-	end
+	end]]
 end
 
 ----------------------
