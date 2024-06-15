@@ -684,15 +684,13 @@ local function sendSync(protocol, prefix, msg)
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
 		local sendChannel = "SOLO"
-		if not IsTrialAccount() then
-			if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
-				sendChannel = "INSTANCE_CHAT"
-			else
-				if IsInRaid() then
-					sendChannel = "RAID"
-				elseif IsInGroup(1) then
-					sendChannel = "PARTY"
-				end
+		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+			sendChannel = "INSTANCE_CHAT"
+		else
+			if IsInRaid() then
+				sendChannel = "RAID"
+			elseif IsInGroup(1) then
+				sendChannel = "PARTY"
 			end
 		end
 		if sendChannel == "SOLO" then
@@ -782,17 +780,15 @@ local function sendLoggedSync(protocol, prefix, msg)
 	if dbmIsEnabled then
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
-		if not IsTrialAccount() then
-			if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
-				C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "INSTANCE_CHAT")
-			else
-				if IsInRaid() then
-					C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "RAID")
-				elseif IsInGroup(1) then
-					C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "PARTY")
-				else--for solo raid
-					handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
-				end
+		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+			C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "INSTANCE_CHAT")
+		else
+			if IsInRaid() then
+				C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "RAID")
+			elseif IsInGroup(1) then
+				C_ChatInfo.SendAddonMessageLogged(DBMPrefix, fullname .. "\t" .. (protocol or DBMSyncProtocol) .. "\t" .. prefix .. "\t" .. msg, "PARTY")
+			else--for solo raid
+				handleSync("SOLO", playerName, nil, (protocol or DBMSyncProtocol), prefix, strsplit("\t", msg))
 			end
 		end
 	end
@@ -837,15 +833,13 @@ local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 	DBM:Debug("SendWorldSync running for " .. prefix)
 	local fullname = playerName .. "-" .. normalizedPlayerRealm
 	local sendChannel = "SOLO"
-	if not IsTrialAccount() then
-		if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
-			sendChannel = "INSTANCE_CHAT"
-		else
-			if IsInRaid() then
-				sendChannel = "RAID"
-			elseif IsInGroup(1) then
-				sendChannel = "PARTY"
-			end
+	if IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+		sendChannel = "INSTANCE_CHAT"
+	else
+		if IsInRaid() then
+			sendChannel = "RAID"
+		elseif IsInGroup(1) then
+			sendChannel = "PARTY"
 		end
 	end
 	if sendChannel == "SOLO" then
