@@ -328,7 +328,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnConstrictingThicket:Show(self.vb.vinesCount)
 		specWarnConstrictingThicket:Play("aesoon")
 		--Timers that specifically reset on constricting begin
---		timerBarrelingChargeCD:Restart(3, self.vb.chargeCount+1)--Done somewhere else to start earlier, but this technically where it happens
+--		timerBarrelingChargeCD:Start(3, self.vb.chargeCount+1)--Done somewhere else to start earlier, but this technically where it happens
 	elseif spellId == 420937 then
 		warnRelentlessBarrage:Show()
 	elseif spellId == 420671 then

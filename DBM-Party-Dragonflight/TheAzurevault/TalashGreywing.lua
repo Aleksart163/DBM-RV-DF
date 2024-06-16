@@ -93,8 +93,8 @@ function mod:SPELL_CAST_START(args)
 		specWarAbsoluteZero:Play("findshelter")
 		timerAbsoluteZero:Start()
 		timerAbsoluteZeroCD:Start()
-		timerFrostBombCD:Restart(14)
-		timerIcyDevastatorCD:Restart(self:IsMythicPlus() and 24.6 or 23.2)
+		timerFrostBombCD:Start(14)
+		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 24.6 or 23.2)
 	end
 end
 

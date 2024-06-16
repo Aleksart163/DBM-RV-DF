@@ -98,7 +98,7 @@ function mod:SPELL_CAST_START(args)
 		timerBurningEmberCD:Pause()
 	elseif spellId == 377017 then
 		if goldStarted then--It's a bugged recast
-			timerMoltenGoldCD:Restart()--Avoid false debug reporting
+			timerMoltenGoldCD:Start()--Avoid false debug reporting
 		else
 			goldStarted = true
 			timerMoltenGoldCD:Start()

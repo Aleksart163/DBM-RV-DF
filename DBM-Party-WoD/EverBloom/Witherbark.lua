@@ -124,7 +124,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnBrittleBarkOver:Show()
 		timerParchedGrasp:Start(3.6)
 		timerBrittleBarkCD:Start(39.9)
-		timerUncheckedGrowthCD:Restart(3.6)--Needs more review to verify
+		timerUncheckedGrowthCD:Start(3.6)--Needs more review to verify
 	end
 end
 

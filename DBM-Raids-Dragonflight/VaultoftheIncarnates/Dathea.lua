@@ -145,14 +145,14 @@ function mod:SPELL_CAST_START(args)
 		--Timers reset by storm
 		if self:IsMythic() then
 			if self.vb.stormCount == 1 then
-				timerConductiveMarkCD:Restart(21, self.vb.markCount+1) --Знак проводимости--
-				timerZephyrSlamCD:Restart(30, self.vb.slamCount+1) --Удар южного ветра--
-				timerCrosswindsCD:Restart(40, self.vb.crosswindCount+1) --Встречный ветер--
+				timerConductiveMarkCD:Start(21, self.vb.markCount+1) --Знак проводимости--
+				timerZephyrSlamCD:Start(30, self.vb.slamCount+1) --Удар южного ветра--
+				timerCrosswindsCD:Start(40, self.vb.crosswindCount+1) --Встречный ветер--
 				timerColaescingStormCD:Start(88.2, self.vb.stormCount+1) --Поднимающаяся буря--
 			elseif self.vb.stormCount == 2 then
 				timerConductiveMarkCD:Start(9.5, self.vb.markCount+1) --Знак проводимости--
-				timerZephyrSlamCD:Restart(33, self.vb.slamCount+1) --Удар южного ветра--
-				timerCrosswindsCD:Restart(29.8, self.vb.crosswindCount+1) --Встречный ветер--
+				timerZephyrSlamCD:Start(33, self.vb.slamCount+1) --Удар южного ветра--
+				timerCrosswindsCD:Start(29.8, self.vb.crosswindCount+1) --Встречный ветер--
 				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря (пока неточно)
 			else--дефолтные, надо будет править
 				timerConductiveMarkCD:Start(21, self.vb.markCount+1) --Знак проводимости
@@ -161,14 +161,14 @@ function mod:SPELL_CAST_START(args)
 				timerColaescingStormCD:Start(87.7, self.vb.stormCount+1) --Поднимающаяся буря
 			end
 		elseif self:IsHeroic() then
-			timerZephyrSlamCD:Restart(20.7, self.vb.slamCount+1)
-			timerCrosswindsCD:Restart(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
-		--	timerConductiveMarkCD:Restart(35, self.vb.markCount+1)
+			timerZephyrSlamCD:Start(20.7, self.vb.slamCount+1)
+			timerCrosswindsCD:Start(30.4, self.vb.crosswindCount+1)--40-45, but always a minimum of 40 from heer
+		--	timerConductiveMarkCD:Start(35, self.vb.markCount+1)
 			timerColaescingStormCD:Start(75.5, self.vb.stormCount+1)
 		else
-		--	timerConductiveMarkCD:Restart(9.7, self.vb.markCount+1)
-			timerZephyrSlamCD:Restart(15.7, self.vb.slamCount+1)
-			timerCrosswindsCD:Restart(34, self.vb.crosswindCount+1)
+		--	timerConductiveMarkCD:Start(9.7, self.vb.markCount+1)
+			timerZephyrSlamCD:Start(15.7, self.vb.slamCount+1)
+			timerCrosswindsCD:Start(34, self.vb.crosswindCount+1)
 			timerColaescingStormCD:Start(86.2, self.vb.stormCount+1)
 		end
 	elseif spellId == 388302 then
@@ -182,10 +182,10 @@ function mod:SPELL_CAST_START(args)
 		if self:IsMythic() then
 			if self.vb.cycloneCount == 1 then
 				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч точно под миф
-				timerZephyrSlamCD:Restart(16.8, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
+				timerZephyrSlamCD:Start(16.8, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
 			elseif self.vb.cycloneCount == 2 then
 				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч (пока неизвестно)
-				timerZephyrSlamCD:Restart(18.4, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
+				timerZephyrSlamCD:Start(18.4, self.vb.slamCount+1) --Удар южного ветра (точно под миф)
 			else
 				timerCycloneCD:Start(87.5, self.vb.cycloneCount+1) --Смерч (пока неизвестно)
 				if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 17 then
@@ -199,7 +199,7 @@ function mod:SPELL_CAST_START(args)
 				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
 			end
 			if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then --точно под героик
-				timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)
+				timerZephyrSlamCD:Start(13.2, self.vb.slamCount+1)
 			end
 		else
 			if self.vb.cycloneCount == 1 then
@@ -208,7 +208,7 @@ function mod:SPELL_CAST_START(args)
 				timerCycloneCD:Start(75, self.vb.cycloneCount+1) --пока неизвестно
 			end
 			if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 13.2 then --точно под героик
-				timerZephyrSlamCD:Restart(13.2, self.vb.slamCount+1)
+				timerZephyrSlamCD:Start(13.2, self.vb.slamCount+1)
 			end
 		end
 		timerCyclone:Start()
@@ -221,7 +221,7 @@ function mod:SPELL_CAST_START(args)
 			timerCrosswindsCD:Start(nil, self.vb.crosswindCount+1)
 		end
 		if timerZephyrSlamCD:GetRemaining(self.vb.slamCount+1) < 6 then
-			timerZephyrSlamCD:Restart(6, self.vb.slamCount+1)--6-8
+			timerZephyrSlamCD:Start(6, self.vb.slamCount+1)--6-8
 		end
 	elseif spellId == 375580 then --Удар южного ветра
 		self.vb.slamCount = self.vb.slamCount + 1

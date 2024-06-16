@@ -94,8 +94,8 @@ function mod:SPELL_CAST_START(args)
 		specWarnElectricalStorm:Play("aesoon")
 		timerElectricStormCD:Start()
 		timerElectricStorm:Start()
-		timerLightingStrikeCD:Restart(18.2)
-		timerEnergySurgeCD:Restart(20.4)
+		timerLightingStrikeCD:Start(18.2)
+		timerEnergySurgeCD:Start(20.4)
 		if not Proshlyap then
 			Proshlyap = true
 		end

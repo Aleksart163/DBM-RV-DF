@@ -57,7 +57,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnWhispers:Show()
 		specWarnWhispers:Play("aesoon")
 		timerWhispersCD:Start()
-		timerDaggerfallCD:Restart(8.4)
+		timerDaggerfallCD:Start(8.4)
 	end
 end
 

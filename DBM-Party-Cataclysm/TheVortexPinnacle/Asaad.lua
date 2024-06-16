@@ -122,14 +122,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnGroundingField:Play("findshelter")
 		timerStorm:Start()
 		if self:IsMythicPlus() then
-			timerChainLightningCD:Restart(16.9)--First cast can be delayed or skipped entirely
-			timerNovaCD:Restart(25.4, self.vb.novaCount+1)
-			timerStaticClingCD:Restart(33.7)
+			timerChainLightningCD:Start(16.9)--First cast can be delayed or skipped entirely
+			timerNovaCD:Start(25.4, self.vb.novaCount+1)
+			timerStaticClingCD:Start(33.7)
 			timerGroundingFieldCD:Start(65.5, self.vb.groundingCount+1)
 		else
-			timerStaticClingCD:Restart(12)
+			timerStaticClingCD:Start(12)
 			--timerChainLightningCD:Start(19.3)
-			timerNovaCD:Restart(22.9, self.vb.novaCount+1)
+			timerNovaCD:Start(22.9, self.vb.novaCount+1)
 			timerGroundingFieldCD:Start(45.7, self.vb.groundingCount+1)--45.7
 		end
 	end

@@ -81,8 +81,8 @@ function mod:SPELL_CAST_START(args)
 		timerBurstForthCD:Start()
 
 		--The other possible timer explanation
-		--timerBarkbreakerCD:Restart(6, self.vb.barkCount+1)
-		--timerGerminateCD:Restart(15.7, self.vb.germinateCount+1)
+		--timerBarkbreakerCD:Start(6, self.vb.barkCount+1)
+		--timerGerminateCD:Start(15.7, self.vb.germinateCount+1)
 	elseif spellId == 388623 then
 		specWarnBranchOut:Show()
 		specWarnBranchOut:Play("watchstep")

@@ -79,7 +79,7 @@ function mod:SPELL_CAST_START(args)
 			warnTransfusion:Show(self.vb.transCount)
 		end
 		--Handle timer resets
-		timerMoltenGoldCD:Restart(25.5, self.vb.goldCount+1)
+		timerMoltenGoldCD:Start(25.5, self.vb.goldCount+1)
 	end
 end
 
