@@ -71,7 +71,7 @@ local specWarnNecroticBreath				= mod:NewSpecialWarningSpell(382712, nil, nil, n
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(383399, nil, nil, nil, 1, 8)
 
 local timerDecayClawsCD						= mod:NewCDNPTimer(8.9, 382787, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разлагающие когти
-local timerWitheringBurstCD					= mod:NewCDNPTimer(16.8, 367503, nil, nil, nil, 3) --Губительный прорыв 19-26
+local timerWitheringBurstCD					= mod:NewCDNPTimer(16.2, 367503, nil, nil, nil, 3) --Губительный прорыв 19-26
 local timerSummonLashersCD					= mod:NewCDNPTimer(12.2, 383062, nil, nil, nil, 1) --Призыв плеточников 12-15
 local timerStinkBreathCD					= mod:NewCDNPTimer(17, 388060, nil, nil, nil, 3) --Вонючее дыхание
 local timerViolentWhirlwindCD				= mod:NewCDNPTimer(17, 388046, nil, nil, nil, 2) --Убийственный вихрь

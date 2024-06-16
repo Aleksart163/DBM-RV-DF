@@ -28,7 +28,7 @@ local warnShoulderSlam						= mod:NewCastAnnounce(391136, 2) --Удар плеч
 local warnPiercingShards					= mod:NewCastAnnounce(370764, 4) --Острые осколки
 local warnIceCutter							= mod:NewCastAnnounce(377105, 4, nil, nil, "Tank|Healer") --Ледокол
 local warnIcyBindings						= mod:NewCastAnnounce(377488, 3) --Ледяные путы
-local warnWakingBane						= mod:NewCastAnnounce(386546, 3)
+local warnWakingBane						= mod:NewCastAnnounce(386546, 3) --Изгнание в сон
 local warnBestialRoar						= mod:NewCastAnnounce(396991, 3)
 local warnSplinteringShards					= mod:NewTargetAnnounce(371007, 2)
 local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
@@ -36,7 +36,7 @@ local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
 local warnArcaneBash						= mod:NewCastAnnounce(387067, 3) --Оглушение тайной магией
 local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинственные испарения
 local warnSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
-local warnWakingBane						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
+local warnWakingBane2						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
 
 local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
@@ -215,7 +215,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellWakingBane:Yell()
 		else
-			warnErraticGrowth:CombinedShow(0.5, args.destName)
+			warnWakingBane2:CombinedShow(1, args.destName)
 		end
 	end
 end

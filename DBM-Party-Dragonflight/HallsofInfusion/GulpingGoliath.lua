@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 385551 385181 385531 385442",
-	"SPELL_AURA_APPLIED 385743 374389",
+	"SPELL_AURA_APPLIED 385743 374389 374610",
 	"SPELL_AURA_APPLIED_DOSE 385743 374389",
 	"SPELL_AURA_REMOVED 374389",
 	"SPELL_AURA_REMOVED_DOSE 374389"
@@ -30,6 +30,7 @@ local warnHangry								= mod:NewSpellAnnounce(385743, 2, nil, "Tank|Healer")
 local warnBodySlam								= mod:NewTargetNoFilterAnnounce(385531, 3)
 local warnToxicEff								= mod:NewCountAnnounce(385442, 3)
 
+local specWarnFixate							= mod:NewSpecialWarningRun(374610, nil, 96306, nil, 4, 2) --Преследование
 local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
 local specWarnGulp								= mod:NewSpecialWarningRunCount(385551, nil, nil, nil, 4, 2)
 local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2)
@@ -131,6 +132,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() and amount >= 8 then
 			specWarnGulpSwogToxin:Show(amount)
 			specWarnGulpSwogToxin:Play("stackhigh")
+		end
+	elseif spellId == 374610 then --Преследование
+		if args:IsPlayer() and self:AntiSpam(2, "Fixate") then
+			specWarnFixate:Show()
+			specWarnFixate:Play("justrun")
 		end
 	end
 end
