@@ -76,7 +76,7 @@ local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, 
 
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
-local yellThirstforBlood			= mod:NewShortYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
