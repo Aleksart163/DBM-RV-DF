@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20230916034331")
 mod:SetCreatureID(91003)
 mod:SetEncounterID(1790)
+mod:SetHotfixNoticeRev(20240617070000)
 mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
@@ -15,21 +16,21 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, is razorshards 29 seconds now?
-local warnShatter					= mod:NewCountAnnounce(188114, 2)
+local warnShatter					= mod:NewCountAnnounce(188114, 2) --Дробление
 
 local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, nil, 2, 4) --Дробление
-local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, "Tank", nil, nil, 3, 4)
-local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8)
+local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, nil, 3, 4) --Бритвенно-острые осколки
+local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8) --Удушающая пыль
 
-local timerShatterCD				= mod:NewCDTimer(24.2, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
-local timerRazorShardsCD			= mod:NewCDTimer(29, 188169, nil, "Tank", nil, 5)
+local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Дробление
+local timerRazorShardsCD			= mod:NewCDTimer(26.1, 188169, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Бритвенно-острые осколки
 
 mod.vb.shatterCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.shatterCount = 0
-	timerShatterCD:Start(20-delay, 1)
-	timerRazorShardsCD:Start(25-delay)--27?
+	timerShatterCD:Start(19.9-delay, 1)
+	timerRazorShardsCD:Start(28.9-delay)
 end
 
 function mod:SPELL_CAST_START(args)
