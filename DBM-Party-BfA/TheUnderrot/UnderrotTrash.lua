@@ -39,7 +39,7 @@ local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil,
 local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2) --Гнилая желчь
 local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2) --Хватка Бездны
 local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 4, 2) --Темное знамение
-local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 96306, nil, 4, 2) --Кровожадность
+local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 96306, nil, 4, 2) --Кровожадность (Преследование)
 local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2) --Ультразвуковой визг
 local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
 local specWarnGiftofGhuun			= mod:NewSpecialWarningInterrupt(265091, "HasInterrupt", nil, nil, 1, 2) --Дар Г'ууна
@@ -76,6 +76,7 @@ local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, 
 
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
+local yellThirstforBlood			= mod:NewShortYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
@@ -228,9 +229,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnDarkOmen:Show()
 		specWarnDarkOmen:Play("range5")
 		yellDarkOmen:Yell()
-	elseif spellId == 266107 and args:IsPlayer() and self:AntiSpam(3, 1) then
-		specWarnThirstforBlood:Show()
-		specWarnThirstforBlood:Play("justrun")
+	elseif spellId == 266107 and self:AntiSpam(3, 1) then
+		if args:IsPlayer() then
+			specWarnThirstforBlood:Show()
+			specWarnThirstforBlood:Play("justrun")
+			yellThirstforBlood:Yell()
+		end
 	elseif spellId == 266209 and self:AntiSpam(3, 5) then
 		specWarnWickedFrenzyDispel:Show(args.destName)
 		specWarnWickedFrenzyDispel:Play("enrage")
