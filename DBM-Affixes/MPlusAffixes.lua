@@ -381,6 +381,7 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	incorpDetected = false
 	afflictedDetected = false
 	self:Unschedule(checkForCombat)
+	self:Unschedule(checkAfflicted)
 end
 
 --[[
