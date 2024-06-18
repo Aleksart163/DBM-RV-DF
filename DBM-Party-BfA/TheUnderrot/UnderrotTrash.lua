@@ -58,7 +58,7 @@ local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDisp
 local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2) --Призыв тотема поглощения духа
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
-local timerBloodHarvestCD			= mod:NewCDNPTimer(12.1, 265016, nil, nil, nil, 3) --Кровавая жатва
+local timerBloodHarvestCD			= mod:NewCDNPTimer(11.7, 265016, nil, nil, nil, 3) --Кровавая жатва
 local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
 local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3) --Волна разложения Off by default to reduce clutter, but optional for those that want it
 local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2) --Боевой клич
