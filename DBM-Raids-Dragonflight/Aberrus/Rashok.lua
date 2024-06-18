@@ -162,7 +162,7 @@ function mod:OnCombatStart(delay)
 	timerSearingSlamCD:Start(9.1-delay, 1)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
-	timerShadowlavaBlastCD:Start(95.9-delay, 1)
+	timerShadowlavaBlastCD:Start(95.2-delay, 1)
 	timerAncientFuryCD:Start(120-delay)
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
