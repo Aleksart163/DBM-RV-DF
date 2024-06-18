@@ -33,9 +33,9 @@ local specWarnStrikeofMountain		= mod:NewSpecialWarningDodge(216290, nil, nil, n
 
 local timerStanceOfMountainCD		= mod:NewCDCountTimer(52, 198509, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Горная стойка
 local timerStanceOfMountain			= mod:NewRPTimer(19.2, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Горная стойка
-local timerSunderCD					= mod:NewCDCountTimer(30, 198496, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Раскол
-local timerStrikeCD					= mod:NewCDCountTimer(30, 216290, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар горы
-local timerBelowofDeepsCD			= mod:NewCDCountTimer(30, 193375, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Рев глубин
+local timerSunderCD					= mod:NewCDTimer(30, 198496, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Раскол
+local timerStrikeCD					= mod:NewCDTimer(30, 216290, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар горы
+local timerBelowofDeepsCD			= mod:NewCDTimer(30, 193375, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Рев глубин
 
 mod.vb.stanceCount = 0
 mod.vb.totemsAlive = 0
@@ -63,9 +63,9 @@ function mod:OnCombatStart(delay)
 	self.vb.strikeCount = 0
 	self.vb.sunderCount = 0
 	self.vb.stanceCount = 0
-	timerSunderCD:Start(8-delay, 1)
+	timerSunderCD:Start(8-delay)
 	timerStrikeCD:Start(16-delay, 1)
-	timerBelowofDeepsCD:Start(20-delay, 1)
+	timerBelowofDeepsCD:Start(20-delay)
 	timerStanceOfMountainCD:Start(60-delay, 1)
 	if self:IsHard() then
 		self.vb.totemsAlive = 5
@@ -106,9 +106,9 @@ function mod:UNIT_DIED(args)
 		if self.vb.totemsAlive == 0 then
 			warnStanceofMountain:Show()
 			timerStanceOfMountainCD:Start(nil, self.vb.stanceCount+1)
-			timerSunderCD:Start(8, 1)
-			timerStrikeCD:Start(16, 1)
-			timerBelowofDeepsCD:Start(20, 1)
+			timerSunderCD:Start(8)
+			timerStrikeCD:Start(16)
+			timerBelowofDeepsCD:Start(20)
 		end
 	end
 end
