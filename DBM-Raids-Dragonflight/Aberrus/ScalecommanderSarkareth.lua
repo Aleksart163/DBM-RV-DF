@@ -114,27 +114,28 @@ mod:AddNamePlateOption("NPAuraOnRescind", 404705)
 mod:AddNamePlateOption("NPAuraOnMight", 404269)
 --Stage Three: The Seas of Infinity
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26145))
-local warnEmbraceofNothingness					= mod:NewTargetCountAnnounce(403520, 3, nil, nil, nil, nil, nil, nil, true)
+local warnEmbraceofNothingness					= mod:NewTargetNoFilterAnnounce(403520, 3, nil, nil, 229042) --Объятия пустоты (Черная дыра)
 local warnVoidSlash								= mod:NewStackAnnounce(408429, 2, nil, "Tank|Healer") --Рассечение Бездны
 local warnHurtlingBarrageSoon					= mod:NewIncomingCountAnnounce(405486, 2) --Опасный шквал
 local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil, nil, nil, nil, nil, true) --Опасный шквал
 
-local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Воспарение)
+local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Вознесение)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
 local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 123244, nil, 3, 2) --В поисках вечности (Спрятаться)
-local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, nil, nil, 3, 2) --Объятия пустоты
+local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
 local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 2) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 2) --Рассечение Бездны
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
-local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1) --Космическое вознесение (Воспарение)
-local timerAstralFormation						= mod:NewCDTimer(29.9, 403510, 403510, nil, nil, 5) --Звездная формация (Астероид)
+local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
+local timerAstralFormation						= mod:NewCDTimer(29.9, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 123244, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Спрятаться) Shortname "Hide"
-local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты
+local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
 local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
+local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
 local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция
@@ -142,8 +143,8 @@ local yellInfiniteDuress						= mod:NewShortPosYell(404288, nil, nil, nil, "YELL
 local yellInfiniteDuressFades					= mod:NewIconFadesYell(404288, nil, nil, nil, "YELL") --Бесконечное заключение
 local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL") --Опасный шквал
-local yellEmbraceofNothingness					= mod:NewShortYell(403520, nil, nil, nil, "YELL") --Объятия пустоты
-local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, nil, nil, nil, "YELL") --Объятия пустоты
+local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
+local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
 local yellVoidSlashFades						= mod:NewShortFadesYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859, nil, nil, "YELL") --Когти пустоты (Бомбардировка) For Void Blast (411238) effect
 
@@ -249,7 +250,7 @@ local allTimers = {
 			--Void Bomb (P2 ability returning)
 			[404027] = {28.5, 61.2, 61.2, 96.3},
 			--Cosmic Ascension
-			[403741] = {7.2, 61.2, 98.7, 58.7},
+			[403741] = {7.5, 61.2, 98.7, 58.7},
 			--Hurtling Barrage
 			[405022] = {19.7, 84.9, 54.9, 35, 67.5},
 			--Void Slash
@@ -571,7 +572,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnCosmicAscension:Show(self.vb.breathCount)
 		specWarnCosmicAscension:Play("watchstep")
-		timerAstralFormation:Start(9.5)
+		timerAstralFormation:Start(6.5)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
 		if timer then
 			timerCosmicAscensionCD:Start(timer, self.vb.breathCount+1)
@@ -775,6 +776,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Play("bombyou")
 			specWarnVoidFracture2:Schedule(5, BetweenStars)
 			specWarnVoidFracture2:ScheduleVoice(5, "runout")
+			yellVoidBomb:Yell()
 			if self:IsMythic() then
 				--schedule for Dimensional Puncture
 				yellVoidFractureFades:Countdown(spellId)
@@ -806,7 +808,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellEmbraceofNothingness:Yell()
 			yellEmbraceofNothingnessFades:Countdown(spellId)
 		else
-			warnEmbraceofNothingness:Show(self.vb.nothingnessCount, args.destName)
+			warnEmbraceofNothingness:Show(args.destName)
 		end
 	elseif spellId == 403284 then--Stage 1-2 Intermission
 		warnVoidEmpowerment:Show(args.destName)
@@ -924,7 +926,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerScouringEternityCD:Start(53.1, 1) --46.2
 		elseif self:IsHeroic() then
 			timerInfiniteDuressCD:Start(4.7, 1)
-			timerCosmicAscensionCD:Start(7.2, 1)
+			timerCosmicAscensionCD:Start(7.5, 1)
 			timerHurtlingBarrageCD:Start(19.7, 1)
 			timerVoidSlashCD:Start(21, 1)
 			timerEmbraceofNothingnessCD:Start(24.7, 1)
