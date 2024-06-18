@@ -10,7 +10,8 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 183088 226296 202108 193505 226287 183548 193585 226406 202181 193941 226347 183539",
 	"SPELL_CAST_SUCCESS 183433 183526 183088",
 	"SPELL_AURA_APPLIED 200154 183407 186576 193803 201983 226388 186616",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 --[[
@@ -53,6 +54,8 @@ local timerPetrifyingTotemCD			= mod:NewCDNPTimer(35.1, 202108, nil, nil, nil, 3
 local timerEmberSwipeCD					= mod:NewCDNPTimer(10.9, 226406, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFrenzyCD						= mod:NewCDNPTimer(20.6, 201983, nil, "RemoveEnrage|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 5)
+
+local timerRP							= mod:NewRPTimer(30)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 GTFO
 
@@ -198,5 +201,17 @@ function mod:UNIT_DIED(args)
 		timerFrenzyCD:Stop(args.destGUID)
 	elseif cid == 102232 then--Rockbound Trapper
 		timerBoundCD:Stop(args.destGUID)
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.RP1 or msg:find(L.RP1)) then
+		self:SendSync("NLRP1")
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "NLRP1" and self:AntiSpam(10, "RP1") then
+		timerRP:Start(19.1)
 	end
 end
