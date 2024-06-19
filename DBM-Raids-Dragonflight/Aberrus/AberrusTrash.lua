@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod("AberrusTrash", "DBM-Raids-Dragonflight", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240305165926")
+mod:SetRevision("20240615070000")
 --mod:SetModelID(47785)
-mod:SetHotfixNoticeRev(20240618070000)
-mod:SetMinSyncRevision(20240618070000)
+mod:SetHotfixNoticeRev(20240614070000)
+mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
