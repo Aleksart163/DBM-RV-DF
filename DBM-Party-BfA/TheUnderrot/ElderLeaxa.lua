@@ -44,10 +44,10 @@ function mod:OnCombatStart(delay)
 	self.vb.bloodMirrorCount = 0
 	self.vb.creepingRotCount = 0
 	self.vb.sanguineFeastCount = 0
-	timerCreepingRotCD:Start(12.3-delay, 1) --
+	timerCreepingRotCD:Start(12.3-delay) --
 	timerBloodMirrorCD:Start(15.3-delay, 1) --
 	if not self:IsNormal() then--Exclude normal, but allow heroic/mythic/mythic+
-		timerSanguineFeastCD:Start(7.1-delay, 1) --
+		timerSanguineFeastCD:Start(7.1-delay) --
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(260685))
