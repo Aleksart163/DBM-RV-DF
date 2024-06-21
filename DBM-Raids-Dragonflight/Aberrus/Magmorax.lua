@@ -306,8 +306,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMoltenSpittle:Show()
 			specWarnMoltenSpittle:Play("targetyou")
 			local text = L.pool:format(icon, icon)--<icon> Pool 1,2,3
-			yellMoltenSpittle:Say(text)--Non soak uses white text per conventions
-			yellMoltenSpittleFades:CountdownSay(spellId, nil, icon)--Non soak uses white text per conventions
+			yellMoltenSpittle:Yell(text)--Non soak uses white text per conventions
+			yellMoltenSpittleFades:Countdown(spellId, nil, icon)--Non soak uses white text per conventions
 		end
 		warnMoltenSpittle:CombinedShow(0.3, self.vb.spitCount, args.destName)
 		self.vb.spitIcon = self.vb.spitIcon + 1
