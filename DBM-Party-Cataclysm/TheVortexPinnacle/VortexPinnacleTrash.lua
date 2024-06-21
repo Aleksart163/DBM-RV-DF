@@ -50,8 +50,8 @@ local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, nil
 local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, nil, nil, 2, 2)
 local specWarnStormSurge						= mod:NewSpecialWarningRun(88055, nil, nil, nil, 4, 2)--Mob is immune to displacements and interrupts, this is an 8 yard range run out
 local specWarnOverloadGroundingField			= mod:NewSpecialWarningRun(413385, nil, nil, nil, 4, 2)
-local specWarnLightningLash						= mod:NewSpecialWarningMoveTo(87762, nil, nil, nil, 1, 2)
---local yellnViciousAmbush						= mod:NewYell(388984)
+local specWarnLightningLash						= mod:NewSpecialWarningMoveTo(87762, nil, nil, nil, 4, 4) --Искрящаяся плеть
+
 local specWarnCyclone							= mod:NewSpecialWarningInterrupt(88010, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGreaterHeal						= mod:NewSpecialWarningInterrupt(87779, "HasInterrupt", nil, nil, 1, 2)
 local specWarnVaporForm							= mod:NewSpecialWarningDispel(88186, "MagicDispeller", nil, nil, 1, 2)
@@ -73,6 +73,7 @@ local timerLightningLashCD						= mod:NewCDNPTimer(19, 87762, nil, nil, nil, 3)
 local timerOverloadGroundingFieldCD				= mod:NewCDNPTimer(20.5, 413385, nil, nil, nil, 3)
 local timerGreaterHealCD						= mod:NewCDNPTimer(14.1, 87779, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Post retial May 30th 2023 hotfix, in cataclysm this will still be like 3 second CD
 
+local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
 
 --local playerName = UnitName("player")
 
@@ -86,6 +87,7 @@ function mod:LitTarget(targetname)
 	if targetname == UnitName("player") then
 		specWarnLightningLash:Show(groundingName)
 		specWarnLightningLash:Play("findshelter")
+		yellLightningLash:Yell()
 	else
 		warnLightningLash:Show(targetname)
 	end
@@ -193,7 +195,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 88010 or spellId == 410870 then
-		warnCyclone:Show(args.destName)
+		if not args:IsPlayer() then
+			warnCyclone:CombinedShow(0.5, args.destName)
+		end
 	elseif spellId == 88171 and args:IsPlayer() and self:AntiSpam(2, 7) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
