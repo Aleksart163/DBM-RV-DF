@@ -33,28 +33,28 @@ local warnHeatStacks								= mod:NewCountAnnounce(408839, 2, nil, nil, DBM_CORE
 local warnMoltenSpittle								= mod:NewTargetCountAnnounce(402994, 2, nil, nil, 307031)
 local warnIncineratingMaws							= mod:NewStackAnnounce(404846, 2, nil, "Tank|Healer")
 
-local specWarnCatastrophicEruption					= mod:NewSpecialWarningSpell(408358, nil, nil, nil, 3, 2)
+local specWarnCatastrophicEruption					= mod:NewSpecialWarningSpell(408358, nil, nil, nil, 3, 2) --Катастрофический всплеск
 local specWarnHeatStacks							= mod:NewSpecialWarningStack(408839, nil, 35, nil, nil, 1, 6)
 local specWarnBlazingTantrum						= mod:NewSpecialWarningMove(407879, "Tank", nil, nil, 1, 2)
-local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, 188832, nil, 2, 2)
+local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, 316853, nil, 2, 2)
 local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, 149213, nil, 2, 2)
-local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402994, nil, 80801, nil, 1, 2)
+local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402994, nil, 80801, nil, 1, 2) --Раскаленный плевок (Лужи лавы)
 local specWarnBlazingBreath							= mod:NewSpecialWarningDodge(409093, nil, 18357, nil, 2, 2)
 local specWarnIncineratingMaws						= mod:NewSpecialWarningDefensive(404846, nil, nil, nil, 3, 4) --Обжигающие пасти
 local specWarnIncineratingMaws2						= mod:NewSpecialWarningStack(404846, nil, 2, nil, nil, 1, 6)
 local specWarnIncineratingMawsSwap					= mod:NewSpecialWarningTaunt(404846, nil, nil, nil, 1, 2)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(411633, nil, nil, nil, 1, 8)
 
-local timerCatastrophicCD							= mod:NewCDTimer(28.9, 408358, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerMoltenSpittleCD							= mod:NewCDCountTimer(29.9, 402994, 307031, nil, nil, 3)--"Lava Pools"
-local timerIngitingRoarCD							= mod:NewCDCountTimer(28.9, 403740, 188832, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--"Roar"
+local timerCatastrophicCD							= mod:NewCDTimer(28.9, 408358, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Катастрофический всплеск
+local timerMoltenSpittleCD							= mod:NewCDCountTimer(29.9, 402994, 307031, nil, nil, 3) --Раскаленный плевок (Лужи лавы)
+local timerIngitingRoarCD							= mod:NewCDCountTimer(28.9, 403740, 316853, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Поджигающий рев (Рев)
 local timerOverpoweringStompCD						= mod:NewCDCountTimer(101.7, 403671, 149213, nil, nil, 2)--"Knockback"
 local timerBlazingBreathCD							= mod:NewCDCountTimer(29.9, 409093, 18357, nil, nil, 3)
 local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
 
 local yellIncineratingMaws							= mod:NewShortYell(404846, nil, nil, nil, "YELL") --Обжигающие пасти
-local yellMoltenSpittle								= mod:NewShortPosYell(402994, "%s", nil, nil, "YELL")
-local yellMoltenSpittleFades						= mod:NewIconFadesYell(402994, nil, nil, nil, "YELL")
+local yellMoltenSpittle								= mod:NewShortPosYell(402994, "%s", nil, nil, "YELL") --Раскаленный плевок (Лужи лавы)
+local yellMoltenSpittleFades						= mod:NewIconFadesYell(402994, nil, nil, nil, "YELL") --Раскаленный плевок (Лужи лавы)
 
 --local berserkTimer								= mod:NewBerserkTimer(600)
 

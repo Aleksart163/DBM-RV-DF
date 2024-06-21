@@ -3,7 +3,6 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision("20240615070000")
 --mod:SetModelID(47785)
-mod:SetHotfixNoticeRev(20240614070000)
 mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
