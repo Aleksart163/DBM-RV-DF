@@ -382,6 +382,7 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	afflictedDetected = false
 	self:Unschedule(checkForCombat)
 	self:Unschedule(checkAfflicted)
+	timerAfflictedCD:Stop()
 end
 
 --[[
