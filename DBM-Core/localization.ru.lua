@@ -331,7 +331,7 @@ L.AUTO_ANNOUNCE_TEXTS.stage			= "Фаза %s"
 L.AUTO_ANNOUNCE_TEXTS.prestage		= "Скоро фаза %s"
 L.AUTO_ANNOUNCE_TEXTS.count 		= "%s (%%s)"
 L.AUTO_ANNOUNCE_TEXTS.stack 		= "%s на |3-5(>%%s<) (%%d)"
-L.AUTO_ANNOUNCE_TEXTS.moveto 		= "%s - бегите к >%%s<"
+L.AUTO_ANNOUNCE_TEXTS.moveto 		= "%s - беги к >%%s<"
 
 local prewarnOption 					= "Предупреждать заранее о $spell:%s"
 L.AUTO_ANNOUNCE_OPTIONS.you 			= "Объявлять когда $spell:%s на тебе"
