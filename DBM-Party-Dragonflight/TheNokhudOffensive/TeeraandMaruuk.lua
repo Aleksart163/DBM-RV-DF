@@ -52,7 +52,7 @@ local timerEarthSplitterCD						= mod:NewCDCountTimer(60, 385339, nil, nil, nil,
 local timerFrightfulRoarCD						= mod:NewCDTimer(30.4, 386063, nil, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
 local timerBrutalizeCD							= mod:NewCDTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Свирепый удар Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
 
-local yellBrutalize								= mod:NewYell(382836, nil, nil, nil, "YELL") --Свирепый удар
+local yellBrutalize								= mod:NewShortYell(382836, nil, nil, nil, "YELL") --Свирепый удар
 
 mod:AddNamePlateOption("NPAuraOnAncestralBond", 392198)
 --Static Counts

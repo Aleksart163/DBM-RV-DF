@@ -31,8 +31,8 @@ local specWarnIndigestion			= mod:NewSpecialWarningDefensive(260793, "Tank", nil
 local specWarnCharge				= mod:NewSpecialWarningDodge(260292, nil, nil, nil, 3, 2) --Рывок
 local specWarnTantrum				= mod:NewSpecialWarningCount(260333, nil, nil, nil, 2, 2) --Припадок
 
-local timerIndigestionCD			= mod:NewCDCountTimer(60, 260793, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение
-local timerChargeCD					= mod:NewCDCountTimer(60, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
+local timerIndigestionCD			= mod:NewCDTimer(30, 260793, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение
+local timerChargeCD					= mod:NewCDTimer(30, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
 local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, nil, nil, nil, 7) --Припадок
 
 mod:AddNamePlateOption("NPAuraMetamorphosis", 260416)
@@ -86,8 +86,8 @@ function mod:OnCombatStart(delay)
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	--he casts random ability first, it's charge like 95% of time though
-	timerChargeCD:Start(7.9-delay, 1) --
-	timerIndigestionCD:Start(18.9-delay, 1) --
+	timerChargeCD:Start(7.9-delay) --
+	timerIndigestionCD:Start(18.9-delay) --
 	timerTantrumCD:Start(46.4, 1) --
 end
 
@@ -146,17 +146,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnTantrum:Show(self.vb.tantrumCount)
 		specWarnTantrum:Play("aesoon")
 		if self.vb.murchalOchkenProshlyapCount == 2 then
-			timerChargeCD:Start(29.9, 1)
-			timerIndigestionCD:Start(17.9, 1)
+			timerChargeCD:Start(29.9)
+			timerIndigestionCD:Start(17.9)
 		elseif self.vb.murchalOchkenProshlyapCount == 3 then
-			timerChargeCD:Start(17.9, 1)
-			timerIndigestionCD:Start(29, 1)
+			timerChargeCD:Start(17.9)
+			timerIndigestionCD:Start(29)
 		elseif self.vb.murchalOchkenProshlyapCount == 4 then
-			timerChargeCD:Start(30.1, 1)
-			timerIndigestionCD:Start(18.1, 1)
+			timerChargeCD:Start(30.1)
+			timerIndigestionCD:Start(18.1)
 		elseif self.vb.murchalOchkenProshlyapCount == 5 then
-			timerChargeCD:Start(30, 1)
-			timerIndigestionCD:Start(17.9, 1)
+			timerChargeCD:Start(30)
+			timerIndigestionCD:Start(17.9)
 		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.tantrumCount+1)
 		if timer then
