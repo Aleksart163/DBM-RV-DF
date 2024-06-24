@@ -199,6 +199,16 @@ L:SetGeneralLocalization({
 	name =	"Enemigos menores"
 })
 
+if GetLocale() == "esES" then
+L:SetMiscLocalization({
+	RP1 = "¿Navarrogg? ¡Traidor! ¿Osas liderar a los intrusos contra nosotros?"
+})
+else
+L:SetMiscLocalization({
+	RP1 = "¡¿Navarrogg?! ¡Traidor! ¿Has conducido a estos intruso hasta nosotros?"
+})
+end
+
 -----------------
 -- La Arquería --
 -----------------

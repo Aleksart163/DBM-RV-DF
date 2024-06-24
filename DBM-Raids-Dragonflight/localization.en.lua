@@ -225,7 +225,9 @@ L:SetGeneralLocalization({
 
 L:SetMiscLocalization({
 	RP1 = "Flame and shadow, both powerful, influential forces.",
-	RP2 = "How exemplary. Congratulations."
+	RP2 = "How exemplary. Congratulations.",
+	RP3 = "A millennia of torment ends. Destruction begins!",
+	RP4 = "We have come to the end of your journey, champions."
 })
 
 ---------------------------

@@ -207,6 +207,10 @@ L:SetGeneralLocalization({
 	name =	"奈薩里奧巢穴小怪"
 })
 
+L:SetMiscLocalization({
+	RP1 = "納瓦羅格？！叛徒！你竟然帶領入侵者對抗我們？"
+})
+
 -----------------------
 -- <<<The Arcway>>> --
 -----------------------

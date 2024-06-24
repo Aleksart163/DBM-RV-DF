@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("AberrusTrash", "DBM-Raids-Dragonflight", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240305165926")
+mod:SetRevision("20240615070000")
 --mod:SetModelID(47785)
+mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
@@ -11,7 +12,8 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 411808 413785 409576",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 411808 413785",
-	"CHAT_MSG_MONSTER_SAY"
+	"CHAT_MSG_MONSTER_SAY",
+	"CHAT_MSG_MONSTER_YELL"
 --	"UNIT_DIED"
 )
 
@@ -105,6 +107,14 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 		self:SendSync("AberrusRP1")
 	elseif (msg == L.RP2 or msg:find(L.RP2)) then
 		self:SendSync("AberrusRP2")
+	elseif (msg == L.RP4 or msg:find(L.RP4)) then
+		self:SendSync("AberrusRP4")
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.RP3 or msg:find(L.RP3)) then
+		self:SendSync("AberrusRP3")
 	end
 end
 
@@ -113,5 +123,9 @@ function mod:OnSync(msg, targetname)
 		timerRP:Start(11.5) --пока неточно
 	elseif msg == "AberrusRP2" and self:AntiSpam(10, "RP2") then
 		timerRP:Start(33.6)
+	elseif msg == "AberrusRP3" and self:AntiSpam(10, "RP3") then
+		timerRP:Start(9.9)
+	elseif msg == "AberrusRP4" and self:AntiSpam(10, "RP4") then
+		timerRP:Start(41)
 	end
 end

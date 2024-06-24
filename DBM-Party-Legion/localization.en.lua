@@ -208,6 +208,10 @@ L:SetGeneralLocalization({
 	name =	"Neltharion's Lair Trash"
 })
 
+L:SetMiscLocalization({
+	RP1 = "Navarrogg?! Betrayer! You would lead these intruders against us?!"
+})
+
 -----------------------
 -- <<<The Arcway>>> --
 -----------------------

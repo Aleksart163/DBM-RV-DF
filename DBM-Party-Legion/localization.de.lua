@@ -186,6 +186,10 @@ L:SetGeneralLocalization({
 	name =	"Trash des Neltharions Hort"
 })
 
+L:SetMiscLocalization({
+	RP1 = "Navarrogg?! Verräter! Ihr führt diese Eindringlinge gegen uns ins Feld?!"
+})
+
 -----------------------
 -- <<<The Arcway>>> --
 -----------------------

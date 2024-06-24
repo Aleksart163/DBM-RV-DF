@@ -25,15 +25,15 @@ mod:RegisterEventsInCombat(
  or ability.id = 413562 and type = "begincast"
 --]]
 --TODO, Cyclone Shield Fragments do something with it? maybe upgrade shield to watch your step alert?
-local warnShield			= mod:NewCountAnnounce(86267, 2)
-local warnShieldEnd			= mod:NewEndAnnounce(86267, 1)
-local warnSummonTempest		= mod:NewCountAnnounce(86340, 2)
-local warnLethalCurrent		= mod:NewCastAnnounce(413151, 4)
+local warnShield			= mod:NewCountAnnounce(86267, 2) --Охранный смерч
+local warnShieldEnd			= mod:NewEndAnnounce(86267, 1) --Охранный смерч
+local warnSummonTempest		= mod:NewCountAnnounce(86340, 2) --Вызов вихря
+local warnLethalCurrent		= mod:NewCastAnnounce(413151, 4) --Вызов вихря
 
-local specWarnGTFO			= mod:NewSpecialWarningGTFO(86292, nil, nil, nil, 1, 8)
+local specWarnGTFO			= mod:NewSpecialWarningGTFO(86292, nil, nil, nil, 1, 8) --Охранный смерч
 
-local timerSummonTempest	= mod:NewCDCountTimer(16.8, 86340, nil, nil, nil, 1)--16.8 old
-local timerShield			= mod:NewNextCountTimer(30.5, 86292, nil, nil, nil, 6)
+local timerSummonTempest	= mod:NewCDCountTimer(16.8, 86340, nil, nil, nil, 1) --Вызов вихря 16.8 old
+local timerShield			= mod:NewNextCountTimer(30.5, 86292, nil, nil, nil, 6) --Охранный смерч
 
 mod.vb.shieldCount = 0
 mod.vb.tempestCount = 0
@@ -49,7 +49,7 @@ function mod:OnCombatStart(delay)
 			"RAID_BOSS_EMOTE"
 		)
 	else
-		timerShield:Start(30-delay, 1)
+		timerShield:Start(4.4-delay, 1) --
 		self:RegisterShortTermEvents(
 			"SPELL_AURA_REMOVED 86295 86310"
 		)
@@ -61,7 +61,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 86340 or args.spellId == 413151 then
+	if args.spellId == 86340 or args.spellId == 413151 and self:AntiSpam(3, 3) then
 		self.vb.tempestCount = self.vb.tempestCount + 1
 		warnSummonTempest:Show(self.vb.tempestCount)
 		timerSummonTempest:Start(self:IsMythicPlus() and 39.6 or 16.8, self.vb.tempestCount+1)--39.6-41

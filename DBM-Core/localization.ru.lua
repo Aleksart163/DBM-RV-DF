@@ -286,7 +286,8 @@ L.TIMER_USAGE = {
 	"/dbm timer endloop: Останавливает любой повторяющийся ltimer."
 }
 
-L.ERROR_NO_PERMISSION				= "У Вас недостаточно прав для выполнения этой операции."
+L.ERROR_NO_PERMISSION				= "У Вас недостаточно прав для отправки таймера пулла/перерыва."
+L.ERROR_NO_PERMISSION_COMBAT		= "Таймер пулла/перерыва не может быть отправлен во время боя."
 L.PULL_TIME_TOO_SHORT				= "Таймер атаки должен быть больше 3 секунд."
 L.PULL_TIME_TOO_LONG				= "Таймер атаки не может быть дольше 60 секунд."
 
@@ -331,7 +332,7 @@ L.AUTO_ANNOUNCE_TEXTS.stage			= "Фаза %s"
 L.AUTO_ANNOUNCE_TEXTS.prestage		= "Скоро фаза %s"
 L.AUTO_ANNOUNCE_TEXTS.count 		= "%s (%%s)"
 L.AUTO_ANNOUNCE_TEXTS.stack 		= "%s на |3-5(>%%s<) (%%d)"
-L.AUTO_ANNOUNCE_TEXTS.moveto 		= "%s - бегите к >%%s<"
+L.AUTO_ANNOUNCE_TEXTS.moveto 		= "%s - беги к >%%s<"
 
 local prewarnOption 					= "Предупреждать заранее о $spell:%s"
 L.AUTO_ANNOUNCE_OPTIONS.you 			= "Объявлять когда $spell:%s на тебе"
@@ -586,6 +587,10 @@ L.AUTO_INFO_FRAME_OPTION_TEXT3		= "Показывать информационн
 L.AUTO_READY_CHECK_OPTION_TEXT		= "Воспроизводить звук проверки готовности, когда пуллят босса (даже если он не является целью)"
 L.AUTO_SPEEDCLEAR_OPTION_TEXT		= "Показывать таймер для быстрой зачистки %s"
 L.AUTO_PRIVATEAURA_OPTION_TEXT		= "Воспроизводить звуковые оповещения DBM для приватных аур $spell:%s в этом бою."
+
+L.AUTO_GOSSIP_BUFFS						= "Автоматический выбор вариантов диалогов для NPC или профессий"
+L.AUTO_GOSSIP_PERFORM_ACTION			= "Автоматический выбор вариантов диалогов для выполнения действий (например, использование транспорта)"
+L.AUTO_GOSSIP_START_ENCOUNTER			= "Автоматический выбор диалогов для начала боя"--Это никогда не должно быть во множественном числе, поскольку оно не будет в трэш-моде, как два других
 
 -- New special warnings
 L.MOVE_WARNING_BAR					= "Индикатор предупреждения"

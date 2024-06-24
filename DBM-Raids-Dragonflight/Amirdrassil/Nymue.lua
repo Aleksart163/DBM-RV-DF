@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2556, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240612024811")
+mod:SetRevision("20240615122743")
 mod:SetCreatureID(206172)
 mod:SetEncounterID(2708)
 mod:SetUsedIcons(8, 7, 6)
@@ -62,7 +62,7 @@ mod:AddPrivateAuraSoundOption(427722, true, 426519, 1)--Weaver's Burden
 --Stage Two: Creation Complete
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28356))
 local warnFullBloom									= mod:NewCountAnnounce(426855, 2)
-local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false)
+local warnRadialFlourish							= mod:NewSpellAnnounce(422721, 2, nil, false)
 local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35)
 
 local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, nil, 2, 2)

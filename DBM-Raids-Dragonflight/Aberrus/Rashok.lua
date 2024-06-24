@@ -40,9 +40,9 @@ local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, ni
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
 local specWarnChargedSmash							= mod:NewSpecialWarningSoakCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
 local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
-local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, nil, nil, nil, 3, 2) --Огненный взмах
+local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, "Tank", nil, nil, 3, 2) --Огненный взмах
 local specWarnEarthenCrush							= mod:NewSpecialWarningDefensive(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
-local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
+local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, "Tank", nil, nil, 3, 2) --Земляное сокрушение
 
 local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 98565, nil, 2, 2, 4) --Высвобождение пламени Тьмы(Горящие шары)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1, 8)
@@ -75,7 +75,7 @@ mod.vb.comboCount = 0--Combos within cast
 mod.vb.firstHitTank = ""
 mod.vb.shadowflameCount = 0
 mod.vb.proshlyapMurchalCount = 0
-mod.vb.combatCount = 1
+mod.vb.murchalOchkenProshlyapationCount = 1
 
 local overchargedStacks = {}
 local normalFirstMurchalProshlyapTimers = {30.1, 13.8, 32.9}
@@ -85,13 +85,45 @@ local heroicFirstMurchalProshlyapTimers = {29.1, 15, 33}
 local heroicSecondMurchalProshlyapTimers = {31.1, 15, 33}
 local heroicThirdMurchalProshlyapTimers = {30.2, 15.9, 33}
 
+function mod:FlamingSlashTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnFlamingSlash:Show()
+		specWarnFlamingSlash:Play("defensive")
+	else
+		if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
+			local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407547)
+			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
+				specWarnFlamingSlashTaunt:Show(UnitName("boss1target"))
+				specWarnFlamingSlashTaunt:Play("tauntboss")
+			end
+		end
+	end
+end
+
+function mod:EarthenCrushTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnEarthenCrush:Show()
+		specWarnEarthenCrush:Play("defensive")
+	else
+		if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
+			local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407597)
+			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
+				specWarnEarthenCrushTaunt:Show(UnitName("boss1target"))
+				specWarnEarthenCrushTaunt:Play("tauntboss")
+			end
+		end
+	end
+end
+
 local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	self.vb.firstHitTank = ""
 	self.vb.comboCount = 0
 	self.vb.proshlyapMurchalCount = self.vb.proshlyapMurchalCount + 1
-	local proshlyap  = self:IsMythic() and self.vb.combatCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 1 and normalFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
-	local proshlyap2 = self:IsMythic() and self.vb.combatCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 2 and normalSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
-	local proshlyap3 = self:IsMythic() and self.vb.combatCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.combatCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.combatCount == 3 and normalThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap  = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 1 and normalFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap2 = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 2 and normalSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap3 = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 3 and normalThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
 	if proshlyap then
 		timerVolcanicComboCD:Start(proshlyap, self.vb.proshlyapMurchalCount+1)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
@@ -147,10 +179,9 @@ local allProshlyapationsOfMurchal = {
 }
 
 function mod:OnCombatStart(delay)
-	self:SetStage(1)
 	table.wipe(overchargedStacks)
 	self.vb.proshlyapMurchalCount = 0
-	self.vb.combatCount = 1
+	self.vb.murchalOchkenProshlyapationCount = 1
 	self.vb.slamCount = 0
 	self.vb.doomCount = 0
 	self.vb.blastCount = 0
@@ -162,7 +193,7 @@ function mod:OnCombatStart(delay)
 	timerSearingSlamCD:Start(9.1-delay, 1)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
-	timerShadowlavaBlastCD:Start(95.9-delay, 1)
+	timerShadowlavaBlastCD:Start(95.2-delay, 1)
 	timerAncientFuryCD:Start(120-delay)
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
@@ -212,7 +243,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnAncientFury:Play("aesoon")
 	elseif spellId == 405821 then --Обжигающий удар
 		self.vb.slamCount = self.vb.slamCount + 1
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, difficultyName, self.vb.phase, spellId, self.vb.slamCount+1)
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, difficultyName, self.vb.murchalOchkenProshlyapationCount, spellId, self.vb.slamCount+1)
 		if timer then
 			timerSearingSlamCD:Start(timer, self.vb.slamCount+1)
 		end
@@ -233,7 +264,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 407544 then --Огненный взмах
 		self.vb.comboCount = self.vb.comboCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+		self:BossTargetScanner(args.sourceGUID, "FlamingSlashTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnFlamingSlash:Show()
 			specWarnFlamingSlash:Play("defensive")
 		else
@@ -246,10 +278,11 @@ function mod:SPELL_CAST_START(args)
 					specWarnFlamingSlashTaunt:Play("tauntboss")
 				end
 			end
-		end
+		end]]
 	elseif spellId == 407596 then --Земляное сокрушение
 		self.vb.comboCount = self.vb.comboCount + 1
-		if self:IsTanking("player", "boss1", nil, true) then
+		self:BossTargetScanner(args.sourceGUID, "EarthenCrushTarget", 0.1, 2)
+	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnEarthenCrush:Show()
 			specWarnEarthenCrush:Play("defensive")
 		else
@@ -262,7 +295,7 @@ function mod:SPELL_CAST_START(args)
 					specWarnEarthenCrushTaunt:Play("tauntboss")
 				end
 			end
-		end
+		end]]
 	elseif spellId == 410070 then
 		self.vb.shadowflameCount = self.vb.shadowflameCount + 1
 		specWarnUnleashedShadowflame:Show(self.vb.shadowflameCount)
@@ -375,7 +408,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBM.InfoFrame:UpdateTable(overchargedStacks)
 		end
 	elseif spellId == 401419 then --Проводник старейшины
-		self.vb.combatCount = self.vb.combatCount + 1
+		self.vb.murchalOchkenProshlyapationCount = self.vb.murchalOchkenProshlyapationCount + 1
 		self.vb.proshlyapMurchalCount = 0
 		warnSiphonEnergyRemoved:Show(args.destName)
 		self.vb.slamCount = 0
@@ -384,8 +417,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.tankCombo = 0
 		self.vb.comboCount = 0
 		self.vb.shadowflameCount = 0
-		if self.vb.combatCount == 2 then
-			self:SetStage(2)
+		if self.vb.murchalOchkenProshlyapationCount == 2 then
 			timerVolcanicComboCD:Start(31.1, 1)
 			self:Schedule(31.1, startProshlyapationOfMurchal, self)
 			if self:IsMythic() then
@@ -396,8 +428,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			else
 				timerSearingSlamCD:Start(10.1, 1) --
 			end
-		elseif self.vb.combatCount == 3 then
-			self:SetStage(3)
+		elseif self.vb.murchalOchkenProshlyapationCount == 3 then
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 			if self:IsMythic() then

@@ -11,6 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 272609 266106 265019 265089 265091 265433 265540 272183 278961 278755 265487 272592 265081 272180 266209 413044",
 	"SPELL_CAST_SUCCESS 265523 265016 266201 266265 265668",
 	"SPELL_AURA_APPLIED 265568 266107 266209 265091 278789 278961 266201",
+	"SPELL_AURA_REMOVED 266107",
 	"UNIT_DIED"
 )
 
@@ -39,7 +40,7 @@ local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil,
 local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2) --Гнилая желчь
 local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2) --Хватка Бездны
 local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 4, 2) --Темное знамение
-local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 96306, nil, 4, 2) --Кровожадность (Преследование)
+local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 96306, nil, 4, 4) --Кровожадность (Преследование)
 local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2) --Ультразвуковой визг
 local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
 local specWarnGiftofGhuun			= mod:NewSpecialWarningInterrupt(265091, "HasInterrupt", nil, nil, 1, 2) --Дар Г'ууна
@@ -58,7 +59,7 @@ local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDisp
 local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2) --Призыв тотема поглощения духа
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
-local timerBloodHarvestCD			= mod:NewCDNPTimer(12.1, 265016, nil, nil, nil, 3) --Кровавая жатва
+local timerBloodHarvestCD			= mod:NewCDNPTimer(11.7, 265016, nil, nil, nil, 3) --Кровавая жатва
 local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
 local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3) --Волна разложения Off by default to reduce clutter, but optional for those that want it
 local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2) --Боевой клич
@@ -76,7 +77,8 @@ local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, 
 
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
-local yellThirstforBlood			= mod:NewShortYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
@@ -229,11 +231,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnDarkOmen:Show()
 		specWarnDarkOmen:Play("range5")
 		yellDarkOmen:Yell()
-	elseif spellId == 266107 and self:AntiSpam(3, 1) then
+	elseif spellId == 266107 and not DBM:UnitDebuff("player", spellId) then --Кровожадность
 		if args:IsPlayer() then
 			specWarnThirstforBlood:Show()
 			specWarnThirstforBlood:Play("justrun")
 			yellThirstforBlood:Yell()
+			yellThirstforBlood2:Countdown(spellId)
 		end
 	elseif spellId == 266209 and self:AntiSpam(3, 5) then
 		specWarnWickedFrenzyDispel:Show(args.destName)
@@ -247,9 +250,20 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 278789 and args:IsPlayer() and self:AntiSpam(3, 8) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 278961 and args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, 3) then
-		specWarnDecayingMindDispel:Show(args.destName)
-		specWarnDecayingMindDispel:Play("helpdispel")
+	elseif spellId == 278961 and args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
+		if self:IsSpellCaster() then
+			specWarnDecayingMindDispel:Show(args.destName)
+			specWarnDecayingMindDispel:Play("helpdispel")
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 266107 then --Кровожадность
+		if args:IsPlayer() then
+			yellThirstforBlood2:Cancel()
+		end
 	end
 end
 

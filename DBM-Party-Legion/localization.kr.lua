@@ -210,6 +210,10 @@ L:SetGeneralLocalization({
 	name =	"넬타리온의 둥지 일반몹"
 })
 
+L:SetMiscLocalization({
+	RP1 = "나바로그? 이 배신자! 감히 침입자들을 끌고 여기 오다니!"
+})
+
 -----------------------
 -- <<<The Arcway>>> --
 -----------------------
