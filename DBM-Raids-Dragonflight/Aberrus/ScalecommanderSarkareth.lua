@@ -83,8 +83,8 @@ local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, 
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
-local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 4) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
-local specWarnVoidFracture2						= mod:NewSpecialWarningMoveTo(404027, nil, nil, nil, 4, 4) --Бомба Бездны
+local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
+local specWarnVoidFracture2						= mod:NewSpecialWarningMoveTo(404027, nil, nil, nil, 4, 6) --Бомба Бездны
 local specWarnAbyssalBreath						= mod:NewSpecialWarningCount(404456, nil, 18357, nil, 2, 2) --Дыхание Бездны (Дыхание)
 local specWarnEmptyStrike						= mod:NewSpecialWarningDefensive(404769, nil, nil, nil, 1, 2, 4) --Пустой удар
 local specWarnCosmicVolley						= mod:NewSpecialWarningInterruptCount(411302, "HasInterrupt", 31295, nil, 1, 2, 4) --Космический залп (Крик)
@@ -583,9 +583,23 @@ function mod:SPELL_CAST_START(args)
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
 	elseif spellId == 403625 then --В поисках вечности (Спрятаться)
-		self:SendSync("MurchalOchkenShlyapen")
+		self.vb.blossomCount = self.vb.blossomCount + 1
+		specWarnScouringEternity:Show(self.vb.blossomCount)
+		specWarnScouringEternity:Play("watchstep")
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
+		if timer then
+			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
+		end
 	elseif spellId == 403741 then --Космическое вознесение (Вознесение)
-		self:SendSync("MurchalOchkenShlyapen 2")
+		self.vb.addIcon = 7
+		self.vb.breathCount = self.vb.breathCount + 1
+		specWarnCosmicAscension:Show(self.vb.breathCount)
+		specWarnCosmicAscension:Play("watchstep")
+		timerAstralFormation:Start(6.5)
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
+		if timer then
+			timerCosmicAscensionCD:Start(timer, self.vb.breathCount+1)
+		end
 		--if self:IsMythic() then
 		--	local mightTimer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 404269, self.vb.breathCount+1)
 		--	if mightTimer then
@@ -593,17 +607,36 @@ function mod:SPELL_CAST_START(args)
 		--	end
 		--end
 	elseif spellId == 403517 then --Объятия пустоты
-		self:SendSync("MurchalOchkenShlyapen 3")
+		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
+		if timer then
+			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
+		end
 	elseif spellId == 407496 or spellId == 404288 then --Бесконечное заключение 407496 confirmed, 404288 unknown (mythic?)
-		self:SendSync("MurchalOchkenShlyapen 4")
+		self.vb.disintegrateCount = self.vb.disintegrateCount + 1
+		self.vb.disintegrateIcon = 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 407496, self.vb.disintegrateCount+1)
+		if timer then
+			timerInfiniteDuressCD:Start(timer, self.vb.disintegrateCount+1)
+		end
 	elseif spellId == 404027 then --Бомба Бездны
-		self:SendSync("MurchalOchkenShlyapen 5")
+		self.vb.bombCount = self.vb.bombCount + 1
+		specWarnVoidBomb:Show(self.vb.bombCount)
+		specWarnVoidBomb:Play("bombsoon")
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.bombCount+1)
+		if timer then
+			timerVoidBombCD:Start(timer, self.vb.bombCount+1)
+		end
 	elseif spellId == 408422 then --Рассечение Бездны
+		self.vb.tankCount = self.vb.tankCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
+		if timer then
+			timerVoidSlashCD:Start(timer, self.vb.tankCount+1)
+		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnVoidSlash:Show()
 			specWarnVoidSlash:Play("defensive")
 		end
-		self:SendSync("MurchalOchkenShlyapen 6")
 	end
 end
 
@@ -762,9 +795,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			playerVoidFracture = true
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
-			specWarnVoidFracture2:Schedule(5, BetweenStars)
-			specWarnVoidFracture2:ScheduleVoice(5, "runout")
 			yellVoidBomb:Yell()
+			if Phase2 then
+				specWarnVoidFracture2:Schedule(5, BetweenStars)
+				specWarnVoidFracture2:ScheduleVoice(5, "runout")
+			end
 			if self:IsMythic() then
 				--schedule for Dimensional Puncture
 				yellVoidFractureFades:Countdown(spellId)
@@ -799,9 +834,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnEmbraceofNothingness:Show(args.destName)
 		end
 	elseif spellId == 403284 then--Stage 1-2 Intermission
-		self:Schedule(3, startProshlyapationOfMurchal, self)
+		self:Schedule(5.5, startProshlyapationOfMurchal, self)
 		if not Phase2 then
 			warnVoidEmpowerment:Show(args.destName)
+			timerEndExistenceCast:Start()
 		end
 		timerOppressingHowlCD:Stop()
 		timerGlitteringSurgeCD:Stop()
@@ -810,17 +846,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSearingBreathCD:Stop()
 		timerBurningClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
-		timerEndExistenceCast:Start()
 	elseif spellId == 410654 then--Stage 2-3 Intermission
 		warnVoidEmpowerment:Show(args.destName)
 		DBM:Debug("Murchal proshlyap 2", 2)
-		timerVoidBombCD:Stop()
-		timerAbyssalBreathCD:Stop()
-		timerDesolateBlossomCD:Stop()
-		timerInfiniteDuressCD:Stop()
-		timerVoidClawsCD:Stop()
-		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
-		timerPhaseCD:Start(13.5)
+		self:SendSync("Phase 3")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -1027,50 +1056,13 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:OnSync(msg)
-	if msg == "MurchalOchkenShlyapen" then --В поисках вечности (Спрятаться)
-		self.vb.blossomCount = self.vb.blossomCount + 1
-		specWarnScouringEternity:Show(self.vb.blossomCount)
-		specWarnScouringEternity:Play("watchstep")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
-		if timer then
-			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
-		end
-	elseif msg == "MurchalOchkenShlyapen 2" then --Космическое вознесение (Вознесение)
-		self.vb.addIcon = 7
-		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnCosmicAscension:Show(self.vb.breathCount)
-		specWarnCosmicAscension:Play("watchstep")
-		timerAstralFormation:Start(6.5)
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
-		if timer then
-			timerCosmicAscensionCD:Start(timer, self.vb.breathCount+1)
-		end
-	elseif msg == "MurchalOchkenShlyapen 3" then --Объятия пустоты
-		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
-		if timer then
-			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
-		end
-	elseif msg == "MurchalOchkenShlyapen 4" then --Бесконечное заключение
-		self.vb.disintegrateCount = self.vb.disintegrateCount + 1
-		self.vb.disintegrateIcon = 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 407496, self.vb.disintegrateCount+1)
-		if timer then
-			timerInfiniteDuressCD:Start(timer, self.vb.disintegrateCount+1)
-		end
-	elseif msg == "MurchalOchkenShlyapen 5" then --Бомба Бездны
-		self.vb.bombCount = self.vb.bombCount + 1
-		specWarnVoidBomb:Show(self.vb.bombCount)
-		specWarnVoidBomb:Play("bombsoon")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.bombCount+1)
-		if timer then
-			timerVoidBombCD:Start(timer, self.vb.bombCount+1)
-		end
-	elseif msg == "MurchalOchkenShlyapen 6" then --Рассечение Бездны
-		self.vb.tankCount = self.vb.tankCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
-			timerVoidSlashCD:Start(timer, self.vb.tankCount+1)
-		end
+	if msg == "Phase 3" then
+		timerVoidBombCD:Stop()
+		timerAbyssalBreathCD:Stop()
+		timerDesolateBlossomCD:Stop()
+		timerInfiniteDuressCD:Stop()
+		timerVoidClawsCD:Stop()
+		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
+		timerPhaseCD:Start(13.5)
 	end
 end
