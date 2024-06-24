@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240201052201")
+mod:SetRevision("20240625070000")
 mod:SetZone()
 
 mod.noStatistics = true
