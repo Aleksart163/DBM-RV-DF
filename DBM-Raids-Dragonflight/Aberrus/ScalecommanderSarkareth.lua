@@ -123,7 +123,7 @@ local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil,
 
 local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Вознесение)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
-local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 123244, nil, 3, 2) --В поисках вечности (Спрятаться)
+local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
 local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 2) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 2) --Рассечение Бездны
@@ -132,7 +132,7 @@ local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
 local timerAstralFormation						= mod:NewCDTimer(29.9, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
-local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 123244, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Спрятаться) Shortname "Hide"
+local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая) (Новая Бездны)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
 local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
@@ -582,7 +582,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
-	elseif spellId == 403625 then --В поисках вечности (Спрятаться)
+	elseif spellId == 403625 then --В поисках вечности (Новая Бездны)
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		specWarnScouringEternity:Show(self.vb.blossomCount)
 		specWarnScouringEternity:Play("watchstep")

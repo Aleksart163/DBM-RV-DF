@@ -25,20 +25,21 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: Violent Swells
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25529))
-local warnFocusedDeluge							= mod:NewCastAnnounce(387571, 3)--On for everyone, since there will likely be many slow tanks in pugs
-local warnInfusedGlobule						= mod:NewCountAnnounce(387474, 2)
-local warnTempestsFury							= mod:NewCountAnnounce(388424, 3)
+local warnFocusedDeluge							= mod:NewCastAnnounce(387571, 3) --Направленный потоп On for everyone, since there will likely be many slow tanks in pugs
+local warnInfusedGlobule						= mod:NewCountAnnounce(387474, 2) --Заряженная капля
+local warnTempestsFury							= mod:NewCountAnnounce(388424, 3, nil, "Tank|Healer") --Неистовство бури
 
-local specWarnSquallBuffet						= mod:NewSpecialWarningYou(387504, nil, nil, nil, 1, 2)
+local specWarnSquallBuffet						= mod:NewSpecialWarningDefensive(387504, nil, nil, nil, 3, 4) --Шквальный толчок
+local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, nil, 2, 4) --Неистовство бури
 
-local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, DBM_COMMON_L.TANKCOMBO, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Squall Buffet/Focused Deluge tank combo
-local timerInfusedGlobuleCD						= mod:NewCDCountTimer(17.5, 387474, nil, nil, nil, 3)
-local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, nil, nil, nil, 2)
+local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Шквальный толчок Squall Buffet/Focused Deluge tank combo
+local timerInfusedGlobuleCD						= mod:NewCDCountTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
+local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури
 
 --Stage Two: Infused Waters
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
-local warnSubmerged								= mod:NewSpellAnnounce(387585, 2)
-local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2)
+local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
+local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
 
 --local timerSubmergedCD						= mod:NewCDTimer(29.9, 387585, nil, nil, nil, 6)--Phasing timer (Now Health based 50%)
 
@@ -64,9 +65,11 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 387571 then
 		warnFocusedDeluge:Show()
-	elseif spellId == 388424 then
+	elseif spellId == 388424 then --Неистовство бури
 		self.vb.tempestCount = self.vb.tempestCount + 1
 		warnTempestsFury:Show(self.vb.tempestCount)
+		specWarnTempestsFury:Show()
+		specWarnTempestsFury:Play("defensive")
 		if self.vb.tempestCount == 1 then--Only 2 cast per rotation
 			timerTempestsFuryCD:Start(31, 2)
 		end
