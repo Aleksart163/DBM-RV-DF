@@ -18,42 +18,42 @@ mod:RegisterEvents(
 (ability.id = 183088 or ability.id = 226296 or ability.id = 202108 or ability.id = 193505 or ability.id = 226287 or ability.id = 183548 or ability.id = 193585 or ability.id = 226406 or ability.id = 202181 or ability.id = 193941 or ability.id = 226347 or ability.id = 183539 or ability.id = 201983 or ability.id = 200154) and type = "begincast"
  or (ability.id = 183433 or ability.id = 183526) and type = "cast"
 --]]
-local warnSubmerge						= mod:NewSpellAnnounce(183433, 3)
+local warnSubmerge						= mod:NewSpellAnnounce(183433, 3) --Погружение
 local warnWarDrums						= mod:NewSpellAnnounce(183526, 4)
 local warnBurningHatred					= mod:NewTargetAnnounce(200154, 3)
 local warnMetamorphosis					= mod:NewTargetNoFilterAnnounce(193803, 3, nil, false)
 local warnPetrifed						= mod:NewTargetNoFilterAnnounce(186616, 4)
 local warnCallWorm						= mod:NewCastAnnounce(183548, 3)
-local warnCrush							= mod:NewCastAnnounce(226287, 3)
+local warnCrush							= mod:NewCastAnnounce(226287, 3) --Сокрушение
 local warnPiercingShards				= mod:NewCastAnnounce(226296, 4, nil, nil, "Tank|Healer")
-local warnFracture						= mod:NewCastAnnounce(193505, 3, nil, nil, "Tank|Healer")
-local warnEmberSwipe					= mod:NewCastAnnounce(226406, 3, nil, nil, "Tank|Healer")
-local warnImpalingShard					= mod:NewCastAnnounce(193941, 3, nil, nil, "Tank|Healer")
-local warnPetrifyingTotem				= mod:NewCastAnnounce(202108, 3)
-local warnBound							= mod:NewCastAnnounce(193585, 3)
-local warnStoneShatter					= mod:NewCastAnnounce(226347, 3)
+local warnFracture						= mod:NewCastAnnounce(193505, 3, nil, nil, "Tank|Healer") --Трещина
+local warnEmberSwipe					= mod:NewCastAnnounce(226406, 3, nil, nil, "Tank|Healer") --Обжигающий размах
+local warnImpalingShard					= mod:NewCastAnnounce(193941, 3, nil, nil, "Tank|Healer") --Пронзающий осколок
+local warnPetrifyingTotem				= mod:NewCastAnnounce(202108, 3) --Каменящий тотем
+local warnBound							= mod:NewCastAnnounce(193585, 3) --Скованность
+local warnStoneShatter					= mod:NewCastAnnounce(226347, 3) --Раздробление камня
 local warnBarbedTongue					= mod:NewCastAnnounce(183539, 3)
 
 local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, nil, nil, 4, 2)
-local specWarnCrush						= mod:NewSpecialWarningRun(226287, "Melee", nil, nil, 1, 2)
-local specWarnAvalanche					= mod:NewSpecialWarningDodge(183088, nil, nil, 3, 1, 2)
-local specWarnPetrifyingTotem			= mod:NewSpecialWarningDodge(202108, nil, nil, nil, 2, 2)
+local specWarnCrush						= mod:NewSpecialWarningRun(226287, "Melee", nil, nil, 1, 2) --Сокрушение
+local specWarnAvalanche					= mod:NewSpecialWarningDodge(183088, nil, nil, 3, 2, 2) --Лавина
+local specWarnPetrifyingTotem			= mod:NewSpecialWarningDodge(202108, nil, nil, nil, 2, 2) --Каменящий тотем
 local specWarnPetrifyingCloud			= mod:NewSpecialWarningDispel(186576, "RemoveMagic", nil, nil, 1, 2)
-local specWarnFrenzy					= mod:NewSpecialWarningDispel(201983, "RemoveEnrage", nil, nil, 1, 2)
-local specWarnStoneGaze					= mod:NewSpecialWarningInterrupt(202181, "HasInterrupt", nil, nil, 1, 2)
+local specWarnFrenzy					= mod:NewSpecialWarningDispel(201983, "RemoveEnrage", nil, nil, 1, 2) --Бешенство
+local specWarnStoneGaze					= mod:NewSpecialWarningInterrupt(202181, "HasInterrupt", nil, nil, 1, 2) --Каменный взгляд
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(186576, nil, nil, nil, 1, 8)
 
-local timerSubmergeCD					= mod:NewCDNPTimer(22.7, 183433, nil, nil, nil, 5)
-local timerStoneShatterCD				= mod:NewCDNPTimer(12.1, 226347, nil, nil, nil, 3)
-local timerImpalingShardCD				= mod:NewCDNPTimer(15.7, 193941, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerCrushCD						= mod:NewCDNPTimer(18.2, 226287, nil, nil, nil, 3)
-local timerFractureCD					= mod:NewCDNPTimer(15.7, 193505, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Also acts as piercing shards timer, piercing is awlays used immediately after fracture
-local timerStoneGazeCD					= mod:NewCDNPTimer(20.6, 202181, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerAvalancheCD					= mod:NewCDNPTimer(19.4, 183088, nil, nil, nil, 3)
-local timerPetrifyingTotemCD			= mod:NewCDNPTimer(35.1, 202108, nil, nil, nil, 3)
-local timerEmberSwipeCD					= mod:NewCDNPTimer(10.9, 226406, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFrenzyCD						= mod:NewCDNPTimer(20.6, 201983, nil, "RemoveEnrage|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 5)
+local timerSubmergeCD					= mod:NewCDNPTimer(22.7, 183433, nil, nil, nil, 5) --Погружение
+local timerStoneShatterCD				= mod:NewCDNPTimer(12.1, 226347, nil, nil, nil, 3) --Раздробление камня
+local timerImpalingShardCD				= mod:NewCDNPTimer(15.7, 193941, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пронзающий осколок
+local timerCrushCD						= mod:NewCDNPTimer(18.2, 226287, nil, nil, nil, 3) --Сокрушение
+local timerFractureCD					= mod:NewCDNPTimer(15.7, 193505, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Трещина Also acts as piercing shards timer, piercing is awlays used immediately after fracture
+local timerStoneGazeCD					= mod:NewCDNPTimer(20.6, 202181, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменный взгляд
+local timerAvalancheCD					= mod:NewCDNPTimer(19.4, 183088, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Лавина
+local timerPetrifyingTotemCD			= mod:NewCDNPTimer(35.1, 202108, nil, nil, nil, 3) --Каменящий тотем
+local timerEmberSwipeCD					= mod:NewCDNPTimer(10.5, 226406, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий размах
+local timerFrenzyCD						= mod:NewCDNPTimer(20.6, 201983, nil, "RemoveEnrage|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Бешенство
+local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Скованность
 
 local timerRP							= mod:NewRPTimer(30)
 
