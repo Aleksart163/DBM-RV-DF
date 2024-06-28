@@ -4,6 +4,9 @@ local L = DBM_GUI_L
 --It's a one stop shop for disabling any DBM core feature
 local spamPanel = DBM_GUI.Cat_Filters:CreateNewPanel(L.Panel_SpamFilter, "option")
 
+local spamAutoKeyLink = spamPanel:CreateArea(L.AreaMurchalOchkenProshlyapation)
+spamAutoKeyLink:CreateCheckButton(L.AutoKeyLink, false, nil, "AutoKeyLink")
+
 local spamSpecAnnounceFeat = spamPanel:CreateArea(L.Area_SpamFilter_SpecFeatures)
 spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnText, true, nil, "DontShowSpecialWarningText")

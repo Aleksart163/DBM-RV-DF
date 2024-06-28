@@ -309,6 +309,7 @@ DBM.DefaultOptions = {
 	ArrowPosY = -150,
 	ArrowPoint = "TOP",
 	-- global boss mod settings (overrides mod-specific settings for some options)
+	AutoKeyLink = false,
 	DontShowBossAnnounces = false,
 	DontShowTargetAnnouncements = true,
 	DontShowSpecialWarningText = false,
@@ -9099,21 +9100,23 @@ frame:RegisterEvent("CHAT_MSG_RAID_LEADER")
 frame:SetScript("OnEvent", startProshlyapationRinaBaka)
 
 local function proshlyapSoulburnin(self, event, msg)
-	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
-			startProshlyapationOfMurchal(true)
-		elseif msg == "!Proshlyapation" and DBM:AntiSpam(5, "PRSH") then
-			SendChatMessage("[DBM RV] Найден пользователь DBM RV ", "PARTY")
+	if DBM.Options.AutoKeyLink then
+		if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
+			if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
+				startProshlyapationOfMurchal(true)
+			elseif msg == "!Proshlyapation" and DBM:AntiSpam(5, "PRSH") then
+				SendChatMessage("[DBM RV] Найден пользователь DBM RV ", "PARTY")
+			end
+		elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
+			if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
+				startProshlyapationOfMurchal(true, true)
+			end
+		elseif event == "CHAT_MSG_GUILD" then
+			if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOPG") then
+				startProshlyapationOfMurchal(true, true, true)
+			end
 		end
-	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOP") then
-			startProshlyapationOfMurchal(true, true)
-		end
-	elseif event == "CHAT_MSG_GUILD" then
-		if string.lower(msg) == "!keys" and DBM:AntiSpam(7, "MOPG") then
-			startProshlyapationOfMurchal(true, true, true)
-		end
-    end
+	end
 end
 
 local f = CreateFrame("Frame")
