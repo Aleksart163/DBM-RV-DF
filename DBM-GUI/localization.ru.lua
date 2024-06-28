@@ -414,9 +414,9 @@ L.Area_DBMFiltersSetup		= "Руководство по фильтрам DBM"
 L.Area_BlizzFiltersSetup	= "Руководство по фильтрам Blizzard"
 
 -- Panel: Toggle DBM Features
-L.AreaMurchalOchkenProshlyapation 	= "Параметры Эпохальных+ ключей"
+L.AreaMurchalOchkenProshlyapation 	= "Параметры эпохальных+ ключей"
 
-L.AutoKeyLink						= "Линковать свой Эпохальный+ ключ в рейд/групп/гильд чат по команде !keys"
+L.AutoKeyLink						= "Линковать свой эпохальный+ ключ в рейд/групп/гильд чат по команде !keys"
 
 L.Panel_SpamFilter			= "Отключение функций DBM"
 

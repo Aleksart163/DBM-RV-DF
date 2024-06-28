@@ -420,9 +420,9 @@ L.Area_DBMFiltersSetup				= "DBM Filters guide"
 L.Area_BlizzFiltersSetup			= "Blizzard Filters guide"
 
 -- Panel: Toggle DBM Features
-L.AreaMurchalOchkenProshlyapation 	= "Options Mythic+ keys"
+L.AreaMurchalOchkenProshlyapation 	= "Options mythic+ keys"
 
-L.AutoKeyLink						= "Link your Mythic+ key in raid/group/guild chat by command !keys"
+L.AutoKeyLink						= "Link your mythic+ key in raid/group/guild chat by command !keys"
 
 L.Panel_SpamFilter					= "Disable DBM Features"
 
