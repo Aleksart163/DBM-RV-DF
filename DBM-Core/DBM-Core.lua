@@ -309,7 +309,7 @@ DBM.DefaultOptions = {
 	ArrowPosY = -150,
 	ArrowPoint = "TOP",
 	-- global boss mod settings (overrides mod-specific settings for some options)
-	AutoKeyLink = false,
+	AutoKeyLink = true,
 	DontShowBossAnnounces = false,
 	DontShowTargetAnnouncements = true,
 	DontShowSpecialWarningText = false,
