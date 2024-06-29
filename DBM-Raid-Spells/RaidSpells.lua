@@ -22,12 +22,13 @@ mod:RegisterEvents(
 local warnMisdirection				= mod:NewYouAnnounce(34477, 1) --Перенаправление
 local warnTricksTheTrade			= mod:NewYouAnnounce(57934, 1) --Маленькие хитрости
 
-local warnMassres1					= mod:NewTargetSourceAnnounce2(212040, 1) --Ободрение (друид) --
-local warnMassres2					= mod:NewTargetSourceAnnounce2(212056, 1) --Отпущение (пал) --
-local warnMassres3					= mod:NewTargetSourceAnnounce2(212036, 1) --Массовое воскрешение (прист) --
-local warnMassres4					= mod:NewTargetSourceAnnounce2(212048, 1) --Древнее видение (шаман) --
-local warnMassres5					= mod:NewTargetSourceAnnounce2(212051, 1) --Повторное пробуждение (монк) --
-local warnMassres6					= mod:NewTargetSourceAnnounce2(361178, 1) --Массовое возвращение (драктир) --
+local warnMassres					= mod:NewTargetSourceAnnounce2(212036, 1) --Массовое воскрешение (прист) --
+--local warnMassres1					= mod:NewTargetSourceAnnounce2(212040, 1) --Ободрение (друид) --
+--local warnMassres2					= mod:NewTargetSourceAnnounce2(212056, 1) --Отпущение (пал) --
+--local warnMassres3					= mod:NewTargetSourceAnnounce2(212036, 1) --Массовое воскрешение (прист) --
+--local warnMassres4					= mod:NewTargetSourceAnnounce2(212048, 1) --Древнее видение (шаман) --
+--local warnMassres5					= mod:NewTargetSourceAnnounce2(212051, 1) --Повторное пробуждение (монк) --
+--local warnMassres6					= mod:NewTargetSourceAnnounce2(361178, 1) --Массовое возвращение (драктир)
 --инженерия
 local warnJeeves					= mod:NewTargetSourceAnnounce2(67826, 1) --Дживс
 local warnAutoHammer				= mod:NewTargetSourceAnnounce2(199109, 1) --Автоматический молот
@@ -123,6 +124,7 @@ local yellTranquility				= mod:NewYell(740, L.SpellNameYell, nil, nil, "YELL") -
 local yellRallyingCry				= mod:NewYell(97462, L.SpellNameYell, nil, nil, "YELL") --Ободряющий клич
 local yellPowerWordBarrier			= mod:NewYell(62618, L.SpellNameYell, nil, nil, "YELL") --Слово силы: Барьер
 local yellAncestralProtectionTotem	= mod:NewYell(207399, L.SpellNameYell, nil, nil, "YELL") --Тотем защиты Предков
+local yellSpiritLinkTotem			= mod:NewYell(98008, L.SpellNameYell, nil, nil, "YELL") --Тотем духовной связи
 local yellSymbolHope				= mod:NewYell(64901, L.SpellNameYell, nil, nil, "YELL") --Символ надежды
 local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell2, nil, nil, "YELL") --Маленькие хитрости
 local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell2, nil, nil, "YELL") --Перенаправление
@@ -273,7 +275,7 @@ function mod:SPELL_CAST_START(args)
 	if DBM:GetNumRealGroupMembers() < 2 then return end
 	if spellId == 212040 and self:AntiSpam(15, "massres") then --Возвращение к жизни (друид)
 		if self.Options.YellOnMassRes then
-			warnMassres1:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -281,7 +283,7 @@ function mod:SPELL_CAST_START(args)
 		end]]
 	elseif spellId == 212056 and self:AntiSpam(15, "massres") then --Отпущение (пал)
 		if self.Options.YellOnMassRes then
-			warnMassres2:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -289,7 +291,7 @@ function mod:SPELL_CAST_START(args)
 		end]]
 	elseif spellId == 212036 and self:AntiSpam(15, "massres") then --Массовое воскрешение (прист)
 		if self.Options.YellOnMassRes then
-			warnMassres3:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -297,7 +299,7 @@ function mod:SPELL_CAST_START(args)
 		end]]
 	elseif spellId == 212048 and self:AntiSpam(15, "massres") then --Древнее видение (шаман)
 		if self.Options.YellOnMassRes then
-			warnMassres4:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -305,7 +307,7 @@ function mod:SPELL_CAST_START(args)
 		end]]
 	elseif spellId == 212051 and self:AntiSpam(15, "massres") then --Повторное пробуждение (монк)
 		if self.Options.YellOnMassRes then
-			warnMassres5:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -313,7 +315,7 @@ function mod:SPELL_CAST_START(args)
 		end]]
 	elseif spellId == 361178 and self:AntiSpam(15, "massres") then --Массовое возвращение (драктир)
 		if self.Options.YellOnMassRes then
-			warnMassres6:Show(sourceName, spellName)
+			warnMassres:Show(sourceName, spellName)
 		end
 	--[[	if self.Options.YellOnMassRes then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnMassRes then
@@ -744,7 +746,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 61994 then --Ритуал призыва
 		if self.Options.YellOnSummoning then
-			if args:IsPlayerSource() then
+			if args:IsPlayerSource() and self:AntiSpam(2, "RitualSummoning") then
 				smartAss(L.SoulstoneYell:format(DbmRV, sourceName, SpellLinks(7720), UnitName("target")))
 			end
 		end
@@ -1026,13 +1028,9 @@ function mod:SPELL_SUMMON(args)
 		end]]
 		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 98008 then --Тотем духовной связи
-	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
-	--	if DBM:GetNumRealGroupMembers() < 2 then return end
-	--[[	if self.Options.YellOnRaidCooldown then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRaidCooldown then
-			prepareMessage(self, "premsg_Spells_spirittotem", spellId, sourceName)
-		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
+		if args:IsPlayerSource() then
+			yellSpiritLinkTotem:Yell(SpellLinks(spellId))
+		end
 	elseif spellId == 207399 then --Тотем защиты Предков
 		if args:IsPlayerSource() then
 			yellAncestralProtectionTotem:Yell(SpellLinks(spellId))
