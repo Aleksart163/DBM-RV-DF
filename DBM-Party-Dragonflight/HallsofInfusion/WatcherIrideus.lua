@@ -37,7 +37,7 @@ local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, n
 
 local timerPowerOverloadCD						= mod:NewCDTimer(28, 389179, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Перегрузка
 local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
-local timerStaticSurgeCD						= mod:NewCDCountTimer(30, 384014, nil, nil, nil, 2) --Статический выброс
+local timerStaticSurgeCD						= mod:NewCDCountTimer(28, 384014, nil, nil, nil, 2) --Статический выброс
 local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
 --Perephase: Ochken of Murchal
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25744))
