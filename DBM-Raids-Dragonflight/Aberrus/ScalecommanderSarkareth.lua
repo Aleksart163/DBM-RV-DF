@@ -105,7 +105,7 @@ local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer",
 local timerBlastingScreamCD						= mod:NewCDTimer(7.3, 404754, 31295, false, 2, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Взрывной крик Spammy so off by default
 local timerDesolateBlossomCD					= mod:NewCDCountTimer(29.9, 404403, nil, nil, nil, 3) --Опустошенный цветок
 local timerInfiniteDuressCD		 				= mod:NewCDCountTimer(29.9, 404288, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON) --Бесконечное заключение
-local timerVoidClawsCD							= mod:NewCDCountTimer(29.9, 411241, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Когти пустоты
+local timerVoidClawsCD							= mod:NewCDCountTimer(29.9, 411241, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Когти пустоты
 local timerVoidClaws							= mod:NewTargetTimer(18, 411241, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Когти пустоты AOE damage from expiring
 local timerEbonMight							= mod:NewCastCountTimer("d29.9", 404269, 299144, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Черная мощь (Невосприимчивость)
 
@@ -130,11 +130,11 @@ local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
-local timerAstralFormation						= mod:NewCDTimer(29.9, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
+local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
-local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая) (Новая Бездны)
+local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
-local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны
+local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
