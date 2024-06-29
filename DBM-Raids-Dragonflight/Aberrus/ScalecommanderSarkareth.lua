@@ -72,7 +72,7 @@ local timerGlitteringSurgeCD					= mod:NewCDCountTimer(29.9, 401810, nil, nil, n
 local timerScorchingBombCD						= mod:NewCDCountTimer(29.9, 401500, 167180, nil, nil, 3) --Опаляющая бомба (Бомбы)
 local timerMassDisintegrateCD					= mod:NewCDCountTimer(29.9, 401680, 405391, nil, nil, 3) --Массовая дезинтеграция (Дезинтеграция)
 local timerSearingBreathCD						= mod:NewCDCountTimer(29.9, 402050, 18357, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Опаляющее дыхание (Дыхание)
-local timerBurningClawsCD						= mod:NewCDCountTimer(29.9, 401330, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающие когти
+local timerBurningClawsCD						= mod:NewCDTimer(29.9, 401330, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающие когти
 local timerBurningClaws							= mod:NewTargetTimer(27, 401330, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Обжигающие когти
 
 mod:AddSetIconOption("SetIconOnMassDisintegrate", 401680, true, 0, {1, 2, 3, 4}) --Массовая дезинтеграция (Дезинтеграция)
@@ -105,7 +105,7 @@ local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer",
 local timerBlastingScreamCD						= mod:NewCDTimer(7.3, 404754, 31295, false, 2, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Взрывной крик Spammy so off by default
 local timerDesolateBlossomCD					= mod:NewCDCountTimer(29.9, 404403, nil, nil, nil, 3) --Опустошенный цветок
 local timerInfiniteDuressCD		 				= mod:NewCDCountTimer(29.9, 404288, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON) --Бесконечное заключение
-local timerVoidClawsCD							= mod:NewCDCountTimer(29.9, 411241, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Когти пустоты
+local timerVoidClawsCD							= mod:NewCDTimer(29.9, 411241, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Когти пустоты
 local timerVoidClaws							= mod:NewTargetTimer(18, 411241, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Когти пустоты AOE damage from expiring
 local timerEbonMight							= mod:NewCastCountTimer("d29.9", 404269, 299144, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Черная мощь (Невосприимчивость)
 
@@ -134,7 +134,7 @@ local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 5)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
-local timerVoidSlashCD							= mod:NewCDCountTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
+local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
@@ -380,7 +380,7 @@ function mod:OnCombatStart(delay)
 		difficultyName = "mythic"
 		timerGlitteringSurgeCD:Start(2.8-delay, 1)
 		timerOppressingHowlCD:Start(13-delay)
-		timerBurningClawsCD:Start(17.9-delay, 1)
+		timerBurningClawsCD:Start(17.9-delay)
 		timerMassDisintegrateCD:Start(20.8-delay, 1)
 		timerSearingBreathCD:Start(25.4-delay, 1)
 		timerPhaseCD:Start(101.9, 2)--Mythic Confirmed
@@ -390,13 +390,13 @@ function mod:OnCombatStart(delay)
 			difficultyName = "lfr"
 			timerGlitteringSurgeCD:Start(3.5-delay, 1)
 			timerOppressingHowlCD:Start(15.3-delay)
-			timerBurningClawsCD:Start(21.1-delay, 1)
+			timerBurningClawsCD:Start(21.1-delay)
 			timerMassDisintegrateCD:Start(24.7-delay, 1)
 			timerSearingBreathCD:Start(28.2-delay, 1)
 		else--Normal and heroic have same p1 timers
 			timerGlitteringSurgeCD:Start(3.3-delay, 1)
 			timerOppressingHowlCD:Start(14.4-delay)
-			timerBurningClawsCD:Start(20-delay, 1)
+			timerBurningClawsCD:Start(20-delay)
 			timerMassDisintegrateCD:Start(23.3-delay, 1)
 			timerSearingBreathCD:Start(26.6-delay, 1)
 			if self:IsHeroic() then
@@ -937,7 +937,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerInfiniteDuressCD:Start(4.5, 1)
 			timerCosmicAscensionCD:Start(6.8, 1)
 			timerHurtlingBarrageCD:Start(18.6, 1)
-			timerVoidSlashCD:Start(19.8, 1)
+			timerVoidSlashCD:Start(19.8)
 			timerEmbraceofNothingnessCD:Start(23.3, 1)
 			timerVoidBombCD:Start(24.5)
 			timerScouringEternityCD:Start(53.1, 1) --46.2
@@ -945,20 +945,20 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerInfiniteDuressCD:Start(4.7, 1)
 			timerCosmicAscensionCD:Start(7.5, 1)
 			timerHurtlingBarrageCD:Start(19.7, 1)
-			timerVoidSlashCD:Start(21, 1)
+			timerVoidSlashCD:Start(21)
 			timerEmbraceofNothingnessCD:Start(24.7, 1)
 			timerVoidBombCD:Start(28.5)
 			timerScouringEternityCD:Start(53.1, 1) --46.2
 		elseif self:IsNormal() then
 			timerCosmicAscensionCD:Start(7.7, 1)
 			timerHurtlingBarrageCD:Start(21, 1)
-			timerVoidSlashCD:Start(22.3, 1)
+			timerVoidSlashCD:Start(22.3)
 			timerEmbraceofNothingnessCD:Start(26.3, 1)
 			timerVoidBombCD:Start(30.3)
 			timerScouringEternityCD:Start(53.1, 1) --48.6
 		else--LFR
 			timerCosmicAscensionCD:Start(7.2, 1)
-			timerVoidSlashCD:Start(21, 1)
+			timerVoidSlashCD:Start(21)
 			timerScouringEternityCD:Start(46.1, 1)
 		end
 	elseif spellId == 410625 then
@@ -975,27 +975,27 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerAbyssalBreathCD:Start(3.4, 1)
 			timerDesolateBlossomCD:Start(10, 1)
 			timerVoidBombCD:Start(14.5)
-			timerVoidClawsCD:Start(17.8, 1)
+			timerVoidClawsCD:Start(17.8)
 			timerInfiniteDuressCD:Start(27.8, 1)
 			timerPhaseCD:Start(103, 3)
 		elseif self:IsHeroic() then
 			timerAbyssalBreathCD:Start(3.5, 1)
 			timerDesolateBlossomCD:Start(10.6, 1)
 			timerVoidBombCD:Start(15.3)
-			timerVoidClawsCD:Start(18.8, 1)
+			timerVoidClawsCD:Start(18.8)
 			timerInfiniteDuressCD:Start(29.4, 1)
 			timerPhaseCD:Start(110, 3)
 		elseif self:IsNormal() then
 			timerAbyssalBreathCD:Start(3.7, 1)
 			timerDesolateBlossomCD:Start(11.2, 1)
 			timerVoidBombCD:Start(16.2)
-			timerVoidClawsCD:Start(19.9, 1)
+			timerVoidClawsCD:Start(19.9)
 			timerPhaseCD:Start(110, 3)
 		else
 			timerAbyssalBreathCD:Start(4, 1)
 			timerDesolateBlossomCD:Start(12, 1)
 			timerVoidBombCD:Start(17.3)
-			timerVoidClawsCD:Start(21.3, 1)
+			timerVoidClawsCD:Start(21.3)
 --			timerPhaseCD:Start(96.7, 3)--Unknown, LFR pushes health threshold before timed threshold can be triggered
 		end
 		if self.Options.InfoFrame then
