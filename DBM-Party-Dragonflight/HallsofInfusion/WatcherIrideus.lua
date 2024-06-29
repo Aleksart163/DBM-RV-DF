@@ -46,25 +46,28 @@ local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1) --Абляци
 local warnNullifyingPulse						= mod:NewCastAnnounce(389446, 4) --Нейтрализующая пульсация
 local warnPurifyingBlast						= mod:NewTargetNoFilterAnnounce(389443, 3, nil, false) --Очищающая вспышка
 
-local yellPowerOverload							= mod:NewYell(389179, nil, nil, nil, "YELL") --Перегрузка
+local yellPowerOverload							= mod:NewShortYell(389179, nil, nil, nil, "YELL") --Перегрузка
 local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL") --Перегрузка
 
 mod.vb.surgeCount = 0
 mod.vb.titanicFistCount = 0
+mod.vb.sparkVolleyCount = 0
 mod.vb.ochkenProshlyapationsCount = 1
 
 local allProshlyapationsOfMurchal = {
 	[1] = {
 		--Кулак титана
-		[384524] = {6, 18, 22.1, 18.1, 19.4, 18.5, 18},
+		[384524] = {6, 18, 22.1, 18.1, 19.4, 18.5, 18, 19.4, 21},
 		--Череда разрядов
-		[384351] = {29.9},
+		[384351] = {29.9, 31, 31, 31, 36},
 		--Статический выброс
 	--	[384014] = {10.9, 28, 28, 28, 28.9, 60},
 	},
 	[2] = {
 		--Кулак титана
-		[384524] = {8.1, 18, 22.1, 18, 18, 19.9, 18, 18},
+		[384524] = {8.1, 18, 22.1, 18, 18, 19.9, 18, 18, 21.3},
+		--Череда разрядов
+		[384351] = {31.6, 31, 31, 31, 36},
 		--Статический выброс
 	--	[384014] = {13, 28, 28, 28, 28.6, 60},
 	},
@@ -73,6 +76,7 @@ local allProshlyapationsOfMurchal = {
 function mod:OnCombatStart(delay)
 	self.vb.surgeCount = 0
 	self.vb.titanicFistCount = 0
+	self.vb.sparkVolleyCount = 0
 	self.vb.ochkenProshlyapationsCount = 1
 	self:SetStage(1)
 	timerTitanicFistCD:Start(6-delay)--
@@ -85,19 +89,19 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 389179 then --Перегрузка
 		timerPowerOverloadCD:Start()
-	elseif spellId == 384351 then
+	elseif spellId == 384351 then --Череда разрядов
+		self.vb.sparkVolleyCount = self.vb.sparkVolleyCount + 1
 		specWarnSparkVolley:Show()
 		specWarnSparkVolley:Play("watchstep")
-		timerSparkVolleyCD:Start()
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.ochkenProshlyapationsCount, spellId, self.vb.sparkVolleyCount+1)
+		if timer then
+			timerSparkVolleyCD:Start(timer, self.vb.sparkVolleyCount+1)
+		end
 	elseif spellId == 384014 then --Статический выброс
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		specWarnStaticSurge:Show(self.vb.surgeCount)
 		specWarnStaticSurge:Play("aesoon")
-	--[[	local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.ochkenProshlyapationsCount, spellId, self.vb.surgeCount+1)
-		if timer then
-			timerStaticSurgeCD:Start(timer, self.vb.surgeCount+1)
-		end]]
-		timerStaticSurgeCD:Start()
+		timerStaticSurgeCD:Start(nil, self.vb.surgeCount+1)
 	elseif spellId == 384524 then --Кулак титана
 		self.vb.titanicFistCount = self.vb.titanicFistCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
@@ -145,6 +149,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.ochkenProshlyapationsCount = self.vb.ochkenProshlyapationsCount + 1
 		self.vb.surgeCount = 0
 		self.vb.titanicFistCount = 0
+		self.vb.sparkVolleyCount = 0
 		warnAblativeBarrierOver:Show()
 		if self:GetStage(1) then
 			self:SetStage(2)

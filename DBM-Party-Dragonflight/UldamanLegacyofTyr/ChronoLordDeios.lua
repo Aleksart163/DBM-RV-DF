@@ -37,6 +37,7 @@ local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil
 local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8)
 local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 3, 4) --Дыхание песка
+local specWarnSandBreath2						= mod:NewSpecialWarningDodge(375727, "-Tank", nil, nil, 2, 4) --Дыхание песка
 
 local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3)--3-9
 local timerRewindTimeflowCD						= mod:NewCDCountTimer(42.3, 376208, nil, nil, nil, 6)
@@ -122,13 +123,16 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.buffetCount == 1 and self.vb.rewindCount >= 1 then
 			timerWingBuffetCD:Start(nil, 2)
 		end
-	elseif spellId == 375727 then
+	elseif spellId == 375727 then --Дыхание песка
 		self.vb.breathCount = self.vb.breathCount + 1
-		self:BossTargetScanner(args.sourceGUID, "SandBreathTarget", 0.1, 2)
-	--[[	if self:IsTanking("player", "boss1", nil, true) then
+	--	self:BossTargetScanner(args.sourceGUID, "SandBreathTarget", 0.1, 2)
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSandBreath:Show()
 			specWarnSandBreath:Play("defensive")
-		end]]
+			yellSandBreath:Yell()
+		end
+		specWarnSandBreath2:Show()
+		specWarnSandBreath2:Play("watchstep")
 		local maxBreath = (self.vb.rewindCount == 0) and 2 or 3
 		if self.vb.breathCount < maxBreath then
 			timerSandBreathCD:Start(nil, self.vb.breathCount+1)
