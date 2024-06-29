@@ -35,10 +35,10 @@ local specWarnStaticSurge						= mod:NewSpecialWarningCount(384014, nil, nil, ni
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389181, nil, nil, nil, 1, 8) --Статическое поле
 local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, nil, 2, 2) --Кулак титана
 
-local timerPowerOverloadCD						= mod:NewCDTimer(60, 389179, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Перегрузка
-local timerSparkVolleyCD						= mod:NewCDTimer(60, 384351, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
-local timerStaticSurgeCD						= mod:NewCDCountTimer(60, 384014, nil, nil, nil, 2) --Статический выброс
-local timerTitanicFistCD						= mod:NewCDTimer(60, 384524, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
+local timerPowerOverloadCD						= mod:NewCDTimer(28, 389179, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Перегрузка
+local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
+local timerStaticSurgeCD						= mod:NewCDCountTimer(30, 384014, nil, nil, nil, 2) --Статический выброс
+local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
 --Perephase: Ochken of Murchal
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25744))
 local warnAblativeBarrier						= mod:NewSpellAnnounce(383840, 2) --Абляционный барьер
@@ -57,14 +57,16 @@ local allProshlyapationsOfMurchal = {
 	[1] = {
 		--Кулак титана
 		[384524] = {6, 18, 22.1, 18.1, 19.4, 18.5, 18},
+		--Череда разрядов
+		[384351] = {29.9},
 		--Статический выброс
-		[384014] = {10.9, 28, 28, 28, 28.9, 60},
+	--	[384014] = {10.9, 28, 28, 28, 28.9, 60},
 	},
 	[2] = {
 		--Кулак титана
 		[384524] = {8.1, 18, 22.1, 18, 18, 19.9, 18, 18},
 		--Статический выброс
-		[384014] = {13, 28, 28, 28, 28.6, 60},
+	--	[384014] = {13, 28, 28, 28, 28.6, 60},
 	},
 }
 
@@ -81,7 +83,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 389179 then
+	if spellId == 389179 then --Перегрузка
 		timerPowerOverloadCD:Start()
 	elseif spellId == 384351 then
 		specWarnSparkVolley:Show()
@@ -91,10 +93,11 @@ function mod:SPELL_CAST_START(args)
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		specWarnStaticSurge:Show(self.vb.surgeCount)
 		specWarnStaticSurge:Play("aesoon")
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.ochkenProshlyapationsCount, spellId, self.vb.surgeCount+1)
+	--[[	local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.ochkenProshlyapationsCount, spellId, self.vb.surgeCount+1)
 		if timer then
 			timerStaticSurgeCD:Start(timer, self.vb.surgeCount+1)
-		end
+		end]]
+		timerStaticSurgeCD:Start()
 	elseif spellId == 384524 then --Кулак титана
 		self.vb.titanicFistCount = self.vb.titanicFistCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
