@@ -91,13 +91,11 @@ local specWarnCosmicVolley						= mod:NewSpecialWarningInterruptCount(411302, "H
 local specWarnBlastingScream					= mod:NewSpecialWarningInterruptCount(404754, "HasInterrupt", nil, nil, 1, 2) --Взрывной крик
 local specWarnDesolateBlossom					= mod:NewSpecialWarningDodgeCount(404403, nil, nil, nil, 2, 2) --Опустошенный цветок
 local specWarnInfiniteDuressYou					= mod:NewSpecialWarningYou(404288, nil, nil, nil, 1, 2, 3) --Бесконечное заключение
-local specWarnVoidClaws							= mod:NewSpecialWarningDefensive(411241, nil, nil, nil, 3, 2) --Когти пустоты
-local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil, nil, 4, 2) --Когти пустоты For Void Blast (411238) effect
+local specWarnVoidClaws							= mod:NewSpecialWarningDefensive(411241, nil, nil, nil, 3, 4) --Когти пустоты
+local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil, nil, 4, 4) --Когти пустоты For Void Blast (411238) effect
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2) --Когти пустоты
 
---21 37 22 790 дебаф
---21 37 30 208
-local timerEndExistenceCast						= mod:NewCastTimer(32.5, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
+local timerEndExistenceCast						= mod:NewCastTimer(30, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
@@ -125,8 +123,8 @@ local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil,
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
 local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
-local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 2) --Рассечение Бездны
-local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 2) --Рассечение Бездны
+local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 4) --Рассечение Бездны
+local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
@@ -138,6 +136,7 @@ local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, "Melee|Healer",
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
+local yellVoidSlash								= mod:NewShortYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
@@ -148,7 +147,6 @@ local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YEL
 local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
 local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
-local yellVoidSlashFades						= mod:NewShortFadesYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859, nil, nil, "YELL") --Когти пустоты (Бомбардировка) For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
@@ -460,7 +458,6 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerGlitteringSurgeCD:Start(timer, self.vb.surgeCount+1)
 		else--Early push, abort timers even earlier
-			DBM:ShowTestSpecialWarning(L.EarlyStaging, 1, nil, true)
 			timerOppressingHowlCD:Stop()
 			timerGlitteringSurgeCD:Stop()
 			timerScorchingBombCD:Stop()
@@ -636,6 +633,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnVoidSlash:Show()
 			specWarnVoidSlash:Play("defensive")
+			yellVoidSlash:Yell()
 		end
 	end
 end
@@ -747,7 +745,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		timerBurningClaws:Start(27, args.destName)
-	elseif spellId == 411241 then
+	elseif spellId == 411241 then --Когти пустоты
 		if not args:IsPlayer() and not UnitIsDeadOrGhost("player") then--and not DBM:UnitDebuff("player", spellId)
 			specWarnVoidClawsTaunt:Show(args.destName)
 			specWarnVoidClawsTaunt:Play("tauntboss")
@@ -767,7 +765,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		timerVoidClaws:Start(18, args.destName)
-	elseif spellId == 408429 then
+	elseif spellId == 408429 then --Рассечение Бездны
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then--Frontal filter, in case it can hit anyone that's in front of boss
 			if not args:IsPlayer() and not UnitIsDeadOrGhost("player") then--and not DBM:UnitDebuff("player", spellId)
@@ -848,8 +846,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 	elseif spellId == 410654 then--Stage 2-3 Intermission
 		warnVoidEmpowerment:Show(args.destName)
-		DBM:Debug("Murchal proshlyap 2", 2)
-		self:SendSync("Phase 3")
+		self:SendSync("Phase 3 RP")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -882,14 +879,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 401330 then
 		timerBurningClaws:Stop(args.destName)
-	elseif spellId == 411241 then
+	elseif spellId == 411241 then --Когти пустоты
 		if args:IsPlayer() then
 			specWarnVoidClawsOut:Cancel()
 			specWarnVoidClawsOut:CancelVoice()
 			yellVoidClawsFades:Cancel()
 		end
 		timerVoidClaws:Stop(args.destName)
-	elseif spellId == 408429 then
+	elseif spellId == 408429 then --Рассечение Бездны
 		if args:IsPlayer() then
 			specWarnVoidSlashOut:Cancel()
 			specWarnVoidSlashOut:CancelVoice()
@@ -923,44 +920,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellHurtlingBarrageFades:Cancel()
 		end
 	elseif spellId == 410654 then --Начало фазы 3
-		self:SetStage(3)
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
-		warnPhase:Play("pthree")
-		self.vb.bombCount = 0--Reused for Void Bombs
-		self.vb.breathCount = 0--Reused for Cosmic Ascension
-		self.vb.surgeCount = 0--Reused for Hurtling Barrage
-		self.vb.blossomCount = 0--Reused for Scouring Eternity
-		self.vb.disintegrateCount = 0--Reused for Inifinite Duress
-		self.vb.tankCount = 0----Reused for Void Slash
-		timerEbonMight:Start(11, 1)
-		if self:IsMythic() then
-			timerInfiniteDuressCD:Start(4.5, 1)
-			timerCosmicAscensionCD:Start(6.8, 1)
-			timerHurtlingBarrageCD:Start(18.6, 1)
-			timerVoidSlashCD:Start(19.8)
-			timerEmbraceofNothingnessCD:Start(23.3, 1)
-			timerVoidBombCD:Start(24.5)
-			timerScouringEternityCD:Start(53.1, 1) --46.2
-		elseif self:IsHeroic() then
-			timerInfiniteDuressCD:Start(4.7, 1)
-			timerCosmicAscensionCD:Start(7.5, 1)
-			timerHurtlingBarrageCD:Start(19.7, 1)
-			timerVoidSlashCD:Start(21)
-			timerEmbraceofNothingnessCD:Start(24.7, 1)
-			timerVoidBombCD:Start(28.5)
-			timerScouringEternityCD:Start(53.1, 1) --46.2
-		elseif self:IsNormal() then
-			timerCosmicAscensionCD:Start(7.7, 1)
-			timerHurtlingBarrageCD:Start(21, 1)
-			timerVoidSlashCD:Start(22.3)
-			timerEmbraceofNothingnessCD:Start(26.3, 1)
-			timerVoidBombCD:Start(30.3)
-			timerScouringEternityCD:Start(53.1, 1) --48.6
-		else--LFR
-			timerCosmicAscensionCD:Start(7.2, 1)
-			timerVoidSlashCD:Start(21)
-			timerScouringEternityCD:Start(46.1, 1)
-		end
+		self:SendSync("Phase 3 Start")
 	elseif spellId == 410625 then
 		timerEndExistenceCast:Stop()
 		--True start of phase 2 timers
@@ -970,7 +930,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.bombCount = 0--Reused for Void Bombs
 		self.vb.breathCount = 0--Reused for Abyssal Breath
 		self.vb.disintegrateCount = 0--Reused for Inifinite Duress
-		self.vb.tankCount = 0----Reused for Void Claws
+		self.vb.tankCount = 0--Reused for Void Claws
 		if self:IsMythic() then
 			timerAbyssalBreathCD:Start(3.4, 1)
 			timerDesolateBlossomCD:Start(10, 1)
@@ -1056,7 +1016,8 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:OnSync(msg)
-	if msg == "Phase 3" then
+	if msg == "Phase 3 RP" then
+		DBM:Debug("Murchal proshlyap 2", 2)
 		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
 		timerDesolateBlossomCD:Stop()
@@ -1064,5 +1025,45 @@ function mod:OnSync(msg)
 		timerVoidClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 		timerPhaseCD:Start(13.5)
+	elseif msg == "Phase 3 Start" then
+		DBM:Debug("Murchal proshlyap 3", 2)
+		self:SetStage(3)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Play("pthree")
+		self.vb.bombCount = 0
+		self.vb.breathCount = 0
+		self.vb.surgeCount = 0
+		self.vb.blossomCount = 0
+		self.vb.disintegrateCount = 0
+		self.vb.tankCount = 0
+		timerEbonMight:Start(11, 1)
+		if self:IsMythic() then
+			timerInfiniteDuressCD:Start(4.5, 1)
+			timerCosmicAscensionCD:Start(6.8, 1)
+			timerHurtlingBarrageCD:Start(18.6, 1)
+			timerVoidSlashCD:Start(19.8)
+			timerEmbraceofNothingnessCD:Start(23.3, 1)
+			timerVoidBombCD:Start(24.5)
+			timerScouringEternityCD:Start(53.1, 1) --46.2
+		elseif self:IsHeroic() then
+			timerInfiniteDuressCD:Start(4.7, 1)
+			timerCosmicAscensionCD:Start(7.5, 1)
+			timerHurtlingBarrageCD:Start(19.7, 1)
+			timerVoidSlashCD:Start(21)
+			timerEmbraceofNothingnessCD:Start(24.7, 1)
+			timerVoidBombCD:Start(28.5)
+			timerScouringEternityCD:Start(50.8, 1) --46.2
+		elseif self:IsNormal() then
+			timerCosmicAscensionCD:Start(7.7, 1)
+			timerHurtlingBarrageCD:Start(21, 1)
+			timerVoidSlashCD:Start(22.3)
+			timerEmbraceofNothingnessCD:Start(26.3, 1)
+			timerVoidBombCD:Start(30.3)
+			timerScouringEternityCD:Start(53.1, 1) --48.6
+		else--LFR
+			timerCosmicAscensionCD:Start(7.2, 1)
+			timerVoidSlashCD:Start(21)
+			timerScouringEternityCD:Start(46.1, 1)
+		end
 	end
 end
