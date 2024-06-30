@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod(2511, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240327002727")
+mod:SetRevision("20240630070000")
 mod:SetCreatureID(189729)
 mod:SetEncounterID(2618)
-mod:SetHotfixNoticeRev(20230507000000)
+mod:SetHotfixNoticeRev(20240629070000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25529))
 local warnFocusedDeluge							= mod:NewCastAnnounce(387571, 3) --Направленный потоп On for everyone, since there will likely be many slow tanks in pugs
 local warnInfusedGlobule						= mod:NewCountAnnounce(387474, 2) --Заряженная капля
-local warnTempestsFury							= mod:NewCountAnnounce(388424, 3, nil, "Tank|Healer") --Неистовство бури
+local warnTempestsFury							= mod:NewCountAnnounce(388424, 3, nil, "Tank") --Неистовство бури
 
 local specWarnSquallBuffet						= mod:NewSpecialWarningDefensive(387504, nil, nil, nil, 3, 4) --Шквальный толчок
 local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, nil, 2, 4) --Неистовство бури
@@ -41,7 +41,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
 
---local timerSubmergedCD						= mod:NewCDTimer(29.9, 387585, nil, nil, nil, 6)--Phasing timer (Now Health based 50%)
+local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5)--Phasing timer (Now Health based 50%)
 
 mod.vb.GlobCount = 0
 mod.vb.tempestCount = 0
@@ -50,10 +50,10 @@ function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.GlobCount = 0
 	self.vb.tempestCount = 0
-	timerTempestsFuryCD:Start(4-delay, 1)
-	timerInfusedGlobuleCD:Start(8-delay, 1)
-	timerSquallBuffetCD:Start(16-delay)
---	timerSubmergedCD:Start(52.1-delay)--Phasing timer (Now Health based 50%)
+	timerTempestsFuryCD:Start(4-delay, 1)--
+	timerInfusedGlobuleCD:Start(7.9-delay, 1)--
+	timerSquallBuffetCD:Start(15.9-delay)--
+	timerSubmergedCD:Start(53.3-delay)--
 end
 
 function mod:SPELL_CAST_START(args)
@@ -84,9 +84,10 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 387585 and self:GetStage(1) then--Submerged
+	if spellId == 387585 and self:GetStage(1) then --Погружение
 		self:SetStage(2)
 		warnSubmerged:Show()
+		timerSubmergedCD:Stop()
 		timerSquallBuffetCD:Stop()
 		timerInfusedGlobuleCD:Stop()
 		timerTempestsFuryCD:Stop()
@@ -95,14 +96,14 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 387585 and self:GetStage(2) then--Submerged
+	if spellId == 387585 and self:GetStage(2) then --Погружение
 		self:SetStage(1)
 		self.vb.GlobCount = 0
 		self.vb.tempestCount = 0
-		warnSubmerged:Show()
-		timerTempestsFuryCD:Start(7, 1)
-		timerInfusedGlobuleCD:Start(11, 1)
-		timerSquallBuffetCD:Start(19.3)
---		timerSubmergedCD:Start(55)--NEED MORE DATA, drycoded
+		warnSubmergedEnded:Show()
+		timerTempestsFuryCD:Start(7.5, 1)--
+		timerInfusedGlobuleCD:Start(11.4, 1)--
+		timerSquallBuffetCD:Start(19.4)--
+		timerSubmergedCD:Start(58.8)--
 	end
 end
