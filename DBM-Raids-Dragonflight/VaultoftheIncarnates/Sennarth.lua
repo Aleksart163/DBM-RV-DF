@@ -60,7 +60,7 @@ local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7,
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
 local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 332313, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 3, 5) --Хладодыщащий арахнид
 local timerFreezingBreathCD						= mod:NewCDTimer(14.5, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мерзлое дыхание
-local timerPhaseCD								= mod:NewPhaseTimer(30)
+local timerPhaseCD								= mod:NewStageTimer(30)
 
 local yellChillingBlast							= mod:NewShortYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв
 local yellChillingBlastFades					= mod:NewShortFadesYell(371976, nil, nil, nil, "YELL") --Леденящий взрыв

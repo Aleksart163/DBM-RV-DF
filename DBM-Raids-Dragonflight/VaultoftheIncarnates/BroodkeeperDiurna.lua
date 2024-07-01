@@ -55,7 +55,7 @@ local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil,
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2) --Смертельное ранение
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8) --Статическое поле
 
-local timerPhaseCD								= mod:NewPhaseTimer(300)
+local timerPhaseCD								= mod:NewStageTimer(300)
 local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.staff, nil, nil, 5) --Великий посох хранительницы стаи Shared CD ability?
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1) --Ускоренная инкубация Shared CD ability?
 local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3) --Дикий огонь 21.4-28

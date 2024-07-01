@@ -46,7 +46,7 @@ local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil
 local specWarnEmptynessBetweenStars			= mod:NewSpecialWarningYou(401215, nil, nil, nil, 1, 5) --Межзвездная пустота
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(406989, nil, nil, nil, 1, 8)
 
-local timerPhaseCD							= mod:NewPhaseTimer(30)
+local timerPhaseCD							= mod:NewStageTimer(30)
 local timerEmptynessBetweenStars			= mod:NewBuffFadesTimer(15, 401215, nil, nil, nil, 3) --Межзвездная пустота
 local berserkTimer							= mod:NewBerserkTimer(600)
 
