@@ -14,9 +14,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 407207 403272 406222 403057 407790 407796 407936 407917 405436 405434 405433 404038 409313 401022",
 	"SPELL_CAST_SUCCESS 402902 401480 407917 409241 410968",
-	"SPELL_AURA_APPLIED 401998 405484 407728 407919",--407182 410966
+	"SPELL_AURA_APPLIED 401998 405484 407728 407919 407182 410966",--410966
 	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 405484 407088 407919",--407182 410966
+	"SPELL_AURA_REMOVED 405484 407088 407919 407182 410966",--410966
 	"SPELL_AURA_REMOVED_DOSE 407088",
 	"SPELL_PERIODIC_DAMAGE 409058 404277 409183",
 	"SPELL_PERIODIC_MISSED 409058 404277 409183"
@@ -37,33 +37,31 @@ mod:RegisterEventsInCombat(
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 --Stage One: The Earth Warder
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26192))
-local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2)
+local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2) --Искаженная земля
 --local warnVolcanicHeart						= mod:NewTargetCountAnnounce(410953, 2, nil, nil, nil, nil, nil, nil, true)
-local warnRushingDarkness						= mod:NewIncomingCountAnnounce(407221, 2)
-local warnRushingDarknessWallTarget				= mod:NewTargetCountAnnounce(407221, 2, nil, nil, nil, nil, nil, nil, true)
-local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180)--This is using count object instead of incoming count because weak auras are scanning for "Bombs (number")
+local warnRushingDarkness						= mod:NewCountAnnounce(407221, 2) --Стремительная тьма
+local warnRushingDarknessWallTarget				= mod:NewTargetCountAnnounce(407221, 2, nil, nil, nil, nil, nil, nil, true) --Стремительная тьма
+local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180) --Вулканическое сердце (Бомбы)
 local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4, nil, "Tank|Healer") --Гибельный удар
 
---local specWarnVolcanicHeart					= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 1, 2)
---local yellVolcanicHeart						= mod:NewShortPosYell(410953)
---local yellVolcanicHeartFades					= mod:NewIconFadesYell(410953)
-local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2)--Twisted earth spawn+Dodge for Volcanic Blast
-local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2)
-local specWarnRushingDarkness					= mod:NewSpecialWarningDodgeCount(407221, nil, nil, nil, 2, 2)
+local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2) --Искаженная земля Twisted earth spawn+Dodge for Volcanic Blast
+local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2) --Звенящий разлом (Разлом)
+local specWarnVolcanicHeart						= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 4, 4) --Вулканическое сердце
+local specWarnRushingDarkness					= mod:NewSpecialWarningMoveAway(407221, nil, nil, nil, 4, 2) --Стремительная тьма
 local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 3, 4) --Гибельный удар
 local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2) --Гибельный удар
 --local specWarnPyroBlast						= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8) --Сочащаяся лава
 
-local timerVolcanicHeartCD						= mod:NewNextCountTimer(26.2, 410953, 167180, nil, nil, 3)--ShortText "Bombs" (not precise enough as next timer, but next is used to match BW string for weak aura matching)
-local timerTwistedEarthCD						= mod:NewCDCountTimer(26.2, 402902, nil, nil, nil, 3)
-local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2)
-local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, nil, 3)
+local timerVolcanicHeartCD						= mod:NewNextCountTimer(26.2, 410953, 167180, nil, nil, 3) --Вулканическое сердце (Бомбы)
+local timerTwistedEarthCD						= mod:NewCDCountTimer(26.2, 402902, nil, nil, nil, 3) --Искаженная земля
+local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2) --Звенящий разлом (Разлом)
+local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, nil, 3) --Стремительная тьма
 local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Гибельный удар
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
-mod:AddPrivateAuraSoundOption(407182, true, 407221, 1)--Rushing Darkness
-mod:AddPrivateAuraSoundOption(410966, true, 410953, 3)--Volcanic Heart
+--mod:AddPrivateAuraSoundOption(407182, true, 407221, 1)--Rushing Darkness
+--mod:AddPrivateAuraSoundOption(410966, true, 410953, 3)--Volcanic Heart
 --mod:AddSetIconOption("SetIconOnVolcanicHeart", 410953, true, 0, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnRushingDarkness", 407221, true, 0, {6})
 --mod:AddNamePlateOption("NPAuraOnAscension", 385541)
@@ -72,18 +70,18 @@ mod:AddSetIconOption("SetIconOnRushingDarkness", 407221, true, 0, {6})
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26421))
 ----Voice From Beyond
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(26456))
-local warnCorruption							= mod:NewTargetCountAnnounce(401010, 3)--Class Call Parent
+local warnCorruption							= mod:NewTargetCountAnnounce(401010, 2) --ПорчаClass Call Parent
 local warnShadowShadowStrike					= mod:NewCastAnnounce(407796, 2, nil, nil, "Tank|Healer")
 local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many are still hidden, but also kinda acts as a "one has also become unhidden" alert
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
-local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2)
+local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
 local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
 
-local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5)--Parent
+local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5) --Порча
 local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
@@ -98,10 +96,12 @@ local timerSunderRealityCD						= mod:NewCDCountTimer(35.1, 407936, 109401, nil,
 local timerSunderReality						= mod:NewCastTimer(12, 407936, 109401, nil, nil, 5)--"Portals"
 local timerEbonDestructionCD					= mod:NewCDCountTimer(35.2, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--"Big Bang"
 
+local yellVolcanicHeart							= mod:NewShortYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
+local yellVolcanicHeartFades					= mod:NewShortFadesYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
+local yellRushingDarkness						= mod:NewShortYell(407221, nil, nil, nil, "YELL") --Стремительная тьма
+local yellRushingDarknessFades					= mod:NewShortFadesYell(407221, nil, nil, nil, "YELL") --Стремительная тьма
 local yellCalamitousStrike						= mod:NewShortYell(401998, nil, nil, nil, "YELL") --Гибельный удар
-local yellRushingDarkness						= mod:NewYell(407221, L.WallBreaker, nil, nil, "YELL")
-local yellRushingDarknessFades					= mod:NewIconFadesYell(407221, nil, nil, nil, "YELL")
-local yellCorruption							= mod:NewShortYell(401010, nil, nil, nil, "YELL")
+local yellCorruption							= mod:NewShortYell(401010, nil, nil, nil, "YELL") --Порча
 
 mod:AddInfoFrameOption(407919, true)
 
@@ -167,8 +167,8 @@ function mod:RushingDarknessTarget(targetname, uId)
 	if not targetname then return end
 	warnRushingDarknessWallTarget:Show(self.vb.RushingDarknessCount, targetname)
 	if targetname == UnitName("player") then
-		yellRushingDarkness:Yell(6, 6)
-		yellRushingDarknessFades:Countdown(5, nil, 6)
+	--	yellRushingDarkness:Yell(6, 6)
+	--	yellRushingDarknessFades:Countdown(spellId)
 	end
 	if self.Options.SetIconOnRushingDarkness then
 		self:SetIcon(targetname, 6, 5)
@@ -193,8 +193,8 @@ function mod:OnCombatStart(delay)
 	timerVolcanicHeartCD:Start(15.6-delay, 1)
 	timerCalamitousStrikeCD:Start(self:IsMythic() and 25.1 or 24.1-delay, 1)--Delayed by extra wall on mythic
 	timerEchoingFissureCD:Start(33.6-delay, 1)
-	self:EnablePrivateAuraSound(407182, "targetyou", 2)--Rushing Darkness
-	self:EnablePrivateAuraSound(410966, "runout", 2)--Volcanic Heart
+--	self:EnablePrivateAuraSound(407182, "targetyou", 2)--Rushing Darkness
+--	self:EnablePrivateAuraSound(410966, "runout", 2)--Volcanic Heart
 end
 
 function mod:OnCombatEnd()
@@ -299,7 +299,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
-	elseif spellId == 410968 then--Event is bugged, doesn't always fire
+	elseif spellId == 410968 then--Вулканическое сердце Event is bugged, doesn't always fire
 --		self.vb.volcIcon = 1
 		self.vb.volcanicCount = self.vb.volcanicCount + 1
 		warnVolcanicHeart:Show(self.vb.volcanicCount)
@@ -359,36 +359,36 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 401998 and not args:IsPlayer() then
 		specWarnCalamitousStrikeSwap:Show(args.destName)
 		specWarnCalamitousStrikeSwap:Play("tauntboss")
-	--elseif spellId == 407182 then
+	elseif spellId == 407182 then --Стремительная тьма
 	--	local icon = self.vb.rushingIcon
 	--	if self.Options.SetIconOnRushingDarkness then
 	--		self:SetIcon(args.destName, icon)
 	--	end
-	--	if args:IsPlayer() then
-	--		specWarnRushingDarkness:Show()
-	--		specWarnRushingDarkness:Play("targetyou")
-	--		yellRushingDarkness:Yell(icon, icon)
-	--		yellRushingDarknessFades:Countdown(spellId, nil, icon)
-	--	end
+		if args:IsPlayer() then
+			specWarnRushingDarkness:Show()
+			specWarnRushingDarkness:Play("targetyou")
+			yellRushingDarkness:Yell()
+			yellRushingDarknessFades:Countdown(spellId)
+		end
 	--	warnRushingDarkness:CombinedShow(0.3, self.vb.RushingDarknessCount, args.destName)
 	--	self.vb.rushingIcon = self.vb.rushingIcon + 1
-	--elseif spellId == 410966 then
+	elseif spellId == 410966 then --Вулканическая пульсация
 	--	local icon = self.vb.volcIcon
 	--	if self.Options.SetIconOnVolcanicHeart then
 	--		self:SetIcon(args.destName, icon)
 	--	end
-	--	if args:IsPlayer() then
-	--		specWarnVolcanicHeart:Show()--DBM_COMMON_L.BREAK_LOS
-	--		if self:IsMythic() then
-	--			--Raid wide, must break LOS
-	--			specWarnVolcanicHeart:Play("breaklos")
-	--		else
-	--			--5 yard range, just spread
-	--			specWarnVolcanicHeart:Play("range5")
-	--		end
-	--		yellVolcanicHeart:Yell(icon, icon)
-	--		yellVolcanicHeartFades:Countdown(spellId, nil, icon)
-	--	end
+		if args:IsPlayer() then
+			specWarnVolcanicHeart:Show()--DBM_COMMON_L.BREAK_LOS
+			if self:IsMythic() then
+				--Raid wide, must break LOS
+				specWarnVolcanicHeart:Play("breaklos")
+			else
+				--5 yard range, just spread
+				specWarnVolcanicHeart:Play("range5")
+			end
+			yellVolcanicHeart:Yell()
+			yellVolcanicHeartFades:Countdown(spellId)
+		end
 	--	warnVolcanicHeart:CombinedShow(0.3, self.vb.volcanicCount, args.destName)
 	--	self.vb.volcIcon = self.vb.volcIcon + 1
 	elseif spellId == 405484 then
@@ -431,20 +431,20 @@ function mod:SPELL_AURA_REMOVED(args)
 --		timerRushingDarknessCD:Start(27, 1)
 		timerCalamitousStrikeCD:Start(34.4, 1)
 		timerEbonDestructionCD:Start(40.2, 1)
-	--elseif spellId == 407182 then
+	elseif spellId == 407182 then --Стремительная тьма
 	--	if self.Options.SetIconOnRushingDarkness then
 	--		self:SetIcon(args.destName, 0)
 	--	end
-	--	if args:IsPlayer() then
-	--		yellRushingDarknessFades:Cancel()
-	--	end
-	--elseif spellId == 410966 then
+		if args:IsPlayer() then
+			yellRushingDarknessFades:Cancel()
+		end
+	elseif spellId == 410966 then --Вулканическая пульсация
 	--	if self.Options.SetIconOnVolcanicHeart then
 	--		self:SetIcon(args.destName, 0)
 	--	end
-	--	if args:IsPlayer() then
-	--		yellVolcanicHeartFades:Cancel()
-	--	end
+		if args:IsPlayer() then
+			yellVolcanicHeartFades:Cancel()
+		end
 	elseif spellId == 407919 and args:IsPlayer() then
 		playerReality = false
 	end
