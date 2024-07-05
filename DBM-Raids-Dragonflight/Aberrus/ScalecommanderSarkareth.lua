@@ -130,7 +130,8 @@ local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
 local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
-local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
+local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
+local timerScouringEternity						= mod:NewCastTimer(5.5, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
 local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, "Melee|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
@@ -579,7 +580,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
-	elseif spellId == 403625 then --В поисках вечности (Новая Бездны)
+	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		specWarnScouringEternity:Show(self.vb.blossomCount)
 		specWarnScouringEternity:Play("watchstep")
@@ -587,6 +588,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
 		end
+		self:SendSync("SupernovaCast")
 	elseif spellId == 403741 then --Космическое вознесение (Вознесение)
 		self.vb.addIcon = 7
 		self.vb.breathCount = self.vb.breathCount + 1
@@ -1065,5 +1067,7 @@ function mod:OnSync(msg)
 			timerVoidSlashCD:Start(21)
 			timerScouringEternityCD:Start(46.1, 1)
 		end
+	elseif msg == "SupernovaCast" then
+		timerScouringEternity:Start()
 	end
 end
