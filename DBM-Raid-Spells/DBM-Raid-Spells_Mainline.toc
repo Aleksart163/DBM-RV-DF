@@ -1,6 +1,6 @@
 ﻿## Interface: 100107
 ## X-Min-Interface: 100107
-## Version: 10.2.50
+## Version: 10.2.52
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010Raid Spells|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Мод|r|cffffe00a>|r |cffff6010Рейдовые заклинания|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010Raid-zauber|r
@@ -27,7 +27,7 @@
 ## X-DBM-Mod-Name-ptBR: Feitiços Raid
 ## X-DBM-Mod-MapID: 657, 960, 961, 959, 962, 994, 1011, 1007, 1001, 1004, 1182, 1175, 1208, 1195, 1279, 1176, 1209, 1358, 1501, 1466, 1456, 1477, 1458, 1516, 1571, 1492, 1544, 1493, 1651, 1677, 1753, 1763, 1754, 1762, 1864, 1822, 1877, 1594, 1841, 1771, 1862, 2097, 2286, 2289, 2290, 2287, 2285, 2293, 2291, 2284, 2441, 1712, 1676, 1648, 1530, 1520, 603, 2444, 2454, 2549, 2569, 2522, 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527, 2579
 ## X-DBM-Mod-Sort: 999
-## X-DBM-Mod-MinCoreRevision: 20240701070000
+## X-DBM-Mod-MinCoreRevision: 20240711070000
 
 localization.en.lua
 localization.ru.lua
