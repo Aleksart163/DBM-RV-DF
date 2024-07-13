@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2520, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240701070000")
+mod:SetRevision("20240714070000")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20240630070000)
+mod:SetHotfixNoticeRev(20240712070000)
 --mod:SetMinSyncRevision(20221215000000)
 mod.respawnTime = 30
 
@@ -679,10 +679,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame and not oblivionDisabled then
 			DBM.InfoFrame:UpdateTable(oblivionStacks, 0.2)
 		end
-	elseif spellId == 401215 then
+	elseif spellId == 401215 then --Межзвездная пустота
 		if args:IsPlayer() then
 			specWarnEmptynessBetweenStars:Show()
 			specWarnEmptynessBetweenStars:Play("teleyou")
+			specWarnVoidFracture2:Cancel()
+			specWarnVoidFracture2:CancelVoice()
 			yellVoidFractureFades:Cancel()
 			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 			if expireTime then--Buff has various durations based on difficulty, 15-25, this is just easiest
@@ -796,13 +798,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
 			yellVoidBomb:Yell()
+			yellVoidFractureFades:Countdown(spellId)
 			if Phase2 then
 				specWarnVoidFracture2:Schedule(5, BetweenStars)
 				specWarnVoidFracture2:ScheduleVoice(5, "runout")
-			end
-			if self:IsMythic() then
-				--schedule for Dimensional Puncture
-				yellVoidFractureFades:Countdown(spellId)
 			end
 		else
 			warnVoidFracture:Show(args.destName)
@@ -895,7 +894,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellVoidClawsFades:Cancel()
 		end
 		timerVoidSlash:Stop(args.destName)--Needs to show for even non tanks getting hit though
-	elseif spellId == 404218 or spellId == 410642 then
+	elseif spellId == 404218 or spellId == 410642 then --Бомба Бездны
 		if args:IsPlayer() then
 			playerVoidFracture = false
 			specWarnVoidFracture2:Cancel()
