@@ -97,6 +97,7 @@ local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, 
 
 local timerEndExistenceCast						= mod:NewCastTimer(30, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7) --Бомба Бездны
+local timerVoidBomb								= mod:NewBuffActiveTimer(15, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
 --local timerCosmicVolleyCD						= mod:NewCDTimer(4.8, 411302, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Mythic Add
@@ -133,7 +134,7 @@ local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, n
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerScouringEternity						= mod:NewCastTimer(5.5, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
-local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
+local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
