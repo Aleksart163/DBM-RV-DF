@@ -686,7 +686,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEmptynessBetweenStars:Play("teleyou")
 			specWarnVoidFracture2:Cancel()
 			specWarnVoidFracture2:CancelVoice()
-			yellVoidFractureFades:Cancel()
 			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 			if expireTime then--Buff has various durations based on difficulty, 15-25, this is just easiest
 				local remaining = expireTime-GetTime()
@@ -800,6 +799,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Play("bombyou")
 			yellVoidBomb:Yell()
 			yellVoidFractureFades:Countdown(spellId)
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			if expireTime then
+				local remaining = expireTime-GetTime()
+				timerVoidBomb:Start(remaining)
+			end
 			if Phase2 then
 				specWarnVoidFracture2:Schedule(5, BetweenStars)
 				specWarnVoidFracture2:ScheduleVoice(5, "runout")
@@ -901,6 +905,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			specWarnVoidFracture2:Cancel()
 			specWarnVoidFracture2:CancelVoice()
 			yellVoidFractureFades:Cancel()
+			timerVoidBomb:Stop()
 		end
 	elseif spellId == 404705 then
 		if self.Options.NPAuraOnRescind then
