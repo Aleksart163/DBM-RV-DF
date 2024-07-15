@@ -799,12 +799,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Play("bombyou")
 			yellVoidBomb:Yell()
 			yellVoidFractureFades:Countdown(spellId)
-			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-			if expireTime then
-				local remaining = expireTime-GetTime()
-				timerVoidBomb:Start(remaining)
-			end
 			if Phase2 then
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				if expireTime then
+					local remaining = expireTime-GetTime()
+					timerVoidBomb:Start(remaining)
+				end
 				specWarnVoidFracture2:Schedule(5, BetweenStars)
 				specWarnVoidFracture2:ScheduleVoice(5, "runout")
 			end
