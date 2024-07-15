@@ -149,7 +149,7 @@ local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YEL
 local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
 local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
-local yellVoidClawsFades						= mod:NewShortFadesYell(411241, 37859, nil, nil, "YELL") --Когти пустоты (Бомбардировка) For Void Blast (411238) effect
+local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YELL") --Когти пустоты (Бомбардировка) For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
 
