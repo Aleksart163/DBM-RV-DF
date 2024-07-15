@@ -72,11 +72,11 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(17024))
 local warnChainShot					= mod:NewSpellAnnounce(272902, 1) --Выстрел цепью
 local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3) --Пороховой выстрел
 
-local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 2) --Картечный залп
+local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 4) --Картечный залп
 local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2) --Пороховой выстрел
 
 ----Hostile
-local timerGrapeShotCD				= mod:NewNextTimer(30.2, 258381, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
+local timerGrapeShotCD				= mod:NewCDTimer(30.2, 258381, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
 ----Friendly
 local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --Выстрел цепью
 
@@ -100,18 +100,18 @@ local function scanCaptains(self, isPull, delay)
 							DBM.RangeCheck:Show(5)
 						end
 					elseif cid == 126847 then--Raoul
-						timerBarrelSmashCD:Start(5-delay, bossGUID)
+						timerBarrelSmashCD:Start(4.5-delay, bossGUID)
 						timerBlackoutBarrelCD:Start(16.9-delay, bossGUID)
 					else--Eudora
-						timerGrapeShotCD:Start(7.3-delay, bossGUID)
+						timerGrapeShotCD:Start(6.3-delay, bossGUID) --смотрится норм
 					end
 				end
 			else--Friendly
 				--Set friendly Timers
 				if isPull then--Only do on pull, if recovery, these will be synced when vb table sent
 					if cid == 126845 then--Jolly
-						if not self:IsMythicPlus() then--On M+ he uses Trade Wind's Vigor 1 second into pull
-							timerLuckySevensCD:Start(9.8-delay, bossGUID)
+						if self:IsMythic() then--On M+ he uses Trade Wind's Vigor 1 second into pull
+							timerTradeWindsVigorCD:Start(8.7-delay, bossGUID)
 						end
 					elseif cid == 126847 then--Raoul
 						timerTappedKegCD:Start(12.2-delay, bossGUID)
@@ -141,14 +141,23 @@ function mod:PowderShotTarget(targetname)
 	end
 end
 
+local function startProshlyapationOfMurchal(self)
+	specWarnGrapeShot:Show()
+	specWarnGrapeShot:Play("stilldanger")
+	timerGrapeShotCD:Start(30.4)
+	self:Schedule(30.4, startProshlyapationOfMurchal, self)
+end
+
 function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerTendingBarCD:Start(8-delay)
+		self:Schedule(7.3, startProshlyapationOfMurchal, self)
 	end
 	self:Schedule(1, scanCaptains, self, true, delay)--1 second delay to give IEEU time to populate boss unitIDs
 end
 
 function mod:OnCombatEnd()
+	self:Unschedule(startProshlyapationOfMurchal)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -201,6 +210,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+--[[
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 258381 then
@@ -208,7 +218,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnGrapeShot:Play("stilldanger")
 		timerGrapeShotCD:Start(nil, args.sourceGUID)
 	end
-end
+end]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -246,7 +256,7 @@ function mod:UNIT_DIED(args)
 		timerBlackoutBarrelCD:Stop(args.destGUID)
 		timerTappedKegCD:Stop(args.destGUID)
 	elseif cid == 126848 then--Captain Eudora
-		timerGrapeShotCD:Stop(args.destGUID)
+		timerGrapeShotCD:Stop()
 		timerChainShotCD:Stop(args.destGUID)
 	elseif cid == 133219 then--Rummy Mancomb (You bastard, you killed Rummy!)
 		timerTendingBarCD:Stop()
