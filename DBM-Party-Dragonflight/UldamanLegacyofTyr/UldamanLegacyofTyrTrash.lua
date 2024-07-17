@@ -22,56 +22,56 @@ mod:RegisterEvents(
  or (ability.id = 377738 or ability.id = 369465 or ability.id = 369328) and type = "cast"
 --]]
 local warnBlessingofTyr						= mod:NewCastAnnounce(382578, 4, nil, nil, "Tank|Healer")
-local warnChainLightning					= mod:NewCastAnnounce(369675, 3)
+local warnChainLightning					= mod:NewCastAnnounce(369675, 3) --Цепная молния
 local warnChomp								= mod:NewStackAnnounce(369828, 2, nil, "Tank|Healer")
-local warnAncientPower						= mod:NewStackAnnounce(377738, 2, nil, "Tank|Healer")
+local warnAncientPower						= mod:NewStackAnnounce(377738, 2, nil, "Tank|Healer") --Древнее могущество
 local warnVenomousFangs						= mod:NewStackAnnounce(369419, 2, nil, "Tank|Healer|RemovePoison")
 local warnRecklessRage						= mod:NewCastAnnounce(369806, 3, nil, nil, "Tank|Healer|RemoveEnrage")
-local warnCleave							= mod:NewCastAnnounce(369409, 3, nil, nil, "Tank|Healer")
-local warnJaggedBite						= mod:NewCastAnnounce(377732, 3, nil, nil, "Tank|Healer")
-local warnHailofStone						= mod:NewCastAnnounce(369465, 4, nil, nil, nil, nil, nil, 3)
+local warnCleave							= mod:NewCastAnnounce(369409, 3, nil, nil, "Tank|Healer") --Рассекающий удар
+local warnJaggedBite						= mod:NewCastAnnounce(377732, 3, nil, nil, "Tank|Healer") --Зазубренный укус
+local warnHailofStone						= mod:NewCastAnnounce(369465, 4, nil, nil, nil, nil, nil, 3) --Град камней
 local warnEarthenWard						= mod:NewCastAnnounce(369400, 3)
-local warnPounce							= mod:NewCastAnnounce(369423, 3)
+local warnPounce							= mod:NewCastAnnounce(369423, 3) --Наскок
 local warnSonicBurst						= mod:NewCastAnnounce(369411, 4)
-local warnThunderousClap					= mod:NewCastAnnounce(381593, 3)
-local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer")
-local warnHasten							= mod:NewCastAnnounce(377500, 3)
+local warnThunderousClap					= mod:NewCastAnnounce(381593, 3) --Грохочущий удар
+local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer") --Удар бастиона
+local warnHasten							= mod:NewCastAnnounce(377500, 3) --Ускорение
 
-local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, nil, nil, nil, 4, 2)
-local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2)
-local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2)
+local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, nil, nil, nil, 4, 2) --Изуверский удар
+local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2) --Раскалывающий удар
+local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2) --Землетрясение
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
 local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 1, 2)
 local specWarnTrappedinStone				= mod:NewSpecialWarningDispel(369366, "RemoveCurse", nil, nil, 1, 2)
 local specWarnDiseasedbite					= mod:NewSpecialWarningDispel(369818, "RemoveDisease", nil, nil, 1, 2)
-local specWarnSpikedCarapaceDispel			= mod:NewSpecialWarningDispel(369823, "MagicDispeller", nil, nil, 1, 2)
+local specWarnSpikedCarapaceDispel			= mod:NewSpecialWarningDispel(369823, "MagicDispeller", nil, nil, 1, 2) --Шипастый панцирь
 local specWarnEarthenWard					= mod:NewSpecialWarningDispel(369400, "MagicDispeller", nil, nil, 1, 2)
-local specWarnHastenDispel					= mod:NewSpecialWarningDispel(377500, "MagicDispeller", nil, nil, 1, 2)
-local specWarnChainLightning				= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2)
-local specWarnStoneSpike					= mod:NewSpecialWarningInterrupt(369674, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSpikedCarapace				= mod:NewSpecialWarningInterrupt(369823, "HasInterrupt", nil, nil, 1, 2)
-local specWarnStoneBolt						= mod:NewSpecialWarningInterrupt(369399, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHastenDispel					= mod:NewSpecialWarningDispel(377500, "MagicDispeller", nil, nil, 1, 2) --Ускорение
+local specWarnChainLightning				= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
+local specWarnStoneSpike					= mod:NewSpecialWarningInterrupt(369674, "HasInterrupt", nil, nil, 1, 2) --Каменный шип
+local specWarnSpikedCarapace				= mod:NewSpecialWarningInterrupt(369823, "HasInterrupt", nil, nil, 1, 2) --Шипастый панцирь
+local specWarnStoneBolt						= mod:NewSpecialWarningInterrupt(369399, "HasInterrupt", nil, nil, 1, 2) --Каменная стрела
 local specWarnCurseofStoneKick				= mod:NewSpecialWarningInterrupt(369365, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSonicBurst					= mod:NewSpecialWarningInterrupt(369411, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHasten						= mod:NewSpecialWarningInterrupt(377500, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHasten						= mod:NewSpecialWarningInterrupt(377500, "HasInterrupt", nil, nil, 1, 2) --Ускорение
 
-local timerBrutalSlamCD						= mod:NewCDNPTimer(20.1, 369811, nil, nil, nil, 3)
-local timerSpikedCarapaceCD					= mod:NewCDNPTimer(18.2, 369823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerStoneSpikeCD						= mod:NewCDNPTimer(6, 369674, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Short CD, may interfere with Chain LIghting CD timer, opt in
-local timerChainLightningCD					= mod:NewCDNPTimer(25.5, 369675, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerJaggedBiteCD						= mod:NewCDNPTimer(11.8, 377732, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerAncientPowerCD					= mod:NewCDNPTimer(6, 377738, nil, nil, nil, 5)
-local timerHailofStoneCD					= mod:NewCDNPTimer(21.8, 369465, nil, nil, nil, 5)
-local timerStoneBoltCD						= mod:NewCDNPTimer(7.2, 369399, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--7-11, off by default to giev prio to Hail of stone
-local timerEarthquakeCD						= mod:NewCDNPTimer(25.4, 369328, nil, nil, nil, 2)
-local timerFissuringSlamCD					= mod:NewCDNPTimer(9.7, 369335, nil, nil, nil, 2)--9.7-15
-local timerCleaveCD							= mod:NewCDNPTimer(15, 369409, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3)
-local timerThunderousClapCD					= mod:NewCDNPTimer(19, 381593, nil, nil, nil, 2)
-local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerHastenCD							= mod:NewCDNPTimer(23, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerBrutalSlamCD						= mod:NewCDNPTimer(20.1, 369811, nil, nil, nil, 3) --Изуверский удар
+local timerSpikedCarapaceCD					= mod:NewCDNPTimer(18.2, 369823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Шипастый панцирь
+local timerStoneSpikeCD						= mod:NewCDNPTimer(6, 369674, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменный шип Short CD, may interfere with Chain LIghting CD timer, opt in
+local timerChainLightningCD					= mod:NewCDNPTimer(25.5, 369675, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Цепная молния
+local timerJaggedBiteCD						= mod:NewCDNPTimer(11.8, 377732, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Зазубренный укус
+local timerAncientPowerCD					= mod:NewCDNPTimer(6, 377738, nil, nil, nil, 5) --Древнее могущество
+local timerHailofStoneCD					= mod:NewCDNPTimer(21.8, 369465, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Град камней
+local timerStoneBoltCD						= mod:NewCDNPTimer(7.2, 369399, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменная стрела 7-11, off by default to giev prio to Hail of stone
+local timerEarthquakeCD						= mod:NewCDNPTimer(23.6, 369328, nil, nil, nil, 2) --Землетрясение
+local timerFissuringSlamCD					= mod:NewCDNPTimer(9.7, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
+local timerCleaveCD							= mod:NewCDNPTimer(15, 369409, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассекающий удар
+local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3) --Наскок
+local timerThunderousClapCD					= mod:NewCDNPTimer(19, 381593, nil, nil, nil, 2) --Грохочущий удар
+local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар бастиона
+local timerHastenCD							= mod:NewCDNPTimer(21.1, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ускорение
 
-local yellTrappedInStone					= mod:NewYell(369366, nil, nil, nil, "YELL")
+local yellTrappedInStone					= mod:NewShortYell(369366, nil, nil, nil, "YELL") --В каменном плену
 
 --local playerName = UnitName("player")
 
@@ -232,13 +232,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 369823 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnSpikedCarapaceDispel:Show(args.destName)
 		specWarnSpikedCarapaceDispel:Play("helpdispel")
-	elseif spellId == 369818 and self:CheckDispelFilter("disease") and args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
-		specWarnDiseasedbite:Show(args.destName)
-		specWarnDiseasedbite:Play("helpdispel")
+	elseif spellId == 369818 and args:IsDestTypePlayer() then
+		if self:IsSpellCaster() and self:AntiSpam(3, 3) then
+			specWarnDiseasedbite:Show(args.destName)
+			specWarnDiseasedbite:Play("helpdispel")
+		end
 	elseif spellId == 369400 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnEarthenWard:Show(args.destName)
 		specWarnEarthenWard:Play("helpdispel")
-	elseif spellId == 369366 then
+	elseif spellId == 369366 and args:IsDestTypePlayer() then
 		if self:CheckDispelFilter("curse") and self:AntiSpam(3, 3) then
 			specWarnTrappedinStone:Show(args.destName)
 			specWarnTrappedinStone:Play("helpdispel")
