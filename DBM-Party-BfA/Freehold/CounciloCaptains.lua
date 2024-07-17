@@ -258,6 +258,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 126848 then--Captain Eudora
 		timerGrapeShotCD:Stop()
 		timerChainShotCD:Stop(args.destGUID)
+		self:Unschedule(startProshlyapationOfMurchal)
 	elseif cid == 133219 then--Rummy Mancomb (You bastard, you killed Rummy!)
 		timerTendingBarCD:Stop()
 	end
