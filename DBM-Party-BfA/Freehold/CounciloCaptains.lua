@@ -60,6 +60,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(17023))
 local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1) --Бочонок с краником
 
 local specWarnBarrelSmash			= mod:NewSpecialWarningRun(256589, "Melee", nil, nil, 4, 2) --Удар бочкой
+local specWarnBarrelSmash2			= mod:NewSpecialWarningDodge(256589, nil, nil, nil, 2, 2) --Удар бочкой
 local specWarnBlackoutBarrel		= mod:NewSpecialWarningSwitch(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
 
 ----Hostile
@@ -174,8 +175,13 @@ function mod:SPELL_CAST_START(args)
 		specWarnBlackoutBarrel:Play("changetarget")
 		timerBlackoutBarrelCD:Start(nil, args.sourceGUID)
 	elseif spellId == 256589 then
-		specWarnBarrelSmash:Show()
-		specWarnBarrelSmash:Play("justrun")
+		if self:IsMelee() then
+			specWarnBarrelSmash:Show()
+			specWarnBarrelSmash:Play("justrun")
+		else
+			specWarnBarrelSmash2:Show()
+			specWarnBarrelSmash2:Play("watchstep")
+		end
 		timerBarrelSmashCD:Start(nil, args.sourceGUID)
 	elseif spellId == 257117 then
 		warnLuckySevens:Show()

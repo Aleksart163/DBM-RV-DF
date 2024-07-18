@@ -11,6 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 257747 258777 257272 257908",
 	"SPELL_AURA_APPLIED 257274 257476 258323 257739 257908 257397 257775 274507",
 	"SPELL_AURA_APPLIED_DOSE 274555",
+	"SPELL_AURA_REMOVED 257739",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_START_UNFILTERED",
 	"ENCOUNTER_START"
@@ -37,31 +38,31 @@ local warnFrostBlast					= mod:NewCastAnnounce(257784, 3)
 local warnRicochetingThrow				= mod:NewTargetNoFilterAnnounce(272402, 2) --Рикошетящий бросок
 local warnSabrousBite					= mod:NewStackAnnounce(274555, 2, nil, "Tank|Healer")
 
-local specWarnOiledBladeSelf			= mod:NewSpecialWarningDefensive(257908, nil, nil, nil, 1, 2)
+local specWarnOiledBladeSelf			= mod:NewSpecialWarningDefensive(257908, nil, nil, nil, 3, 2) --Смазанный нефтью клинок
 local specWarnVileBombardment			= mod:NewSpecialWarningDodge(257272, nil, nil, nil, 2, 2) --Гнусная бомбардировка
 local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, nil, 2, 2) --Крепкая оплеуха
-local specWarnAzeriteGrenade			= mod:NewSpecialWarningDodge(258672, nil, nil, nil, 2, 2)
-local specWarnDuelistDash				= mod:NewSpecialWarningDodge(274400, nil, nil, nil, 2, 2)
+local specWarnAzeriteGrenade			= mod:NewSpecialWarningDodge(258672, nil, nil, nil, 2, 2) --Азеритовая граната
+local specWarnDuelistDash				= mod:NewSpecialWarningDodge(274400, nil, nil, nil, 2, 2) --Рывок дуэлянта
 local specWarnSeaSpout					= mod:NewSpecialWarningDodge(258777, nil, nil, nil, 2, 2) --Струя морской воды
 local specWarnRatTrap					= mod:NewSpecialWarningDodge(274383, nil, nil, nil, 2, 2) --Мышеловки
-local specWarnBoulderThrow				= mod:NewSpecialWarningDodge(258181, nil, nil, nil, 2, 2)
-local specWarnBladeBarrage				= mod:NewSpecialWarningDodge(257870, nil, nil, nil, 2, 2)
-local specWarnShatteringToss			= mod:NewSpecialWarningSpell(274860, "Tank", nil, nil, 1, 12)
-local specWarnGoinBan					= mod:NewSpecialWarningRun(257756, "Melee", nil, nil, 4, 2)
-local specWarnGroundShatter				= mod:NewSpecialWarningRun(258199, "Melee", nil, nil, 4, 2)
-local specWarnBlindRagePlayer			= mod:NewSpecialWarningRun(257739, nil, nil, nil, 4, 2)
-local specWarnSlipperySudsYou			= mod:NewSpecialWarningYou(274507, nil, nil, nil, 1, 2)
+local specWarnBoulderThrow				= mod:NewSpecialWarningDodge(258181, nil, nil, nil, 2, 2) --Бросок валуна
+local specWarnBladeBarrage				= mod:NewSpecialWarningDodge(257870, nil, nil, nil, 2, 2) --Завеса клинков
+local specWarnShatteringToss			= mod:NewSpecialWarningSpell(274860, "Tank", nil, nil, 1, 12) --Раскалывающий бросок
+local specWarnGoinBan					= mod:NewSpecialWarningRun(257756, "Melee", nil, nil, 4, 2) --Помешательство
+local specWarnGroundShatter				= mod:NewSpecialWarningRun(258199, "Melee", nil, nil, 4, 2) --Разбивание земли
+local specWarnBlindRagePlayer			= mod:NewSpecialWarningRun(257739, nil, 96306, nil, 4, 2) --Слепая ярость (Преследование)
+local specWarnSlipperySudsYou			= mod:NewSpecialWarningYou(274507, nil, nil, nil, 1, 2) --Скользкая пена
 local specWarnHealingBalm				= mod:NewSpecialWarningInterrupt(257397, "HasInterrupt", nil, nil, 1, 2)
 local specWarnPainfulMotivation			= mod:NewSpecialWarningInterrupt(257899, nil, nil, nil, 1, 2)
 local specWarnThunderingSquall			= mod:NewSpecialWarningInterrupt(257736, "HasInterrupt", nil, nil, 1, 2)
 --local specWarnSeaSpoutKick				= mod:NewSpecialWarningInterrupt(258777, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFrostBlast				= mod:NewSpecialWarningInterrupt(257784, "HasInterrupt", nil, nil, 1, 2)--Might prune or disable by default if it conflicts with higher priority interrupts in area
-local specWarnSlipperySuds				= mod:NewSpecialWarningInterrupt(274507, "HasInterrupt", nil, nil, 1, 2)
+local specWarnSlipperySuds				= mod:NewSpecialWarningInterrupt(274507, "HasInterrupt", nil, nil, 1, 2) --Скользкая пена
 local specWarnBestialWrath				= mod:NewSpecialWarningDispel(257476, "RemoveEnrage", nil, 2, 1, 2)
-local specWarnBlindRage					= mod:NewSpecialWarningDispel(257739, "RemoveEnrage", nil, 2, 1, 2)
+local specWarnBlindRage					= mod:NewSpecialWarningDispel(257739, "RemoveEnrage", nil, 2, 1, 2) --Слепая ярость
 local specWarnInfectedWound				= mod:NewSpecialWarningDispel(258323, "RemoveDisease", nil, nil, 1, 2)
 local specWarnPlagueStep				= mod:NewSpecialWarningDispel(257775, "RemoveDisease", nil, nil, 1, 2)
-local specWarnOiledBlade				= mod:NewSpecialWarningDispel(257908, "RemoveMagic", nil, 2, 1, 2)
+local specWarnOiledBlade				= mod:NewSpecialWarningDispel(257908, "RemoveMagic", nil, 2, 3, 2) --Смазанный нефтью клинок
 local specWarnHealingBalmDispel			= mod:NewSpecialWarningDispel(257397, "MagicDispeller", nil, nil, 1, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
@@ -73,17 +74,19 @@ local timerRatTrapsCD					= mod:NewCDNPTimer(20, 274383, nil, nil, nil, 3) --М�
 local timerRicochetingThrowCD			= mod:NewCDNPTimer(8.1, 272402, nil, nil, nil, 3) --Рикошетящий бросок
 local timerEarthShakerCD				= mod:NewCDNPTimer(8, 257747, nil, nil, nil, 3) --Землевержец Instance cast, not really worth announcing every 8 sec, but def worth having a timer for
 local timerGoinBanCD					= mod:NewCDNPTimer(16.5, 257756, nil, nil, nil, 2) --Помешательство
-local timerSlipperySudsCD				= mod:NewCDNPTimer(20.6, 274507, nil, nil, nil, 3)
-local timerGroundShatterCD				= mod:NewCDNPTimer(19.3, 258199, nil, nil, nil, 3)
-local timerBoulderThrowCD				= mod:NewCDNPTimer(19.3, 258181, nil, nil, nil, 3)
+local timerSlipperySudsCD				= mod:NewCDNPTimer(20.6, 274507, nil, nil, nil, 3) --Скользкая пена
+local timerGroundShatterCD				= mod:NewCDNPTimer(19.3, 258199, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Разбивание земли
+local timerBoulderThrowCD				= mod:NewCDNPTimer(19.3, 258181, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Бросок валуна
 local timerPainfulMotivationCD			= mod:NewCDNPTimer(18.1, 257899, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBladeBarrageCD				= mod:NewCDNPTimer(18.2, 257870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBladeBarrageCD				= mod:NewCDNPTimer(18.2, 257870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Завеса клинков
 local timerThunderingSquallCD			= mod:NewCDNPTimer(27.8, 257736, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
-local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
-local yellDuelistDash					= mod:NewYell(274400, nil, nil, nil, "YELL")
+local yellBlindRagePlayer				= mod:NewShortYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
+local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
+local yellRicochetingThrow				= mod:NewShortYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
+local yellDuelistDash					= mod:NewShortYell(274400, nil, nil, nil, "YELL") --Рывок дуэлянта
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 extremely unique but unthrottled (except with itself)
 
@@ -245,7 +248,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 257476 and self:AntiSpam(4, 3) then
 		specWarnBestialWrath:Show(args.destName)
 		specWarnBestialWrath:Play("enrage")
-	elseif spellId == 257739 and self:AntiSpam(4, 3) then
+	elseif spellId == 257739 and self:AntiSpam(4, 3) then --Слепая ярость (Преследование)
 		--If it can be dispelled by affected player, no reason to tell them to run away, dispel is priority
 		if self.Options.SpecWarn257739dispel then
 			specWarnBlindRage:Show(args.sourceName)
@@ -253,10 +256,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif args:IsPlayer() and not self:IsTank() then
 			specWarnBlindRagePlayer:Show()
 			specWarnBlindRagePlayer:Play("justrun")
+			yellBlindRagePlayer:Yell()
+			yellBlindRagePlayer2:Countdown(spellId)
 		end
-	elseif spellId == 257908 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
-		specWarnOiledBlade:Show(args.destName)
-		specWarnOiledBlade:Play("helpdispel")
+	elseif spellId == 257908 and args:IsDestTypePlayer() then
+		if self:IsSpellCaster() and self:AntiSpam(3, 3) then
+			specWarnOiledBlade:Show(args.destName)
+			specWarnOiledBlade:Play("helpdispel")
+		end
 	elseif spellId == 258323 and args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, 3) then
 		specWarnInfectedWound:Show(args.destName)
 		specWarnInfectedWound:Play("helpdispel")
@@ -277,6 +284,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 257739 then --Слепая ярость (Преследование)
+		if args:IsPlayer() then
+			yellBlindRagePlayer2:Cancel()
+		end
+	end
+end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

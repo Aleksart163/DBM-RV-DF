@@ -42,11 +42,12 @@ local warnWindblast								= mod:NewSpellAnnounce(87923, 2, nil, "RemoveMagic|Ta
 local warnPressurizedBlast						= mod:NewCastAnnounce(410999, 4) --Порыв сжатого воздуха
 local warnBombCyclone							= mod:NewSpellAnnounce(411005, 3) --Взрывной циклон
 local warnWindFlurry							= mod:NewSpellAnnounce(410998, 3, nil, "Tank|Healer") --Шквал ветра
-local warnLethalCurrent							= mod:NewCastAnnounce(411001, 4)
+local warnLethalCurrent							= mod:NewTargetNoFilterAnnounce(411001, 4) --Смертоносный поток
 local warnOverloadGroundingField				= mod:NewCastAnnounce(413385, 4) --Перегрузка заземляющего поля
-local warnGreaterHeal							= mod:NewCastAnnounce(411001, 4) --Великое исцеление
+local warnGreaterHeal							= mod:NewCastAnnounce(87779, 4) --Великое исцеление
 local warnLightningLash							= mod:NewTargetNoFilterAnnounce(87762, 4) --Искрящаяся плеть
 
+local specWarnLethalCurrent						= mod:NewSpecialWarningYou(411001, nil, nil, nil, 3, 4) --Смертоносный поток
 local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, nil, 2, 2) --Турбулентность
 local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, nil, nil, 2, 2)
 local specWarnStormSurge						= mod:NewSpecialWarningRun(88055, nil, nil, nil, 4, 2) --Область штормаMob is immune to displacements and interrupts, this is an 8 yard range run out
@@ -74,6 +75,7 @@ local timerLightningLashCD						= mod:NewCDNPTimer(19, 87762, nil, nil, nil, 3, 
 local timerOverloadGroundingFieldCD				= mod:NewCDNPTimer(20.5, 413385, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перегрузка заземляющего поля
 local timerGreaterHealCD						= mod:NewCDNPTimer(14.1, 87779, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Великое исцеление Post retial May 30th 2023 hotfix, in cataclysm this will still be like 3 second CD
 
+local yellLethalCurrent							= mod:NewShortYell(411001, nil, nil, nil, "YELL") --Смертоносный поток
 local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
 local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --Смерч
 
@@ -83,6 +85,18 @@ local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --См
 
 local groundingName = DBM:GetSpellName(87726)
 local playerGrounded = false
+
+function mod:LethalCurrentTarget(targetname, uId)
+	if not targetname then return end
+	if self:AntiSpam(2, targetname) then
+		warnLethalCurrent:CombinedShow(0.5, targetname)
+		if targetname == UnitName("player") then
+			specWarnLethalCurrent:Show()
+			specWarnLethalCurrent:Play("justrun")
+			yellLethalCurrent:Yell()
+		end
+	end
+end
 
 function mod:LitTarget(targetname)
 	if not targetname then return end
@@ -152,8 +166,8 @@ function mod:SPELL_CAST_START(args)
 			specWarnTurbulence:Play("aesoon")
 		end
 --		specWarnTurbulence:ScheduleVoice("pushbackincoming")
-	elseif spellId == 411002 and self:AntiSpam(3, 6) then
-		warnLethalCurrent:Show()
+	elseif spellId == 411001 then --Смертоносный поток
+		self:BossTargetScanner(args.sourceGUID, "LethalCurrentTarget", 0.1, 2)
 	elseif spellId == 413385 then
 		timerOverloadGroundingFieldCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 1) then
