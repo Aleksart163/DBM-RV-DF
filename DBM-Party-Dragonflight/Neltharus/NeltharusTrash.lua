@@ -26,63 +26,64 @@ mod:RegisterEvents(
  or ability.id = 383654
 --]]
 local warnBlazingSlash						= mod:NewCastAnnounce(397011, 3, nil, nil, "Tank|Healer")
-local warnBrutalStrike						= mod:NewCastAnnounce(378847, 3, nil, nil, "Tank|Healer")
+local warnBrutalStrike						= mod:NewCastAnnounce(378847, 3, nil, nil, "Tank|Healer") --Жестокий удар
 local warnReverberatingSlam					= mod:NewCastAnnounce(372971, 3, nil, nil, "Tank|Healer")
 local warnMoltencore						= mod:NewCastAnnounce(378282, 4)
-local warnBurningRoar						= mod:NewCastAnnounce(395427, 4)
-local warnMoteofCombustion					= mod:NewCastAnnounce(384161, 4)
-local warnMendingClay						= mod:NewCastAnnounce(372223, 3)
-local warnForgestomp						= mod:NewCastAnnounce(384623, 3)
+local warnBurningRoar						= mod:NewCastAnnounce(395427, 4) --Пылающий рев
+local warnMoteofCombustion					= mod:NewCastAnnounce(384161, 4) --Частица возгорания
+local warnMendingClay						= mod:NewCastAnnounce(372223, 3) --Исцеляющая глина
+local warnForgestomp						= mod:NewCastAnnounce(384623, 3) --Топот кузнеца
 local warnBoldAmbush						= mod:NewTargetNoFilterAnnounce(372566, 3)
-local warnBindingSpear						= mod:NewTargetNoFilterAnnounce(372561, 3)
+local warnBindingSpear						= mod:NewTargetNoFilterAnnounce(372561, 3) --Приковывающее копье
 local warnMoltenBarrier						= mod:NewTargetNoFilterAnnounce(382791, 4)
 local warnBurningChain						= mod:NewTargetNoFilterAnnounce(374451, 1)
 
-local specWarnTempest						= mod:NewSpecialWarningSpell(381663, nil, nil, nil, 2, 13)--pushbackincoming
-local specWarnVolcanicGuard					= mod:NewSpecialWarningDodge(382708, nil, nil, nil, 1, 2)
-local specWarnEruptiveCrush					= mod:NewSpecialWarningDodge(376186, nil, nil, nil, 2, 2)
-local specWarnMagmaFist						= mod:NewSpecialWarningDodge(372311, nil, nil, nil, 2, 2)
-local specWarnExplosiveConcoction			= mod:NewSpecialWarningDodge(378827, nil, nil, nil, 2, 2)
-local specWarnScorchingBreath				= mod:NewSpecialWarningDodge(372201, nil, nil, nil, 2, 2)
-local specWarnThrowLava						= mod:NewSpecialWarningDodge(379406, nil, nil, nil, 2, 2)
-local specWarnPierceMarrow					= mod:NewSpecialWarningDodge(372262, nil, nil, nil, 2, 2)
-local specWarnBindingSpear					= mod:NewSpecialWarningDodge(372561, nil, nil, nil, 2, 2)
-local specWarnConflagrantBattery			= mod:NewSpecialWarningDodge(372296, nil, nil, nil, 2, 2)
-local specWarnScorchingFusillade			= mod:NewSpecialWarningMoveAway(372543, nil, nil, nil, 1, 2)
-local specWarnMoteofCombustionYou			= mod:NewSpecialWarningYou(384161, nil, nil, nil, 1, 2)
+local specWarnTempest						= mod:NewSpecialWarningSpell(381663, nil, nil, nil, 2, 13) --Раскаленная буря
+local specWarnVolcanicGuard					= mod:NewSpecialWarningDodge(382708, nil, nil, nil, 1, 2) --Вулканическая защита
+local specWarnEruptiveCrush					= mod:NewSpecialWarningDodge(376186, nil, nil, nil, 2, 2) --Разбивающее сокрушение
+local specWarnMagmaFist						= mod:NewSpecialWarningDodge(372311, nil, nil, nil, 2, 2) --Магмовый кулак
+local specWarnExplosiveConcoction			= mod:NewSpecialWarningDodge(378827, nil, nil, nil, 2, 2) --Взрывчатая смесь
+local specWarnScorchingBreath				= mod:NewSpecialWarningDodge(372201, nil, nil, nil, 2, 2) --Обжигающее дыхание
+local specWarnThrowLava						= mod:NewSpecialWarningDodge(379406, nil, nil, nil, 2, 2) --Бросок лавы
+local specWarnPierceMarrow					= mod:NewSpecialWarningDodge(372262, nil, nil, nil, 2, 2) --Пронзание кости
+local specWarnBindingSpear					= mod:NewSpecialWarningDodge(372561, nil, nil, nil, 2, 2) --Приковывающее копье
+local specWarnConflagrantBattery			= mod:NewSpecialWarningDodge(372296, nil, nil, nil, 2, 2) --Огненная батарея
+local specWarnScorchingFusillade			= mod:NewSpecialWarningMoveAway(372543, nil, nil, nil, 4, 2) --Обжигающий обстрел
+local specWarnMoteofCombustionYou			= mod:NewSpecialWarningYou(384161, nil, nil, nil, 1, 2) --Частица возгорания
+local specWarnMoteofCombustion2				= mod:NewSpecialWarningDispel(384161, "RemoveMagic", nil, nil, 3, 2)
 local specWarnBoldAmbush					= mod:NewSpecialWarningYou(372566, nil, nil, nil, 1, 2)
 local specWarnImbuedMagma					= mod:NewSpecialWarningDispel(372461, "RemoveMagic", nil, nil, 1, 2)
 local specWarnFiredUp						= mod:NewSpecialWarningDispel(371875, "RemoveEnrage", nil, nil, 2, 2)
-local specWarnMoltenCore					= mod:NewSpecialWarningInterrupt(378282, "HasInterrupt", nil, nil, 1, 2)
+local specWarnMoltenCore					= mod:NewSpecialWarningInterrupt(378282, "HasInterrupt", nil, nil, 1, 2) --Огненные Недра
 local specWarnEmberReach					= mod:NewSpecialWarningInterrupt(372615, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBurningRoar					= mod:NewSpecialWarningInterrupt(395427, "HasInterrupt", nil, nil, 1, 2)
-local specWarnMoteofCombustion				= mod:NewSpecialWarningInterrupt(384161, "HasInterrupt", nil, nil, 1, 2)
-local specWarnMendingClay					= mod:NewSpecialWarningInterrupt(372223, "HasInterrupt", nil, nil, 1, 2)
+local specWarnBurningRoar					= mod:NewSpecialWarningInterrupt(395427, "HasInterrupt", nil, nil, 1, 2) --Пылающий рев
+local specWarnMoteofCombustion				= mod:NewSpecialWarningInterrupt(384161, "HasInterrupt", nil, nil, 1, 2) --Частица возгорания
+local specWarnMendingClay					= mod:NewSpecialWarningInterrupt(372223, "HasInterrupt", nil, nil, 1, 2) --Исцеляющая глина
 local specWarnMoltenArmy					= mod:NewSpecialWarningInterrupt(383651, "HasInterrupt", nil, nil, 1, 2)
 
-local timerMagmaFistCD						= mod:NewCDNPTimer(25.4, 372311, nil, nil, nil, 3)
-local timerBrutalStrikeCD					= mod:NewCDNPTimer(15.7, 378847, nil, "Tank|Healer", nil, 3)
-local timerVolcanicGuardCD					= mod:NewCDNPTimer(25.4, 382708, nil, nil, nil, 3)
-local timerExplosiveConcoctionCD			= mod:NewCDNPTimer(18.2, 378827, nil, nil, nil, 3)
-local timerBindingSpearCD					= mod:NewCDNPTimer(25.4, 372561, nil, nil, nil, 3)
-local timerMendingClayCD					= mod:NewCDNPTimer(25.4, 372223, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBurningRoarCD					= mod:NewCDNPTimer(20.5, 395427, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerMoltenCoreCD						= mod:NewCDNPTimer(8.1, 378282, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerEruptiveCrushCD					= mod:NewCDNPTimer(15.7, 376186, nil, nil, nil, 3)
-local timerScorchingBreathCD				= mod:NewCDNPTimer(16.1, 372201, nil, nil, nil, 3)
-local timerMoteofCombustionCD				= mod:NewCDNPTimer(18.2, 384161, nil, nil, nil, 3)
-local timerThrowLavaCD						= mod:NewCDNPTimer(12.1, 379406, nil, nil, nil, 3)
-local timerPierceMarrowCD					= mod:NewCDNPTimer(10.9, 372262, nil, nil, nil, 3)
-local timerScorchingFusilladeCD				= mod:NewCDNPTimer(23, 372543, nil, nil, nil, 3)
-local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, nil, nil, nil, 3)
+local timerMagmaFistCD						= mod:NewCDNPTimer(24.6, 372311, nil, nil, nil, 3) --Магмовый кулак
+local timerBrutalStrikeCD					= mod:NewCDNPTimer(15.7, 378847, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Жестокий удар
+local timerVolcanicGuardCD					= mod:NewCDNPTimer(25.4, 382708, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вулканическая защита
+local timerExplosiveConcoctionCD			= mod:NewCDNPTimer(18.2, 378827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывчатая смесь
+local timerBindingSpearCD					= mod:NewCDNPTimer(24.8, 372561, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Приковывающее копье
+local timerMendingClayCD					= mod:NewCDNPTimer(24.6, 372223, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Исцеляющая глина
+local timerBurningRoarCD					= mod:NewCDNPTimer(20.5, 395427, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пылающий рев
+local timerMoltenCoreCD						= mod:NewCDNPTimer(8.1, 378282, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненные Недра
+local timerEruptiveCrushCD					= mod:NewCDNPTimer(15.7, 376186, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Разбивающее сокрушение
+local timerScorchingBreathCD				= mod:NewCDNPTimer(16.1, 372201, nil, nil, nil, 3) --Обжигающее дыхание
+local timerMoteofCombustionCD				= mod:NewCDNPTimer(16.7, 384161, nil, nil, nil, 3) --Частица возгорания
+local timerThrowLavaCD						= mod:NewCDNPTimer(11.3, 379406, nil, nil, nil, 3) --Бросок лавы
+local timerPierceMarrowCD					= mod:NewCDNPTimer(10.9, 372262, nil, nil, nil, 3) --Пронзание кости
+local timerScorchingFusilladeCD				= mod:NewCDNPTimer(23, 372543, nil, nil, nil, 3) --Обжигающий обстрел
+local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Огненная батарея
 --local timerReverbSlamCD					= mod:NewCDNPTimer(17, 372971, nil, nil, nil, 3)--8-17? needs further review
-local timerCandescentTempestCD				= mod:NewCDNPTimer(27.8, 381663, nil, nil, nil, 2)
-local timerForgestompCD						= mod:NewCDNPTimer(17.3, 384623, nil, nil, nil, 2)
+local timerCandescentTempestCD				= mod:NewCDNPTimer(27.8, 381663, nil, nil, nil, 2) --Раскаленная буря
+local timerForgestompCD						= mod:NewCDNPTimer(16.1, 384623, nil, nil, nil, 2) --Топот кузнеца
 
-local yellBindingSpear						= mod:NewYell(372561, nil, nil, nil, "YELL")
-local yellScorchingFusillade				= mod:NewYell(372543, nil, nil, nil, "YELL")
-local yellMoteofCombustion					= mod:NewYell(384161, nil, nil, nil, "YELL")
-local yellBoldAmbush						= mod:NewYell(372566, nil, nil, nil, "YELL")
+local yellBindingSpear						= mod:NewShortYell(372561, nil, nil, nil, "YELL") --Приковывающее копье
+local yellScorchingFusillade				= mod:NewShortYell(372543, nil, nil, nil, "YELL") --Обжигающий обстрел
+local yellMoteofCombustion					= mod:NewShortYell(384161, nil, nil, nil, "YELL") --Частица возгорания
+local yellBoldAmbush						= mod:NewShortYell(372566, nil, nil, nil, "YELL") --Смелая засада
 
 mod:AddBoolOption("AGBuffs", true)
 
@@ -247,6 +248,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMoteofCombustionYou:Show()
 			specWarnMoteofCombustionYou:Play("targetyou")
 			yellMoteofCombustion:Yell()
+		elseif not args:IsPlayer() and self:IsSpellCaster() then
+			specWarnMoteofCombustion2:CombinedShow(0.3, args.destName)
+			specWarnMoteofCombustion2:Play("helpdispel")
 		end
 	elseif spellId == 373089 then
 		if args:IsPlayer() then
@@ -262,9 +266,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellBindingSpear:Yell()
 		end
-	elseif spellId == 372461 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
-		specWarnImbuedMagma:Show(args.destName)
-		specWarnImbuedMagma:Play("helpdispel")
+	elseif spellId == 372461 and args:IsDestTypePlayer() then
+		if self:IsSpellCaster() and self:AntiSpam(3, 3) then
+			specWarnImbuedMagma:Show(args.destName)
+			specWarnImbuedMagma:Play("helpdispel")
+		end
 	elseif spellId == 382791 then
 		warnMoltenBarrier:Show(args.destName)
 	elseif spellId == 383651 then--Army Buff
