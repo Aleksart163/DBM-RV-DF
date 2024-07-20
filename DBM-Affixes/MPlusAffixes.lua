@@ -22,7 +22,7 @@ mod:RegisterEvents(
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
-local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, 322274) --Дестабилизация (Ослабление) 322274
+local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, 322274) --Дестабилизация (Ослабление) 322274
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -215,8 +215,11 @@ function mod:SPELL_CAST_START(args)
 		self:Unschedule(checkAfflicted)
 		checkForCombat(self)
 		self:Schedule(40, checkAfflicted, self)
-	elseif spellId == 408805 and self:AntiSpam(3, "aff3") then
-		warnDestabalize:Show()
+	elseif spellId == 408805 and self:AntiSpam(3, "aff3") then --Дестабилизация (Ослабление)
+		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
+		if unitId and UnitIsEnemy("player", unitId) then
+			warnDestabalize:Show()
+		end
 	end
 end
 
