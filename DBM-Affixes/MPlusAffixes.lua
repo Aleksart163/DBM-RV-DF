@@ -22,7 +22,7 @@ mod:RegisterEvents(
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
-local warnDestabalize						= mod:NewCastAnnounce(408805, 2) --Дестабилизация
+local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, 322274) --Дестабилизация (Ослабление) 322274
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -40,17 +40,17 @@ local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", ni
 local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 14) --Запутывание
 --
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
-local timerPrimalOverload					= mod:NewCastTimer(3, 396411, nil, nil, nil, 7)
+local timerPrimalOverload					= mod:NewCastTimer(3, 396411, nil, nil, nil, 7) --Изначальная перегрузка
 local timerMarkLightning					= mod:NewBuffActiveTimer(15, 396369, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка молнии
 local timerMarkWind							= mod:NewBuffActiveTimer(15, 396364, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Метка ветра
 local timerQuake							= mod:NewCastTimer(2.5, 240447, nil, nil, nil, 2, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 2.5) --Землетрясение
 local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Некротическая язва
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 --
-local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true) --Запутывание
-local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
-local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Крик изнемогающей души Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
+local timerIncorporealCD					= mod:NewCDTimer(45, 408801, 173254, nil, nil, 5, nil, nil, nil, 3, 3) --Бесплотность (Призыв духов) 173254
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
@@ -406,7 +406,9 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	afflictedDetected = false
 	self:Unschedule(checkForCombat)
 	self:Unschedule(checkAfflicted)
+	self:Unschedule(checkIncorp)
 	timerAfflictedCD:Stop()
+	timerIncorporealCD:Stop()
 end
 
 --[[
