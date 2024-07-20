@@ -78,7 +78,7 @@ local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, 
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
 local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
-local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood2			= mod:NewShortFadesYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
@@ -231,7 +231,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnDarkOmen:Show()
 		specWarnDarkOmen:Play("range5")
 		yellDarkOmen:Yell()
-	elseif spellId == 266107 and not DBM:UnitDebuff("player", spellId) then --Кровожадность
+--	elseif spellId == 266107 and not DBM:UnitDebuff("player", spellId) then --Кровожадность
+	elseif spellId == 266107 then --Кровожадность
 		if args:IsPlayer() then
 			specWarnThirstforBlood:Show()
 			specWarnThirstforBlood:Play("justrun")
@@ -251,7 +252,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	elseif spellId == 278961 and args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
-		if self:IsSpellCaster() then
+		if not args:IsPlayer() and self:IsSpellCaster() then
 			specWarnDecayingMindDispel:Show(args.destName)
 			specWarnDecayingMindDispel:Play("helpdispel")
 		end

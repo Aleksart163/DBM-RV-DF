@@ -22,7 +22,7 @@ mod:RegisterEvents(
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
-local warnDestabalize						= mod:NewCastAnnounce(408805, 4, nil, nil, false) --Дестабилизация
+local warnDestabalize						= mod:NewCastAnnounce(408805, 2) --Дестабилизация
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -37,6 +37,7 @@ local specWarnGrievousWound					= mod:NewSpecialWarningStack(240559, nil, 4, nil
 local specWarnSanguineIchor					= mod:NewSpecialWarningMove(226512, nil, nil, nil, 1, 2) --Кровавый гной
 local specWarnQuake							= mod:NewSpecialWarningCast(240447, "SpellCaster", nil, nil, 1, 2) --Землетрясение
 local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", nil, nil, 1, 2) --Землетрясение
+local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 14) --Запутывание
 --
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
 local timerPrimalOverload					= mod:NewCastTimer(3, 396411, nil, nil, nil, 7)
@@ -47,7 +48,7 @@ local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Heal
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 --
 local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true)
+local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true) --Запутывание
 local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
 local timerIncorporealCD					= mod:NewCDTimer(45, 408801, nil, nil, nil, 5, nil, nil, nil, 3, 3)
 
@@ -201,7 +202,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 240446 and self:AntiSpam(3, "aff1") then
 		warnExplosion:Show()
-	elseif spellId == 409492 and self:AntiSpam(3, "aff2") then
+	elseif spellId == 409492 and self:AntiSpam(3, "aff2") then --Крик изнемогающей души
 		warnAfflictedCry:Show()
 		warnAfflictedCry:Play("helpspirit")
 		if not afflictedDetected then
@@ -293,6 +294,29 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
 		specWarnSpitefulFixate:Show()
 		specWarnSpitefulFixate:Play("targetyou")
+	elseif spellId == 408556 then --Запутывание
+		if self:AntiSpam(20, "aff6") then
+			timerEntangledCD:Start(30)
+			--Entangled check runs every 30 seconds, and if conditions aren't met for it activating it skips and goes into next 30 second CD
+			--This checks if it was cast (by seeing if timer exists) if not, it starts next timer for next possible cast
+			self:Unschedule(checkEntangled)
+			self:Schedule(35, checkEntangled, self)
+		end
+		if args:IsPlayer() then
+			specWarnEntangled:Show()
+			specWarnEntangled:Play("breakvine")--breakvine
+		end
+	elseif spellId == 408801 and self:AntiSpam(25, "aff7") then --Бесплотность
+		if not incorpDetected then
+			incorpDetected = true
+		end
+		--This one is interesting cause it runs every 45 seconds, sometimes skips a cast and goes 90, but also pauses out of combat
+		incorporealCounting = true
+		timerIncorporealCD:Start()
+		self:Unschedule(checkForCombat)
+		self:Unschedule(checkIncorp)
+		checkForCombat(self)
+		self:Schedule(50, checkIncorp, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
