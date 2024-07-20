@@ -97,7 +97,7 @@ local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, 
 
 local timerEndExistenceCast						= mod:NewCastTimer(30, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7) --Бомба Бездны
-local timerVoidBomb								= mod:NewBuffActiveTimer(15, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
+local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
 --local timerCosmicVolleyCD						= mod:NewCDTimer(4.8, 411302, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Mythic Add
@@ -800,16 +800,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellVoidBomb:Yell()
 			yellVoidFractureFades:Countdown(spellId)
 			if Phase2 then
-				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-				if expireTime then
-					local remaining = expireTime-GetTime()
-					timerVoidBomb:Start(remaining)
+				if spellId == 404218 then
+					specWarnVoidFracture2:Schedule(2, BetweenStars)
+					specWarnVoidFracture2:ScheduleVoice(2, "runout")
+					timerVoidBomb:Start()
+				else
+					specWarnVoidFracture2:Schedule(4, BetweenStars)
+					specWarnVoidFracture2:ScheduleVoice(4, "runout")
+					timerVoidBomb:Start(14)
 				end
-				specWarnVoidFracture2:Schedule(5, BetweenStars)
-				specWarnVoidFracture2:ScheduleVoice(5, "runout")
 			end
 		else
-			warnVoidFracture:Show(args.destName)
+			warnVoidFracture:CombinedShow(1, args.destName)
 		end
 	elseif spellId == 404705 then
 		if self.Options.NPAuraOnRescind then
