@@ -76,7 +76,7 @@ local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, ni
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
 
 local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5) --Порча
-local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --Stage Three: Reality Fractures
@@ -279,9 +279,6 @@ function mod:SPELL_CAST_START(args)
 		timerCorruptionCD:Start(14, 1)--Time to first debuffs
 	elseif spellId == 403057 then--Surrender To Corruption
 		self:SetStage(2)
-		--20 50 01 217 2 фаза
-		--20 50 30 146 Темное уничтожение
-		--20 50 34 121 Стремительная тьма
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		self.vb.twistedEarthCount = 0
@@ -290,8 +287,8 @@ function mod:SPELL_CAST_START(args)
 		self.vb.proshlyapCount = 2
 		timerSunderShadowCD:Start(14.8, 1)
 		timerVolcanicHeartCD:Start(20.7, 1)
-		timerUmbralAnnihilationCD:Start(25.1, 1)
-		timerRushingDarknessCD:Start(30.9, 1)
+		timerUmbralAnnihilationCD:Start(28.9, 1) --Темное уничтожение (норм под гер)
+		timerRushingDarknessCD:Start(32.9, 1) --Стремительная тьма (норм под гер)
 		if self:IsHard() then
 			timerTwistedEarthCD:Start(self:IsMythic() and 41.5 or 71.5, 1)
 		end
@@ -437,9 +434,6 @@ function mod:SPELL_AURA_REMOVED(args)
 --		timerRushingDarknessCD:Start(27, 1)
 		timerCalamitousStrikeCD:Start(34.4, 1)
 		timerEbonDestructionCD:Start(44.3, 1) --Большой взрыв (норм под гер)
-		--20 52 06 207 начало фазы 3
-		--20 52 30 354 порталы
-		--20 52 50 507 Большой взрыв
 --[[	elseif spellId == 407182 then --Стремительная тьма
 		if self.Options.SetIconOnRushingDarkness then
 			self:SetIcon(args.destName, 0)
