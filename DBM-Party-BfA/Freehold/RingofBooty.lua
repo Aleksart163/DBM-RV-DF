@@ -35,7 +35,8 @@ local warnGreasy					= mod:NewCountAnnounce(257829, 2)
 local warnRearm						= mod:NewSpellAnnounce(256489, 4)
 
 local specWarnSharkToss				= mod:NewSpecialWarningYou(256358, nil, nil, nil, 1, 2)
-local specWarnSharknado				= mod:NewSpecialWarningRun(256405, nil, nil, nil, 4, 2) --Акулий торнадо
+local specWarnSharknado				= mod:NewSpecialWarningRun(256405, "Melee", nil, nil, 4, 2) --Акулий торнадо
+local specWarnSharknado2			= mod:NewSpecialWarningDodge(256405, nil, nil, nil, 2, 2) --Акулий торнадо
 --local specWarnRearm					= mod:NewSpecialWarningDodge(256489, nil, nil, nil, 2, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(256552, nil, nil, nil, 1, 8)
 
@@ -65,8 +66,13 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 256405 then
-		specWarnSharknado:Show()
-		specWarnSharknado:Play("justrun")
+		if self:IsMelee() then
+			specWarnSharknado:Show()
+			specWarnSharknado:Play("justrun")
+		else
+			specWarnSharknado2:Show()
+			specWarnSharknado2:Play("watchstep")
+		end
 		timerSharknadoCD:Start()
 	elseif spellId == 256489 or spellId == 256494 then
 		if self:AntiSpam(3, 3) then
