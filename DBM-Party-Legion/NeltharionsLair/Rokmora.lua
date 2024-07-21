@@ -22,7 +22,7 @@ local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, nil,
 local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, nil, 3, 4) --Бритвенно-острые осколки
 local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8) --Удушающая пыль
 
-local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Дробление
+local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Дробление
 local timerRazorShardsCD			= mod:NewCDTimer(26.1, 188169, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Бритвенно-острые осколки
 
 mod.vb.shatterCount = 0

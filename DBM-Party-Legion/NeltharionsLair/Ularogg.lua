@@ -31,8 +31,8 @@ local specWarnStanceofMountain		= mod:NewSpecialWarningCount(198509, nil, nil, n
 local specWarnSunder				= mod:NewSpecialWarningDefensive(198496, nil, nil, 2, 3, 2) --Раскол
 local specWarnStrikeofMountain		= mod:NewSpecialWarningDodge(216290, nil, nil, nil, 2, 2) --Удар горы
 
-local timerStanceOfMountainCD		= mod:NewCDCountTimer(52, 198509, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Горная стойка
-local timerStanceOfMountain			= mod:NewRPTimer(19.2, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5) --Горная стойка
+local timerStanceOfMountainCD		= mod:NewCDCountTimer(52, 198509, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Горная стойка
+local timerStanceOfMountain			= mod:NewRPTimer(19.2, nil, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Горная стойка
 local timerSunderCD					= mod:NewCDTimer(30, 198496, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Раскол
 local timerStrikeCD					= mod:NewCDTimer(30, 216290, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар горы
 local timerBelowofDeepsCD			= mod:NewCDTimer(30, 193375, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Рев глубин

@@ -68,7 +68,7 @@ local timerShockwaveCD							= mod:NewCDNPTimer(20.2, 87759, nil, "Tank|Healer",
 local timerIcyBuffetCD							= mod:NewCDNPTimer(22.6, 88194, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
 local timerWindBlastCD							= mod:NewCDNPTimer(10.1, 87923, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Порыв ветра
 local timerCloudGuardCD							= mod:NewCDNPTimer(19.1, 411000, nil, nil, nil, 5) --Облачная защита
-local timerPressurizedBlastCD					= mod:NewCDNPTimer(21.8, 410999, nil, nil, nil, 2) --Порыв сжатого воздуха
+local timerPressurizedBlastCD					= mod:NewCDNPTimer(21.8, 410999, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Порыв сжатого воздуха
 local timerBombCycloneCD						= mod:NewCDNPTimer(15.5, 411005, nil, nil, nil, 3) --Взрывной циклон 15.9-17.1
 local timerTurbulenceCD							= mod:NewCDNPTimer(32, 411002, nil, nil, nil, 2) --Турбулентность
 local timerWindFlurryCD							= mod:NewCDNPTimer(10.1, 410998, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Шквал ветра
@@ -118,31 +118,31 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(3, 5) then
 			warnGaleStrike:Show()
 		end
-	elseif spellId == 88010 or spellId == 410870 then--Pre 10.1, post 10.1
+	elseif spellId == 88010 or spellId == 410870 then --Смерч Pre 10.1, post 10.1
 		timerCycloneCD:Start(nil, args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-			specWarnCyclone:Show()
+			specWarnCyclone:Show(args.sourceName)
 			specWarnCyclone:Play("kickcast")
 		end
 	elseif spellId == 87762 then
 		timerLightningLashCD:Start(nil, args.sourceGUID)
 		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "LitTarget", 0.1, 8)
-	elseif spellId == 87779 then
+	elseif spellId == 87779 then --Великое исцеление
 		timerGreaterHealCD:Start(nil, args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-			specWarnGreaterHeal:Show()
+			specWarnGreaterHeal:Show(args.sourceName)
 			specWarnGreaterHeal:Play("kickcast")
 		elseif self:AntiSpam(3, 5) then
 			warnGreaterHeal:Show()
 		end
 	elseif spellId == 88201 then--No throttle on purpose. this particular spell always needs awareness
 		warnHealingWell:Show()
-	elseif spellId == 88194 then
+	elseif spellId == 88194 then --Ледяные крылья
 		timerIcyBuffetCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnIcyBuffet:Show()
 			specWarnIcyBuffet:Show()
-			specWarnGreaterHeal:Play("watchstep")
+			specWarnIcyBuffet:Play("watchstep")
 		end
 	elseif spellId == 87761 then
 		timerRallyCD:Start(nil, args.sourceGUID)
@@ -215,7 +215,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 88010 or spellId == 410870 then
+	if spellId == 88010 or spellId == 410870 then --Смерч
 		if args:IsPlayer() then
 			yellCyclone:Yell()
 		else

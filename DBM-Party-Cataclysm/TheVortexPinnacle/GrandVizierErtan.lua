@@ -14,7 +14,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 86340 413151",
+	"SPELL_CAST_START 86340 86331 413151",
 	"SPELL_AURA_APPLIED 86292"
 )
 
@@ -30,6 +30,7 @@ local warnShieldEnd			= mod:NewEndAnnounce(86267, 1) --Охранный смер
 local warnSummonTempest		= mod:NewCountAnnounce(86340, 2) --Вызов вихря
 local warnLethalCurrent		= mod:NewCastAnnounce(413151, 4) --Вызов вихря
 
+local specWarnLightningBolt	= mod:NewSpecialWarningInterrupt(86331, "HasInterrupt", nil, nil, 1, 2) --Молния
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(86292, nil, nil, nil, 1, 8) --Охранный смерч
 
 local timerSummonTempest	= mod:NewCDCountTimer(16.8, 86340, nil, nil, nil, 1) --Вызов вихря 16.8 old
@@ -61,28 +62,36 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 86340 or args.spellId == 413151 and self:AntiSpam(3, 3) then
+	local spellId = args.spellId
+	if spellId == 86340 or spellId == 413151 and self:AntiSpam(3, 3) then
 		self.vb.tempestCount = self.vb.tempestCount + 1
 		warnSummonTempest:Show(self.vb.tempestCount)
 		timerSummonTempest:Start(self:IsMythicPlus() and 39.6 or 16.8, self.vb.tempestCount+1)--39.6-41
-	elseif args.spellId == 413151 and self:AntiSpam(3, 1) then
+	elseif spellId == 413151 and self:AntiSpam(3, 1) then
 		warnLethalCurrent:Show()
+	elseif spellId == 86331 then --Молния
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnLightningBolt:Show(args.sourceName)
+			specWarnLightningBolt:Play("kickcast")
+		end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 86292 and args:IsPlayer() and self:AntiSpam(3, 2) then
+	local spellId = args.spellId
+	if spellId == 86292 and args:IsPlayer() and self:AntiSpam(3, 2) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 86295 then
+	local spellId = args.spellId
+	if spellId == 86295 then
 		self.vb.shieldCount = self.vb.shieldCount + 1
 		warnShield:Show(self.vb.shieldCount)
 		timerShield:Start(40, self.vb.shieldCount+1)--Restart used purely to avoid a bug where when boss is killed it fires debug
-	elseif args.spellId == 86310 then
+	elseif spellId == 86310 then
 		warnShieldEnd:Show()
 	end
 end
