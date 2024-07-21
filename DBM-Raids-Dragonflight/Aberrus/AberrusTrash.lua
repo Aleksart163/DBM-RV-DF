@@ -7,26 +7,29 @@ mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 409612 406911 411755",
---	"SPELL_CAST_SUCCESS 413785",
+	"SPELL_CAST_START 409612 406911 411755 409473",
+	"SPELL_CAST_SUCCESS 409473",
 	"SPELL_AURA_APPLIED 411808 413785 409576",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 411808 413785",
 	"CHAT_MSG_MONSTER_SAY",
-	"CHAT_MSG_MONSTER_YELL"
---	"UNIT_DIED"
+	"CHAT_MSG_MONSTER_YELL",
+	"UNIT_DIED"
 )
 
 --[[
 (ability.id = 409612 or ability.id = 406911) and type = "begincast"
  or ability.id = 413785 and type = "cast"
 ]]--
+
+local specWarnLavaPurge						= mod:NewSpecialWarningDodge(409473, nil, nil, nil, 2, 2) --Лавовое истребление
 local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, nil, 2, 2) --Истребление
 local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2)
 local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil, nil, 1, 2)
 local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2)
 local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "HasInterrupt", nil, nil, 1, 2)
 
+local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребление
 local timerRP								= mod:NewRPTimer(30)
 
 local yellSlimeInjection					= mod:NewYell(411808, nil, nil, nil, "YELL")
@@ -39,7 +42,9 @@ local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
-
+--11 33 125
+--11 46 158
+--11 59 218
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 409612 and self:AntiSpam(5, 2) then
@@ -53,12 +58,25 @@ function mod:SPELL_CAST_START(args)
 			specWarnBrutalCauterization:Show(args.sourceName)
 			specWarnBrutalCauterization:Play("kickcast")
 		end
-	elseif spellId == 411755 and self:AntiSpam(2, "Eradicate") then
-		specWarnEradicate:Show()
-		specWarnEradicate:Play("shockwave")
+	elseif spellId == 411755 then --Истребление
+		timerEradicateCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(2, "Eradicate") then
+			specWarnEradicate:Show()
+			specWarnEradicate:Play("shockwave")
+		end
+	elseif spellId == 409473 and self:AntiSpam(3, "LavaPurge") then --Лавовое истребление
+		specWarnLavaPurge:Show()
+		specWarnLavaPurge:Play("watchstep")
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 409473 then --Лавовое истребление
+		DBM:Debug("Check Murchal proshlyap", 2)
+	end
+end
+		
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -93,14 +111,14 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
---[[
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 201288 or cid == 205619 then--Sundered Champion & Sarek Cinderbreath
-		timerBrutalCauterizationCD:Stop(args.destGUID)
+--	if cid == 201288 or cid == 205619 then--Sundered Champion & Sarek Cinderbreath
+--	timerBrutalCauterizationCD:Stop(args.destGUID)
+	if cid == 205478 then --Прошляпанное очко Мурчаля
+		timerEradicateCD:Stop(args.destGUID)
 	end
 end
---]]
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if (msg == L.RP1 or msg:find(L.RP1)) then
