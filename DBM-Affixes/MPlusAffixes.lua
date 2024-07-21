@@ -20,7 +20,7 @@ mod:RegisterEvents(
 
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
-local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
+--local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление) 322274
 --
