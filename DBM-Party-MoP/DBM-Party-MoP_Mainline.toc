@@ -30,7 +30,7 @@
 ## X-DBM-Mod-Name-frFR: Groupe (MoP)
 ## X-DBM-Mod-Sort: 702
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
-## X-DBM-Mod-MinCoreRevision: 20240715070000
+## X-DBM-Mod-MinCoreRevision: 20240723070000
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
