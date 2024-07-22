@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240701070000")
+mod:SetRevision("20240722070000")
 mod:SetZone()
 
 mod.noStatistics = true
@@ -37,7 +37,7 @@ local specWarnGrievousWound					= mod:NewSpecialWarningStack(240559, nil, 4, nil
 local specWarnSanguineIchor					= mod:NewSpecialWarningMove(226512, nil, nil, nil, 1, 2) --Кровавый гной
 local specWarnQuake							= mod:NewSpecialWarningCast(240447, "SpellCaster", nil, nil, 1, 2) --Землетрясение
 local specWarnQuake2						= mod:NewSpecialWarningMoveAway(240447, "Physical", nil, nil, 1, 2) --Землетрясение
-local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 14) --Запутывание
+local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, 311634, nil, 1, 14) --Запутывание
 --
 local timerPrimalOverloadCD					= mod:NewCDTimer(70, 396411, nil, nil, nil, 7) --Изначальная перегрузка
 local timerPrimalOverload					= mod:NewCastTimer(3, 396411, nil, nil, nil, 7) --Изначальная перегрузка
@@ -48,7 +48,7 @@ local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Heal
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 --
 local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
-local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 3, nil, nil, nil, true) --Запутывание
+local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 311634, nil, nil, 3, 3, nil, nil, nil, true) --Запутывание
 local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, 2, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Крик изнемогающей души Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
 local timerIncorporealCD					= mod:NewCDTimer(45, 408801, 173254, nil, nil, 5, nil, nil, nil, 3, 3) --Бесплотность (Призыв духов) 173254
 
@@ -410,8 +410,10 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	self:Unschedule(checkForCombat)
 	self:Unschedule(checkAfflicted)
 	self:Unschedule(checkIncorp)
+	self:Unschedule(checkEntangled)
 	timerAfflictedCD:Stop()
 	timerIncorporealCD:Stop()
+	timerEntangledCD:Stop()
 end
 
 --[[
