@@ -34,6 +34,7 @@ local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Пров�
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
 local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 
+local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 3, 4) --Сломанный проводник
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, nil, nil, 4, 4) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
@@ -55,7 +56,7 @@ local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, 
 local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
---local berserkTimer								= mod:NewBerserkTimer(600)
+local berserkTimer									= mod:NewBerserkTimer(120)
 
 local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
@@ -431,6 +432,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 			DBM:Debug("Murchal proshlyap 2", 2)
 		elseif self.vb.murchalOchkenProshlyapationCount == 3 then
+			specWarnShatteredConduit:Show()
+			specWarnShatteredConduit:Play("speedup")
+			berserkTimer:Start()
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 			if self:IsMythic() then
@@ -480,6 +484,7 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 		if remaining > 0 then
 			local elapsedTimer = 100-remaining
 			timerAncientFuryCD:Update(elapsedTimer, 100)
+			berserkTimer:Update(elapsedTimer, 100)
 		else
 			timerAncientFuryCD:Stop()
 		end
