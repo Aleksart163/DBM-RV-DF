@@ -335,6 +335,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnSearingSlam:Show()
 			specWarnSearingSlam:Play("targetyou")
+			specWarnSearingSlam:ScheduleVoice(1.5, "defensive")
 			yellSearingSlam:Yell()
 			yellSearingSlamFades:Countdown(spellId)
 		else
