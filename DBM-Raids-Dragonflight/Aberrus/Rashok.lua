@@ -429,6 +429,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			else
 				timerSearingSlamCD:Start(10.1, 1) --
 			end
+			DBM:Debug("Murchal proshlyap 2", 2)
 		elseif self.vb.murchalOchkenProshlyapationCount == 3 then
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
@@ -436,15 +437,16 @@ function mod:SPELL_AURA_REMOVED(args)
 				timerUnleashedShadowflameCD:Start(6.2, 1)
 				timerSearingSlamCD:Start(11.1, 1)
 			elseif self:IsHeroic() then
-				timerSearingSlamCD:Start(10.1, 1) --
+				timerSearingSlamCD:Start(11.1, 1) --
 			else
 				timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
 			end
+			DBM:Debug("Murchal proshlyap 3", 2)
 		end
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(96.8, self.vb.blastCount+1) --2 каст в героике точно
-		timerAncientFuryCD:Start(115)
+		timerAncientFuryCD:Start(120)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
