@@ -15,7 +15,8 @@ mod:RegisterEvents(
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
-	"CHALLENGE_MODE_COMPLETED"
+	"CHALLENGE_MODE_COMPLETED",
+	"CHALLENGE_MODE_RESET"
 )
 
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
@@ -398,6 +399,22 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:Unschedule(checkForCombat)
 		checkForCombat(self)
 	end
+end
+
+function mod:CHALLENGE_MODE_RESET()
+	overloadCounting = false
+	overloadDetected = false
+	afflictedCounting = false
+	incorporealCounting = false
+	incorpDetected = false
+	afflictedDetected = false
+	self:Unschedule(checkForCombat)
+	self:Unschedule(checkAfflicted)
+	self:Unschedule(checkIncorp)
+	self:Unschedule(checkEntangled)
+	timerAfflictedCD:Stop()
+	timerIncorporealCD:Stop()
+	timerEntangledCD:Stop()
 end
 
 function mod:CHALLENGE_MODE_COMPLETED()
