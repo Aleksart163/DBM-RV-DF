@@ -23,17 +23,17 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnFixate					= mod:NewTargetAnnounce(209906, 2, nil, false)--Could be spammy, optional
-local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1)
+local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1) --Шипастый язык
 
-local specWarnAdds					= mod:NewSpecialWarningSwitchCount(199817, "-Healer", nil, 2, 1, 2)
+local specWarnAdds					= mod:NewSpecialWarningSwitchCount(199817, "-Healer", nil, 2, 1, 2) --Призыв прислужников
 local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2)
-local specWarnSpikedTongue			= mod:NewSpecialWarningRunCount(199176, nil, nil, nil, 4, 2)
+local specWarnSpikedTongue			= mod:NewSpecialWarningRunCount(199176, nil, nil, nil, 4, 2) --Шипастый язык
 local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8)
 
-local timerSpikedTongueCD			= mod:NewNextCountTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
-local timerAddsCD					= mod:NewCDCountTimer(65, 199817, nil, nil, nil, 1, 226361)
-local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2)
-local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3)
+local timerSpikedTongueCD			= mod:NewNextCountTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Шипастый язык
+local timerAddsCD					= mod:NewCDCountTimer(65, 199817, nil, nil, nil, 1, 226361) --Призыв прислужников
+local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
+local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
 mod.vb.retchCount = 0
 mod.vb.addsCount = 0
@@ -46,7 +46,7 @@ function mod:OnCombatStart(delay)
 	self.vb.spikeCount = 0
 	self.vb.mawCount = 0
 	timerAddsCD:Start(5.2-delay, 1)
-	timerRancidMawCD:Start(7.3-delay, 1)
+	timerRancidMawCD:Start(6.9-delay, 1)
 	timerToxicRetchCD:Start(12.2-delay, 1)
 	timerSpikedTongueCD:Start(50.5-delay, 1)
 end

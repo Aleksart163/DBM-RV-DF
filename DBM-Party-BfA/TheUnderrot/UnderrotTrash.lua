@@ -73,7 +73,7 @@ local timerWickedFrenzyCD			= mod:NewCDNPTimer(7, 266209, nil, nil, nil, 5, nil,
 local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Плево Бездны
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел Тьмы 25.4-27.7
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
-local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.7, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
+local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
