@@ -35,8 +35,8 @@ local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеюща�
 local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 
 local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
-local specWarnSearingSlam							= mod:NewSpecialWarningYou(405821, nil, nil, nil, 2, 2) --Обжигающий удар
-local specWarnDoomFlame								= mod:NewSpecialWarningCount(406851, nil, nil, nil, 2, 2) --Огни рока
+local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, nil, nil, 4, 4) --Обжигающий удар
+local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
 local specWarnChargedSmash							= mod:NewSpecialWarningSoakCount(400777, nil, nil, nil, 2, 2) --Заряженный удар
 local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
