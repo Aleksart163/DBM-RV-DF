@@ -80,7 +80,7 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20240723070000")
+DBM.Revision = parseCurseDate("20240723160000")
 
 local fakeBWVersion, fakeBWHash = 337, "848363e"--337.4
 local bwVersionResponseString = "V^%d^%s"
