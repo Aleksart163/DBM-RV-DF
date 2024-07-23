@@ -34,7 +34,6 @@ mod:RegisterEvents(
 --]]
 local warnCyclone								= mod:NewTargetNoFilterAnnounce(88010, 4) --Смерч
 local warnGaleStrike							= mod:NewCastAnnounce(88061, 3, nil, nil, "Tank|Healer|MagicDispeller") --Ураганный удар
-local warnIcyBuffet								= mod:NewCastAnnounce(88194, 3) --Ледяные крылья
 local warnRally									= mod:NewCastAnnounce(87761, 2, nil, nil) --Поддержка в бою
 local warnHealingWell							= mod:NewCastAnnounce(88201, 2)
 local warnCloudGuard							= mod:NewCastAnnounce(411000, 2) --Облачная защита
@@ -65,7 +64,7 @@ local timerStormSurgeCD							= mod:NewCDNPTimer(16.1, 88055, nil, nil, nil, 2) 
 local timerGaleStrikeCD							= mod:NewCDNPTimer(17, 88061, nil, "Tank|Healer|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Ураганный удар
 local timerRallyCD								= mod:NewCDNPTimer(26.7, 87761, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Поддержка в бою
 local timerShockwaveCD							= mod:NewCDNPTimer(20.2, 87759, nil, "Tank|Healer", nil, 3) --Ударная волна
-local timerIcyBuffetCD							= mod:NewCDNPTimer(22.6, 88194, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
+local timerIcyBuffetCD							= mod:NewCDNPTimer(28, 88194, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
 local timerWindBlastCD							= mod:NewCDNPTimer(10.1, 87923, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Порыв ветра
 local timerCloudGuardCD							= mod:NewCDNPTimer(19.1, 411000, nil, nil, nil, 5) --Облачная защита
 local timerPressurizedBlastCD					= mod:NewCDNPTimer(21.8, 410999, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Порыв сжатого воздуха
@@ -140,7 +139,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 88194 then --Ледяные крылья
 		timerIcyBuffetCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
-			warnIcyBuffet:Show()
 			specWarnIcyBuffet:Show()
 			specWarnIcyBuffet:Play("watchstep")
 		end
