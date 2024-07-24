@@ -37,7 +37,8 @@ local warnThunderousClap					= mod:NewCastAnnounce(381593, 3) --Грохочущ
 local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer") --Удар бастиона
 local warnHasten							= mod:NewCastAnnounce(377500, 3) --Ускорение
 
-local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, nil, nil, nil, 4, 2) --Изуверский удар
+local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, "Melee", nil, nil, 4, 2) --Изуверский удар
+local specWarnBrutalSlam2					= mod:NewSpecialWarningDodge(369811, "Ranged", nil, nil, 2, 2) --Изуверский удар
 local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2) --Раскалывающий удар
 local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2) --Землетрясение
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
@@ -64,7 +65,7 @@ local timerAncientPowerCD					= mod:NewCDNPTimer(6, 377738, nil, nil, nil, 5) --
 local timerHailofStoneCD					= mod:NewCDNPTimer(21.8, 369465, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Град камней
 local timerStoneBoltCD						= mod:NewCDNPTimer(7.2, 369399, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменная стрела 7-11, off by default to giev prio to Hail of stone
 local timerEarthquakeCD						= mod:NewCDNPTimer(23.2, 369328, nil, nil, nil, 2) --Землетрясение
-local timerFissuringSlamCD					= mod:NewCDNPTimer(7.8, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
+local timerFissuringSlamCD					= mod:NewCDNPTimer(9.6, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
 local timerCleaveCD							= mod:NewCDNPTimer(15, 369409, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассекающий удар
 local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3) --Наскок
 local timerThunderousClapCD					= mod:NewCDNPTimer(18.5, 381593, nil, nil, nil, 2) --Грохочущий удар
@@ -91,10 +92,15 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
-	if spellId == 369811 then
+	if spellId == 369811 then --Изуверский удар
 		if self:AntiSpam(3, 1) then
-			specWarnBrutalSlam:Show()
-			specWarnBrutalSlam:Play("justrun")
+			if self:IsMelee() then
+				specWarnBrutalSlam:Show()
+				specWarnBrutalSlam:Play("justrun")
+			else
+				specWarnBrutalSlam2:Show()
+				specWarnBrutalSlam2:Play("watchstep")
+			end
 		end
 	elseif spellId == 381593 then
 		timerThunderousClapCD:Start(nil, args.sourceGUID)
@@ -142,11 +148,7 @@ function mod:SPELL_CAST_START(args)
 			warnCleave:Show()
 		end
 	elseif spellId == 369335 then
-		if timerEarthquakeCD:GetRemaining(args.sourceGUID) < 10 then
-			timerFissuringSlamCD:Start(15.7, args.sourceGUID)
-		else
-			timerFissuringSlamCD:Start(9.7, args.sourceGUID)
-		end
+		timerFissuringSlamCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
 			specWarnFissuringSlam:Show()
 			specWarnFissuringSlam:Play("watchstep")

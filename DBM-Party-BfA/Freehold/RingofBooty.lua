@@ -36,7 +36,7 @@ local warnRearm						= mod:NewSpellAnnounce(256489, 4)
 
 local specWarnSharkToss				= mod:NewSpecialWarningYou(256358, nil, nil, nil, 1, 2)
 local specWarnSharknado				= mod:NewSpecialWarningRun(256405, "Melee", nil, nil, 4, 2) --Акулий торнадо
-local specWarnSharknado2			= mod:NewSpecialWarningDodge(256405, nil, nil, nil, 2, 2) --Акулий торнадо
+local specWarnSharknado2			= mod:NewSpecialWarningDodge(256405, "Ranged", nil, nil, 2, 2) --Акулий торнадо
 --local specWarnRearm					= mod:NewSpecialWarningDodge(256489, nil, nil, nil, 2, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(256552, nil, nil, nil, 1, 8)
 

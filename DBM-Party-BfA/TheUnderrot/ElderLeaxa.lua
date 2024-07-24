@@ -17,13 +17,13 @@ mod:RegisterEventsInCombat(
 local specWarnBloodBolt				= mod:NewSpecialWarningInterrupt(260879, "HasInterrupt", nil, nil, 1, 2) --Кровавая стрела
 local specWarnCreepingRot			= mod:NewSpecialWarningDodge(260894, nil, nil, nil, 2, 2) --Ползущая гниль
 local specWarnSanguineFeast			= mod:NewSpecialWarningDodge(264757, nil, nil, nil, 2, 2) --Кровавый пир
-local specWarnBloodMirror			= mod:NewSpecialWarningSwitch(264603, nil, -17950, nil, 1, 2) --Кровавое зеркало
+local specWarnBloodMirror			= mod:NewSpecialWarningSwitch(264603, "-Healer", -17950, nil, 1, 2) --Кровавое зеркало
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 --TODO: Use NewNextSourceTimer to split adds from boss
 local timerCreepingRotCD			= mod:NewCDTimer(15.8, 260894, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Ползущая гниль
 local timerSanguineFeastCD			= mod:NewCDTimer(30, 264757, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кровавый пир
-local timerBloodMirrorCD			= mod:NewCDCountTimer(47.4, 264603, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, 3, 5) --Кровавое зеркало 47.4-49.8
+local timerBloodMirrorCD			= mod:NewCDCountTimer(47.4, 264603, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, 2, 5) --Кровавое зеркало 47.4-49.8
 
 mod:AddInfoFrameOption(260685, "Healer")
 
@@ -33,7 +33,7 @@ mod.vb.sanguineFeastCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Кровавое зеркало
-	[264603] = {15.3, 48.9, 52.1, 51.7, 48.1},
+	[264603] = {15.3, 48.4, 52.1, 51.7, 48.1},
 	--Ползущая гниль
 	[260894] = {12.3, 15.8, 15.9, 18, 15.8, 18, 15.8, 15.8, 15.8, 15.8, 15.8, 15.8, 15.9},
 	--Кровавый пир
