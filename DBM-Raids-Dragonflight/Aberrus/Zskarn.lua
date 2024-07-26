@@ -30,29 +30,29 @@ mod:RegisterEventsInCombat(
 --]]
 --TODO, icon method for golems will likely be changed to broodkeeper method since that's what BW is likely to use, but for testing purposes a basic incremental apply per set is probably fine
 --TODO, GTFO for standing in fire traps
-local warnSoakedShrapnal						= mod:NewAddsLeftAnnounce(406725, 2)
-local warnScatterTraps							= mod:NewCountAnnounce(406725, 2)
-local warnSalvageParts							= mod:NewTargetNoFilterAnnounce(405592, 1)
-local warnSearingClaws							= mod:NewStackAnnounce(404942, 2, nil, "Tank|Healer")
+local warnSoakedShrapnal						= mod:NewAddsLeftAnnounce(406725, 2) --Шрапнельная бомба
+local warnScatterTraps							= mod:NewCountAnnounce(406725, 2) --Шрапнельная бомба
+local warnSalvageParts							= mod:NewTargetNoFilterAnnounce(405592, 1) --Сбор запчастей
+local warnSearingClaws							= mod:NewStackAnnounce(404942, 2, nil, "Tank|Healer") --Обжигающие когти
 
 local specWarnTacticalDestruction				= mod:NewSpecialWarningDodgeCount(406678, nil, nil, nil, 4, 2) --Тактическое разрушение
-local specWarnDragonDeezTraps					= mod:NewSpecialWarningDodgeCount(405736, nil, nil, nil, 1, 2)
-local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil, nil, nil, 1, 2)
-local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, 149213, nil, 2, 2)
-local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2)
+local specWarnDragonDeezTraps					= mod:NewSpecialWarningDodgeCount(405736, nil, nil, nil, 1, 2) --Ловушки драконьего огня
+local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil, nil, nil, 1, 2) --Оживление големов
+local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2) --Активация ловушки драконьего огня
+local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, 149213, nil, 2, 2) --Взрывная волна (Отпор)
+local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 6, nil, nil, 1, 4) --Обжигающие когти
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
 local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тактическое разрушение
-local timerShrapnalBombCD						= mod:NewCDCountTimer(42.5, 406725, 167180, nil, nil, 3)--"Bombs"
-local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2)--"Detonate"
-local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, nil, nil, nil, 1)
-local timerBlastWaveCD							= mod:NewCDCountTimer(34, 403978, 149213, nil, nil, 2)--"Knockback"
-local timerUnstableEmbersCD						= mod:NewCDCountTimer(20.7, 404010, 264364, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)--"Embers"
-local timerEliminationProtocol					= mod:NewCastTimer(10, 409942, 207544, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--"Beams"
-local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, nil, nil, nil, 3)
+local timerShrapnalBombCD						= mod:NewCDCountTimer(42.5, 406725, 167180, nil, nil, 3) --Шрапнельная бомба (Бомбы)
+local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2) --Шрапнельная бомба (Взрыв)
+local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, nil, nil, nil, 1) --Оживление големов
+local timerBlastWaveCD							= mod:NewCDCountTimer(34, 403978, 149213, nil, nil, 2) --Взрывная волна (Отпор)
+local timerUnstableEmbersCD						= mod:NewCDCountTimer(20.7, 404010, 264364, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Нестабильные угли (Угли)
+local timerEliminationProtocol					= mod:NewCastTimer(10, 409942, 207544, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Протокол устранения (Лучи)
+local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, nil, nil, nil, 3) --Ловушки драконьего огня
 local berserkTimer								= mod:NewBerserkTimer(600)
 
 local yellUnstableEmbers						= mod:NewShortYell(404010, nil, nil, nil, "YELL")
@@ -239,7 +239,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
 	if spellId == 404955 then
 		self.vb.shrapnalSoakCount = self.vb.shrapnalSoakCount + 1
-		warnSoakedShrapnal:Show(self.vb.expectedBombs - self.vb.shrapnalSoakCount)
+	--	warnSoakedShrapnal:Show(self.vb.expectedBombs - self.vb.shrapnalSoakCount) --Сломанный разрабами анонс
 		if self.vb.shrapnalSoakCount == self.vb.expectedBombs then
 			timerShrapnalBomb:Stop()
 		end
