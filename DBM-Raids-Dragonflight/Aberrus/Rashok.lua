@@ -34,8 +34,9 @@ local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Пров�
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
 local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 
+local specWarnShadowflameFissures					= mod:NewSpecialWarningDodge(404431, nil, 205181, nil, 2, 2) --Разломы пламени Тьмы (Пламя тьмы)
 local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 3, 4) --Сломанный проводник
-local specWarnAncientFury							= mod:NewSpecialWarningSpell(405316, nil, nil, nil, 2, 2) --Древняя ярость
+local specWarnAncientFury							= mod:NewSpecialWarningDefensive(405316, nil, nil, nil, 3, 4) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, nil, nil, 4, 4) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, nil, 2, 2) --Взрыв темной лавы
@@ -50,9 +51,10 @@ local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1,
 
 local timerUnyieldingRage							= mod:NewBuffActiveTimer(96, 406165, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Тлеющая ярость
 local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
+local timerAncientFury								= mod:NewCastTimer(10, 405316, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
 local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Обжигающий удар
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
-local timerShadowlavaBlastCD						= mod:NewCDCountTimer(28.9, 406333, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв темной лавы
+local timerShadowlavaBlastCD						= mod:NewCDTimer(28.9, 406333, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв темной лавы
 local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
@@ -194,8 +196,8 @@ function mod:OnCombatStart(delay)
 	timerSearingSlamCD:Start(9.1-delay, 1)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
-	timerShadowlavaBlastCD:Start(95.2-delay, 1)
-	timerAncientFuryCD:Start(120-delay)
+	timerShadowlavaBlastCD:Start(95.2-delay)
+	timerAncientFuryCD:Start(118-delay) --
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
 		timerVolcanicComboCD:Start(29.1-delay, 1)
@@ -211,6 +213,9 @@ function mod:OnCombatStart(delay)
 	elseif self:IsHeroic() then
 		timerVolcanicComboCD:Start(29.1-delay, 1)
 		self:Schedule(29.1, startProshlyapationOfMurchal, self)
+		self:RegisterShortTermEvents(
+			"SPELL_ENERGIZE 405825"
+		)
 		difficultyName = "heroic"
 	else
 		timerVolcanicComboCD:Start(30.1-delay, 1)
@@ -239,9 +244,10 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 405316 then
+	if spellId == 405316 then --Древняя ярость
 		specWarnAncientFury:Show()
 		specWarnAncientFury:Play("aesoon")
+		timerAncientFury:Start()
 	elseif spellId == 405821 then --Обжигающий удар
 		self.vb.slamCount = self.vb.slamCount + 1
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, difficultyName, self.vb.murchalOchkenProshlyapationCount, spellId, self.vb.slamCount+1)
@@ -379,6 +385,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:Unschedule(startProshlyapationOfMurchal)
 		timerVolcanicComboCD:Stop()
 		warnSiphonEnergyApplied:Show(args.destName)
+		specWarnShadowflameFissures:Show()
+		specWarnShadowflameFissures:Play("watchstep")
 		timerSearingSlamCD:Stop()
 		timerChargedSmashCD:Stop()
 		timerDoomFlameCD:Stop()
@@ -449,8 +457,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
-		timerShadowlavaBlastCD:Start(96.8, self.vb.blastCount+1) --2 каст в героике точно
-		timerAncientFuryCD:Start(120)
+		timerShadowlavaBlastCD:Start(96.8) --2 каст в героике точно
+		timerAncientFuryCD:Start(118)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
