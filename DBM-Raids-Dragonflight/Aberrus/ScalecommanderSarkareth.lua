@@ -171,6 +171,7 @@ mod.vb.hurtlingIcon = 3
 mod.vb.bigAddKilled = 0
 --Non Synced Variables
 local Phase2 = false
+local Phase2Start = false
 local oblivionStacks = {}
 local castsPerGUID = {}
 local oblivionDisabled = false--Cache to avoid constant option table spamming
@@ -375,6 +376,7 @@ function mod:OnCombatStart(delay)
 	self.vb.bigAddKilled = 0
 	playerVoidFracture = false
 	Phase2 = false
+	Phase2Start = false
 --	timerScorchingBombCD:Start(1-delay, 1)--Used 1 second into pull
 	if self:IsMythic() then
 		difficultyName = "mythic"
@@ -681,6 +683,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:UpdateTable(oblivionStacks, 0.2)
 		end
 	elseif spellId == 401215 then --Межзвездная пустота
+		if not Phase2Start then
+			Phase2Start = true
+			timerEndExistenceCast:Start(21)
+		end
 		if args:IsPlayer() then
 			specWarnEmptynessBetweenStars:Show()
 			specWarnEmptynessBetweenStars:Play("teleyou")
@@ -843,7 +849,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
 		if not Phase2 then
 			warnVoidEmpowerment:Show(args.destName)
-			timerEndExistenceCast:Start()
+		--	timerEndExistenceCast:Start()
 		end
 		timerOppressingHowlCD:Stop()
 		timerGlitteringSurgeCD:Stop()
@@ -930,7 +936,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 410654 then --Начало фазы 3
 		self:SendSync("Phase 3 Start")
-	elseif spellId == 410625 then
+	elseif spellId == 410625 then --Прекращение существования (Стартанула фаза 2)
 		timerEndExistenceCast:Stop()
 		--True start of phase 2 timers
 		self:SetStage(2)
