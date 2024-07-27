@@ -39,31 +39,32 @@ mod:RegisterEventsInCombat(
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Stage One: The Zaqali Forces
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26604))
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 ----Ignara (Mythic Only)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26737))
 local warnPhoenixRush								= mod:NewCountAnnounce(401108, 3) --Рывок феникса
 
-local specWarnAwakenedFocus							= mod:NewSpecialWarningRun(401381, nil, 374610, nil, 4, 2, 4) --Пылающее средоточие "Fixate"
+local specWarnAwakenedFocus							= mod:NewSpecialWarningRun(401381, nil, 96306, nil, 4, 2, 4) --Пылающее средоточие (Преследование)
 local specWarnVigorousGale							= mod:NewSpecialWarningCount(407009, nil, nil, nil, 2, 13, 4) --Могучий ветер
 
 local timerPhoenixRushCD							= mod:NewCDCountTimer(29.9, 401108, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Рывок феникса
 local timerVigorousGaleCD							= mod:NewCDCountTimer(29.9, 407009, nil, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Могучий ветер
 ----Warlord Kagni
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26209))
-local warnHeavyCudgel								= mod:NewStackAnnounce(401258, 2, nil, "Tank|Healer")
-local warnMagmaMystic								= mod:NewCountAnnounce(397383, 3)
+local warnHeavyCudgel								= mod:NewStackAnnounce(401258, 2, nil, "Tank|Healer") --Тяжелая дубина
+local warnMagmaMystic								= mod:NewCountAnnounce(397383, 3) --Раскаленный барьер
 local warnWallClimber								= mod:NewCountAnnounce("ej26221", 2, 163789, false, 2)
 local warnHeavyCudgel2								= mod:NewTargetNoFilterAnnounce(401258, 4) --Тяжелая дубина
 
 local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, nil, 3, 2) --Тяжелая дубина
-local specWarnHeavyCudgelStack						= mod:NewSpecialWarningStack(401258, nil, 2, nil, nil, 1, 6)
-local specWarnHeavyCudgelSwap						= mod:NewSpecialWarningTaunt(401258, nil, nil, nil, 1, 2)
-local specWarnDevastatingLeap						= mod:NewSpecialWarningDodgeCount(408959, nil, 67382, nil, 2, 2)
+local specWarnHeavyCudgelStack						= mod:NewSpecialWarningStack(401258, nil, 2, nil, nil, 1, 6) --Тяжелая дубина
+local specWarnHeavyCudgelSwap						= mod:NewSpecialWarningTaunt(401258, nil, nil, nil, 1, 2) --Тяжелая дубина
+local specWarnDevastatingLeap						= mod:NewSpecialWarningDodgeCount(408959, nil, 67382, nil, 2, 2) --Разрушительный прыжок (Прыжок)
 local specWarnAdds									= mod:NewSpecialWarningAddsCustom(285849, "-Healer", nil, nil, 1, 2)
 
-local timerHeavyCudgelCD							= mod:NewCDCountTimer(21.0, 401258, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerDevastatingLeapCD						= mod:NewCDCountTimer(29.9, 408959, 67382, nil, nil, 3)--"Leap"
-local timerMagmaMysticCD							= mod:NewCDCountTimer(29.9, 397383, nil, nil, nil, 1)--Molten Barrier Icon
+local timerHeavyCudgelCD							= mod:NewCDCountTimer(21.0, 401258, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Тяжелая дубина
+local timerDevastatingLeapCD						= mod:NewCDCountTimer(29.9, 408959, 67382, nil, nil, 3) --Разрушительный прыжок (Прыжок)
+local timerMagmaMysticCD							= mod:NewCDCountTimer(29.9, 397383, nil, nil, nil, 1) --Раскаленный барьер
 local timerWallClimberCD							= mod:NewCDCountTimer(29.9, "ej26221", nil, false, 2, 1, 163789)--Ladder Icon
 local timerGuardsandHuntsmanCD						= mod:NewTimer(30, "timerGuardsandHuntsmanCD", 285849, nil, nil, 1, nil, nil, nil, nil, nil, nil, nil, 404382)--Random guard banner
 ----Magma Mystic
@@ -84,7 +85,7 @@ local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4) --Вулкани
 local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2)
 
 local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2) --Обжигающий рык
-local timerVolcanicShieldCD							= mod:NewCDTimer(30.3, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
+local timerVolcanicShieldCD							= mod:NewCDTimer(15, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
 ----Flamebound Huntsman
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26213))
 local warnBlazingSpear								= mod:NewTargetAnnounce(401401, 3)
@@ -94,17 +95,16 @@ local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, ni
 --local timerBlazingSpearCD							= mod:NewAITimer(29.9, 401401, nil, nil, nil, 3)
 --Stage Two: Warlord's Will
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26683))
-local warnDesperateImmo								= mod:NewSpellAnnounce(409359, 3, nil, nil, nil, nil, nil, 2)
-local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer")
+local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer") --Горящая дубина
 
-local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 2, 2)
-local specWarnFlamingCudgel							= mod:NewSpecialWarningCount(410351, nil, nil, nil, 2, 2)--Count because it's hybrid warning
-local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6)
-local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2)
+local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 2, 2) --Катастрофический удар
+local specWarnFlamingCudgel							= mod:NewSpecialWarningCount(410351, nil, nil, nil, 2, 2) --Горящая дубина Count because it's hybrid warning
+local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6) --Горящая дубина
+local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2) --Горящая дубина
 
 --local timerIgnarasFuryCD							= mod:NewAITimer(29.9, 406585, nil, nil, nil, 2)
-local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5)
-local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Катастрофический удар
+local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
 
 local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
 local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL")
@@ -292,8 +292,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.cudgelCount = 0
 		self.vb.leapCount = 0--Reused with demo slam
 		self:SetStage(2)
-		warnDesperateImmo:Show()
-		warnDesperateImmo:Play("ptwo")
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 		timerHeavyCudgelCD:Stop()
 		timerDevastatingLeapCD:Stop()
 		timerPhoenixRushCD:Stop()
@@ -325,7 +325,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timer = 31
 		end
 		timerHeavyCudgelCD:Start(timer - 3, self.vb.cudgelCount+1)--Timer minus cast time
-	elseif spellId == 410351 then
+	elseif spellId == 410351 then --Горящая дубина
 		self.vb.cudgelCount = self.vb.cudgelCount + 1
 		--18, 23, 19, 11.9,
 		--18, 23, 19, 12
@@ -339,6 +339,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timer = 23
 		end
 		timerFlamingCudgelCD:Start(timer - 3, self.vb.cudgelCount+1)--Timer minus cast time
+		--По старой инфе с начала фазы 2 от каста до каста
+		--18.6, 15, 23
 	end
 end
 

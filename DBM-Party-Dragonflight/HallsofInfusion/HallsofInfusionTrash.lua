@@ -65,7 +65,7 @@ local specWarnAqueousBarrier				= mod:NewSpecialWarningInterrupt(377402, "HasInt
 local specWarnRefreshingTides				= mod:NewSpecialWarningInterrupt(376171, "HasInterrupt", nil, nil, 1, 2) --Освежающие волны
 
 local timerDemoShoutCD						= mod:NewCDNPTimer(30, 374339, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Деморализующий крик
-local timerDazzleCD							= mod:NewCDNPTimer(15.3, 374563, nil, nil, nil, 3) --Блеск
+local timerDazzleCD							= mod:NewCDNPTimer(15, 374563, nil, nil, nil, 3) --Блеск
 local timerZephyrsCallCD					= mod:NewCDNPTimer(11.7, 374823, nil, nil, nil, 1) --Зов ветра (23.1)
 local timerWhirlingFuryCD					= mod:NewCDNPTimer(5.2, 375079, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Кружащее неистовство (было 16.2)
 local timerMoltenSubductionCD				= mod:NewCDNPTimer(20.6, 374724, nil, nil, nil, 3) --Раскаленная субдукция
