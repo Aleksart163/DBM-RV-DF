@@ -171,7 +171,7 @@ mod.vb.hurtlingIcon = 3
 mod.vb.bigAddKilled = 0
 --Non Synced Variables
 local Phase2 = false
-local Phase2Start = false
+local Phase2Preshlyap = false
 local oblivionStacks = {}
 local castsPerGUID = {}
 local oblivionDisabled = false--Cache to avoid constant option table spamming
@@ -376,7 +376,7 @@ function mod:OnCombatStart(delay)
 	self.vb.bigAddKilled = 0
 	playerVoidFracture = false
 	Phase2 = false
-	Phase2Start = false
+	Phase2Preshlyap = false
 --	timerScorchingBombCD:Start(1-delay, 1)--Used 1 second into pull
 	if self:IsMythic() then
 		difficultyName = "mythic"
@@ -683,10 +683,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:UpdateTable(oblivionStacks, 0.2)
 		end
 	elseif spellId == 401215 then --Межзвездная пустота
-		if not Phase2Start then
-			Phase2Start = true
-			timerEndExistenceCast:Start(21)
-		end
 		if args:IsPlayer() then
 			specWarnEmptynessBetweenStars:Show()
 			specWarnEmptynessBetweenStars:Play("teleyou")
@@ -696,6 +692,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			if expireTime then--Buff has various durations based on difficulty, 15-25, this is just easiest
 				local remaining = expireTime-GetTime()
 				timerEmptynessBetweenStars:Start(remaining)
+			end
+			if not Phase2Preshlyap then
+				Phase2Preshlyap = true
+				timerEndExistenceCast:Start(21)
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
@@ -806,7 +806,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellVoidBomb:Yell()
 			yellVoidFractureFades:Countdown(spellId)
 			if Phase2 then
-				if spellId == 404218 then
+				specWarnVoidFracture2:Schedule(1.5, BetweenStars)
+				specWarnVoidFracture2:ScheduleVoice(1.5, "runout")
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				if expireTime then
+					local remaining = expireTime-GetTime()
+					timerVoidBomb:Start(remaining)
+				end
+			--[[	if spellId == 404218 then
 					specWarnVoidFracture2:Schedule(2, BetweenStars)
 					specWarnVoidFracture2:ScheduleVoice(2, "runout")
 					timerVoidBomb:Start()
@@ -814,7 +821,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnVoidFracture2:Schedule(4, BetweenStars)
 					specWarnVoidFracture2:ScheduleVoice(4, "runout")
 					timerVoidBomb:Start(14)
-				end
+				end]]
 			end
 		else
 			warnVoidFracture:CombinedShow(1, args.destName)
