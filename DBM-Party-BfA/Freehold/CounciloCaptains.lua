@@ -153,7 +153,7 @@ function mod:BlackoutBarrelTarget(targetname, uId)
 		specWarnBlackoutBarrel:Play("changetarget")
 	end
 	if self.Options.SetIconOnBlackoutBarrel then
-		self:SetIcon(targetname, 8, 30)
+		self:SetIcon(targetname, 8, 15)
 	end
 end
 
