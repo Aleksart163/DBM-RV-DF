@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2093, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231020041658")
+mod:SetRevision("20240728070000")
 mod:SetCreatureID(126845, 126847, 126848)--Captain Jolly, Captain Raoul, Captain Eudora
 mod:SetEncounterID(2094)
+mod:SetUsedIcons(8)
 mod:DisableRegenDetection()
 mod:DisableFriendlyDetection()
-mod:SetHotfixNoticeRev(20230922000000)
-mod:SetMinSyncRevision(20230922000000)
+mod:SetHotfixNoticeRev(20240729070000)
+mod:SetMinSyncRevision(20240729070000)
 
 mod:RegisterCombat("combat")
 
@@ -15,6 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 258338 256589 257117 267522 272884 267533 272902 265088 264608 265168 256979 281329",
 	"SPELL_CAST_SUCCESS 258381",
 	"SPELL_AURA_APPLIED 265085 265056 278467",
+	"SPELL_AURA_REMOVED 258875",
 	"SPELL_DAMAGE 272397",
 	"SPELL_MISSED 272397",
 	"UNIT_DIED"
@@ -58,20 +60,21 @@ mod:AddRangeFrameOption(5, 267522)
 --Raoul
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17023))
 local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1) --Бочонок с краником
+local warnBlackoutBarrel			= mod:NewTargetNoFilterAnnounce(258338, 3) --Бочка черной пелены
 
-local specWarnBarrelSmash			= mod:NewSpecialWarningRun(256589, "Melee", nil, nil, 4, 2) --Удар бочкой
-local specWarnBarrelSmash2			= mod:NewSpecialWarningDodge(256589, nil, nil, nil, 2, 2) --Удар бочкой
-local specWarnBlackoutBarrel		= mod:NewSpecialWarningSwitch(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
+local specWarnBarrelSmashCast		= mod:NewSpecialWarningDodge(256589, nil, nil, nil, 2, 2) --Удар бочкой
+local specWarnBlackoutBarrel		= mod:NewSpecialWarningTarget(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
+local specWarnBlackoutBarrel2		= mod:NewSpecialWarningRun(258338, nil, nil, nil, 4, 4) --Бочка черной пелены
 
 ----Hostile
-local timerBarrelSmashCD			= mod:NewCDTimer(22.9, 256589, nil, "Melee", nil, 3) --Удар бочкой 22.9-24.5
-local timerBlackoutBarrelCD			= mod:NewCDTimer(46.1, 258338, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Бочка черной пелены
+local timerBarrelSmashCD			= mod:NewNextTimer(22.9, 256589, nil, "Melee", nil, 2) --Удар бочкой 22.9-24.5
+local timerBlackoutBarrelCD			= mod:NewCDCountTimer(47.3, 258338, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Бочка черной пелены
 ----Friendly
 local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5) --Бочонок с краником
 --Eudora
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17024))
 local warnChainShot					= mod:NewSpellAnnounce(272902, 1) --Выстрел цепью
-local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3) --Пороховой выстрел
+--local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3) --Пороховой выстрел
 
 local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 4) --Картечный залп
 local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2) --Пороховой выстрел
@@ -80,6 +83,12 @@ local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 
 local timerGrapeShotCD				= mod:NewCDTimer(30.2, 258381, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
 ----Friendly
 local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --Выстрел цепью
+
+local yellBlackoutBarrel			= mod:NewShortYell(258338, nil, nil, nil, "YELL") --Бочка черной пелены
+
+mod:AddSetIconOption("SetIconOnBlackoutBarrel", 258338, true, 0, {8}) --Бочка черной пелены
+
+mod.vb.blackoutBarrelCount = 0
 
 local function scanCaptains(self, isPull, delay)
 	local foundOne, foundTwo, foundThree
@@ -101,8 +110,8 @@ local function scanCaptains(self, isPull, delay)
 							DBM.RangeCheck:Show(5)
 						end
 					elseif cid == 126847 then--Raoul
-						timerBarrelSmashCD:Start(4.5-delay, bossGUID)
-						timerBlackoutBarrelCD:Start(16.9-delay, bossGUID)
+						timerBarrelSmashCD:Start(5-delay, bossGUID)
+						timerBlackoutBarrelCD:Start(19.5-delay, 1, bossGUID)
 					else--Eudora
 						timerGrapeShotCD:Start(6.3-delay, bossGUID) --смотрится норм
 					end
@@ -132,13 +141,29 @@ local function scanCaptains(self, isPull, delay)
 	end
 end
 
+function mod:BlackoutBarrelTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnBlackoutBarrel2:Show()
+		specWarnBlackoutBarrel2:Play("runout")
+		yellBlackoutBarrel:Yell()
+	else
+		warnBlackoutBarrel:Show(targetname)
+		specWarnBlackoutBarrel:Show(targetname)
+		specWarnBlackoutBarrel:Play("changetarget")
+	end
+	if self.Options.SetIconOnBlackoutBarrel then
+		self:SetIcon(targetname, 8, 30)
+	end
+end
+
 function mod:PowderShotTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnPowderShot:Show()
 		specWarnPowderShot:Play("targetyou")
-	else
-		warnPowderShot:Show(targetname)
+--	else
+--		warnPowderShot:Show(targetname)
 	end
 end
 
@@ -150,6 +175,7 @@ local function startProshlyapationOfMurchal(self)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.blackoutBarrelCount = 0
 	if not self:IsNormal() then
 		timerTendingBarCD:Start(8-delay)
 		self:Schedule(7.3, startProshlyapationOfMurchal, self)
@@ -170,17 +196,16 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 258338 then
-		specWarnBlackoutBarrel:Show()
-		specWarnBlackoutBarrel:Play("changetarget")
-		timerBlackoutBarrelCD:Start(nil, args.sourceGUID)
+	if spellId == 258338 then --Бочка черной пелены
+		self.vb.blackoutBarrelCount = self.vb.blackoutBarrelCount + 1
+		self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.1, 2)
+		timerBlackoutBarrelCD:Start(nil, self.vb.blackoutBarrelCount+1, args.sourceGUID)
 	elseif spellId == 256589 then
+		specWarnBarrelSmashCast:Show()
 		if self:IsMelee() then
-			specWarnBarrelSmash:Show()
-			specWarnBarrelSmash:Play("justrun")
+			specWarnBarrelSmashCast:Play("runout")
 		else
-			specWarnBarrelSmash2:Show()
-			specWarnBarrelSmash2:Play("watchstep")
+			specWarnBarrelSmashCast:Play("watchstep")
 		end
 		timerBarrelSmashCD:Start(nil, args.sourceGUID)
 	elseif spellId == 257117 then
@@ -239,6 +264,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		if unitId and UnitIsEnemy("player", unitId) then
 			warnCausticBrewOnBoss:Show(args.destName)
 		end]]
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 258875 then --Бочка черной пелены
+		if self.Options.SetIconOnBlackoutBarrel then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
