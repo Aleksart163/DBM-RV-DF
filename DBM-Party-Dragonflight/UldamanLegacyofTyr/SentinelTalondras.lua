@@ -27,24 +27,26 @@ mod:RegisterEventsInCombat(
  or ability.id = 372600 or ability.id = 372652 and target.id = 184124
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnInexorable							= mod:NewSpellAnnounce(372600, 2)
-local warnInexorableOver						= mod:NewFadesAnnounce(372600, 1)
-local warnResonatingOrb							= mod:NewTargetNoFilterAnnounce(382071, 3)
-local warnEarthenShards							= mod:NewTargetNoFilterAnnounce(372718, 3, nil, "Healer")
+local warnInexorable							= mod:NewSpellAnnounce(372600, 2) --Неумолимость
+local warnInexorableOver						= mod:NewFadesAnnounce(372600, 1) --Неумолимость
+local warnResonatingOrb							= mod:NewTargetNoFilterAnnounce(382071, 3) --Резонирующая сфера
+local warnEarthenShards							= mod:NewTargetNoFilterAnnounce(372718, 4) --Земляные осколки
 
-local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, nil, nil, 3, 2)
-local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2)
-local specWarnCrushingStomp						= mod:NewSpecialWarningCount(372701, nil, nil, nil, 2, 2)
+local specWarnEarthenShards						= mod:NewSpecialWarningDefensive(372718, nil, nil, nil, 3, 4) --Земляные осколки
+local specWarnEarthenShards2					= mod:NewSpecialWarningTarget(372718, "Healer", nil, nil, 3, 4) --Земляные осколки
+local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, nil, nil, 3, 4) --Титаническое усиление
+local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2) --Резонирующая сфера
+local specWarnCrushingStomp						= mod:NewSpecialWarningCount(372701, nil, nil, nil, 2, 2) --Сокрушительная поступь
 
-local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerResonatingOrbCD						= mod:NewCDTimer(25.6, 382071, nil, nil, nil, 3, nil, nil, true)--25-30ish
-local timerCrushingStompCD						= mod:NewCDCountTimer(12.1, 372701, nil, nil, nil, 2, nil, nil, true)
-local timerEarthenShardsCD						= mod:NewCDTimer(6, 372718, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON, true)
+local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Титаническое усиление
+local timerResonatingOrbCD						= mod:NewCDTimer(25.6, 382071, nil, nil, nil, 3, nil, nil, true) --Резонирующая сфера 25-30ish
+local timerCrushingStompCD						= mod:NewCDCountTimer(12.1, 372701, nil, nil, nil, 2, nil, nil, true) --Сокрушительная поступь
+local timerEarthenShardsCD						= mod:NewCDTimer(6, 372718, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, true) --Земляные осколки
 
-local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL")
-local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL")
+local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
+local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
 
-mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3}) --Резонирующая сфера
 
 mod.vb.orbIcon = 1
 mod.vb.stompCount = 0
@@ -102,8 +104,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnResonatingOrb:CombinedShow(0.5, args.destName)
 		self.vb.orbIcon = self.vb.orbIcon + 1
-	elseif spellId == 372718 then
-		warnEarthenShards:CombinedShow(0.3, args.destName)--TODO: Don't combo if it's never more than 1
+	elseif spellId == 372718 then --Земляные осколки
+		if args:IsPlayer() then
+			specWarnEarthenShards:Show()
+			specWarnEarthenShards:Play("defensive")
+		else
+			warnEarthenShards:CombinedShow(0.3, args.destName)--TODO: Don't combo if it's never more than 1
+			specWarnEarthenShards2:CombinedShow(0.3, args.destName)
+			specWarnEarthenShards2:Play("helpme")
+		end
 	end
 end
 
