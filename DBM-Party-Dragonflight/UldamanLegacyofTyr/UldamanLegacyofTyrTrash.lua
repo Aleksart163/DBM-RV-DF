@@ -36,13 +36,14 @@ local warnSonicBurst						= mod:NewCastAnnounce(369411, 4)
 local warnThunderousClap					= mod:NewCastAnnounce(381593, 3) --Грохочущий удар
 local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer") --Удар бастиона
 local warnHasten							= mod:NewCastAnnounce(377500, 3) --Ускорение
+local warnCurseofStone						= mod:NewCastAnnounce(369365, 4) --Проклятие камня
 
 local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, "Melee", nil, nil, 4, 2) --Изуверский удар
 local specWarnBrutalSlam2					= mod:NewSpecialWarningDodge(369811, "Ranged", nil, nil, 2, 2) --Изуверский удар
 local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2) --Раскалывающий удар
 local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2) --Землетрясение
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
-local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 1, 2)
+local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 3, 2) --Проклятие камня
 local specWarnTrappedinStone				= mod:NewSpecialWarningDispel(369366, "RemoveCurse", nil, nil, 3, 2) --В каменном плену
 local specWarnDiseasedbite					= mod:NewSpecialWarningDispel(369818, "RemoveDisease", nil, nil, 1, 2)
 local specWarnSpikedCarapaceDispel			= mod:NewSpecialWarningDispel(369823, "MagicDispeller", nil, nil, 1, 2) --Шипастый панцирь
@@ -52,7 +53,7 @@ local specWarnChainLightning				= mod:NewSpecialWarningInterrupt(369675, "HasInt
 local specWarnStoneSpike					= mod:NewSpecialWarningInterrupt(369674, "HasInterrupt", nil, nil, 1, 2) --Каменный шип
 local specWarnSpikedCarapace				= mod:NewSpecialWarningInterrupt(369823, "HasInterrupt", nil, nil, 1, 2) --Шипастый панцирь
 local specWarnStoneBolt						= mod:NewSpecialWarningInterrupt(369399, "HasInterrupt", nil, nil, 1, 2) --Каменная стрела
-local specWarnCurseofStoneKick				= mod:NewSpecialWarningInterrupt(369365, "HasInterrupt", nil, nil, 1, 2)
+local specWarnCurseofStoneKick				= mod:NewSpecialWarningInterrupt(369365, "HasInterrupt", nil, nil, 1, 2) --Проклятие камня
 local specWarnSonicBurst					= mod:NewSpecialWarningInterrupt(369411, "HasInterrupt", nil, nil, 1, 2)
 local specWarnHasten						= mod:NewSpecialWarningInterrupt(377500, "HasInterrupt", nil, nil, 1, 2) --Ускорение
 
@@ -62,7 +63,7 @@ local timerStoneSpikeCD						= mod:NewCDNPTimer(6, 369674, nil, false, nil, 4, n
 local timerChainLightningCD					= mod:NewCDNPTimer(25.5, 369675, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Цепная молния
 local timerJaggedBiteCD						= mod:NewCDNPTimer(11.8, 377732, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Зазубренный укус
 local timerAncientPowerCD					= mod:NewCDNPTimer(6, 377738, nil, nil, nil, 5) --Древнее могущество
-local timerHailofStoneCD					= mod:NewCDNPTimer(21.8, 369465, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Град камней
+local timerHailofStoneCD					= mod:NewCDNPTimer(21.4, 369465, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Град камней
 local timerStoneBoltCD						= mod:NewCDNPTimer(7.2, 369399, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменная стрела 7-11, off by default to giev prio to Hail of stone
 local timerEarthquakeCD						= mod:NewCDNPTimer(23.2, 369328, nil, nil, nil, 2) --Землетрясение
 local timerFissuringSlamCD					= mod:NewCDNPTimer(9.6, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
@@ -155,12 +156,13 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 369400 and self:AntiSpam(3, 6) then
 		warnEarthenWard:Show()
-	elseif spellId == 369365 then
+	elseif spellId == 369365 then --Проклятие камня
 		if self.Options.SpecWarn369365interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnCurseofStoneKick:Show(args.sourceName)
 			specWarnCurseofStoneKick:Play("kickcast")
---		elseif self:AntiSpam(3, 7) then
---			warnChainLightning:Show()
+		elseif self:AntiSpam(2, "CurseofStone") then
+			warnCurseofStone:Show()
+			warnCurseofStone:Play("crowdcontrol")
 		end
 	elseif spellId == 369423 then
 		timerPounceCD:Start(nil, args.sourceGUID)

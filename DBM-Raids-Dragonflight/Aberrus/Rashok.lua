@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2525, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426174649")
+mod:SetRevision("20240727070000")
 mod:SetCreatureID(201320)
 mod:SetEncounterID(2680)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20240609070000)
+mod:SetHotfixNoticeRev(20240728070000)
 --mod:SetMinSyncRevision(20221215000000)
 mod.respawnTime = 30
 
@@ -50,7 +50,7 @@ local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil,
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1, 8)
 
 local timerUnyieldingRage							= mod:NewBuffActiveTimer(96, 406165, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Тлеющая ярость
-local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
+local timerAncientFuryCD							= mod:NewCDTimer(29.9, 405316, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
 local timerAncientFury								= mod:NewCastTimer(10, 405316, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Древняя ярость
 local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Обжигающий удар
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
@@ -58,7 +58,7 @@ local timerShadowlavaBlastCD						= mod:NewCDTimer(28.9, 406333, nil, nil, nil, 
 local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
 local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
-local berserkTimer									= mod:NewBerserkTimer(120)
+--local berserkTimer									= mod:NewBerserkTimer(118)
 
 local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
 local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
@@ -442,7 +442,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		elseif self.vb.murchalOchkenProshlyapationCount == 3 then
 			specWarnShatteredConduit:Show()
 			specWarnShatteredConduit:Play("speedup")
-			berserkTimer:Start()
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 			if self:IsMythic() then
@@ -491,8 +490,7 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 		local remaining = 100-bossPower
 		if remaining > 0 then
 			local elapsedTimer = 100-remaining
-			timerAncientFuryCD:Update(elapsedTimer, 100)
-			berserkTimer:Update(elapsedTimer, 100)
+			timerAncientFuryCD:Update(elapsedTimer, 118)
 		else
 			timerAncientFuryCD:Stop()
 		end

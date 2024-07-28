@@ -7,7 +7,7 @@ mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 409612 406911 411755 409473",
+	"SPELL_CAST_START 409612 406911 411755 409473 406282",
 	"SPELL_CAST_SUCCESS 409473",
 	"SPELL_AURA_APPLIED 411808 413785 409576",
 --	"SPELL_AURA_APPLIED_DOSE",
@@ -22,6 +22,9 @@ mod:RegisterEvents(
  or ability.id = 413785 and type = "cast"
 ]]--
 
+local warnDreamBurst						= mod:NewTargetNoFilterAnnounce(406282, 4) --Усыпляющий взрыв
+
+local specWarnDreamBurst					= mod:NewSpecialWarningMoveAway(406282, nil, nil, nil, 4, 2) --Усыпляющий взрыв
 local specWarnLavaPurge						= mod:NewSpecialWarningDodge(409473, nil, nil, nil, 2, 2) --Лавовое истребление
 local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, nil, 2, 2) --Истребление
 local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2)
@@ -32,7 +35,9 @@ local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "Ha
 local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребление
 local timerRP								= mod:NewRPTimer(30)
 
-local yellSlimeInjection					= mod:NewYell(411808, nil, nil, nil, "YELL")
+local yellDreamBurst						= mod:NewShortYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
+local yellDreamBurst2						= mod:NewShortFadesYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
+local yellSlimeInjection					= mod:NewShortYell(411808, nil, nil, nil, "YELL") --Разбрызгивание слизи
 local yellSlimeInjectionFades				= mod:NewShortFadesYell(411808, nil, nil, nil, "YELL")
 local yellDarkBindings						= mod:NewShortYell(413785, nil, nil, nil, "YELL") --Темные путы
 local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "YELL") --Темные путы
@@ -45,6 +50,19 @@ local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "
 --11 33 125
 --11 46 158
 --11 59 218
+
+function mod:DreamBurstTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnDreamBurst:Show()
+		specWarnDreamBurst:Play("runout")
+		yellDreamBurst:Yell()
+		yellDreamBurst2:Countdown(3.5)
+	else
+		warnDreamBurst:Show(targetname)
+	end
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 409612 and self:AntiSpam(5, 2) then
@@ -67,6 +85,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 409473 and self:AntiSpam(3, "LavaPurge") then --Лавовое истребление
 		specWarnLavaPurge:Show()
 		specWarnLavaPurge:Play("watchstep")
+	elseif spellId == 406282 then --Усыпляющий взрыв
+		self:BossTargetScanner(args.sourceGUID, "DreamBurstTarget", 0.1, 2)
 	end
 end
 
@@ -88,7 +108,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellSlimeInjectionFades:Countdown(spellId)
 		end
 	elseif spellId == 413785 or spellId == 409576 then --Темные путы
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(2, "DarkBindings") then
 			specWarnDarkBindings:Show()
 			specWarnDarkBindings:Play("scatter")
 			yellDarkBindings:Yell()
