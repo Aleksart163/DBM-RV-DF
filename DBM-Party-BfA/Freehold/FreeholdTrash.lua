@@ -79,9 +79,9 @@ local timerGroundShatterCD				= mod:NewCDNPTimer(19.3, 258199, nil, nil, nil, 2,
 local timerBoulderThrowCD				= mod:NewCDNPTimer(19.3, 258181, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Бросок валуна
 local timerPainfulMotivationCD			= mod:NewCDNPTimer(18.1, 257899, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBladeBarrageCD				= mod:NewCDNPTimer(18.2, 257870, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Завеса клинков
-local timerThunderingSquallCD			= mod:NewCDNPTimer(27.8, 257736, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerThunderingSquallCD			= mod:NewCDNPTimer(20.6, 257736, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Громоподобный шквал
+local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Смазанный нефтью клинок
+local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяной удар
 
 local yellBlindRagePlayer				= mod:NewShortYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
 local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
