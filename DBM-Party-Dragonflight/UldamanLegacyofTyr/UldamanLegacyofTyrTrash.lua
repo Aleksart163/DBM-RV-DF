@@ -45,9 +45,9 @@ local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil,
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
 local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 3, 2) --Проклятие камня
 local specWarnTrappedinStone				= mod:NewSpecialWarningDispel(369366, "RemoveCurse", nil, nil, 3, 2) --В каменном плену
-local specWarnDiseasedbite					= mod:NewSpecialWarningDispel(369818, "RemoveDisease", nil, nil, 1, 2)
+--local specWarnDiseasedbite					= mod:NewSpecialWarningDispel(369818, "RemoveDisease", nil, nil, 1, 2) --Зараженный укус
 local specWarnSpikedCarapaceDispel			= mod:NewSpecialWarningDispel(369823, "MagicDispeller", nil, nil, 1, 2) --Шипастый панцирь
-local specWarnEarthenWard					= mod:NewSpecialWarningDispel(369400, "MagicDispeller", nil, nil, 1, 2)
+local specWarnEarthenWard					= mod:NewSpecialWarningDispel(369400, "MagicDispeller", nil, nil, 1, 2) --Земляной оберег
 local specWarnHastenDispel					= mod:NewSpecialWarningDispel(377500, "MagicDispeller", nil, nil, 1, 2) --Ускорение
 local specWarnChainLightning				= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
 local specWarnStoneSpike					= mod:NewSpecialWarningInterrupt(369674, "HasInterrupt", nil, nil, 1, 2) --Каменный шип
@@ -236,11 +236,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 369823 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnSpikedCarapaceDispel:Show(args.destName)
 		specWarnSpikedCarapaceDispel:Play("helpdispel")
-	elseif spellId == 369818 and args:IsDestTypePlayer() then
+--[[	elseif spellId == 369818 and args:IsDestTypePlayer() then
 		if self:IsSpellCaster() and self:AntiSpam(3, 3) then
 			specWarnDiseasedbite:Show(args.destName)
 			specWarnDiseasedbite:Play("helpdispel")
-		end
+		end]]
 	elseif spellId == 369400 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnEarthenWard:Show(args.destName)
 		specWarnEarthenWard:Play("helpdispel")
