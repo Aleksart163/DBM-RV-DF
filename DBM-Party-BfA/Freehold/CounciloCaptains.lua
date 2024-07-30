@@ -195,7 +195,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 258338 then --Бочка черной пелены
 		self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.4, 2)
-	--	self:SendSync("BlackoutBarrel")
+	--	self:SendSync("Blackout Barrel")
 		timerBlackoutBarrelCD:Start(nil, args.sourceGUID)
 	elseif spellId == 256589 then --Удар бочкой
 		specWarnBarrelSmashCast:Show()
@@ -204,7 +204,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			specWarnBarrelSmashCast:Play("watchstep")
 		end
-	--	self:SendSync("BarrelSmash")
+	--	self:SendSync("Barrel Smash")
 		timerBarrelSmashCD:Start(nil, args.sourceGUID)
 	elseif spellId == 257117 then
 		warnLuckySevens:Show()
@@ -293,27 +293,28 @@ function mod:UNIT_DIED(args)
 		timerBarrelSmashCD:Stop(args.destGUID)
 		timerBlackoutBarrelCD:Stop(args.destGUID)
 		timerTappedKegCD:Stop(args.destGUID)
-	--	self:SendSync("RaoulDied")
+	--	self:SendSync("Raoul Died")
 	elseif cid == 126848 then--Captain Eudora
 		timerGrapeShotCD:Stop()
 		timerChainShotCD:Stop(args.destGUID)
 		self:Unschedule(startProshlyapationOfMurchal)
-	--	self:SendSync("EudoraDied")
+	--	self:SendSync("Eudora Died")
 	elseif cid == 133219 then--Rummy Mancomb (You bastard, you killed Rummy!)
 		timerTendingBarCD:Stop()
 	end
 end
+
 --[[
-function mod:OnSync(event)
-	if event == "BlackoutBarrel" then
+function mod:OnSync(msg)
+	if msg == "Blackout Barrel" then
 		timerBlackoutBarrelCD:Start(47.3)
-	elseif event == "BarrelSmash" then
+	elseif msg == "Barrel Smash" then
 		timerBarrelSmashCD:Start(22.9)
-	elseif event == "EudoraDied" then
+	elseif msg == "Eudora Died" then
 		timerGrapeShotCD:Stop()
 		timerChainShotCD:Stop()
 		self:Unschedule(startProshlyapationOfMurchal)
-	elseif event == "RaoulDied" then
+	elseif msg == "Raoul Died" then
 		timerBarrelSmashCD:Stop()
 		timerBlackoutBarrelCD:Stop()
 		timerTappedKegCD:Stop()
