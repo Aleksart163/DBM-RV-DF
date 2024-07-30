@@ -68,7 +68,7 @@ local specWarnBlackoutBarrel2		= mod:NewSpecialWarningRun(258338, nil, nil, nil,
 
 ----Hostile
 local timerBarrelSmashCD			= mod:NewNextTimer(22.9, 256589, nil, "Melee", nil, 2) --Удар бочкой 22.9-24.5
-local timerBlackoutBarrelCD			= mod:NewCDCountTimer(47.3, 258338, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Бочка черной пелены
+local timerBlackoutBarrelCD			= mod:NewCDTimer(47.3, 258338, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Бочка черной пелены
 ----Friendly
 local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5) --Бочонок с краником
 --Eudora
@@ -87,8 +87,6 @@ local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --�
 local yellBlackoutBarrel			= mod:NewShortYell(258338, nil, nil, nil, "YELL") --Бочка черной пелены
 
 mod:AddSetIconOption("SetIconOnBlackoutBarrel", 258338, true, 0, {8}) --Бочка черной пелены
-
-mod.vb.blackoutBarrelCount = 0
 
 local function scanCaptains(self, isPull, delay)
 	local foundOne, foundTwo, foundThree
@@ -111,7 +109,7 @@ local function scanCaptains(self, isPull, delay)
 						end
 					elseif cid == 126847 then--Raoul
 						timerBarrelSmashCD:Start(5-delay, bossGUID)
-						timerBlackoutBarrelCD:Start(19.5-delay, 1, bossGUID)
+						timerBlackoutBarrelCD:Start(19.5-delay, bossGUID)
 					else--Eudora
 						timerGrapeShotCD:Start(6.3-delay, bossGUID) --смотрится норм
 					end
@@ -175,7 +173,6 @@ local function startProshlyapationOfMurchal(self)
 end
 
 function mod:OnCombatStart(delay)
-	self.vb.blackoutBarrelCount = 0
 	if not self:IsNormal() then
 		timerTendingBarCD:Start(8-delay)
 		self:Schedule(7.3, startProshlyapationOfMurchal, self)
@@ -197,16 +194,17 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 258338 then --Бочка черной пелены
-		self.vb.blackoutBarrelCount = self.vb.blackoutBarrelCount + 1
-		self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.1, 2)
-		timerBlackoutBarrelCD:Start(nil, self.vb.blackoutBarrelCount+1, args.sourceGUID)
-	elseif spellId == 256589 then
+		self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.4, 2)
+	--	self:SendSync("BlackoutBarrel")
+		timerBlackoutBarrelCD:Start(nil, args.sourceGUID)
+	elseif spellId == 256589 then --Удар бочкой
 		specWarnBarrelSmashCast:Show()
 		if self:IsMelee() then
 			specWarnBarrelSmashCast:Play("runout")
 		else
 			specWarnBarrelSmashCast:Play("watchstep")
 		end
+	--	self:SendSync("BarrelSmash")
 		timerBarrelSmashCD:Start(nil, args.sourceGUID)
 	elseif spellId == 257117 then
 		warnLuckySevens:Show()
@@ -236,7 +234,7 @@ function mod:SPELL_CAST_START(args)
 			warnGoodBrew:Show(L.hasteBrew)
 		end
 		timerTendingBarCD:Start()
-	elseif spellId == 256979 and self:IsMythic() then
+	elseif spellId == 256979 and self:IsMythic() then --Пороховой выстрел
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "PowderShotTarget", 0.1, 16, true, nil, nil, nil, true)
 	end
 end
@@ -295,11 +293,29 @@ function mod:UNIT_DIED(args)
 		timerBarrelSmashCD:Stop(args.destGUID)
 		timerBlackoutBarrelCD:Stop(args.destGUID)
 		timerTappedKegCD:Stop(args.destGUID)
+	--	self:SendSync("RaoulDied")
 	elseif cid == 126848 then--Captain Eudora
 		timerGrapeShotCD:Stop()
 		timerChainShotCD:Stop(args.destGUID)
 		self:Unschedule(startProshlyapationOfMurchal)
+	--	self:SendSync("EudoraDied")
 	elseif cid == 133219 then--Rummy Mancomb (You bastard, you killed Rummy!)
 		timerTendingBarCD:Stop()
 	end
 end
+--[[
+function mod:OnSync(event)
+	if event == "BlackoutBarrel" then
+		timerBlackoutBarrelCD:Start(47.3)
+	elseif event == "BarrelSmash" then
+		timerBarrelSmashCD:Start(22.9)
+	elseif event == "EudoraDied" then
+		timerGrapeShotCD:Stop()
+		timerChainShotCD:Stop()
+		self:Unschedule(startProshlyapationOfMurchal)
+	elseif event == "RaoulDied" then
+		timerBarrelSmashCD:Stop()
+		timerBlackoutBarrelCD:Stop()
+		timerTappedKegCD:Stop()
+	end
+end]]
