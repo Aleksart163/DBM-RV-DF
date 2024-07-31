@@ -19,7 +19,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 405484 407088 407919",--407182 410966
 	"SPELL_AURA_REMOVED_DOSE 407088",
 	"SPELL_PERIODIC_DAMAGE 409058 404277 409183",
-	"SPELL_PERIODIC_MISSED 409058 404277 409183"
+	"SPELL_PERIODIC_MISSED 409058 404277 409183",
+	"UNIT_AURA player"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -457,6 +458,27 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 	local spellId = args.spellId
 	if spellId == 407088 then
 		warnHidden:Show(args.amount or 1)
+	end
+end
+
+do
+	local warnedRushingDarkness, warnedVolcanicHeartbeat = false, false
+	function mod:UNIT_AURA(uId)
+		local hasRushingDarkness = DBM:UnitDebuff("player", 407182)
+		if hasRushingDarkness and not warnedRushingDarkness then
+			warnedRushingDarkness = true
+			DBM:Debug("Murchal proshlyap", 2)
+		elseif not hasRushingDarkness and warnedRushingDarkness then
+			warnedRushingDarkness = false
+		end
+
+		local hasVolcanicHeartbeat = DBM:UnitDebuff("player", 410966)
+		if hasVolcanicHeartbeat and not warnedVolcanicHeartbeat then
+			warnedVolcanicHeartbeat = true
+			DBM:Debug("Murchal proshlyap 2", 2)
+		elseif not hasVolcanicHeartbeat and warnedVolcanicHeartbeat then
+			warnedVolcanicHeartbeat = false
+		end
 	end
 end
 
