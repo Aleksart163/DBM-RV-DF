@@ -82,9 +82,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnEradicate:Show()
 			specWarnEradicate:Play("shockwave")
 		end
-	elseif spellId == 409473 and self:AntiSpam(3, "LavaPurge") then --Лавовое истребление
-		specWarnLavaPurge:Show()
-		specWarnLavaPurge:Play("watchstep")
 	elseif spellId == 406282 then --Усыпляющий взрыв
 		self:BossTargetScanner(args.sourceGUID, "DreamBurstTarget", 0.1, 2)
 	end
@@ -92,8 +89,9 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 409473 then --Лавовое истребление
-		DBM:Debug("Check Murchal proshlyap", 2)
+	if spellId == 409473 and self:AntiSpam(3, "LavaPurge") then --Лавовое истребление
+		specWarnLavaPurge:Show()
+		specWarnLavaPurge:Play("watchstep")
 	end
 end
 		
