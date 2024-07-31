@@ -28,26 +28,26 @@ mod:RegisterEventsInCombat(
  or ability.id = 377405 and type = "applydebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnEternalOrb							= mod:NewCountAnnounce(376292, 3, nil, false)
-local warnRewindTimeflow						= mod:NewCountAnnounce(376208, 1)
-local warnTimeSink								= mod:NewTargetAnnounce(377405, 1)
+local warnEternalOrb							= mod:NewCountAnnounce(376292, 3, nil, false) --Вечная сфера
+local warnRewindTimeflow						= mod:NewCountAnnounce(376208, 1) --Перемотка времени
+local warnTimeSink								= mod:NewTargetAnnounce(377405, 1) --Пожиратель времени
 local warnSandBreath							= mod:NewTargetNoFilterAnnounce(375727, 4) --Дыхание песка
 
-local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil, 2, 2)
-local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8)
+local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil, 2, 2) --Взмах крыльями
+local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2) --Пожиратель времени
 local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 3, 4) --Дыхание песка
 local specWarnSandBreath2						= mod:NewSpecialWarningDodge(375727, "-Tank", nil, nil, 2, 4) --Дыхание песка
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8) --Зона вечности
 
-local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3)--3-9
-local timerRewindTimeflowCD						= mod:NewCDCountTimer(42.3, 376208, nil, nil, nil, 6)
-local timerRewindTimeflow						= mod:NewBuffActiveTimer(14, 376208, nil, nil, nil, 5)--12+2sec cast
-local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2)
-local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON)
+local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3) --Вечная сфера 3-9
+local timerRewindTimeflowCD						= mod:NewCDCountTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
+local timerRewindTimeflow						= mod:NewCastTimer(14, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени 12+2sec cast
+local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2) --Взмах крыльями 
+local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Пожиратель времени
 local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 
 local yellSandBreath							= mod:NewShortYell(375727, nil, nil, nil, "YELL") --Дыхание песка
-local yellTimeSink								= mod:NewYell(377405, nil, nil, nil, "YELL")
+local yellTimeSink								= mod:NewShortYell(377405, nil, nil, nil, "YELL") --Пожиратель времени
 
 mod:AddRangeFrameOption(5, 377405)
 mod:AddSetIconOption("SetIconOnSandBreath", 375727, true, 0, {8}) --Дыхание песка
@@ -57,6 +57,7 @@ mod.vb.rewindCount = 0
 mod.vb.breathCount = 0
 mod.vb.buffetCount = 0
 --mod.vb.sinkCount = 0--It's only once per rotation, no reason to count that
+local Proshlyap = false
 
 function mod:SandBreathTarget(targetname, uId)
 	if not targetname then return end
@@ -72,19 +73,25 @@ function mod:SandBreathTarget(targetname, uId)
 	end
 end
 
+local allProshlyapationsOfMurchal = {
+	--Дыхание песка
+	[375727] = {14.5, 17.2, 19.2},
+}
+
 function mod:OnCombatStart(delay)
 	self.vb.orbSet = 0
 	self.vb.rewindCount = 0
 	self.vb.breathCount = 0
 	self.vb.buffetCount = 0
 --	self.vb.sinkCount = 0
+	Proshlyap = false
 	timerEternalOrbCD:Start(2.1-delay, 1)
 	if self:IsHard() then
-		timerTimeSinkCD:Start(5.5-delay)
+		timerTimeSinkCD:Start(5-delay)
 	end
-	timerWingBuffetCD:Start(6-delay, 1)
-	timerSandBreathCD:Start(12.3-delay, 1)
-	timerRewindTimeflowCD:Start(39-delay, 1)
+	timerWingBuffetCD:Start(6.9-delay, 1) --Взмах крыльями (23 сек)
+	timerSandBreathCD:Start(13-delay, 1) --Дыхание песка (19 сек)
+	timerRewindTimeflowCD:Start(41-delay, 1) --Перемотка времени
 end
 
 function mod:OnCombatEnd()
@@ -101,12 +108,15 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.orbSet < 5 then
 			timerEternalOrbCD:Start(nil, self.vb.orbSet+1)
 		end
-	elseif spellId == 376208 then
+	elseif spellId == 376208 then --Перемотка времени
 		self.vb.rewindCount = self.vb.rewindCount + 1
 		self.vb.orbSet = 0
 		self.vb.breathCount = 0
 		self.vb.buffetCount = 0
 --		self.vb.sinkCount = 0
+		if not Proshlyap then
+			Proshlyap = true
+		end
 		warnRewindTimeflow:Show(self.vb.rewindCount)
 		--Reboot Timers
 		timerSandBreathCD:Start(14.5, 1)
@@ -116,11 +126,12 @@ function mod:SPELL_CAST_START(args)
 			timerTimeSinkCD:Start(22.8)
 		end
 		timerRewindTimeflowCD:Start(56.7, self.vb.rewindCount+1)
-	elseif spellId == 376049 then
+		timerRewindTimeflow:Start()
+	elseif spellId == 376049 then --Взмах крыльями
 		self.vb.buffetCount = self.vb.buffetCount + 1
 		specWarnWingBuffet:Show(self.vb.buffetCount)
 		specWarnWingBuffet:Play("carefly")
-		if self.vb.buffetCount == 1 and self.vb.rewindCount >= 1 then
+		if self.vb.buffetCount == 1 and self.vb.rewindCount >= 0 then
 			timerWingBuffetCD:Start(nil, 2)
 		end
 	elseif spellId == 375727 then --Дыхание песка
@@ -133,10 +144,21 @@ function mod:SPELL_CAST_START(args)
 		end
 		specWarnSandBreath2:Show()
 		specWarnSandBreath2:Play("watchstep")
-		local maxBreath = (self.vb.rewindCount == 0) and 2 or 3
-		if self.vb.breathCount < maxBreath then
-			timerSandBreathCD:Start(nil, self.vb.breathCount+1)
+		if not Proshlyap and self.vb.breathCount == 1 then
+			timerSandBreathCD:Start(19, self.vb.breathCount+1)
+		elseif Proshlyap then
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.breathCount+1)
+			if timer then
+				timerSandBreathCD:Start(timer, self.vb.breathCount+1)
+			end
 		end
+--[[		if self.vb.breathCount == 1 and self.vb.rewindCount == 0 then
+			timerSandBreathCD:Start(19, self.vb.breathCount+1)
+		elseif self.vb.breathCount == 1 and self.vb.rewindCount >= 1 then
+			timerSandBreathCD:Start(17.2, self.vb.breathCount+1)
+		elseif self.vb.breathCount == 2 and self.vb.rewindCount >= 1 then
+			timerSandBreathCD:Start(19.2, self.vb.breathCount+1)
+		end]]
 	end
 end
 
