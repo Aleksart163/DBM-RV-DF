@@ -66,7 +66,7 @@ function mod:OnCombatStart(delay)
 	timerSunderCD:Start(8-delay)
 	timerStrikeCD:Start(16-delay, 1)
 	timerBelowofDeepsCD:Start(20-delay)
-	timerStanceOfMountainCD:Start(60-delay, 1)
+	timerStanceOfMountainCD:Start(61-delay, 1)
 	if self:IsHard() then
 		self.vb.totemsAlive = 5
 	else

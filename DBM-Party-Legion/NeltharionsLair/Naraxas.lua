@@ -45,10 +45,10 @@ function mod:OnCombatStart(delay)
 	self.vb.addsCount = 0
 	self.vb.spikeCount = 0
 	self.vb.mawCount = 0
-	timerAddsCD:Start(5.2-delay, 1)
+	timerAddsCD:Start(5-delay, 1)
 	timerRancidMawCD:Start(6.9-delay, 1)
 	timerToxicRetchCD:Start(12.2-delay, 1)
-	timerSpikedTongueCD:Start(50.5-delay, 1)
+	timerSpikedTongueCD:Start(49.9-delay, 1)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

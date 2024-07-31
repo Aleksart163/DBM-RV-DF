@@ -32,12 +32,12 @@ local warnToxicEff								= mod:NewCountAnnounce(385442, 3)
 
 local specWarnFixate							= mod:NewSpecialWarningRun(374610, nil, 96306, nil, 4, 2) --Преследование
 local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
-local specWarnGulp								= mod:NewSpecialWarningRunCount(385551, nil, nil, nil, 4, 2)
+local specWarnGulp								= mod:NewSpecialWarningRunCount(385551, nil, nil, nil, 4, 2) --Заглатывание
 local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2)
 local specWarnOverpoweringCroak					= mod:NewSpecialWarningDodgeCount(385187, nil, nil, nil, 2, 2)--385181 is cast but lacks tooltip, so damage Id used for tooltip/option
 local specWarnBodySlam							= mod:NewSpecialWarningMoveAway(385531, nil, nil, nil, 1, 2)
 
-local timerGulpCD								= mod:NewCDCountTimer(38.8, 385551, nil, nil, nil, 3)
+local timerGulpCD								= mod:NewCDCountTimer(38.8, 385551, nil, nil, nil, 3) --Заглатывание
 local timerOverpoweringCroakCD					= mod:NewCDCountTimer(37.7, 385187, nil, nil, nil, 2)--Tough to classify, it's aoe, it's targeted dodge, and it's adds
 local timerBellySlamCD							= mod:NewCDTimer(37.7, 385531, nil, nil, nil, 3)
 local timerToxicEffluviaaCD						= mod:NewCDCountTimer(26.7, 385442, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
@@ -93,11 +93,11 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 385551 then
+	if spellId == 385551 then --Заглатывание
 		self.vb.gulpCount = self.vb.gulpCount + 1
 		specWarnGulp:Show(self.vb.gulpCount)
 		specWarnGulp:Play("justrun")
-		timerGulpCD:Start(self.vb.gulpCount == 1 and 47.3 or 37.6, self.vb.gulpCount+1)
+		timerGulpCD:Start(self.vb.gulpCount == 1 and 47.1 or 37.6, self.vb.gulpCount+1)
 	elseif spellId == 385181 then
 		self.vb.croakCount = self.vb.croakCount + 1
 		specWarnOverpoweringCroak:Show(self.vb.croakCount)

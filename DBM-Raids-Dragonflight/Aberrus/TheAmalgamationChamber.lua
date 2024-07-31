@@ -70,31 +70,31 @@ local timerFlameSlashCD							= mod:NewCDCountTimer(11, 403203, nil, "Tank|Heale
 --Слияние пламени Тьмы
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26338))
 local warnPhase2								= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnShadowandFlame						= mod:NewCastAnnounce(409385, 4)
-local warnShadowflame							= mod:NewCountAnnounce(405394, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(405394))
-local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, nil, 167180, nil, nil, nil, true)
-local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3)
+local warnShadowandFlame						= mod:NewCastAnnounce(409385, 4) --Тьма и пламя
+local warnShadowflame							= mod:NewCountAnnounce(405394, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(405394)) --Заражение пламенем Тьмы
+local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, nil, 167180, nil, nil, nil, true) --Обжигающий сумрак (Бомбы)
+local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3) --Взрыв пламени Тьмы
 
-local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, nil, 2, 2)
-local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2)
-local specWarnConvergentEruption				= mod:NewSpecialWarningCount(408193, nil, nil, nil, 2, 2)
+local specWarnGloomConflag						= mod:NewSpecialWarningSoakCount(405437, nil, nil, nil, 2, 2) --Возгорание мрака
+local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2) --Обжигающий сумрак (Бомба)
+local specWarnConvergentEruption				= mod:NewSpecialWarningSoakCount(408193, nil, nil, nil, 2, 2) --Объединенный взрыв
 local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
 local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
 
 local timerPhaseCD								= mod:NewStageTimer(30)
-local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3)
-local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3)--"Bombs"
-local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5)
+local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Тьма и пламя
+local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3) --Возгорание мрака
+local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомба)
+local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
 local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
-local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Might be redundant if always after crushing
+local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Взрыв пламени Тьмы Might be redundant if always after crushing
 
 local yellWitheringVulnerability				= mod:NewShortYell(405914, nil, nil, nil, "YELL") --Иссушающая слабость
-local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --"Bomb"
-local yellUmbralDetonationFades					= mod:NewShortFadesYell(405036, nil, nil, nil, "YELL")
-local yellBlisteringTwilight					= mod:NewShortYell(405642, 49685, nil, nil, "YELL")
-local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642, nil, nil, nil, "YELL")
-local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, false, 2, "YELL")
+local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --Теневая детонация (Бомба)
+local yellUmbralDetonationFades					= mod:NewShortFadesYell(405036, nil, nil, nil, "YELL") --Теневая детонация (Бомба)
+local yellBlisteringTwilight					= mod:NewShortYell(405642, 49685, nil, nil, "YELL") --Обжигающий сумрак (Бомба)
+local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642, nil, nil, nil, "YELL") --Обжигающий сумрак (Бомба)
+local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, false, 2, "YELL") --Тьма и пламя
 
 mod:AddSetIconOption("SetIconOnWitheringVulnerability", 405914, true, 0, {8}) --Иссушающая слабость
 mod:AddSetIconOption("SetIconOnBlistering", 405642, false, 0, {1, 2, 3, 4})
