@@ -16,7 +16,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 385743 374389 374610",
 	"SPELL_AURA_APPLIED_DOSE 385743 374389",
 	"SPELL_AURA_REMOVED 374389",
-	"SPELL_AURA_REMOVED_DOSE 374389"
+	"SPELL_AURA_REMOVED_DOSE 374389",
+	"UNIT_AURA player"
 )
 
 --[[
@@ -133,11 +134,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnGulpSwogToxin:Show(amount)
 			specWarnGulpSwogToxin:Play("stackhigh")
 		end
-	elseif spellId == 374610 then --Преследование
-		if args:IsPlayer() and self:AntiSpam(2, "Fixate") then
-			specWarnFixate:Show()
-			specWarnFixate:Play("justrun")
-		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -158,6 +154,20 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 		toxinStacks[args.destName] = args.amount or 1
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks)
+		end
+	end
+end
+
+do
+	local warnedFixate = false
+	function mod:UNIT_AURA(uId)
+		local hasFixate = DBM:UnitDebuff("player", 374610)
+		if hasFixate and not warnedFixate and self:AntiSpam(2, "Fixate") then
+			warnedFixate = true
+			specWarnFixate:Show()
+			specWarnFixate:Play("justrun")
+		elseif not hasFixate and warnedFixate then
+			warnedFixate = false
 		end
 	end
 end
