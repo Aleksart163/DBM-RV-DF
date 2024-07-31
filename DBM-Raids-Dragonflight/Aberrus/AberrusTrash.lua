@@ -22,6 +22,7 @@ mod:RegisterEvents(
  or ability.id = 413785 and type = "cast"
 ]]--
 
+local warnLavaPurge							= mod:NewCastAnnounce(409473, 2) --Лавовое истребление
 local warnDreamBurst						= mod:NewTargetNoFilterAnnounce(406282, 4) --Усыпляющий взрыв
 
 local specWarnDreamBurst					= mod:NewSpecialWarningMoveAway(406282, nil, nil, nil, 4, 2) --Усыпляющий взрыв
@@ -84,12 +85,14 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 406282 then --Усыпляющий взрыв
 		self:BossTargetScanner(args.sourceGUID, "DreamBurstTarget", 0.1, 2)
+	elseif spellId == 409473 and self:AntiSpam(3, "LavaPurge1") then --Лавовое истребление
+		warnLavaPurge:Show()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 409473 and self:AntiSpam(3, "LavaPurge") then --Лавовое истребление
+	if spellId == 409473 and self:AntiSpam(3, "LavaPurge2") then --Лавовое истребление
 		specWarnLavaPurge:Show()
 		specWarnLavaPurge:Play("watchstep")
 	end
