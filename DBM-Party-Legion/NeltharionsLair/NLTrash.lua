@@ -19,7 +19,7 @@ mod:RegisterEvents(
  or (ability.id = 183433 or ability.id = 183526) and type = "cast"
 --]]
 local warnSubmerge						= mod:NewSpellAnnounce(183433, 3) --Погружение
-local warnWarDrums						= mod:NewSpellAnnounce(183526, 4)
+local warnWarDrums						= mod:NewSpellAnnounce(183526, 4) --Боевые барабаны
 local warnBurningHatred					= mod:NewTargetAnnounce(200154, 3)
 local warnMetamorphosis					= mod:NewTargetNoFilterAnnounce(193803, 3, nil, false)
 local warnPetrifed						= mod:NewTargetNoFilterAnnounce(186616, 4)
@@ -63,6 +63,7 @@ function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 183088 then
+		timerAvalancheCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
 			specWarnAvalanche:Show()
 			specWarnAvalanche:Play("watchstep")
@@ -137,8 +138,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 183526 and self:AntiSpam(3, 5) then
 		warnWarDrums:Show()
-	elseif spellId == 183088 then
-		timerAvalancheCD:Start(18.3, args.sourceGUID)--19.4 - 1.1
+--[[	elseif spellId == 183088 then
+		timerAvalancheCD:Start(18.3, args.sourceGUID)--19.4 - 1.1]]
 	end
 end
 
