@@ -34,7 +34,8 @@ local timerMoltenCrashCD			= mod:NewCDCountTimer(16.5, 200732, nil, "Tank", nil,
 local timerLandSlideCD				= mod:NewCDTimer(16.5, 200700, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оползень 16.5-27
 local timerCrystalSpikesCD			= mod:NewCDTimer(21.4, 200551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристальные шипы
 local timerMagmaSculptorCD			= mod:NewCDCountTimer(71, 200637, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Ваятель магмы Everyone?
-local timerMagmaWaveCD				= mod:NewCDCountTimer(60, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
+local timerMagmaWaveCD				= mod:NewCDCountTimer(60, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна
+local timerMagmaWave				= mod:NewCastTimer(6, 200404, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна
 
 mod:AddSetIconOption("SetIconOnBurningHatred", 200154, true, 0, {8}) --Пламенная ненависть (Преследование)
 
@@ -96,6 +97,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnMagmaWave:Play("findshelter")
 		end
 		timerMagmaWaveCD:Start(nil, self.vb.waveCount+1)
+		timerMagmaWave:Start()
 	end
 end
 
@@ -135,5 +137,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			specWarnMagmaWave:Play("findshelter")
 		end
 		timerMagmaWaveCD:Start(nil, self.vb.waveCount+1)
+		timerMagmaWave:Start()
 	end
 end
