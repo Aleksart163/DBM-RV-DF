@@ -30,17 +30,18 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 369675 and type = "begincast"
 --]]
-local warnCalloftheDeep							= mod:NewCountAnnounce(369605, 3)
-local warnBloodlust								= mod:NewSpellAnnounce(369754, 3)
+local warnChainLightning						= mod:NewCastAnnounce(369675, 4) --Цепная молния
+local warnCalloftheDeep							= mod:NewCountAnnounce(369605, 3) --Зов глубин
+local warnBloodlust								= mod:NewSpellAnnounce(369754, 3) --Жажда крови
 
-local specWarnQuakingTotem						= mod:NewSpecialWarningSwitchCount(369700, "-Healer", nil, nil, 1, 2)
-local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2)
-local specWarnThunderingSlam					= mod:NewSpecialWarningDodgeCount(369703, nil, nil, nil, 2, 2)
+local specWarnQuakingTotem						= mod:NewSpecialWarningSwitch(369700, "-Healer", nil, nil, 3, 4) --Сотрясающий тотем
+local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
+local specWarnThunderingSlam					= mod:NewSpecialWarningDodgeCount(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
-local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, nil, nil, nil, 1)--28-30
-local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 5)
-local timerBloodlustCD							= mod:NewCDTimer(30, 369754, nil, nil, nil, 5)
-local timerThunderingSlamCD						= mod:NewCDCountTimer(18.2, 369703, nil, nil, nil, 3)--18-23
+local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
+local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Сотрясающий тотем
+local timerBloodlustCD							= mod:NewCDTimer(30, 369754, nil, nil, nil, 5) --Жажда крови
+local timerThunderingSlamCD						= mod:NewCDCountTimer(18.2, 369703, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар 18-23
 
 mod.vb.callCount = 0
 mod.vb.thunderingCount = 0
@@ -52,15 +53,19 @@ function mod:OnCombatStart(delay)
 	self.vb.totemCount = 0
 	timerCalloftheDeepCD:Start(5-delay, 1)
 	timerThunderingSlamCD:Start(12.1-delay, 1)
-	timerQuakingTotemCD:Start(20.4-delay, 1)
+	timerQuakingTotemCD:Start(20-delay, 1)
 	timerBloodlustCD:Start(27-delay)
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 369675 and args:GetSrcCreatureID() == 186658 and self:CheckInterruptFilter(args.sourceGUID, false, true) then--186658 boss version of mob
-		specWarnChainLightning:Show(args.sourceName)
-		specWarnChainLightning:Play("kickcast")
+	if spellId == 369675 and args:GetSrcCreatureID() == 186658 then --Цепная молния 186658 boss version of mob
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnChainLightning:Show(args.sourceName)
+			specWarnChainLightning:Play("kickcast")
+		else
+			warnChainLightning:Show()
+		end
 	elseif spellId == 369754 then
 		warnBloodlust:Show()
 		timerBloodlustCD:Start()
@@ -69,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnThunderingSlam:Play("watchstep")
 	elseif spellId == 382303 then
 		self.vb.totemCount = self.vb.totemCount + 1
-		specWarnQuakingTotem:Show(self.vb.totemCount)
+		specWarnQuakingTotem:Show()
 		specWarnQuakingTotem:Play("attacktotem")
 		timerQuakingTotemCD:Start(nil, self.vb.totemCount+1)
 	end
