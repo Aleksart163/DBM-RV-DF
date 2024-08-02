@@ -20,9 +20,10 @@ mod:RegisterEventsInCombat(
 (ability.id = 200732 or ability.id = 200551 or ability.id = 200637 or ability.id = 200700 or ability.id = 200404) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnCrystalSpikes				= mod:NewSpellAnnounce(200551, 2) --Кристальные шипы
+local warnCrystalSpikes				= mod:NewCastAnnounce(200551, 2) --Кристальные шипы
 local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 96306) --Пламенная ненависть (Преследование)
 
+local specWarnCrystalSpikes			= mod:NewSpecialWarningDodge(200551, "-Tank", nil, nil, 2, 2) --Кристальные шипы
 local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 4) --Магматический удар
 local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil, 1, 2) --Оползень
 local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitchCount(200637, "Dps", nil, nil, 1, 2) --Ваятель магмы
@@ -75,8 +76,10 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerMoltenCrashCD:Start(15.9, self.vb.crashCount+1)
 		--1 каст 18.7, 2 каст 16.1, 3 каст 15.9
-	elseif spellId == 200551 then
+	elseif spellId == 200551 then --Кристальные шипы
 		warnCrystalSpikes:Show()
+		specWarnCrystalSpikes:Show()
+		specWarnCrystalSpikes:Play("watchstep")
 		timerCrystalSpikesCD:Start()
 	elseif spellId == 200637 then
 		self.vb.addCount = self.vb.addCount + 1
