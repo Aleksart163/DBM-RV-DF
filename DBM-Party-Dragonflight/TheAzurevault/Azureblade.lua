@@ -30,7 +30,7 @@ local warnSummonDraconicImage					= mod:NewSpellAnnounce(384223, 4) --Призы
 local warnOverwhelmingEnergy					= mod:NewEndAnnounce(384132, 1) --Переполняющая энергия
 local warnDraconicImageLeft						= mod:NewAnnounce("warnDraconicImage", 2, 384223)
 
-local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, 37859, nil, 2, 4) --Нестабильная магия
+local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, 37859, nil, 2, 4) --Нестабильная магия (Бомбардировка)
 local specWarnArcaneCleave						= mod:NewSpecialWarningDefensive(372222, nil, nil, nil, 3, 4) --Удар тайной магии
 local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "MeleeDps", nil, nil, 2, 2) --Удар тайной магии
 local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2) --Древняя сфера

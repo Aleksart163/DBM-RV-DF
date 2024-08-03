@@ -94,7 +94,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnSpikedTongue:ScheduleVoice(1.5, "keepmove")
 			yellSpikedTongue:Yell()
 		end
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.spikeCount+1) or 60
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.spikeCount+1)
 		if timer then
 			timerSpikedTongueCD:Start(timer, self.vb.spikeCount+1)
 		end
@@ -128,7 +128,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			specWarnAdds:Show()
 			specWarnAdds:Play("mobkill")
 		end
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.addsCount+1) or 120
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.addsCount+1)
 		if timer then
 			timerAddsCD:Start(timer, self.vb.addsCount+1)
 		end
