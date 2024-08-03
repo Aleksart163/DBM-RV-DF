@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 199176 210150 205549",
-	"SPELL_AURA_APPLIED 209906",
+	"SPELL_AURA_APPLIED 209906 199775",
 	"SPELL_AURA_REMOVED 199178",
 	"SPELL_PERIODIC_DAMAGE 188494",
 	"SPELL_PERIODIC_MISSED 188494",
@@ -22,33 +22,44 @@ mod:RegisterEventsInCombat(
 (ability.id = 199176 or ability.id = 210150 or ability.id = 205549) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnFixate					= mod:NewTargetAnnounce(209906, 2, nil, false)--Could be spammy, optional
+local warnFixate					= mod:NewTargetNoFilterAnnounce(209906, 2, nil, false) --Самопожертвование фанатика Could be spammy, optional
 local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1) --Шипастый язык
+local warnFrenzy					= mod:NewTargetNoFilterAnnounce(199775, 4) --Бешенство
 
-local specWarnAdds					= mod:NewSpecialWarningSwitchCount(199817, "-Healer", nil, 2, 1, 2) --Призыв прислужников
-local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2)
-local specWarnSpikedTongue			= mod:NewSpecialWarningRunCount(199176, nil, nil, nil, 4, 2) --Шипастый язык
-local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8)
+local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, 2, 2, 2) --Призыв прислужников
+local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) --Самопожертвование фанатика
+local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 2) --Шипастый язык
+local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8) --Зловонная пасть
 
-local timerSpikedTongueCD			= mod:NewNextCountTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Шипастый язык
-local timerAddsCD					= mod:NewCDCountTimer(65, 199817, nil, nil, nil, 1, 226361) --Призыв прислужников
-local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
-local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
+local timerSpikedTongueCD			= mod:NewNextCountTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
+local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
+local timerAddsCD					= mod:NewCDCountTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 1 or nil, 5) --Призыв прислужников
+local timerRancidMawCD				= mod:NewCDCountTimer(60, 205549, nil, nil, nil, 2) --Зловонная пасть
+local timerToxicRetchCD				= mod:NewCDCountTimer(60, 210150, nil, nil, nil, 3) --Токсичная желчь
+
+local yellSpikedTongue				= mod:NewShortYell(199176, nil, nil, nil, "YELL") --Шипастый язык
 
 mod.vb.retchCount = 0
 mod.vb.addsCount = 0
 mod.vb.spikeCount = 0
 mod.vb.mawCount = 0
 
+local allProshlyapationsOfMurchal = {
+	--Шипастый язык
+	[199176] = {49.9, 56.1, 55.9, 60, 60, 60, 60},
+	--Призыв прислужников
+	[199817] = {5, 80, 96, 120, 120},
+}
+
 function mod:OnCombatStart(delay)
 	self.vb.retchCount = 0
 	self.vb.addsCount = 0
 	self.vb.spikeCount = 0
 	self.vb.mawCount = 0
-	timerAddsCD:Start(5-delay, 1)
-	timerRancidMawCD:Start(6.9-delay, 1)
-	timerToxicRetchCD:Start(12.2-delay, 1)
-	timerSpikedTongueCD:Start(49.9-delay, 1)
+	timerAddsCD:Start(5-delay, 1) --
+	timerRancidMawCD:Start(6.9-delay, 1) --
+	timerToxicRetchCD:Start(12.2-delay, 1) --
+	timerSpikedTongueCD:Start(49.9-delay, 1) --
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -60,13 +71,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnFixate:Show(args.destName)
 		end
+	elseif spellId == 199775 then --Бешенство
+		warnFrenzy:Show(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 199178 and self:AntiSpam(4, 2) then
+	if spellId == 199178 and self:AntiSpam(4, 2) then --Шипастый язык (притяжка)
 		warnSpikedTongueOver:Show()
+		timerSpikedTongue:Stop()
+		timerRancidMawCD:Start(nil, self.vb.mawCount+1)
+		timerToxicRetchCD:Start(nil, self.vb.retchCount+1)
 	end
 end
 
@@ -75,11 +91,25 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 199176 then
 		self.vb.spikeCount = self.vb.spikeCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnSpikedTongue:Show(self.vb.spikeCount)
-			specWarnSpikedTongue:Play("runout")
+			specWarnSpikedTongue:Show()
+			specWarnSpikedTongue:Play("justrun")
 			specWarnSpikedTongue:ScheduleVoice(1.5, "keepmove")
+			yellSpikedTongue:Yell()
 		end
-		timerSpikedTongueCD:Start(nil, self.vb.spikeCount+1)
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.spikeCount+1) or 60
+		if timer then
+			timerSpikedTongueCD:Start(timer, self.vb.spikeCount+1)
+		end
+	--	timerSpikedTongueCD:Start(nil, self.vb.spikeCount+1)
+		timerSpikedTongue:Start()
+		timerRancidMawCD:Stop()
+		timerToxicRetchCD:Stop()
+		--После 1 языка--
+		--Желчь через 7.9 сек
+		--Пасть через 13.1 сек
+		--После 2 языка--
+		--Пасть через 9.5 сек
+		--Желчь через 12.9 сек
 	elseif spellId == 205549 then
 		self.vb.mawCount = self.vb.mawCount + 1
 		timerRancidMawCD:Start(nil, self.vb.mawCount+1)
@@ -100,8 +130,17 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 199817 then--Call Minions
 		self.vb.addsCount = self.vb.addsCount + 1
-		specWarnAdds:Show(self.vb.addsCount)
-		specWarnAdds:Play("mobsoon")
-		timerAddsCD:Start(nil, self.vb.addsCount+1)
+		if self:IsMelee() then
+			specWarnAdds:Schedule(5)
+			specWarnAdds:ScheduleVoice(5, "mobkill")
+		else
+			specWarnAdds:Show()
+			specWarnAdds:Play("mobkill")
+		end
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.addsCount+1) or 120
+		if timer then
+			timerAddsCD:Start(timer, self.vb.addsCount+1)
+		end
+	--	timerAddsCD:Start(nil, self.vb.addsCount+1)
 	end
 end
