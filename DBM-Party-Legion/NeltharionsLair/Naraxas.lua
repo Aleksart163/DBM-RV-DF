@@ -34,8 +34,8 @@ local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1,
 local timerSpikedTongueCD			= mod:NewNextCountTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
 local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
 local timerAddsCD					= mod:NewCDCountTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 1 or nil, 5) --Призыв прислужников
-local timerRancidMawCD				= mod:NewCDCountTimer(60, 205549, nil, nil, nil, 2) --Зловонная пасть
-local timerToxicRetchCD				= mod:NewCDCountTimer(60, 210150, nil, nil, nil, 3) --Токсичная желчь
+local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
+local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
 local yellSpikedTongue				= mod:NewShortYell(199176, nil, nil, nil, "YELL") --Шипастый язык
 
@@ -46,9 +46,9 @@ mod.vb.mawCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Шипастый язык
-	[199176] = {49.9, 56.1, 55.9, 60, 60, 60, 60},
+	[199176] = {49.9, 55.9, 55, 55, 55, 55, 56.3},
 	--Призыв прислужников
-	[199817] = {5, 80, 96, 120, 120},
+	[199817] = {5, 80, 96, 80.4, 96},
 }
 
 function mod:OnCombatStart(delay)
@@ -81,14 +81,12 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 199178 and self:AntiSpam(4, 2) then --Шипастый язык (притяжка)
 		warnSpikedTongueOver:Show()
 		timerSpikedTongue:Stop()
-		timerRancidMawCD:Start(nil, self.vb.mawCount+1)
-		timerToxicRetchCD:Start(nil, self.vb.retchCount+1)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 199176 then
+	if spellId == 199176 then Шипастый язык
 		self.vb.spikeCount = self.vb.spikeCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSpikedTongue:Show()
@@ -100,16 +98,9 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerSpikedTongueCD:Start(timer, self.vb.spikeCount+1)
 		end
-	--	timerSpikedTongueCD:Start(nil, self.vb.spikeCount+1)
 		timerSpikedTongue:Start()
 		timerRancidMawCD:Stop()
 		timerToxicRetchCD:Stop()
-		--После 1 языка--
-		--Желчь через 7.9 сек
-		--Пасть через 13.1 сек
-		--После 2 языка--
-		--Пасть через 9.5 сек
-		--Желчь через 12.9 сек
 	elseif spellId == 205549 then
 		self.vb.mawCount = self.vb.mawCount + 1
 		timerRancidMawCD:Start(nil, self.vb.mawCount+1)
@@ -131,8 +122,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 199817 then--Call Minions
 		self.vb.addsCount = self.vb.addsCount + 1
 		if self:IsMelee() then
-			specWarnAdds:Schedule(5)
-			specWarnAdds:ScheduleVoice(5, "mobkill")
+			specWarnAdds:Schedule(5.5)
+			specWarnAdds:ScheduleVoice(5.5, "mobkill")
 		else
 			specWarnAdds:Show()
 			specWarnAdds:Play("mobkill")
