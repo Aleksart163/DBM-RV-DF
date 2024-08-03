@@ -695,7 +695,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not Phase2Preshlyap then
 				Phase2Preshlyap = true
-				timerEndExistenceCast:Start(21)
+				timerEndExistenceCast:Start(20)
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
