@@ -86,7 +86,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 199176 then Шипастый язык
+	if spellId == 199176 then --Шипастый язык
 		self.vb.spikeCount = self.vb.spikeCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSpikedTongue:Show()
