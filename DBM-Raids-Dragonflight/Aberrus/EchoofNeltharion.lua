@@ -71,7 +71,7 @@ local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
-local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2)
+local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2) --Темное уничтожение
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
@@ -160,7 +160,7 @@ local function checkForSkippedDarkness(self)
 	if self.vb.RushingDarknessCount == 0 then--first one skipped (which is like 95% of pulls)
 		self.vb.RushingDarknessCount = self.vb.RushingDarknessCount + 1
 		self.vb.skippedDarkness = true
-		timerRushingDarknessCD:Start(10.2, 2)
+		timerRushingDarknessCD:Start(14.2, 1)
 	end
 end
 
@@ -215,7 +215,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 406222 or spellId == 401022 then
 		self.vb.tankCount = self.vb.tankCount + 1
 		self:BossTargetScanner(args.sourceGUID, "CalamitousStrikeTarget", 0.1, 2)
-		timerCalamitousStrikeCD:Start(self:GetStage(1) and 36.3 or 35.2, self.vb.tankCount+1)
+	--	timerCalamitousStrikeCD:Start(self:GetStage(1) and 36.3 or 35.2, self.vb.tankCount+1) --кривой таймер на 3 фазе
+		timerCalamitousStrikeCD:Start(self:GetStage(1) and 36.3 or 29.1, self.vb.tankCount+1)
 	elseif spellId == 407790 then
 		self.vb.tankCount = self.vb.tankCount + 1
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
@@ -223,17 +224,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnSunderShadow:Play("defensive")
 		end
 		timerSunderShadowCD:Start(nil, self.vb.tankCount+1)
-	elseif args:IsSpellID(405436, 405434, 405433, 404038) then--10, 7.5, 5, 2.5 (405433 used on heroic AND normal, others used?)
+	elseif args:IsSpellID(405436, 405434, 405433, 404038) then --Темное уничтожение 10, 7.5, 5, 2.5 (405433 used on heroic AND normal, others used?)
 		self.vb.annihilatingCount = self.vb.annihilatingCount + 1
 		specWarnUmbralAnnihilation:Show(self.vb.annihilatingCount)
 		specWarnUmbralAnnihilation:Play("aesoon")
-		if self.vb.annihilatingCount >= 5 then
-			timerUmbralAnnihilationCD:Start(10.9, self.vb.annihilatingCount+1)
-		elseif self.vb.annihilatingCount == 2 then--A wild fluke that keeps coming up in debug
-			timerUmbralAnnihilationCD:Start(27.9, self.vb.annihilatingCount+1)
-		else
-			timerUmbralAnnihilationCD:Start(29.2, self.vb.annihilatingCount+1)
-		end
+		timerUmbralAnnihilationCD:Start(29.8, self.vb.annihilatingCount+1)
 	elseif spellId == 407796 then
 		warnShadowShadowStrike:Show()
 	elseif spellId == 407936 then
@@ -264,7 +259,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerRushingDarknessCD:Start(self:GetStage(2) and 27.9 or 28, self.vb.RushingDarknessCount+1)--new, now every 35-36 due to inceased cast time of portals
 		end
-		if self:IsHard() and self.vb.proshlyapCount < 3 then--Mythic P1 only wall breaker strat used by all top guilds (which means everyone else will use it too and expect it in DBM)
+		if self:IsMythic() and self:GetStage(1) then--Mythic P1 only wall breaker strat used by all top guilds (which means everyone else will use it too and expect it in DBM)
 			self:BossTargetScanner(args.sourceGUID, "RushingDarknessTarget", 0.2, 8, true, nil, nil, nil, true)
 		else
 			warnRushingDarkness:Show(self.vb.RushingDarknessCount)
@@ -416,7 +411,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 407088 and self:GetStage(3, 1) then--Empowered Shadows
+	if spellId == 407088 and self:GetStage(3, 1) then --Фаза 3 Empowered Shadows
 		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
@@ -431,10 +426,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:Unschedule(fixBrokenHeartTimer)
 		timerRushingDarknessCD:Start(10.8, 1)--Start initial timer (you know, for the cast that's skipped 95% of time)
 		self:Schedule(15.8, checkForSkippedDarkness, self)--Schedule checker to see if the normally skipped cast happened, and if not, start backup timer for second cast
-		timerSunderRealityCD:Start(24.1, 1) --Порталы (норм под гер)
---		timerRushingDarknessCD:Start(27, 1)
-		timerCalamitousStrikeCD:Start(34.4, 1)
-		timerEbonDestructionCD:Start(44.3, 1) --Большой взрыв (норм под гер)
+		timerSunderRealityCD:Start(22.3, 1) --Порталы (норм под гер)
+		timerCalamitousStrikeCD:Start(39.7, 1) --Гибельный удар
+		timerEbonDestructionCD:Start(42.7, 1) --Большой взрыв (норм под гер)
 --[[	elseif spellId == 407182 then --Стремительная тьма
 		if self.Options.SetIconOnRushingDarkness then
 			self:SetIcon(args.destName, 0)
@@ -467,7 +461,7 @@ do
 		local hasRushingDarkness = DBM:UnitDebuff("player", 407182)
 		if hasRushingDarkness and not warnedRushingDarkness then
 			warnedRushingDarkness = true
-			DBM:Debug("Murchal proshlyap", 2)
+			DBM:Debug("check Murchal proshlyap", 2)
 		elseif not hasRushingDarkness and warnedRushingDarkness then
 			warnedRushingDarkness = false
 		end
@@ -475,7 +469,7 @@ do
 		local hasVolcanicHeartbeat = DBM:UnitDebuff("player", 410966)
 		if hasVolcanicHeartbeat and not warnedVolcanicHeartbeat then
 			warnedVolcanicHeartbeat = true
-			DBM:Debug("Murchal proshlyap 2", 2)
+			DBM:Debug("check Murchal proshlyap 2", 2)
 		elseif not hasVolcanicHeartbeat and warnedVolcanicHeartbeat then
 			warnedVolcanicHeartbeat = false
 		end
