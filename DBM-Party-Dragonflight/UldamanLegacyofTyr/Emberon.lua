@@ -31,23 +31,23 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 369043
 --]]
-local warnKeepersRemaining						= mod:NewAddsLeftAnnounce(369033, 3)
-local warnUnstableEmbers						= mod:NewTargetNoFilterAnnounce(369110, 3)
-local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false)--In case you want to know, but not totally practical to enable by default
+local warnKeepersRemaining						= mod:NewAddsLeftAnnounce(369033, 3) --Активация хранителей
+local warnUnstableEmbers						= mod:NewTargetNoFilterAnnounce(369110, 3) --Нестабильные угли
+local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false) --Ищущее пламя In case you want to know, but not totally practical to enable by default
 
-local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2)
-local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2)
+local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2) --Очищающее пламя
+local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
 
-local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6)--Maybe swap for activate keepers instead
-local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3)
+local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6) --Очищающее пламя Maybe swap for activate keepers instead
+local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
 local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающий хлопок
 
 local yellSearingClap							= mod:NewShortYell(369061, nil, nil, nil, "YELL") --Обжигающий хлопок
-local yellUnstableEmbers						= mod:NewYell(369110, nil, nil, nil, "YELL")
-local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL")
+local yellUnstableEmbers						= mod:NewShortYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
+local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
 
-mod:AddSetIconOption("SetIconOnSearingClap", 369061, true, 0, {8}) --Дыхание песка
+mod:AddSetIconOption("SetIconOnSearingClap", 369061, true, 0, {8}) --Обжигающий хлопок
 
 mod.vb.addsRemaining = 0
 mod.vb.embersCount = 0
@@ -71,11 +71,12 @@ function mod:OnCombatStart(delay)
 	self.vb.embersCount = 0
 	self.vb.purgingCount = 0
 	self.vb.tankCount = 0
+	timerSearingClapCD:Start(3.9, self.vb.tankCount+1)
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 368990 then
+	if spellId == 368990 then --Очищающее пламя
 		self.vb.purgingCount = self.vb.purgingCount + 1
 		specWarnPurgingFlames:Show(self.vb.purgingCount)
 		specWarnPurgingFlames:Play("laserrun")
@@ -86,7 +87,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 369110 or spellId == 369198 then--110 confirmed, 198 unknown
 		self.vb.embersCount = self.vb.embersCount + 1
 		timerUnstableEmbersCD:Start(12, self.vb.embersCount+1)
-	elseif spellId == 369061 then
+	elseif spellId == 369061 then --Обжигающий хлопок
 		self.vb.tankCount = self.vb.tankCount + 1
 		self:BossTargetScanner(args.sourceGUID, "SearingClapTarget", 0.1, 2)
 	--[[	if self:IsTanking("player", "boss1", nil, true) then
@@ -101,10 +102,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 369049 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		warnSeekingFlame:Show()
-	elseif spellId == 369033 then--Activate Keepers, more accurate for starting timers after purging flames since it subtracks travel time
+	elseif spellId == 369033 then --Активация хранителей Activate Keepers, more accurate for starting timers after purging flames since it subtracks travel time
 		--As of Aug 10th hotfix, these are now same as pull, + travel time (so 0-2 sec variation)
 		--These also now replace pull timers since no point in not combining code together
-		timerSearingClapCD:Start(4.4, self.vb.tankCount+1)--Non resetting, for healer/tank CDs
+	--	timerSearingClapCD:Start(4.4, self.vb.tankCount+1)--Non resetting, for healer/tank CDs
 		timerUnstableEmbersCD:Start(12.2, 1)
 		timerPurgingFlamesCD:Start(39.7, self.vb.purgingCount+1)--40-42, due to travel time back to center of room
 	end
@@ -134,9 +135,11 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 368990 then--Purging Flames over
 		self.vb.embersCount = 0--Resetting since it's mostly for timer control
 		self.vb.addsRemaining = 0--Reset for good measure
-	elseif spellId == 369043 then
+	elseif spellId == 369043 then --Насыщение
 		self.vb.addsRemaining = self.vb.addsRemaining - 1
-		if self.vb.addsRemaining > 0 then
+		if self.vb.addsRemaining == 0 then
+			timerSearingClapCD:Start(3.5, self.vb.tankCount+1)
+		elseif self.vb.addsRemaining > 0 then
 			warnKeepersRemaining:Show(self.vb.addsRemaining)
 		end
 	end
