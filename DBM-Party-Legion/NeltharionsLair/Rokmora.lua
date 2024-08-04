@@ -29,7 +29,7 @@ mod.vb.shatterCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.shatterCount = 0
-	timerShatterCD:Start(19.9-delay, 1)
+	timerShatterCD:Start(21-delay, 1)
 	timerRazorShardsCD:Start(28.9-delay)
 end
 

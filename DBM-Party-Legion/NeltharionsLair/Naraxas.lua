@@ -31,11 +31,11 @@ local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) 
 local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 2) --Шипастый язык
 local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8) --Зловонная пасть
 
-local timerSpikedTongueCD			= mod:NewNextCountTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
-local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
-local timerAddsCD					= mod:NewCDCountTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 1 or nil, 5) --Призыв прислужников
-local timerRancidMawCD				= mod:NewCDCountTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
-local timerToxicRetchCD				= mod:NewCDCountTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
+local timerSpikedTongueCD			= mod:NewCDTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
+local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, "Tank|Healer", nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
+local timerAddsCD					= mod:NewCDTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 1 or nil, 5) --Призыв прислужников
+local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
+local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
 local yellSpikedTongue				= mod:NewShortYell(199176, nil, nil, nil, "YELL") --Шипастый язык
 
@@ -56,10 +56,10 @@ function mod:OnCombatStart(delay)
 	self.vb.addsCount = 0
 	self.vb.spikeCount = 0
 	self.vb.mawCount = 0
-	timerAddsCD:Start(5-delay, 1) --
-	timerRancidMawCD:Start(6.9-delay, 1) --
-	timerToxicRetchCD:Start(12.2-delay, 1) --
-	timerSpikedTongueCD:Start(49.9-delay, 1) --
+	timerAddsCD:Start(5-delay) --
+	timerRancidMawCD:Start(6.9-delay) --
+	timerToxicRetchCD:Start(12.2-delay) --
+	timerSpikedTongueCD:Start(49.9-delay) --
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -132,6 +132,5 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if timer then
 			timerAddsCD:Start(timer, self.vb.addsCount+1)
 		end
-	--	timerAddsCD:Start(nil, self.vb.addsCount+1)
 	end
 end

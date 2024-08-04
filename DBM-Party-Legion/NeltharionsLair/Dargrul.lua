@@ -31,11 +31,11 @@ local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, n
 local specWarnMagmaWave2			= mod:NewSpecialWarningSpell(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
 local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 96306, nil, 4, 2) --Пламенная ненависть (Преследование)
 
-local timerMoltenCrashCD			= mod:NewCDCountTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23
+local timerMoltenCrashCD			= mod:NewCDTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23
 local timerLandSlideCD				= mod:NewCDTimer(16, 200700, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оползень 16.5-27
-local timerCrystalSpikesCD			= mod:NewCDCountTimer(90, 200551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристальные шипы
-local timerMagmaSculptorCD			= mod:NewCDCountTimer(71, 200637, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Ваятель магмы Everyone?
-local timerMagmaWaveCD				= mod:NewCDCountTimer(90, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна
+local timerCrystalSpikesCD			= mod:NewCDTimer(21.4, 200551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристальные шипы
+local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 2 or nil, 5) --Ваятель магмы Everyone?
+local timerMagmaWaveCD				= mod:NewCDTimer(90, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна
 local timerMagmaWave				= mod:NewCastTimer(2.5, 200404, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна
 
 local yellBurningHatred				= mod:NewShortYell(200154, 96306, nil, nil, "YELL") --Пламенная ненависть (Преследование)
@@ -59,21 +59,21 @@ local allProshlyapationsOfMurchal = {
 	[200418] = {60.8, 63, 63.1, 65, 64.6},
 	--Оползень
 	[200700] = {15.7, 16, 16, 21.8, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16},
+	--Магматический удар
+	[200732] = {18.9, 16, 37.9, 16, 16, 16, 16.8, 15.5, 15.7, 16, 16, 16, 16, 16, 16, 15, 17.3, 17.1, 13.6},
 }
 
---Магматический удар
-	--
 function mod:OnCombatStart(delay)
 	self.vb.landSlideCount = 0
 	self.vb.crystalSpikesCount = 0
 	self.vb.waveCount = 0
 	self.vb.crashCount = 0
 	self.vb.addCount = 0
-	timerCrystalSpikesCD:Start(5-delay, 1) --
-	timerMagmaSculptorCD:Start(9.6-delay, 1) --
+	timerCrystalSpikesCD:Start(5-delay) --
+	timerMagmaSculptorCD:Start(9.6-delay) --
 	timerLandSlideCD:Start(15.7-delay) --
-	timerMoltenCrashCD:Start(19-delay, 1) --
-	timerMagmaWaveCD:Start(60.8-delay, 1) --
+	timerMoltenCrashCD:Start(18.9-delay) --
+	timerMagmaWaveCD:Start(60.8-delay) --
 end
 
 function mod:SPELL_CAST_START(args)
@@ -84,12 +84,9 @@ function mod:SPELL_CAST_START(args)
 			specWarnMoltenCrash:Show()
 			specWarnMoltenCrash:Play("defensive")
 		end
-		if self.vb.crashCount == 9 then
-			timerMoltenCrashCD:Start(14.6, self.vb.crashCount+1)
-		elseif self.vb.crashCount == 17 then
-			timerMoltenCrashCD:Start(32.1, self.vb.crashCount+1)
-		else
-			timerMoltenCrashCD:Start(15.9, self.vb.crashCount+1)
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.crashCount+1) 
+		if timer then
+			timerMoltenCrashCD:Start(timer, self.vb.crashCount+1)
 		end
 	elseif spellId == 200551 then --Кристальные шипы
 		self.vb.crystalSpikesCount = self.vb.crystalSpikesCount + 1
