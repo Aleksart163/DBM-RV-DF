@@ -101,7 +101,7 @@ local specWarnIronbark				= mod:NewSpecialWarningYou(102342, nil, nil, nil, 1, 2
 local specWarnInnervate 			= mod:NewSpecialWarningYou(29166, nil, nil, nil, 1, 2) --Озарение
 local specWarnInnervate2			= mod:NewSpecialWarningEnd(29166, nil, nil, nil, 1, 2) --Озарение
 local specWarnSymbolHope 			= mod:NewSpecialWarningYou(64901, nil, nil, nil, 1, 2) --Символ надежды
-local specWarnSymbolHope2			= mod:NewSpecialWarningEnd(64901, nil, nil, nil, 1, 2) --Символ надежды
+--local specWarnSymbolHope2			= mod:NewSpecialWarningEnd(64901, nil, nil, nil, 1, 2) --Символ надежды
 local specWarnManaTea2				= mod:NewSpecialWarningEnd(197908, nil, nil, nil, 1, 2) --Маначай
 
 local timerEndlessCloaks			= mod:NewCastTimer(300, 391789, nil, nil, nil, 7) --Шкафчик с множеством плащей
@@ -907,11 +907,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			specWarnInnervate2:Show()
 			specWarnInnervate2:Play("end")
 		end
-	elseif spellId == 64901 then --Символ надежды
+--[[	elseif spellId == 64901 then --Символ надежды
 		if args:IsPlayer() and self:IsHealer() then
 			specWarnSymbolHope2:Show()
 			specWarnSymbolHope2:Play("end")
-		end
+		end]]
 	elseif spellId == 197908 then --Маначай
 		if args:IsPlayer() and self:IsHealer() then
 			specWarnManaTea2:Show()
