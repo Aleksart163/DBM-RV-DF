@@ -69,7 +69,7 @@ local timerEarthquakeCD						= mod:NewCDNPTimer(23.2, 369328, nil, nil, nil, 2) 
 local timerFissuringSlamCD					= mod:NewCDNPTimer(9.6, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
 local timerCleaveCD							= mod:NewCDNPTimer(15, 369409, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассекающий удар
 local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3) --Наскок
-local timerThunderousClapCD					= mod:NewCDNPTimer(18.5, 381593, nil, nil, nil, 2) --Грохочущий удар
+local timerThunderousClapCD					= mod:NewCDNPTimer(18, 381593, nil, nil, nil, 2) --Грохочущий удар
 local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар бастиона
 local timerHastenCD							= mod:NewCDNPTimer(21.1, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ускорение
 
