@@ -40,7 +40,7 @@ local specWarnSandBreath2						= mod:NewSpecialWarningDodge(375727, "-Tank", nil
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8) --Зона вечности
 
 local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3) --Вечная сфера 3-9
-local timerRewindTimeflowCD						= mod:NewCDCountTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
+local timerRewindTimeflowCD						= mod:NewCDTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
 local timerRewindTimeflow						= mod:NewCastTimer(14, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени 12+2sec cast
 local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2) --Взмах крыльями 
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Пожиратель времени
@@ -91,7 +91,7 @@ function mod:OnCombatStart(delay)
 	end
 	timerWingBuffetCD:Start(6.9-delay, 1) --Взмах крыльями (23 сек)
 	timerSandBreathCD:Start(13-delay, 1) --Дыхание песка (19 сек)
-	timerRewindTimeflowCD:Start(41-delay, 1) --Перемотка времени
+	timerRewindTimeflowCD:Start(41-delay) --Перемотка времени
 end
 
 function mod:OnCombatEnd()
