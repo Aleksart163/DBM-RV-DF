@@ -41,10 +41,10 @@ local specWarnOverpoweringCroak					= mod:NewSpecialWarningDodgeCount(385187, ni
 --local specWarnBodySlam							= mod:NewSpecialWarningMoveAway(385531, nil, nil, nil, 1, 2) --Удар пузом
 local specWarnBodySlam							= mod:NewSpecialWarningDodge(385531, nil, nil, nil, 2, 2) --Удар пузом
 
-local timerGulpCD								= mod:NewCDCountTimer(38.8, 385551, nil, nil, nil, 3) --Заглатывание
-local timerOverpoweringCroakCD					= mod:NewCDCountTimer(37.7, 385187, nil, nil, nil, 2)--Tough to classify, it's aoe, it's targeted dodge, and it's adds
-local timerBellySlamCD							= mod:NewCDTimer(37.7, 385531, nil, nil, nil, 3) --Удар пузом
-local timerToxicEffluviaaCD						= mod:NewCDCountTimer(26.7, 385442, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+local timerGulpCD								= mod:NewCDCountTimer(38.8, 385551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заглатывание
+local timerOverpoweringCroakCD					= mod:NewCDCountTimer(37.7, 385187, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Подавляющее кваканье
+local timerBellySlamCD							= mod:NewCDTimer(37.7, 385531, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар пузом
+local timerToxicEffluviaaCD						= mod:NewCDCountTimer(26.7, 385442, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Токсичные испарения
 
 local yellBodySlam								= mod:NewYell(385531, nil, nil, nil, "YELL") --Удар пузом
 
