@@ -139,7 +139,7 @@ local function scanCaptains(self, isPull, delay)
 	end
 end
 
-function mod:BlackoutBarrelTarget(targetname, uId)
+function mod:BlackoutBarrelTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnBlackoutBarrel2:Show()
@@ -147,8 +147,8 @@ function mod:BlackoutBarrelTarget(targetname, uId)
 		yellBlackoutBarrel:Yell()
 	else
 		warnBlackoutBarrel:Show(targetname)
-		specWarnBlackoutBarrel:Show(targetname)
-		specWarnBlackoutBarrel:Play("changetarget")
+	--	specWarnBlackoutBarrel:Show(targetname)
+	--	specWarnBlackoutBarrel:Play("changetarget")
 	end
 	if self.Options.SetIconOnBlackoutBarrel then
 		self:SetIcon(targetname, 8, 15)
@@ -194,7 +194,8 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 258338 then --Бочка черной пелены
-		self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.4, 2)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "BlackoutBarrelTarget", 0.1, 6, true)
+	--	self:BossTargetScanner(args.sourceGUID, "BlackoutBarrelTarget", 0.4, 2)
 	--	self:SendSync("Blackout Barrel")
 		timerBlackoutBarrelCD:Start(nil, args.sourceGUID)
 	elseif spellId == 256589 then --Удар бочкой
