@@ -25,7 +25,7 @@ mod:RegisterEvents(
 --]]
 local warnBlastingGust						= mod:NewCastAnnounce(374080, 4)
 local warnContainmentBeam					= mod:NewCastAnnounce(374020, 2, nil, nil, false)--Can be spammy, it's kind of sort of a passive constant cast of these mobs, so opt in
-local warnExpulse							= mod:NewCastAnnounce(374045, 3)
+local warnExpulse							= mod:NewCastAnnounce(374045, 4) --Выброс (сломано разрабами)
 local warnDemoralizingShout					= mod:NewCastAnnounce(374339, 2) --Деморализующий крик
 local warnElementalFocus					= mod:NewCastAnnounce(395694, 4)
 local warnCauterize							= mod:NewCastAnnounce(374699, 3)--20.6?
@@ -54,7 +54,7 @@ local specWarnBoilingRage					= mod:NewSpecialWarningDispel(377384, "RemoveEnrag
 local specWarnAqueousBarrierDispel			= mod:NewSpecialWarningDispel(377402, "MagicDispeller", nil, nil, 1, 2) --Водяная преграда
 --local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
 local specWarnBlastingGust					= mod:NewSpecialWarningInterrupt(374080, "HasInterrupt", nil, nil, 1, 2)
-local specWarnExpulse						= mod:NewSpecialWarningInterrupt(374045, "HasInterrupt", nil, nil, 1, 2)
+local specWarnExpulse						= mod:NewSpecialWarningInterrupt(374045, "HasInterrupt", nil, nil, 1, 2) --Выброс
 local specWarnDemoShout						= mod:NewSpecialWarningInterrupt(374339, "HasInterrupt", nil, nil, 1, 2) --Деморализующий крик
 local specWarnEarthShield					= mod:NewSpecialWarningInterrupt(374066, "HasInterrupt", nil, nil, 1, 2)
 local specWarnElementalFocus				= mod:NewSpecialWarningInterrupt(395694, "HasInterrupt", nil, nil, 1, 2)
@@ -113,7 +113,7 @@ function mod:SPELL_CAST_START(args)
 		elseif self:AntiSpam(3, 7) then
 			warnBlastingGust:Show()
 		end
-	elseif spellId == 374045 then
+	elseif spellId == 374045 then --Выброс
 		if self.Options.SpecWarn374045interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnExpulse:Show(args.sourceName)
 			specWarnExpulse:Play("kickcast")
