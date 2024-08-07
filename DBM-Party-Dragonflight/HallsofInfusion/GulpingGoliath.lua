@@ -27,33 +27,38 @@ mod:RegisterEventsInCombat(
  or (source.type = "NPC" and source.firstSeen = timestamp) or (target.type = "NPC" and target.firstSeen = timestamp)
 --]]
 --TODO, actually detect gulp target or is it no one specific?
-local warnHangry								= mod:NewSpellAnnounce(385743, 2, nil, "Tank|Healer")
-local warnBodySlam								= mod:NewTargetNoFilterAnnounce(385531, 3)
-local warnToxicEff								= mod:NewCountAnnounce(385442, 3)
+local warnHangry								= mod:NewSpellAnnounce(385743, 2, nil, "Tank|Healer") --Золоден
+--local warnBodySlam								= mod:NewTargetNoFilterAnnounce(385531, 3) --Удар пузом
+local warnBodySlam								= mod:NewCastAnnounce(385531, 4) --Удар пузом
+local warnToxicEff								= mod:NewCountAnnounce(385442, 3) --Токсичные испарения
 
 local specWarnFixate							= mod:NewSpecialWarningRun(374610, nil, 96306, nil, 4, 2) --Преследование
-local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
-local specWarnGulp								= mod:NewSpecialWarningRunCount(385551, nil, nil, nil, 4, 2) --Заглатывание
-local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 2, nil, nil, 1, 6)
+local specWarnGulp								= mod:NewSpecialWarningDodgeCount(385551, nil, nil, nil, 2, 2) --Заглатывание
+local specWarnGulp2								= mod:NewSpecialWarningMoveTo(385551, "Tank", nil, nil, 4, 4) --Заглатывание
+local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2) --Золоден
 local specWarnOverpoweringCroak					= mod:NewSpecialWarningDodgeCount(385187, nil, nil, nil, 2, 2)--385181 is cast but lacks tooltip, so damage Id used for tooltip/option
-local specWarnBodySlam							= mod:NewSpecialWarningMoveAway(385531, nil, nil, nil, 1, 2)
+--local specWarnBodySlam							= mod:NewSpecialWarningMoveAway(385531, nil, nil, nil, 1, 2) --Удар пузом
+local specWarnBodySlam							= mod:NewSpecialWarningDodge(385531, nil, nil, nil, 2, 2) --Удар пузом
 
 local timerGulpCD								= mod:NewCDCountTimer(38.8, 385551, nil, nil, nil, 3) --Заглатывание
 local timerOverpoweringCroakCD					= mod:NewCDCountTimer(37.7, 385187, nil, nil, nil, 2)--Tough to classify, it's aoe, it's targeted dodge, and it's adds
-local timerBellySlamCD							= mod:NewCDTimer(37.7, 385531, nil, nil, nil, 3)
+local timerBellySlamCD							= mod:NewCDTimer(37.7, 385531, nil, nil, nil, 3) --Удар пузом
 local timerToxicEffluviaaCD						= mod:NewCDCountTimer(26.7, 385442, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
-local yellBodySlam								= mod:NewYell(385531, nil, nil, nil, "YELL")
+local yellBodySlam								= mod:NewYell(385531, nil, nil, nil, "YELL") --Удар пузом
 
 mod:AddRangeFrameOption(12, 385531)
 mod:AddInfoFrameOption(374389, "RemovePoison")
 
+local Proshlyap = false
 local toxinStacks = {}
 
 mod.vb.gulpCount = 0
 mod.vb.croakCount = 0
 mod.vb.toxicCount = 0
 
+--[[
 function mod:BodySlamTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -63,13 +68,14 @@ function mod:BodySlamTarget(targetname)
 	else
 		warnBodySlam:Show(targetname)
 	end
-end
+end]]
 
 function mod:OnCombatStart(delay)
 	table.wipe(toxinStacks)
 	self.vb.gulpCount = 0
 	self.vb.croakCount = 0
 	self.vb.toxicCount = 0
+	Proshlyap = false
 	timerOverpoweringCroakCD:Start(8-delay, 1)
 	timerGulpCD:Start(17.8-delay, 1)
 	timerToxicEffluviaaCD:Start(29.9-delay, 1)
@@ -96,8 +102,18 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 385551 then --Заглатывание
 		self.vb.gulpCount = self.vb.gulpCount + 1
-		specWarnGulp:Show(self.vb.gulpCount)
-		specWarnGulp:Play("justrun")
+		if self:IsTank() then
+			if not Proshlyap then
+				specWarnGulp2:Show(CL.BOSS)
+				specWarnGulp2:Play("movetoboss")
+			else
+				specWarnGulp:Show(self.vb.gulpCount)
+				specWarnGulp:Play("watchstep")
+			end
+		else
+			specWarnGulp:Show(self.vb.gulpCount)
+			specWarnGulp:Play("watchstep")
+		end
 		timerGulpCD:Start(self.vb.gulpCount == 1 and 47.1 or 37.6, self.vb.gulpCount+1)
 	elseif spellId == 385181 then
 		self.vb.croakCount = self.vb.croakCount + 1
@@ -105,8 +121,11 @@ function mod:SPELL_CAST_START(args)
 		specWarnOverpoweringCroak:Play("aesoon")
 		specWarnOverpoweringCroak:ScheduleVoice(2, "watchstep")
 		timerOverpoweringCroakCD:Start(nil, self.vb.croakCount+1)
-	elseif spellId == 385531 then
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "BodySlamTarget", 0.1, 6, true)
+	elseif spellId == 385531 then --Удар пузом
+	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "BodySlamTarget", 0.1, 6, true)
+		warnBodySlam:Show()
+		specWarnBodySlam:Show()
+		specWarnBodySlam:Play("watchstep")
 		timerBellySlamCD:Start()
 	elseif spellId == 385442 then
 		self.vb.toxicCount = self.vb.toxicCount + 1
@@ -124,15 +143,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnHangry:Show()
 		end
-	elseif spellId == 374389 then
+	elseif spellId == 374389 then --Токсин рогоплава
 		local amount = args.amount or 1
 		toxinStacks[args.destName] = amount
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks)
 		end
-		if args:IsPlayer() and amount >= 8 then
+		if args:IsPlayer() and amount >= 2 and amount % 2 == 0 then
 			specWarnGulpSwogToxin:Show(amount)
 			specWarnGulpSwogToxin:Play("stackhigh")
+		elseif args:IsPlayer() and amount >= 6 then
+			Proshlyap = true
 		end
 	end
 end
@@ -140,7 +161,10 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 374389 then
+	if spellId == 374389 then --Токсин рогоплава
+		if args:IsPlayer() then
+			Proshlyap = false
+		end
 		toxinStacks[args.destName] = nil
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks)
