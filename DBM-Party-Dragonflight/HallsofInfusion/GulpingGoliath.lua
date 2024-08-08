@@ -35,7 +35,7 @@ local warnToxicEff								= mod:NewCountAnnounce(385442, 3) --Токсичные
 local warnOverpoweringCroak						= mod:NewCountAnnounce(385187, 2) --Подавляющее кваканье
 
 local specWarnFixate							= mod:NewSpecialWarningRun(374610, nil, 96306, nil, 4, 2) --Преследование
-local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 2, nil, nil, 1, 6) --Токсин рогоплава
+local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnGulp								= mod:NewSpecialWarningDodgeCount(385551, nil, nil, nil, 2, 2) --Заглатывание
 local specWarnGulp2								= mod:NewSpecialWarningMoveTo(385551, "Tank", nil, nil, 3, 4) --Заглатывание
 --local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2) --Золоден
@@ -62,8 +62,6 @@ mod.vb.croakCount = 0
 mod.vb.toxicCount = 0
 mod.vb.bodySlamCount = 0
 
---Токсичные испарения
-	--30, 27, 39, 39
 --[[
 function mod:BodySlamTarget(targetname)
 	if not targetname then return end
@@ -76,12 +74,8 @@ function mod:BodySlamTarget(targetname)
 	end
 end]]
 
---Заглатывание
---17.9, 47, 39
 function mod:OnCombatStart(delay)
 	table.wipe(toxinStacks)
-	--23 36 37 832 пул босса
-	--23 36 55 786
 	self.vb.gulpCount = 0
 	self.vb.croakCount = 0
 	self.vb.toxicCount = 0
@@ -145,7 +139,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks)
 		end
-		if args:IsPlayer() and amount >= 2 and amount % 2 == 0 then
+		if args:IsPlayer() and amount >= 4 and amount % 2 == 0 then
 			specWarnGulpSwogToxin:Show(amount)
 			specWarnGulpSwogToxin:Play("stackhigh")
 		elseif args:IsPlayer() and amount >= 6 then
