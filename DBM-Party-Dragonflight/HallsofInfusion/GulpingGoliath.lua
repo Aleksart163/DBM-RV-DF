@@ -33,7 +33,7 @@ local warnBodySlam								= mod:NewCastAnnounce(385531, 4) --Удар пузом
 local warnToxicEff								= mod:NewCountAnnounce(385442, 3) --Токсичные испарения
 
 local specWarnFixate							= mod:NewSpecialWarningRun(374610, nil, 96306, nil, 4, 2) --Преследование
-local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 2, nil, nil, 1, 6)
+local specWarnGulpSwogToxin						= mod:NewSpecialWarningStack(374389, nil, 2, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnGulp								= mod:NewSpecialWarningDodgeCount(385551, nil, nil, nil, 2, 2) --Заглатывание
 local specWarnGulp2								= mod:NewSpecialWarningMoveTo(385551, "Tank", nil, nil, 3, 4) --Заглатывание
 local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2) --Золоден
