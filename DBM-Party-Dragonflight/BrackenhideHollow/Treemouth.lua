@@ -87,7 +87,7 @@ function mod:SPELL_CAST_START(args)
 		warnGraspingVines:Show()
 		if self:IsMythic() then
 			if self:IsTank() then
-				specWarnGraspingVines2:Show(CL.BOSS)
+				specWarnGraspingVines2:Show(DBM_COMMON_L.BOSS)
 				specWarnGraspingVines2:Play("movetoboss")
 			else
 				specWarnGraspingVines:Show()
