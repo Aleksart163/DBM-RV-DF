@@ -41,10 +41,11 @@ local warnWindblast								= mod:NewSpellAnnounce(87923, 2, nil, "RemoveMagic|Ta
 local warnPressurizedBlast						= mod:NewCastAnnounce(410999, 4) --Порыв сжатого воздуха
 local warnBombCyclone							= mod:NewSpellAnnounce(411005, 3) --Взрывной циклон
 local warnWindFlurry							= mod:NewSpellAnnounce(410998, 3, nil, "Tank|Healer") --Шквал ветра
-local warnLethalCurrent							= mod:NewTargetNoFilterAnnounce(411001, 4) --Смертоносный поток
 local warnOverloadGroundingField				= mod:NewCastAnnounce(413385, 4) --Перегрузка заземляющего поля
 local warnGreaterHeal							= mod:NewCastAnnounce(87779, 4) --Великое исцеление
 local warnLightningLash							= mod:NewTargetNoFilterAnnounce(87762, 4) --Искрящаяся плеть
+--local warnLethalCurrent							= mod:NewTargetNoFilterAnnounce(411001, 4) --Смертоносный поток
+local warnLethalCurrent							= mod:NewCastAnnounce(411001, 4) --Смертоносный поток
 
 local specWarnIcyBuffet							= mod:NewSpecialWarningSpell(88194, nil, nil, nil, 2, 2) --Ледяные крылья
 local specWarnLethalCurrent						= mod:NewSpecialWarningYou(411001, nil, nil, nil, 3, 4) --Смертоносный поток
@@ -86,6 +87,7 @@ local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --См
 local groundingName = DBM:GetSpellName(87726)
 local playerGrounded = false
 
+--[[
 function mod:LethalCurrentTarget(targetname, uId)
 	if not targetname then return end
 	if self:AntiSpam(2, targetname) then
@@ -96,7 +98,7 @@ function mod:LethalCurrentTarget(targetname, uId)
 			yellLethalCurrent:Yell()
 		end
 	end
-end
+end]]
 
 function mod:LitTarget(targetname)
 	if not targetname then return end
@@ -168,7 +170,8 @@ function mod:SPELL_CAST_START(args)
 		end
 --		specWarnTurbulence:ScheduleVoice("pushbackincoming")
 	elseif spellId == 411001 then --Смертоносный поток
-		self:BossTargetScanner(args.sourceGUID, "LethalCurrentTarget", 0.1, 2)
+		warnLethalCurrent:Show()
+	--	self:BossTargetScanner(args.sourceGUID, "LethalCurrentTarget", 0.1, 2)
 	elseif spellId == 413385 then
 		timerOverloadGroundingFieldCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 1) then
