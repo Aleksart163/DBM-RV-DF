@@ -4,10 +4,10 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20240810070000")
 mod:SetCreatureID(43873)
 mod:SetEncounterID(1041)
-mod:SetHotfixNoticeRev(20230527000000)
+mod:SetHotfixNoticeRev(20240811070000)
 --mod:SetMinSyncRevision(20230226000000)
 mod.sendMainBossGUID = true
 
@@ -16,8 +16,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 88308",
 	"SPELL_CAST_SUCCESS 413295 181089",
-	"SPELL_AURA_APPLIED 88282 88286 413275"
---	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"SPELL_AURA_APPLIED 88282 88286 413275",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --TODO, verify changes on non mythic+ in 10.1
@@ -29,7 +29,7 @@ ability.id = 88308 and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 
-local warnCalltheWind		= mod:NewCountAnnounce(88276, 2) --Призыв ветра
+local warnCalltheWind		= mod:NewSpellAnnounce(88276, 2) --Призыв ветра
 local warnUpwind			= mod:NewSpellAnnounce(88282, 1) --Наветренная сторона
 
 --local specWarnBreath		= mod:NewSpecialWarningYou(88308, "-Tank", nil, 2, 1, 2)
@@ -38,9 +38,9 @@ local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, nil, nil, 2,
 local specWarnDownwind		= mod:NewSpecialWarningSpell(88286, nil, nil, nil, 1, 14) --Подветренная сторона Альтаирия
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(413275, nil, nil, nil, 1, 8) --Холодный фронт
 
-local timerCalltheWindCD	= mod:NewCDCountTimer(20.6, 88276, nil, nil, nil, 6) --Призыв ветра
-local timerBreathCD			= mod:NewCDCountTimer(13.4, 88308, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание) May be 10.5 pre nerf for cata classic
-local timerDownburstCD		= mod:NewCDCountTimer(35.1, 413295, nil, nil, nil, 7) --Нисходящий порыв 35.1-44
+local timerCalltheWindCD	= mod:NewCDTimer(20.6, 88276, nil, nil, nil, 6) --Призыв ветра
+local timerBreathCD			= mod:NewCDTimer(13.4, 88308, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание) May be 10.5 pre nerf for cata classic
+local timerDownburstCD		= mod:NewCDTimer(35.1, 413295, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий порыв 35.1-44
 
 mod.vb.activeWind = "none"
 mod.vb.windCount = 0
@@ -73,22 +73,24 @@ end
 
 local allProshlyapationsOfMurchal = {
 	--Дыхание
-	[88308] = {13.4, 21, 20.9, 21.1, 21, 21, 20, 21.1},
+	[88308] = {12.5, 21, 20.9, 21.1, 21, 21, 20, 21.1, 21, 21, 21, 21, 21, 21, 22},
+	--Нисходящий порыв
+	[413295] = {20.4, 36.5, 42.1, 35, 40, 35, 40, 35, 40},
 }
---каждые 19.9 Призыв ветра
+
 function mod:OnCombatStart(delay)
 	self.vb.activeWind = "none"
 	self.vb.windCount = 0
 	self.vb.burstCount = 0
 	self.vb.breathCount = 0
 	if self:IsMythic() then
-		timerCalltheWindCD:Start(5.9-delay, 1) --
-		timerBreathCD:Start(13.4-delay, 1) --
-		timerDownburstCD:Start(21.5-delay, 1) --
+		timerCalltheWindCD:Start(4.9-delay) --
+		timerBreathCD:Start(12.5-delay) --
+		timerDownburstCD:Start(20.4-delay) --
 	else
 		--TODO, recheck on non mythic plus
-		timerCalltheWindCD:Start(5-delay, 1)
-		timerBreathCD:Start(10.7-delay, 1)
+		timerCalltheWindCD:Start(5-delay)
+		timerBreathCD:Start(10.7-delay)
 	end
 end
 
@@ -98,23 +100,35 @@ function mod:SPELL_CAST_START(args)
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnBreath:Show()
 		specWarnBreath:Play("breathsoon")
-		timerBreathCD:Start(self:IsMythic() and 21.8 or 13.4, self.vb.breathCount+1)
-		updateAllTimers(self, 6)
+		if self:IsMythic() then
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.breathCount+1)
+			if timer then
+				timerBreathCD:Start(timer, self.vb.breathCount+1)
+			end
+		else
+			timerBreathCD:Start(13.4, self.vb.breathCount+1)
+			updateAllTimers(self, 6)
+		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 413295 then
+	if spellId == 413295 then --Нисходящий порыв
 		self.vb.burstCount = self.vb.burstCount + 1
 		specWarnDownburst:Show(tornado)
 		specWarnDownburst:Play("getknockedup")
-		timerDownburstCD:Start(nil, self.vb.burstCount+1)
-		--updateAllTimers(self, 1.2)--accurate, but not really worth triggering
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.burstCount+1)
+		if timer then
+			timerDownburstCD:Start(timer, self.vb.burstCount+1)
+		end
 	elseif spellId == 181089 then--Encounter Event
-		self.vb.windCount = self.vb.windCount + 1
-		warnCalltheWind:Show(self.vb.windCount)
-		timerCalltheWindCD:Start(self:IsMythic() and 15.4 or 20.6, self.vb.windCount+1)
+		DBM:Debug("Check Murchal proshlyap", 2)
+		if not self:IsMythic() then
+			self.vb.windCount = self.vb.windCount + 1
+			warnCalltheWind:Show(self.vb.windCount)
+			timerCalltheWindCD:Start(self:IsMythic() and 15.4 or 20.6, self.vb.windCount+1)
+		end
 		--updateAllTimers(self, 1.2)--accurate, but not really worth triggering
 	end
 end
@@ -134,11 +148,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
---[[
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
-	if spellId == 88276 then
-		warnCalltheWind:Show()
-		timerCalltheWindCD:Start()
+	if spellId == 88276 and self:AntiSpam(2, "CalltheWind") then
+		self.vb.windCount = self.vb.windCount + 1
+		warnCalltheWind:Schedule(1)
+		if self.vb.windCount < 11 then
+			timerCalltheWindCD:Start(20, self.vb.windCount+1)
+		elseif self.vb.windCount >= 11 then
+			timerCalltheWindCD:Start(21, self.vb.windCount+1)
+		end
 	end
 end
---]]
