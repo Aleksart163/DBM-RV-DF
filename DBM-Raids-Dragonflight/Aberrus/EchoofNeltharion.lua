@@ -56,7 +56,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 
 
 local timerVolcanicHeartCD						= mod:NewNextCountTimer(26.2, 410953, 167180, nil, nil, 3) --Вулканическое сердце (Бомбы)
 local timerTwistedEarthCD						= mod:NewCDCountTimer(26.2, 402902, nil, nil, nil, 3) --Искаженная земля
-local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2) --Звенящий разлом (Разлом)
+local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Звенящий разлом (Разлом)
 local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, nil, 3) --Стремительная тьма
 local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Гибельный удар
 --local berserkTimer							= mod:NewBerserkTimer(600)
@@ -71,13 +71,13 @@ local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
-local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2) --Темное уничтожение
+local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensiveCount(405433, nil, 246664, nil, 2, 2) --Темное уничтожение (Аннигиляция)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
 
 local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5) --Порча
-local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение
+local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, 246664, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение (Аннигиляция)
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --Stage Three: Reality Fractures
@@ -238,7 +238,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407917 then --Черное разрушение (Большой взрыв)
 		self.vb.ebonCount = self.vb.ebonCount + 1
 		warnEbonDestruction:Show(self.vb.ebonCount)
-		timerEbonDestructionCD:Start(nil, self.vb.ebonCount+1)
+		timerEbonDestructionCD:Start(29.4, self.vb.ebonCount+1) --Большой взрыв (отлично смотрится под героик)
 		timerEbonDestruction:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM_COMMON_L.NO_DEBUFF:format(realityName))
@@ -393,6 +393,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(5, 3) then
 			self.vb.corruptionCount = self.vb.corruptionCount + 1
 			timerCorruptionCD:Start(43.4, self.vb.corruptionCount+1)
+			DBM:Debug("Check Murchal proshlyap", 2)
 		end
 		warnCorruption:CombinedShow(0.3, self.vb.corruptionCount, args.destName)
 		if args:IsPlayer() then
@@ -411,7 +412,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 407088 and self:GetStage(3, 1) then --Фаза 3 Empowered Shadows
+	if spellId == 407088 and self:GetStage(3, 1) then --Фаза 3
 		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")

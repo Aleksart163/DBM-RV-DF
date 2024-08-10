@@ -59,7 +59,7 @@ local warnDazzled								= mod:NewTargetNoFilterAnnounce(401905, 4, nil, false) 
 local warnMassDisintegrate						= mod:NewTargetCountAnnounce(401680, 3, nil, nil, 405391, nil, nil, nil, true) --Массовая дезинтеграция (Дезинтеграция)
 local warnBurningClaws							= mod:NewStackAnnounce(401330, 2, nil, "Tank|Healer") --Обжигающие когти
 
-local specWarnGlitteringSurge					= mod:NewSpecialWarningCount(401810, nil, nil, nil, 2, 2) --Сияющий всплеск
+local specWarnGlitteringSurge					= mod:NewSpecialWarningDefensiveCount(401810, nil, nil, nil, 2, 2) --Сияющий всплеск
 local specWarnScorchingBomb						= mod:NewSpecialWarningCount(401500, nil, 167180, nil, 2, 2) --Опаляющая бомба (Бомбы)
 
 local specWarnMassDisintegrateYou				= mod:NewSpecialWarningYou(401680, nil, 405391, nil, 1, 2) --Массовая дезинтеграция (Дезинтеграция)
