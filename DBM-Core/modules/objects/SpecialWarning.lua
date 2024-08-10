@@ -210,6 +210,7 @@ local specInstructionalRemapTable = {
 	["interrupt"] = "spell",
 	["interruptcount"] = "count",
 	["defensive"] = "spell",
+	["defensivecount"] = "count",
 	["taunt"] = "target",
 	["soak"] = "spell",
 	["soakcount"] = "count",
@@ -316,6 +317,7 @@ local specTypeFilterTable = {
 	["interrupt"] = "interrupt",
 	["interruptcount"] = "interrupt",
 	["defensive"] = "defensive",
+	["defensivecount"] = "defensive",
 	["taunt"] = "taunt",
 	["soak"] = "soak",
 	["soakcount"] = "soak",
@@ -886,6 +888,11 @@ end
 ---@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning
 function bossModPrototype:NewSpecialWarningDefensive(spellId, optionDefault, ...)
 	return newSpecialWarning(self, "defensive", spellId, nil, optionDefault, ...)
+end
+
+---@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning
+function bossModPrototype:NewSpecialWarningDefensiveCount(spellId, optionDefault, ...)
+	return newSpecialWarning(self, "defensivecount", spellId, nil, optionDefault, ...)
 end
 
 ---@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning
