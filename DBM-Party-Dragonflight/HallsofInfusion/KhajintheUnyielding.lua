@@ -25,11 +25,13 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, review heroic logs in 10.1 to see if timer changes affect that mode
-local warnFrostCyclone							= mod:NewCountAnnounce(390111, 2) --Морозный смерч
+local warnFrostCyclone							= mod:NewCastAnnounce(390111, 2) --Морозный смерч
+local warnFrostShock							= mod:NewSpellAnnounce(385963, 3) --Ледяной шок
 
 local specWarnFrostCyclone						= mod:NewSpecialWarningDodge(390111, nil, nil, nil, 2, 2) --Морозный смерч
 local specWarnHailstorm							= mod:NewSpecialWarningMoveTo(386757, nil, nil, nil, 3, 4) --Буря с градом
-local specWarnGlacialSurge						= mod:NewSpecialWarningDodgeCount(386559, nil, nil, nil, 2, 2) --Ледяной всплеск
+local specWarnGlacialSurge						= mod:NewSpecialWarningDodge(386559, "Ranged", nil, nil, 2, 2) --Ледяной всплеск
+local specWarnGlacialSurge2						= mod:NewSpecialWarningRun(386559, "Melee", nil, nil, 4, 4) --Ледяной всплеск
 local specWarnFrostShock						= mod:NewSpecialWarningYou(385963, nil, nil, nil, 1, 2) --Ледяной шок
 local specWarnFrostShock2						= mod:NewSpecialWarningDispel(385963, "RemoveMagic", nil, nil, 1, 2) --Ледяной шок
 
@@ -37,7 +39,7 @@ local timerHailstormCD							= mod:NewCDTimer(22, 386757, nil, nil, nil, 2, nil,
 local timerHailstorm							= mod:NewCastTimer(7, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Ледяной всплеск
 local timerFrostCycloneCD						= mod:NewCDTimer(29.9, 390111, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Морозный смерч
-local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяной шок
+local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, "RemoveMagic", nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяной шок
 
 local yellFrostShock							= mod:NewShortYell(385963, nil, nil, nil, "YELL") --Ледяной шок
 
@@ -59,7 +61,7 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		timerFrostCycloneCD:Start(10-delay, 1) --
 		timerHailstormCD:Start(20-delay)
-		timerGlacialSurgeCD:Start(self:IsMythicPlus() and 32 or 27-delay, 1) --
+		timerGlacialSurgeCD:Start(self:IsMythic() and 32 or 27-delay, 1) --
 	else--TODO, verify heroic still does this
 		timerHailstormCD:Start(10-delay)
 		timerGlacialSurgeCD:Start(22-delay, 1)
@@ -72,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.hailCount = self.vb.hailCount + 1
 		specWarnHailstorm:Show(boulder)
 		specWarnHailstorm:Play("findshelter")
-		if self:IsMythicPlus() then
+		if self:IsMythic() then
 			--20.0, 30.0, 42.0, 30.0
 			if self.vb.hailCount % 2 == 0 then
 				timerHailstormCD:Start(42, self.vb.hailCount+1)
@@ -83,11 +85,16 @@ function mod:SPELL_CAST_START(args)
 			timerHailstormCD:Start(22, self.vb.hailCount+1)
 		end
 		timerHailstorm:Start()
-	elseif spellId == 386559 then
+	elseif spellId == 386559 then --Ледяной всплеск
 		self.vb.surgeCount = self.vb.surgeCount + 1
-		specWarnGlacialSurge:Show(self.vb.surgeCount)
-		specWarnGlacialSurge:Play("watchstep")--or watchring maybe?
-		if self:IsMythicPlus() then
+		if self:IsMelee() then
+			specWarnGlacialSurge2:Show()
+			specWarnGlacialSurge2:Play("watchstep")
+		else
+			specWarnGlacialSurge:Show()
+			specWarnGlacialSurge:Play("watchstep")
+		end
+		if self:IsMythic() then
 			--32.0, 30.0, 42.0, 30.0
 			if self.vb.surgeCount % 2 == 0 then
 				timerGlacialSurgeCD:Start(42, self.vb.surgeCount+1)
@@ -102,7 +109,7 @@ function mod:SPELL_CAST_START(args)
 		warnFrostCyclone:Show()
 		specWarnFrostCyclone:Show()
 		specWarnFrostCyclone:Play("watchstep")
-		if self:IsMythicPlus() then
+		if self:IsMythic() then
 			--10.0, 35.0, 37.0, 35.0
 			if self.vb.cycloneCount % 2 == 0 then
 				timerFrostCycloneCD:Start(37, self.vb.cycloneCount+1)
@@ -119,12 +126,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 385963 then
 		self.vb.shockCount = self.vb.shockCount + 1
-		if self:IsMythicPlus() then
-			--pull:6.0, 12.0, 30.0, 30.0, 12.0, 30.0
-			if self.vb.shockCount % 3 == 1 then
+		warnFrostShock:Show()
+		if self:IsMythic() then
+			if self.vb.shockCount % 2 == 1 then
 				timerFrostShockCD:Start(12, self.vb.shockCount+1)
 			else
-				timerFrostShockCD:Start(30, self.vb.shockCount+1)
+				timerFrostShockCD:Start(60, self.vb.shockCount+1)
 			end
 		else
 			timerFrostShockCD:Start(11, self.vb.shockCount+1)
