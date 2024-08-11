@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2510, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240502084720")
+mod:SetRevision("20240810070000")
 mod:SetCreatureID(189727)
 mod:SetEncounterID(2617)
-mod:SetHotfixNoticeRev(20240429000000)
-mod:SetMinSyncRevision(20230507000000)
+mod:SetHotfixNoticeRev(20240811070000)
+mod:SetMinSyncRevision(20240811070000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -23,17 +23,21 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, review heroic logs in 10.1 to see if timer changes affect that mode
-local warnFrostCyclone							= mod:NewCountAnnounce(390111, 3)
+local warnFrostCyclone							= mod:NewCountAnnounce(390111, 2) --Морозный смерч
 
-local specWarnHailstorm							= mod:NewSpecialWarningMoveTo(386757, nil, nil, nil, 3, 2)
-local specWarnGlacialSurge						= mod:NewSpecialWarningDodgeCount(386559, nil, nil, nil, 2, 2)
-local specWarnFrostCyclone						= mod:NewSpecialWarningCount(390111, false, nil, nil, 2, 2)--Optional emphasis for it
-local specWarnFrostShock						= mod:NewSpecialWarningDispel(385963, "RemoveMagic", nil, nil, 1, 2)
+local specWarnFrostCyclone						= mod:NewSpecialWarningDodge(390111, nil, nil, nil, 2, 2) --Морозный смерч
+local specWarnHailstorm							= mod:NewSpecialWarningMoveTo(386757, nil, nil, nil, 3, 4) --Буря с градом
+local specWarnGlacialSurge						= mod:NewSpecialWarningDodgeCount(386559, nil, nil, nil, 2, 2) --Ледяной всплеск
+local specWarnFrostShock						= mod:NewSpecialWarningYou(385963, nil, nil, nil, 1, 2) --Ледяной шок
+local specWarnFrostShock2						= mod:NewSpecialWarningDispel(385963, "RemoveMagic", nil, nil, 1, 2) --Ледяной шок
 
-local timerHailstormCD							= mod:NewCDCountTimer(22, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerGlacialSurgeCD						= mod:NewCDCountTimer(22, 386559, nil, nil, nil, 3)
-local timerFrostCycloneCD						= mod:NewCDCountTimer(29.9, 390111, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerFrostShockCD							= mod:NewCDCountTimer(11, 385963, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerHailstormCD							= mod:NewCDTimer(22, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Буря с градом
+local timerHailstorm							= mod:NewCastTimer(7, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Ледяной всплеск
+local timerFrostCycloneCD						= mod:NewCDTimer(29.9, 390111, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Морозный смерч
+local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Ледяной шок
+
+local yellFrostShock							= mod:NewShortYell(385963, nil, nil, nil, "YELL") --Ледяной шок
 
 local boulder = DBM:GetSpellName(386222)
 
@@ -47,13 +51,13 @@ function mod:OnCombatStart(delay)
 	self.vb.surgeCount = 0
 	self.vb.cycloneCount = 0
 	self.vb.shockCount = 0
-	timerFrostShockCD:Start(6-delay, 1)
+	timerFrostShockCD:Start(6-delay, 1) --
 	if self:IsMythic() then
-		timerFrostCycloneCD:Start(10-delay, 1)
-		timerHailstormCD:Start(20-delay, 1)
-		timerGlacialSurgeCD:Start(self:IsMythicPlus() and 32 or 27-delay, 1)
+		timerFrostCycloneCD:Start(10-delay, 1) --
+		timerHailstormCD:Start(20-delay)
+		timerGlacialSurgeCD:Start(self:IsMythicPlus() and 32 or 27-delay, 1) --
 	else--TODO, verify heroic still does this
-		timerHailstormCD:Start(10-delay, 1)
+		timerHailstormCD:Start(10-delay)
 		timerGlacialSurgeCD:Start(22-delay, 1)
 	end
 end
@@ -74,6 +78,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerHailstormCD:Start(22, self.vb.hailCount+1)
 		end
+		timerHailstorm:Start()
 	elseif spellId == 386559 then
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		specWarnGlacialSurge:Show(self.vb.surgeCount)
@@ -90,12 +95,9 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 390111 then
 		self.vb.cycloneCount = self.vb.cycloneCount + 1
-		if self.Options.SpecWarn390111count then
-			specWarnFrostCyclone:Show(self.vb.cycloneCount)
-			specWarnFrostCyclone:Play("watchstep")
-		else
-			warnFrostCyclone:Show(self.vb.cycloneCount)
-		end
+		warnFrostCyclone:Show()
+		specWarnFrostCyclone:Show()
+		specWarnFrostCyclone:Play("watchstep")
 		if self:IsMythicPlus() then
 			--10.0, 35.0, 37.0, 35.0
 			if self.vb.cycloneCount % 2 == 0 then
@@ -128,8 +130,14 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 385963 and self:CheckDispelFilter("magic") then
-		specWarnFrostShock:Show(args.destName)
-		specWarnFrostShock:Play("helpdispel")
+	if spellId == 385963 then
+		if args:IsPlayer() then
+			specWarnFrostShock:Show()
+			specWarnFrostShock:Play("targetyou")
+			yellFrostShock:Yell()
+		else
+			specWarnFrostShock2:Show(args.destName)
+			specWarnFrostShock2:Play("helpdispel")
+		end
 	end
 end
