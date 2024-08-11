@@ -118,9 +118,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.burstCount = self.vb.burstCount + 1
 		specWarnDownburst:Show(tornado)
 		specWarnDownburst:Play("getknockedup")
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.burstCount+1)
-		if timer then
-			timerDownburstCD:Start(timer, self.vb.burstCount+1)
+		if self:IsMythic() then
+			local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.burstCount+1)
+			if timer then
+				timerDownburstCD:Start(timer, self.vb.burstCount+1)
+			end
+		else
+			timerDownburstCD:Start(nil, self.vb.burstCount+1)
 		end
 	elseif spellId == 181089 then--Encounter Event
 		DBM:Debug("Check Murchal proshlyap", 2)
@@ -129,7 +133,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnCalltheWind:Show(self.vb.windCount)
 			timerCalltheWindCD:Start(self:IsMythic() and 15.4 or 20.6, self.vb.windCount+1)
 		end
-		--updateAllTimers(self, 1.2)--accurate, but not really worth triggering
 	end
 end
 
@@ -150,12 +153,14 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 88276 and self:AntiSpam(2, "CalltheWind") then
-		self.vb.windCount = self.vb.windCount + 1
-		warnCalltheWind:Schedule(1)
-		if self.vb.windCount < 11 then
-			timerCalltheWindCD:Start(20, self.vb.windCount+1)
-		elseif self.vb.windCount >= 11 then
-			timerCalltheWindCD:Start(21, self.vb.windCount+1)
+		if self:IsMythic() then
+			self.vb.windCount = self.vb.windCount + 1
+			warnCalltheWind:Schedule(1)
+			if self.vb.windCount < 11 then
+				timerCalltheWindCD:Start(20, self.vb.windCount+1)
+			elseif self.vb.windCount >= 11 then
+				timerCalltheWindCD:Start(21, self.vb.windCount+1)
+			end
 		end
 	end
 end
