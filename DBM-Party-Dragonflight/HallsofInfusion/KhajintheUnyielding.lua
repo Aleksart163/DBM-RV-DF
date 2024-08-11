@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20240810070000")
 mod:SetCreatureID(189727)
 mod:SetEncounterID(2617)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20240811070000)
 mod:SetMinSyncRevision(20240811070000)
 --mod.respawnTime = 29
@@ -14,7 +15,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 386757 386559 390111",
 	"SPELL_CAST_SUCCESS 385963",
-	"SPELL_AURA_APPLIED 385963"
+	"SPELL_AURA_APPLIED 385963",
+	"SPELL_AURA_REMOVED 385963"
 )
 
 --[[
@@ -35,9 +37,11 @@ local timerHailstormCD							= mod:NewCDTimer(22, 386757, nil, nil, nil, 2, nil,
 local timerHailstorm							= mod:NewCastTimer(7, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Ледяной всплеск
 local timerFrostCycloneCD						= mod:NewCDTimer(29.9, 390111, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Морозный смерч
-local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Ледяной шок
+local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяной шок
 
 local yellFrostShock							= mod:NewShortYell(385963, nil, nil, nil, "YELL") --Ледяной шок
+
+mod:AddSetIconOption("SetIconOnFrostShock", 385963, true, 0, {8})
 
 local boulder = DBM:GetSpellName(386222)
 
@@ -138,6 +142,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnFrostShock2:Show(args.destName)
 			specWarnFrostShock2:Play("helpdispel")
+		end
+		if self.Options.SetIconOnFrostShock then
+			self:SetIcon(args.destName, 8)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 385963 then
+		if self.Options.SetIconOnFrostShock then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end
