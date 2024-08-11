@@ -224,6 +224,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
+	RP = "Our lines are breaking, Sarkareth! We cannot hold them!",
 	RP1 = "Flame and shadow, both powerful, influential forces.",
 	RP2 = "How exemplary. Congratulations.",
 	RP3 = "A millennia of torment ends. Destruction begins!",

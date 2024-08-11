@@ -60,7 +60,7 @@ mod.vb.addIcon = 8
 function mod:OnCombatStart(delay)
 	timerVineWhipCD:Start(5.1-delay)
 	timerDecaySprayCD:Start(12.5-delay)
-	timerGraspingVinesCD:Start(23.2-delay)
+	timerGraspingVinesCD:Start(22.8-delay)
 --	timerInfectiousSpitCD:Start(25.9-delay)--Restarted by vines anyways
 end
 

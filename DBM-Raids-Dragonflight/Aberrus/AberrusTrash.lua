@@ -142,7 +142,9 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
-	if (msg == L.RP1 or msg:find(L.RP1)) then
+	if (msg == L.RP or msg:find(L.RP)) then
+		self:SendSync("AberrusRP")
+	elseif (msg == L.RP1 or msg:find(L.RP1)) then
 		self:SendSync("AberrusRP1")
 	elseif (msg == L.RP2 or msg:find(L.RP2)) then
 		self:SendSync("AberrusRP2")
@@ -158,7 +160,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:OnSync(msg, targetname)
-	if msg == "AberrusRP1" and self:AntiSpam(10, "RP1") then
+	if msg == "AberrusRP" and self:AntiSpam(10, "RP") then
+		timerRP:Start(55.5) --пока неточно
+	elseif msg == "AberrusRP1" and self:AntiSpam(10, "RP1") then
 		timerRP:Start(11.5) --пока неточно
 	elseif msg == "AberrusRP2" and self:AntiSpam(10, "RP2") then
 		timerRP:Start(33.6)
