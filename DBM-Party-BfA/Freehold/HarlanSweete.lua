@@ -29,8 +29,8 @@ local warnBlackPowder				= mod:NewTargetNoFilterAnnounce(257314, 4, nil, nil, 17
 local warnCannonBarrage				= mod:NewTargetNoFilterAnnounce(257305, 4) --Обстрел
 local warnWhirlingDagger			= mod:NewSpellAnnounce(413131, 3) --Вращающийся кинжал
 
-local specWarnWhirlingDagger		= mod:NewSpecialWarningYou(413131, nil, nil, nil, 1, 2) --Вращающийся кинжал
-local specWarnWhirlingDagger2		= mod:NewSpecialWarningTarget(413131, "Healer", nil, nil, 3, 4) --Вращающийся кинжал
+local specWarnWhirlingDagger		= mod:NewSpecialWarningYou(413131, nil, nil, nil, 1, 4) --Вращающийся кинжал
+local specWarnWhirlingDagger2		= mod:NewSpecialWarningTarget(413131, "Healer", nil, nil, 1, 4) --Вращающийся кинжал
 local specWarnBlackPowderBomb		= mod:NewSpecialWarningRun(257314, nil, 174716, nil, 4, 4) --Бомба с черным порохом (Бомба)
 local specWarnSwiftwindSaber		= mod:NewSpecialWarningDodge(257278, nil, nil, nil, 2, 2) --Сабля повелителя пассатов
 local specWarnCannonBarrage			= mod:NewSpecialWarningDodge(257305, nil, nil, nil, 3, 2) --Обстрел
