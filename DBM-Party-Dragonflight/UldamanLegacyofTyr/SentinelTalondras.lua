@@ -111,7 +111,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEarthenShards:CombinedShow(0.3, args.destName)--TODO: Don't combo if it's never more than 1
 			specWarnEarthenShards2:CombinedShow(0.3, args.destName)
-			specWarnEarthenShards2:Play("helpme")
+			specWarnEarthenShards2:Play("healall")
 		end
 	end
 end
