@@ -159,7 +159,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 257314 and args:IsDestTypePlayer() then --Бомба с черным порохом
 		if args:IsPlayer() then
 			specWarnBlackPowderBomb:Show()
-			specWarnBlackPowderBomb:Play("justrun")
+			specWarnBlackPowderBomb:Play("bombrun")
 			yellBlackPowder:Yell()
 			yellBlackPowder2:Countdown(spellId)
 		else
