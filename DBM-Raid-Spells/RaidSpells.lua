@@ -1108,8 +1108,11 @@ function mod:GOSSIP_SHOW()
 end
 
 function mod:LOADING_SCREEN_DISABLED()
+	typeInstance = select(2, IsInInstance())
+	if typeInstance == "party" or typeInstance == "raid" then return end
 	if not murchalOchkenProshlyapation then murchalOchkenProshlyapation = DBM:GetModByName("MPlusAffixes") end
 	murchalOchkenProshlyapation:UpdateProshlyapationOfMurchal()
+	DBM:Debug("Murchal proshlyap 3", 2)
 end
 
 function mod:PLAYER_DEAD()
