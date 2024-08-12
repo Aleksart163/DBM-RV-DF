@@ -47,6 +47,7 @@ local warnLightningLash							= mod:NewTargetNoFilterAnnounce(87762, 4) --Иск
 --local warnLethalCurrent							= mod:NewTargetNoFilterAnnounce(411001, 4) --Смертоносный поток
 local warnLethalCurrent							= mod:NewCastAnnounce(411001, 4) --Смертоносный поток
 
+local specWarnCyclone2							= mod:NewSpecialWarningYou(88010, nil, nil, nil, 1, 2) --Смерч
 local specWarnIcyBuffet							= mod:NewSpecialWarningSpell(88194, nil, nil, nil, 2, 2) --Ледяные крылья
 local specWarnLethalCurrent						= mod:NewSpecialWarningYou(411001, nil, nil, nil, 3, 4) --Смертоносный поток
 local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, nil, 2, 2) --Турбулентность
@@ -79,6 +80,7 @@ local timerGreaterHealCD						= mod:NewCDNPTimer(14.1, 87779, nil, nil, nil, 4, 
 local yellLethalCurrent							= mod:NewShortYell(411001, nil, nil, nil, "YELL") --Смертоносный поток
 local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
 local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --Смерч
+local yellCyclone2								= mod:NewFadesYell(88010, nil, nil, nil, "YELL") --Смерч
 
 --local playerName = UnitName("player")
 
@@ -218,7 +220,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 88010 or spellId == 410870 then --Смерч
 		if args:IsPlayer() then
+			specWarnCyclone2:Show()
+			specWarnCyclone2:Play("targetyou")
 			yellCyclone:Yell()
+			yellCyclone2:Countdown(spellId)
 		else
 			warnCyclone:CombinedShow(0.5, args.destName)
 		end
