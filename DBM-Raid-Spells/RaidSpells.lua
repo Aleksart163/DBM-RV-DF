@@ -933,8 +933,8 @@ function mod:SPELL_CREATE(args)
 	typeInstance = select(2, IsInInstance())
 	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	if DBM:GetNumRealGroupMembers() < 2 then return end
-	if spellId == 698 and self:AntiSpam(10, "summoning") then --Ритуал призыва
-		if args:IsPlayerSource() then
+	if spellId == 698 then --Ритуал призыва
+		if args:IsPlayerSource() and self:AntiSpam(10, "summoning") then
 			yellRitualSummoning:Yell(SpellLinks(spellId))
 		else
 			warnRitualofSummoning:Show(sourceName, spellName)
@@ -977,34 +977,34 @@ function mod:SPELL_CREATE(args)
 		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 371515 or spellId == 371519 or spellId == 371521 then --Котел с зельями мощи
 --	elseif args:IsSpellID(371515, 371519, 371521) then --Котел с зельями мощи
-		if args:IsPlayerSource() then
+		if args:IsPlayerSource() and self:AntiSpam(5, "PotionCauldronofPower") then
 			yellPotionCauldronofPower:Yell(SpellLinks(371515))
-		elseif self:AntiSpam(10, "PotionCauldronofPower") then
+		else
 			warnPotionCauldronofPower:Show(sourceName, spellName)
 		end
 	elseif spellId == 406963 or spellId == 406964 or spellId == 406965 then --Котел с зельями великой мощи
 --	elseif args:IsSpellID(406963, 406964, 406965) then --Котел с зельями великой мощи
-		if args:IsPlayerSource() then
+		if args:IsPlayerSource() and self:AntiSpam(5, "PotionCauldronofPower2") then
 			yellPotionCauldronofPower2:Yell(SpellLinks(406963))
-		elseif self:AntiSpam(10, "PotionCauldronofPower2") then
+		else
 			warnPotionCauldronofPower2:Show(sourceName, spellName)
 		end
 	elseif spellId == 382423 then --Сытная похлебка Юсы
-		if args:IsPlayerSource() then
+		if args:IsPlayerSource() and self:AntiSpam(5, "YusasHeartyStew") then
 			yellYusasHeartyStew:Yell(SpellLinks(spellId))
-		elseif self:AntiSpam(10, "YusasHeartyStew") then
+		else
 			warnYusasHeartyStew:Show(sourceName, spellName)
 		end
 	elseif spellId == 383063 then --Гора драконьих деликатесов
-		if args:IsPlayerSource() then
+		if args:IsPlayerSource() and self:AntiSpam(5, "DraconicDelicacies") then
 			yellDraconicDelicacies:Yell(SpellLinks(381420))
-		elseif self:AntiSpam(10, "DraconicDelicacies") then
+		else
 			warnDraconicDelicacies:Show(sourceName, spellName)
 		end
 	elseif spellId == 382427 then --Большой калуакский банкет
-		if args:IsPlayerSource() then
+		if args:IsPlayerSource() and self:AntiSpam(5, "GrandBanquet") then
 			yellGrandBanquet:Yell(SpellLinks(spellId))
-		elseif self:AntiSpam(10, "GrandBanquet") then
+		else
 			warnGrandBanquet:Show(sourceName, spellName)
 		end
 	end
