@@ -413,23 +413,6 @@ function mod:LOADING_SCREEN_DISABLED()
 	DBM:Debug("Murchal proshlyap 3", 2)
 end]]
 
-function mod:CHALLENGE_MODE_RESET()
-	overloadCounting = false
-	overloadDetected = false
-	afflictedCounting = false
-	incorporealCounting = false
-	incorpDetected = false
-	afflictedDetected = false
-	self:Unschedule(checkForCombat)
-	self:Unschedule(checkAfflicted)
-	self:Unschedule(checkIncorp)
-	self:Unschedule(checkEntangled)
-	timerAfflictedCD:Stop()
-	timerIncorporealCD:Stop()
-	timerEntangledCD:Stop()
-	DBM:Debug("Murchal proshlyap 2", 2)
-end
-
 function mod:CHALLENGE_MODE_COMPLETED()
 	overloadCounting = false
 	overloadDetected = false
@@ -445,6 +428,41 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	timerIncorporealCD:Stop()
 	timerEntangledCD:Stop()
 	DBM:Debug("Murchal proshlyap", 2)
+end
+mod.CHALLENGE_MODE_RESET = mod.CHALLENGE_MODE_COMPLETED
+
+--[[function mod:CHALLENGE_MODE_RESET()
+	overloadCounting = false
+	overloadDetected = false
+	afflictedCounting = false
+	incorporealCounting = false
+	incorpDetected = false
+	afflictedDetected = false
+	self:Unschedule(checkForCombat)
+	self:Unschedule(checkAfflicted)
+	self:Unschedule(checkIncorp)
+	self:Unschedule(checkEntangled)
+	timerAfflictedCD:Stop()
+	timerIncorporealCD:Stop()
+	timerEntangledCD:Stop()
+	DBM:Debug("Murchal proshlyap 2", 2)
+end]]
+
+function mod:UpdateProshlyapationOfMurchal()
+	overloadCounting = false
+	overloadDetected = false
+	afflictedCounting = false
+	incorporealCounting = false
+	incorpDetected = false
+	afflictedDetected = false
+	self:Unschedule(checkForCombat)
+	self:Unschedule(checkAfflicted)
+	self:Unschedule(checkIncorp)
+	self:Unschedule(checkEntangled)
+	timerAfflictedCD:Stop()
+	timerIncorporealCD:Stop()
+	timerEntangledCD:Stop()
+	DBM:Debug("Murchal proshlyap 2", 2)
 end
 
 --[[

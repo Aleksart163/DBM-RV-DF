@@ -14,6 +14,7 @@ mod:RegisterEvents(
 	"SPELL_CREATE 698 201351 185709 88304 61031 49844 382423 371515 371519 371521 406963 406964 406965 383063 382427",
 --	"SPELL_RESURRECT 20484 95750 61999",
 	"PLAYER_DEAD",
+	"LOADING_SCREEN_DISABLED",
 	"GOSSIP_SHOW"--[[,
 	"UNIT_SPELLCAST_SUCCEEDED"]]
 )
@@ -152,6 +153,8 @@ mod:AddBoolOption("AutoSpirit", false)
 local Rebirth = DBM:GetSpellName(20484) 
 local typeInstance = nil
 local DbmRV = "[DBM RV] "
+
+local murchalOchkenProshlyapation = DBM:GetModByName("MPlusAffixes")
 
 local function UnitInYourParty(sourceName)
 	if GetNumGroupMembers() > 0 and (UnitInParty(sourceName) or UnitPlayerOrPetInParty(sourceName) or UnitInRaid(sourceName) or UnitInBattleground(sourceName)) then
@@ -1102,6 +1105,11 @@ function mod:GOSSIP_SHOW()
 			self:SelectGossip(gossipOptionID)
 		end
 	end
+end
+
+function mod:LOADING_SCREEN_DISABLED()
+	if not murchalOchkenProshlyapation then murchalOchkenProshlyapation = DBM:GetModByName("MPlusAffixes") end
+	murchalOchkenProshlyapation:UpdateProshlyapationOfMurchal()
 end
 
 function mod:PLAYER_DEAD()
