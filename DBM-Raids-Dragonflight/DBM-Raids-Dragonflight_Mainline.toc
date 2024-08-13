@@ -1,6 +1,6 @@
 ## Interface: 100107
 ## X-Min-Interface: 100107
-## Version: 10.2.57
+## Version: 10.2.58
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010Raids (DF)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010공격대 (용군단)|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010團隊副本-巨龍崛起|r
@@ -24,7 +24,7 @@
 ## X-DBM-Mod-Name-zhCN: 团队副本（巨龙时代）
 ## X-DBM-Mod-Sort: 201
 ## X-DBM-Mod-MapID: 2549, 2569, 2522
-## X-DBM-Mod-MinCoreRevision: 20240805070000
+## X-DBM-Mod-MinCoreRevision: 20240814070000
 ## X-DBM-Mod-MinExpansion: 9
 ## X-Curse-Project-ID: 3358
 ## X-WoWI-ID: 8814

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RaidSpells", "DBM-Raid-Spells")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240812070000")
+mod:SetRevision("20240813070000")
 mod:SetZone()
 --mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
