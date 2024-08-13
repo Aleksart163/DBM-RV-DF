@@ -65,7 +65,7 @@ local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26421))
 ----Voice From Beyond
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(26456))
-local warnCorruption							= mod:NewTargetCountAnnounce(401010, 2) --ПорчаClass Call Parent
+local warnCorruption							= mod:NewTargetNoFilterAnnounce(401010, 2) --Порча Class Call Parent
 local warnShadowShadowStrike					= mod:NewCastAnnounce(407796, 2, nil, nil, "Tank|Healer")
 local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many are still hidden, but also kinda acts as a "one has also become unhidden" alert
 
@@ -128,6 +128,7 @@ local mythicTwistedP1Timers = {2, 20.6, 19.4, 18.2, 18.2, 18.2, 19.5, 17.0}
 local mythicTwistedP2Timers = {41.6, 18.2, 12.1, 29.2, 13.4, 14.6}
 local volcanicP2Timers = {21.3, 15.7, 17.0, 14.8, 17.3, 16.7, 18, 14.5}
 local volcanicP2LFRTimers = {21.3, 15.6, 16.9, 17, 12, 16.9, 12, 16.9, 12, 17}
+local corruptionTimers = {7, 42.4, 47.8, 44.5, 45, 45} --героик
 
 function mod:CalamitousStrikeTarget(targetname, uId)
 	if not targetname then return end
@@ -272,7 +273,6 @@ function mod:SPELL_CAST_START(args)
 		timerRushingDarknessCD:Stop()
 		timerCalamitousStrikeCD:Stop()
 		timerVolcanicHeartCD:Stop()
-		timerCorruptionCD:Start(14, 1)--Time to first debuffs
 	elseif spellId == 403057 then--Surrender To Corruption
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -281,6 +281,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.volcanicCount = 0
 		self.vb.RushingDarknessCount = 0
 		self.vb.proshlyapCount = 2
+		timerCorruptionCD:Start(7, 1)
 		timerSunderShadowCD:Start(14.8, 1)
 		timerVolcanicHeartCD:Start(20.7, 1)
 		timerUmbralAnnihilationCD:Start(28.9, 1) --Темное уничтожение (норм под гер)
@@ -389,13 +390,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnVolcanicHeart:CombinedShow(0.3, self.vb.volcanicCount, args.destName)
 		self.vb.volcIcon = self.vb.volcIcon + 1]]
-	elseif spellId == 405484 then
+	elseif spellId == 405484 then --Покорение порче
 		if self:AntiSpam(5, 3) then
 			self.vb.corruptionCount = self.vb.corruptionCount + 1
-			timerCorruptionCD:Start(43.4, self.vb.corruptionCount+1)
-			DBM:Debug("Check Murchal proshlyap", 2)
+		--	timerCorruptionCD:Start(43.4, self.vb.corruptionCount+1)
+			local timer = corruptionTimers[self.vb.corruptionCount+1]
+			if timer then
+				timerCorruptionCD:Start(timer, self.vb.corruptionCount+1)
+			end
+			DBM:Debug("Check Murchal corruption proshlyap", 2)
 		end
-		warnCorruption:CombinedShow(0.3, self.vb.corruptionCount, args.destName)
+		warnCorruption:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnCorruption:Show()
 			specWarnCorruption:Play("targetyou")
