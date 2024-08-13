@@ -15,9 +15,9 @@ mod:RegisterEvents(
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
+--	"LOADING_SCREEN_DISABLED",
 	"CHALLENGE_MODE_COMPLETED",
 	"CHALLENGE_MODE_RESET"
---	"LOADING_SCREEN_DISABLED"
 )
 
 --Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
@@ -401,17 +401,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		checkForCombat(self)
 	end
 end
---[[
-function mod:LOADING_SCREEN_DISABLED()
-	self:Unschedule(checkForCombat)
-	self:Unschedule(checkAfflicted)
-	self:Unschedule(checkIncorp)
-	self:Unschedule(checkEntangled)
-	timerAfflictedCD:Stop()
-	timerIncorporealCD:Stop()
-	timerEntangledCD:Stop()
-	DBM:Debug("Murchal proshlyap 3", 2)
-end]]
 
 function mod:CHALLENGE_MODE_COMPLETED()
 	overloadCounting = false
@@ -448,7 +437,7 @@ mod.CHALLENGE_MODE_RESET = mod.CHALLENGE_MODE_COMPLETED
 	DBM:Debug("Murchal proshlyap 2", 2)
 end]]
 
-function mod:UpdateProshlyapationOfMurchal()
+function mod:ProshlyapOfMurchal()
 	overloadCounting = false
 	overloadDetected = false
 	afflictedCounting = false
