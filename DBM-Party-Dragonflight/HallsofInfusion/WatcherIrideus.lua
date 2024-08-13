@@ -46,6 +46,8 @@ local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1) --Абляци
 local warnNullifyingPulse						= mod:NewCastAnnounce(389446, 4) --Нейтрализующая пульсация
 local warnPurifyingBlast						= mod:NewTargetNoFilterAnnounce(389443, 3, nil, false) --Очищающая вспышка
 
+local specWarnNullifyingPulse					= mod:NewSpecialWarningRun(389446, "Melee", nil, nil, 4, 2) --Нейтрализующая пульсация
+
 local yellPowerOverload							= mod:NewShortYell(389179, nil, nil, nil, "YELL") --Перегрузка
 local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL") --Перегрузка
 
@@ -114,6 +116,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 389446 and self:AntiSpam(3, 1) then
 		warnNullifyingPulse:Show()
+		specWarnNullifyingPulse:Show()
+		specWarnNullifyingPulse:Play("justrun")
 	end
 end
 
