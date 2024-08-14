@@ -25,7 +25,7 @@ local warnMetamorphosis					= mod:NewTargetNoFilterAnnounce(193803, 3, nil, fals
 local warnPetrifed						= mod:NewTargetNoFilterAnnounce(186616, 4)
 local warnCallWorm						= mod:NewCastAnnounce(183548, 3)
 local warnCrush							= mod:NewCastAnnounce(226287, 3) --Сокрушение
-local warnPiercingShards				= mod:NewCastAnnounce(226296, 4, nil, nil, "Tank|Healer")
+local warnPiercingShards				= mod:NewCastAnnounce(226296, 4) --Острые осколки
 local warnFracture						= mod:NewCastAnnounce(193505, 3, nil, nil, "Tank|Healer") --Трещина
 local warnEmberSwipe					= mod:NewCastAnnounce(226406, 3, nil, nil, "Tank|Healer") --Обжигающий размах
 local warnImpalingShard					= mod:NewCastAnnounce(193941, 3, nil, nil, "Tank|Healer") --Пронзающий осколок
@@ -34,6 +34,8 @@ local warnBound							= mod:NewCastAnnounce(193585, 3) --Скованность
 local warnStoneShatter					= mod:NewCastAnnounce(226347, 3) --Раздробление камня
 local warnBarbedTongue					= mod:NewCastAnnounce(183539, 3)
 
+local specWarnPiercingShards			= mod:NewSpecialWarningDefensive(226296, nil, nil, nil, 3, 4) --Острые осколки
+local specWarnPiercingShards2			= mod:NewSpecialWarningTarget(226296, nil, nil, nil, 2, 4) --Острые осколки
 local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, nil, nil, 4, 2)
 local specWarnCrush						= mod:NewSpecialWarningRun(226287, "Melee", nil, nil, 1, 2) --Сокрушение
 local specWarnAvalanche					= mod:NewSpecialWarningDodge(183088, nil, nil, 3, 2, 2) --Лавина
@@ -43,6 +45,7 @@ local specWarnFrenzy					= mod:NewSpecialWarningDispel(201983, "RemoveEnrage", n
 local specWarnStoneGaze					= mod:NewSpecialWarningInterrupt(202181, "HasInterrupt", nil, nil, 1, 2) --Каменный взгляд
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(186576, nil, nil, nil, 1, 8)
 
+local timerPiercingShardsCD				= mod:NewCDNPTimer(14.9, 226296, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Острые осколки
 local timerSubmergeCD					= mod:NewCDNPTimer(22.7, 183433, nil, nil, nil, 5) --Погружение
 local timerStoneShatterCD				= mod:NewCDNPTimer(12.1, 226347, nil, nil, nil, 3) --Раздробление камня
 local timerImpalingShardCD				= mod:NewCDNPTimer(15.7, 193941, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пронзающий осколок
@@ -57,7 +60,21 @@ local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 4, nil, 
 
 local timerRP							= mod:NewRPTimer(30)
 
+local yellPiercingShards				= mod:NewShortYell(226296, nil, nil, nil, "YELL") --Острые осколки
+
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 GTFO
+
+function mod:PiercingShardsTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnPiercingShards:Show()
+		specWarnPiercingShards:Play("defensive")
+		yellPiercingShards:Yell()
+	else
+		specWarnPiercingShards2:Show(targetname)
+		specWarnPiercingShards2:Play("watchstep")
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -68,8 +85,10 @@ function mod:SPELL_CAST_START(args)
 			specWarnAvalanche:Show()
 			specWarnAvalanche:Play("watchstep")
 		end
-	elseif spellId == 226296 and self:AntiSpam(3, 5) then
+	elseif spellId == 226296 then --Острые осколки
+		self:BossTargetScanner(args.sourceGUID, "PiercingShardsTarget", 0.2, 4)
 		warnPiercingShards:Show()
+		timerPiercingShardsCD:Start(nil, args.sourceGUID)
 	elseif spellId == 202108 then
 		timerPetrifyingTotemCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
