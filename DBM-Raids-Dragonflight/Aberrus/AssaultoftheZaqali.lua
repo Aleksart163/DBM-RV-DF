@@ -116,6 +116,7 @@ local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil,
 --mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
 --mod:GroupSpells(390715, 396094)
 
+local Proshlyap = false
 local castsPerGUID = {}
 mod.vb.cudgelCount = 0
 mod.vb.leapCount = 0
@@ -146,6 +147,7 @@ local function magmaLoop(self)
 	warnMagmaMystic:Show(self.vb.magmaMysticCount)
 	local timer
 	if self.vb.magmaMysticCount == 1 then
+		Proshlyap = true
 		timer = 58--Think it's techincally 55 still, but this offsets the landing/attackable for rest of fight
 	elseif self.vb.magmaMysticCount % 2 == 0 then
 		timer = 55
@@ -179,6 +181,7 @@ function mod:OnCombatStart(delay)
 	self.vb.rushCount = 0
 	self.vb.galeCount = 0
 	self.vb.bigAdds = 0
+	Proshlyap = false
 	self.vb.magmaMysticCount = 0
 	self.vb.wallClimberCount = 0
 	timerHeavyCudgelCD:Start(11.9-delay, 1)
@@ -294,6 +297,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
+		Proshlyap = false
 		timerHeavyCudgelCD:Stop()
 		timerDevastatingLeapCD:Stop()
 		timerPhoenixRushCD:Stop()
@@ -360,7 +364,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnHeavyCudgelStack:Show(amount)
 					specWarnHeavyCudgelStack:Play("stackhigh")
 				else
-					if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					if not DBM:UnitDebuff("player", spellId) and not Proshlyap and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 						specWarnHeavyCudgelSwap:Show(args.destName)
 						specWarnHeavyCudgelSwap:Play("tauntboss")
 					else
