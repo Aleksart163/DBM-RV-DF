@@ -8,7 +8,7 @@ mod:SetZone(657)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 88061 88010 88201 88194 87762 87761 87779 411012 411000 410870 410999 411002 411001 413385",
+	"SPELL_CAST_START 88061 88010 88201 88194 87762 87761 87779 411012 411000 410870 410999 411002 411001 413385 88170",
 	"SPELL_CAST_SUCCESS 88055 87759 87923 411004 410998",
 	"SPELL_AURA_APPLIED 88171 88186 88010 410870 87726",
 --	"SPELL_AURA_APPLIED_DOSE",
@@ -46,15 +46,17 @@ local warnGreaterHeal							= mod:NewCastAnnounce(87779, 4) --Великое и�
 local warnLightningLash							= mod:NewTargetNoFilterAnnounce(87762, 4) --Искрящаяся плеть
 --local warnLethalCurrent							= mod:NewTargetNoFilterAnnounce(411001, 4) --Смертоносный поток
 local warnLethalCurrent							= mod:NewCastAnnounce(411001, 4) --Смертоносный поток
+local warnCloudburst							= mod:NewCastAnnounce(88170, 4) --Грозовая сфера
 
 local specWarnCyclone2							= mod:NewSpecialWarningYou(88010, nil, nil, nil, 1, 2) --Смерч
 local specWarnIcyBuffet							= mod:NewSpecialWarningSpell(88194, nil, nil, nil, 2, 2) --Ледяные крылья
 local specWarnLethalCurrent						= mod:NewSpecialWarningYou(411001, nil, nil, nil, 3, 4) --Смертоносный поток
 local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, nil, 2, 2) --Турбулентность
-local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, nil, nil, 2, 2)
-local specWarnStormSurge						= mod:NewSpecialWarningRun(88055, nil, nil, nil, 4, 2) --Область штормаMob is immune to displacements and interrupts, this is an 8 yard range run out
+local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, 18357, nil, 2, 2) --Студеное дыхание (Дыхание)
+local specWarnStormSurge						= mod:NewSpecialWarningRun(88055, nil, nil, nil, 4, 2) --Область шторма Mob is immune to displacements and interrupts, this is an 8 yard range run out
 local specWarnOverloadGroundingField			= mod:NewSpecialWarningRun(413385, nil, nil, nil, 4, 4) --Перегрузка заземляющего поля
 local specWarnLightningLash						= mod:NewSpecialWarningMoveTo(87762, nil, nil, nil, 4, 4) --Искрящаяся плеть
+local specWarnOverloadGroundingField2			= mod:NewSpecialWarningSpell(413385, nil, nil, nil, 2, 2) --Перегрузка заземляющего поля
 
 local specWarnCyclone							= mod:NewSpecialWarningInterrupt(88010, "HasInterrupt", nil, nil, 1, 2) --Смерч
 local specWarnGreaterHeal						= mod:NewSpecialWarningInterrupt(87779, "HasInterrupt", nil, nil, 1, 2) --Великое исцеление
@@ -174,19 +176,24 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 411001 then --Смертоносный поток
 		warnLethalCurrent:Show()
 	--	self:BossTargetScanner(args.sourceGUID, "LethalCurrentTarget", 0.1, 2)
-	elseif spellId == 413385 then
+	elseif spellId == 413385 then --Перегрузка заземляющего поля
 		timerOverloadGroundingFieldCD:Start(nil, args.sourceGUID)
+		warnOverloadGroundingField:Show()
 		if self:AntiSpam(3, 1) then
 			if playerGrounded then
 				specWarnOverloadGroundingField:Show()
 				specWarnOverloadGroundingField:Play("justrun")
 			else
-				warnOverloadGroundingField:Show()
+				specWarnOverloadGroundingField2:Show()
+				specWarnOverloadGroundingField2:Play("watchstep")
 			end
+		end
+	elseif spellId == 88170 then --Грозовая сфера
+		if self:AntiSpam(2, "Cloudburst") then
+			warnCloudburst:Show()
 		end
 	end
 end
-
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 88055 then
