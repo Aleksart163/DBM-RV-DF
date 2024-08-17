@@ -194,6 +194,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	end
 end
+
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 88055 then

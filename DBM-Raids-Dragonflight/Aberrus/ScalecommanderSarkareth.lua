@@ -11,8 +11,10 @@ mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
 
+
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 401383 401810 401500 401642 402050 401325 404027 404456 404769 411302 404754 404403 411030 407496 404288 411236 403741 405022 403625 403517 408422 401704",
+	"SPELL_CAST_SUCCESS 402746",
 	"SPELL_SUMMON 404505 404507",
 	"SPELL_AURA_APPLIED 401951 401215 403997 407576 401905 401680 401330 404218 410642 404705 407496 404288 411241 405486 403520 408429 403284 410654 410625",
 	"SPELL_AURA_APPLIED_DOSE 401951 403997 407576 401330 404269 411241 408429",
@@ -22,7 +24,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 401621 402746 403524 404062 406428",
 	"SPELL_PERIODIC_DAMAGE 406989",
 	"SPELL_PERIODIC_MISSED 406989",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --[[
@@ -643,6 +646,13 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 402746 then --Парящие угли
+		DBM:Debug("Check Murchal proshlyap", 2)
+	end
+end
+
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 404505 then--Empty Recollection (Mythic Add)
@@ -695,7 +705,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not Phase2Preshlyap then
 				Phase2Preshlyap = true
-				timerEndExistenceCast:Start(20)
+				timerEndExistenceCast:Start(21)
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
@@ -1034,6 +1044,12 @@ function mod:UNIT_DIED(args)
 		timerEmptyStrikeCD:Stop(args.destGUID)
 --		timerCosmicVolleyCD:Stop(args.destGUID)
 		timerEbonMight:Stop(self.vb.bigAddKilled)
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+	if spellId == 402746 then --Парящие угли
+		DBM:Debug("Check Murchal proshlyap 2", 2)
 	end
 end
 
