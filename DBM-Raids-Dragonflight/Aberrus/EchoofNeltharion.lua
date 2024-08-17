@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED_DOSE 407088",
 	"SPELL_PERIODIC_DAMAGE 409058 404277 409183",
 	"SPELL_PERIODIC_MISSED 409058 404277 409183",
-	"UNIT_AURA player"
+	"CHAT_MSG_RAID_BOSS_EMOTE"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -47,7 +47,7 @@ local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4, nil, 
 
 local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2) --Искаженная земля Twisted earth spawn+Dodge for Volcanic Blast
 local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2) --Звенящий разлом (Разлом)
---local specWarnVolcanicHeart						= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 4, 4) --Вулканическое сердце
+local specWarnVolcanicHeart						= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 4, 8) --Вулканическое сердце
 --local specWarnRushingDarkness					= mod:NewSpecialWarningMoveAway(407221, nil, nil, nil, 4, 2) --Стремительная тьма
 local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 3, 4) --Гибельный удар
 local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2) --Гибельный удар
@@ -461,27 +461,6 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 	end
 end
 
-do
-	local warnedRushingDarkness, warnedVolcanicHeartbeat = false, false
-	function mod:UNIT_AURA(uId)
-		local hasRushingDarkness = DBM:UnitDebuff("player", 407182)
-		if hasRushingDarkness and not warnedRushingDarkness then
-			warnedRushingDarkness = true
-			DBM:Debug("check Murchal proshlyap", 2)
-		elseif not hasRushingDarkness and warnedRushingDarkness then
-			warnedRushingDarkness = false
-		end
-
-		local hasVolcanicHeartbeat = DBM:UnitDebuff("player", 410966)
-		if hasVolcanicHeartbeat and not warnedVolcanicHeartbeat then
-			warnedVolcanicHeartbeat = true
-			DBM:Debug("check Murchal proshlyap 2", 2)
-		elseif not hasVolcanicHeartbeat and warnedVolcanicHeartbeat then
-			warnedVolcanicHeartbeat = false
-		end
-	end
-end
-
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if (spellId == 409058 or spellId == 404277 or spellId == 409183) and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show(spellName)
@@ -490,3 +469,20 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
+function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
+	if msg:find("spell:410966") and self:AntiSpam(2, 1) then
+	--[[	if not self:IsTank() then
+			specWarnVolcanicHeart:Show()
+			specWarnVolcanicHeart:Play("runtoedge")
+			specWarnVolcanicHeart:ScheduleVoice(2, "defensive")
+		end]]
+		DBM:Debug("Check Murchal proshlyap 410966", 2)
+	elseif msg:find("spell:410953") and self:AntiSpam(2, 1) then
+	--[[	if not self:IsTank() then
+			specWarnVolcanicHeart:Show()
+			specWarnVolcanicHeart:Play("runtoedge")
+			specWarnVolcanicHeart:ScheduleVoice(2, "defensive")
+		end]]
+		DBM:Debug("Check Murchal proshlyap 410953", 2)
+	end
+end
