@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20240428124541")
 mod:SetCreatureID(184124)
 mod:SetEncounterID(2557)
-mod:SetUsedIcons(1, 2, 3)
+mod:SetUsedIcons(1, 2, 3, 8)
 --mod:SetHotfixNoticeRev(20220322000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -45,8 +45,10 @@ local timerEarthenShardsCD						= mod:NewCDTimer(6, 372718, nil, nil, nil, 3, ni
 
 local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
 local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
+local yellEarthenShards							= mod:NewShortYell(372718, nil, nil, nil, "YELL") --Земляные осколки
 
 mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3}) --Резонирующая сфера
+mod:AddSetIconOption("SetIconOnEarthenShards", 372718, true, 0, {8}) --Земляные осколки
 
 mod.vb.orbIcon = 1
 mod.vb.stompCount = 0
@@ -108,10 +110,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnEarthenShards:Show()
 			specWarnEarthenShards:Play("defensive")
+			yellEarthenShards:Yell()
 		else
-			warnEarthenShards:CombinedShow(0.3, args.destName)--TODO: Don't combo if it's never more than 1
-			specWarnEarthenShards2:CombinedShow(0.3, args.destName)
+			warnEarthenShards:Show(args.destName)
+			specWarnEarthenShards2:Show(args.destName)
 			specWarnEarthenShards2:Play("healall")
+		end
+		if self.Options.SetIconOnEarthenShards then
+			self:SetIcon(args.destName, 8, 10)
 		end
 	end
 end

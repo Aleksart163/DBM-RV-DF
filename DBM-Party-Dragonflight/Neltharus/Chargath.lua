@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(2490, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240501102915")
+mod:SetRevision("20240817070000")
 mod:SetCreatureID(189340)
 mod:SetEncounterID(2613)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20230703000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -13,10 +14,10 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 373733 373742 375056",
-	"SPELL_AURA_APPLIED 374655 375057 388523",
+	"SPELL_AURA_APPLIED 374655 375057 388523 373735",
 	"SPELL_AURA_APPLIED_DOSE 374655",
 	"SPELL_AURA_REFRESH 374655",
-	"SPELL_AURA_REMOVED 374655 388523 375055",
+	"SPELL_AURA_REMOVED 374655 388523 375055 373735",
 	"SPELL_PERIODIC_DAMAGE 374854",
 	"SPELL_PERIODIC_MISSED 374854"
 )
@@ -27,23 +28,28 @@ mod:RegisterEventsInCombat(
  or ability.id = 374655 or (ability.id = 388523 or ability.id = 375055) and (type = "applybuff" or type = "removebuff" or type = "applydebuff" or type = "removedebuff")
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnDragonStrike							= mod:NewTargetNoFilterAnnounce(373733, 3)
-local warnGroundingSpear						= mod:NewTargetNoFilterAnnounce(373424, 3)
-local warnFetterStack							= mod:NewStackAnnounce(374655, 1)
-local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 1)--Boss Only
+local warnDragonStrike							= mod:NewTargetNoFilterAnnounce(373733, 3) --Удар дракона
+local warnGroundingSpear						= mod:NewTargetNoFilterAnnounce(373424, 4) --Сбивающее копье
+local warnFetterStack							= mod:NewStackAnnounce(374655, 1) --Кандалы
+local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 1) --Кандалы Boss Only
 
-local specWarnMagmaWave							= mod:NewSpecialWarningDodge(373742, nil, nil, nil, 2, 2)
-local specWarnGroundingSpear					= mod:NewSpecialWarningYou(373424, nil, nil, nil, 1, 2)
-local specWarnFieryFocus						= mod:NewSpecialWarningInterrupt(375056, nil, nil, nil, 1, 13)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 8)
+local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(373733, nil, nil, nil, 3, 4) --Удар дракона
+local specWarnDragonStrike2						= mod:NewSpecialWarningTarget(373733, "Healer", nil, nil, 3, 4) --Удар дракона
+local specWarnMagmaWave							= mod:NewSpecialWarningDodge(373742, nil, nil, nil, 2, 2) --Магматическая волна
+local specWarnGroundingSpear					= mod:NewSpecialWarningYou(373424, nil, nil, nil, 1, 2) --Сбивающее копье
+local specWarnFieryFocus						= mod:NewSpecialWarningInterrupt(375056, nil, nil, nil, 1, 13) --Огненное преследование
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 8) --Взорванная земля
 
-local timerDragonStrikeCD						= mod:NewCDCountTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON)--12 but lowest spell queue priority, it's often delayed by several more seconds
-local timerMagmaWaveCD							= mod:NewCDCountTimer(12.1, 373742, nil, nil, nil, 3)--Actual CD still not known, since you'd never fully see it unhindered by blade lock or reset by fetter
-local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3)
-local timerFetter								= mod:NewTargetTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerFieryFocusCD							= mod:NewCDCountTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
+local timerDragonStrikeCD						= mod:NewCDTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON) --Удар дракона 12 but lowest spell queue priority, it's often delayed by several more seconds
+local timerMagmaWaveCD							= mod:NewCDTimer(12.1, 373742, nil, nil, nil, 3) --Магматическая волна Actual CD still not known, since you'd never fully see it unhindered by blade lock or reset by fetter
+local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3) --Сбивающее копье
+local timerFetter								= mod:NewTargetTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Кандалы
+local timerFieryFocusCD							= mod:NewCDCountTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Огненное преследование
 
-local yellGroundingSpear						= mod:NewYell(373424, nil, nil, nil, "YELL")
+local yellGroundingSpear						= mod:NewShortYell(373424, nil, nil, nil, "YELL") --Сбивающее копье
+local yellDragonStrike							= mod:NewShortYell(373733, nil, nil, nil, "YELL") --Удар дракона
+
+mod:AddSetIconOption("SetIconOnDragonStrike", 373733, true, 0, {8}) --Удар дракона
 
 mod.vb.magmawaveCount = 0
 mod.vb.dragonCount = 0
@@ -53,7 +59,13 @@ mod.vb.bossFettered = false
 
 function mod:DragonStrikeTarget(targetname)
 	if not targetname then return end
-	warnDragonStrike:Show(targetname)
+	if targetname == UnitName("player") then
+		specWarnDragonStrike:Show()
+		specWarnDragonStrike:Play("defensive")
+		yellDragonStrike:Yell()
+	else
+		warnDragonStrike:Show(targetname)
+	end
 end
 
 function mod:OnCombatStart(delay)
@@ -62,8 +74,8 @@ function mod:OnCombatStart(delay)
 	self.vb.focusCount = 0
 	self.vb.focusInProgress = false
 	self.vb.bossFettered = false
-	timerMagmaWaveCD:Start(5.1-delay, 1)
-	timerDragonStrikeCD:Start(12-delay, 1)
+	timerMagmaWaveCD:Start(4.9-delay) --
+	timerDragonStrikeCD:Start(12-delay)
 	timerGroundingSpearCD:Start(24.5-delay)
 	timerFieryFocusCD:Start(29.2-delay, 1)
 end
@@ -74,11 +86,13 @@ function mod:SPELL_CAST_START(args)
 		self.vb.dragonCount = self.vb.dragonCount + 1
 		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "DragonStrikeTarget", 0.1, 8, true)
 --		timerDragonStrikeCD:Start()
-	elseif spellId == 373742 then
+	elseif spellId == 373742 then --Магматическая волна
 		self.vb.magmawaveCount = self.vb.magmawaveCount + 1
 		specWarnMagmaWave:Show()
 		specWarnMagmaWave:Play("watchwave")
-		timerMagmaWaveCD:Start(nil, self.vb.magmawaveCount+1)
+		if self.vb.magmawaveCount < 2 then
+			timerMagmaWaveCD:Start(nil, self.vb.magmawaveCount+1)
+		end
 --	elseif spellId == 373424 then
 --		timerGroundingSpearCD:Start()
 	elseif spellId == 375056 then
@@ -100,6 +114,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 388523 or spellId == 374655 then
 		if spellId == 388523 then--12 second stun
+			self.vb.magmawaveCount = 0
 			self.vb.bossFettered = true
 			warnFetter:Show(args.destName)
 			timerFetter:Start(args.destName)
@@ -123,6 +138,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellGroundingSpear:Yell()
 		elseif not self:IsMythic() then--On non mythic only one target, else everyone gets it so no need to target announce
 			warnGroundingSpear:Show(args.destName)
+		end
+	elseif spellId == 373735 then --Удар дракона
+		if args:IsPlayer() then
+			DBM:Debug("Прошляпанное очко Мурчаля и его подсоса на Illisone", 2)
+		else
+			specWarnDragonStrike2:Show(args.destName)
+			specWarnDragonStrike2:Play("healall")
+		end
+		if self.Options.SetIconOnDragonStrike then
+			self:SetIcon(args.destName, 8, 14)
 		end
 	end
 end
