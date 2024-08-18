@@ -40,11 +40,11 @@ local specWarnGroundingSpear					= mod:NewSpecialWarningYou(373424, nil, nil, ni
 local specWarnFieryFocus						= mod:NewSpecialWarningInterrupt(375056, nil, nil, nil, 1, 13) --Огненное преследование
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 8) --Взорванная земля
 
-local timerDragonStrikeCD						= mod:NewCDTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON) --Удар дракона 12 but lowest spell queue priority, it's often delayed by several more seconds
+local timerDragonStrikeCD						= mod:NewCDTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, nil, 2, 5) --Удар дракона
 local timerMagmaWaveCD							= mod:NewCDTimer(12.1, 373742, nil, nil, nil, 3) --Магматическая волна Actual CD still not known, since you'd never fully see it unhindered by blade lock or reset by fetter
 local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3) --Сбивающее копье
-local timerFetter								= mod:NewTargetTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Кандалы
-local timerFieryFocusCD							= mod:NewCDCountTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Огненное преследование
+local timerFetter								= mod:NewBuffActiveTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы
+local timerFieryFocusCD							= mod:NewCDTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Огненное преследование
 
 local yellGroundingSpear						= mod:NewShortYell(373424, nil, nil, nil, "YELL") --Сбивающее копье
 local yellDragonStrike							= mod:NewShortYell(373733, nil, nil, nil, "YELL") --Удар дракона
@@ -77,7 +77,7 @@ function mod:OnCombatStart(delay)
 	timerMagmaWaveCD:Start(4.9-delay) --
 	timerDragonStrikeCD:Start(12-delay)
 	timerGroundingSpearCD:Start(24.5-delay)
-	timerFieryFocusCD:Start(29.2-delay, 1)
+	timerFieryFocusCD:Start(29.2-delay)
 end
 
 function mod:SPELL_CAST_START(args)
