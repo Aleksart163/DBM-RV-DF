@@ -9027,22 +9027,22 @@ local function startProshlyapationRinaBaka(self, event, arg1, arg2)
 	end
 	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
 		if message:find("EblanDetect") then
-			SendChatMessage("[OchkenProshlyapDetect v2.5] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "PARTY")
-			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
+			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "PARTY")
+			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
 	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
 			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "PARTY")]]
 		end
 	elseif event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER" then
 		if message:find("EblanDetect") then
-			SendChatMessage("[OchkenProshlyapDetect v2.5] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "INSTANCE_CHAT")
-			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
+			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "INSTANCE_CHAT")
+			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
 	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
 			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "INSTANCE_CHAT")]]
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
 		if message:find("EblanDetect") then
-			SendChatMessage("[OchkenProshlyapDetect v2.5] Найден подлиз очка Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
-			SendChatMessage("[DBM RV] Нахуя ты спамишь этой хуетой? Выключай эту поеботу и прекрати лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
+			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
+			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
 	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
 			SendChatMessage([DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "RAID")]]
 		end
