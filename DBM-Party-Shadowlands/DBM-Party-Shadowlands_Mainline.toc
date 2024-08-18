@@ -26,8 +26,9 @@
 ## X-DBM-Mod-Name-ruRU: Подземелья (Темные Земли)
 ## X-DBM-Mod-Sort: 302
 ## X-DBM-Mod-MapID: 2286, 2289, 2290, 2287, 2285, 2293, 2291, 2284, 2441
-## X-DBM-Mod-MinCoreRevision: 20240814070000
+## X-DBM-Mod-MinCoreRevision: 20240819070000
 ## X-DBM-Mod-MinExpansion: 8
+## Version: r135
 
 localization.en.lua
 localization.kr.lua
