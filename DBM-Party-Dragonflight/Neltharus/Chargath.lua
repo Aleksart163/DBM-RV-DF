@@ -30,8 +30,8 @@ mod:RegisterEventsInCombat(
 --]]
 local warnDragonStrike							= mod:NewTargetNoFilterAnnounce(373733, 3) --Удар дракона
 local warnGroundingSpear						= mod:NewTargetNoFilterAnnounce(373424, 4) --Сбивающее копье
-local warnFetterStack							= mod:NewStackAnnounce(374655, 1) --Кандалы
-local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 1) --Кандалы Boss Only
+local warnFetterStack							= mod:NewStackAnnounce(374655, 2) --Кандалы
+local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 2) --Кандалы Boss Only
 
 local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(373733, nil, nil, nil, 3, 4) --Удар дракона
 local specWarnDragonStrike2						= mod:NewSpecialWarningTarget(373733, "Healer", nil, nil, 3, 4) --Удар дракона
@@ -140,8 +140,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnGroundingSpear:Show(args.destName)
 		end
 	elseif spellId == 373735 then --Удар дракона
+		--Новые прошляпы--
 		if args:IsPlayer() then
-			DBM:Debug("Прошляпанное очко Мурчаля и его подсоса на Illisone", 2)
+			DBM:Debug("Здесь прошляпил своё очко Мурчаль Прошляпенко и его подсос на Illisone", 2)
 		else
 			specWarnDragonStrike2:Show(args.destName)
 			specWarnDragonStrike2:Play("healall")
