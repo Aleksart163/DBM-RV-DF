@@ -6,7 +6,7 @@ mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
 mod:SetRevision("20240110230340")
 mod:SetCreatureID(198933)
 mod:SetEncounterID(2669)
---mod:SetUsedIcons(1, 2, 3)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20231102000000)
 mod:SetMinSyncRevision(20231102000000)
 mod.respawnTime = 29
@@ -33,24 +33,27 @@ mod:RegisterEvents(
 --]]
 --https://www.warcraftlogs.com/reports/q8cZgTfWkBRp3vFy#fight=last&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20409261%20or%20ability.id%20%3D%20414535%20or%20ability.id%20%3D%20409456%20or%20ability.id%20%3D%20409635%20or%20ability.id%20%3D%20414184%20or%20ability.id%20%3D%20414652)%20and%20type%20%3D%20%22begincast%22%0A%20or%20(ability.id%20%3D%20409456%20or%20ability.id%20%3D%20414177)%20and%20type%20%3D%20%22removebuff%22%0A%20or%20type%20%3D%20%22dungeonencounterstart%22%20or%20type%20%3D%20%22dungeonencounterend%22&view=events
 --NOTES: Crushing Onslaught seems utterly passive and not much point in warning for it really
-local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4)
-local warnEarthsurge							= mod:NewCountAnnounce(409456, 3)
-local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1)
-local warnCataclysmicObliteration				= mod:NewSpellAnnounce(414184, 4)
+local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4) --Истребляющий взрыв
+local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной импульс
+local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
+local warnCataclysmicObliteration				= mod:NewSpellAnnounce(414184, 4) --Катастрофическое истребление
 
-local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 2, 2)--Warn everyone
-local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2)
-local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8)
+local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 4, 4) --Истребляющий взрыв
+local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2) --Камнекрушащий шквал
+local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2) --Дробящий выдох
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
+local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребляющий взрыв
+local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
+local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
+local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
+local timerCataclysmicObliterationCD			= mod:NewCDTimer(120, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
+local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 local timerRP									= mod:NewRPTimer(19.8)
-local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON)
-local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON)
-local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2)
 
-local yellExtinctionBlast						= mod:NewYell(409261, nil, nil, nil, "YELL")--But have target of it do yell
+local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
+
+mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв
 
 mod.vb.surgeCount = 0
 
@@ -76,7 +79,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsMythic() then
 			specWarnPulvBreath:ScheduleVoice(2, "scatter")
 		end
-	elseif spellId == 414184 or spellId == 414652 then
+	elseif spellId == 414184 or spellId == 414652 then --Катастрофическое истребление
 		self:SetStage(2)
 		timerExtinctionBlastCD:Stop()
 		timerStonecrackerBarrageCD:Stop()
@@ -89,13 +92,16 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 409266 then
+	if spellId == 409266 then --Истребляющий взрыв
 		if args:IsPlayer() then
 			specWarnExtinctionBlast:Show(DBM_COMMON_L.SHIELD)
 			specWarnExtinctionBlast:Play("findshelter")
 			yellExtinctionBlast:Yell()
 		else
 			warnExtinctionBlast:Show(args.destName)
+		end
+		if self.Options.SetIconOnExtinctionBlast then
+			self:SetIcon(args.destName, 8, 6)
 		end
 	elseif spellId == 414376 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnGTFO:Show(args.spellName)
@@ -105,7 +111,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 409456 then--Earthsurge
+	if spellId == 409456 then --Земляной импульс
 		warnEarthsurgeOver:Show()
 		timerPulverizingExhalationCD:Start(9, self.vb.surgeCount)
 		timerExtinctionBlastCD:Start(41.8, self.vb.surgeCount+1)
