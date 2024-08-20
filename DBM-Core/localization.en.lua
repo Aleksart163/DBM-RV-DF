@@ -6,7 +6,7 @@ DBM_CORE_L = L
 L.DEADLY_BOSS_MODS						= "Dungeon Boss Master" -- NO TRANSLATE
 L.DBM									= "DBM RV" -- NO TRANSLATE
 L.DBM_RV_PROSHLYAPATION_OF_MURCHAL_URL	= "https://github.com/Aleksart163/DBM-RV-DF"
-L.DBM_RV_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think that some module needs an additional warning, timer, feature or localization? \nAny questions can be addressed to discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r or leave requests at |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r"
+L.DBM_RV_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think that some module needs an additional warning, timer, feature or localization? \nAny questions can be addressed to discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r or leave requests at |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r\n|h|cffa0000fATTENTION!|r Starting from season 3, the support for this addon is temporarily discontinued. You can still support the addon at |h|cff3588ffhttps://www.donationalerts.com/r/aleksart163|r"
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
