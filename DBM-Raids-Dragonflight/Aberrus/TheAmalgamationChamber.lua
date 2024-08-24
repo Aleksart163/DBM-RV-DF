@@ -59,12 +59,12 @@ local warnBlazingHeat							= mod:NewCountAnnounce(402617, 2, nil, nil, DBM_CORE
 local warnBlazingHeatFades						= mod:NewFadesAnnounce(402617, 1)
 
 local specWarnFlameSlash						= mod:NewSpecialWarningDefensive(403203, nil, nil, nil, 1, 3) --Пылающий взмах
-local specWarnFieryMeteor						= mod:NewSpecialWarningCount(404732, nil, nil, nil, 2, 2)
-local specWarnMoltenEruption					= mod:NewSpecialWarningCount(403101, nil, nil, nil, 2, 2, 3)
+local specWarnFieryMeteor						= mod:NewSpecialWarningSoakCount(404732, nil, nil, nil, 2, 2) --Огненный метеор
+local specWarnMoltenEruption					= mod:NewSpecialWarningSoakCount(403101, nil, nil, nil, 2, 2, 3) --Извержение лавы
 local specWarnSwirlingFlame						= mod:NewSpecialWarningDodgeCount(404896, nil, 86189, nil, 2, 2)
 
-local timerFieryMeteorCD						= mod:NewCDCountTimer(31.7, 404732, nil, nil, nil, 3)
-local timerMoltenEruptionCD						= mod:NewCDCountTimer(22.3, 403101, nil, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON)
+local timerFieryMeteorCD						= mod:NewCDCountTimer(31.7, 404732, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненный метеор
+local timerMoltenEruptionCD						= mod:NewCDCountTimer(22.3, 403101, nil, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON) --Извержение лавы
 local timerSwirlingFlameCD						= mod:NewCDCountTimer(20.7, 404896, 86189, nil, nil, 3)--"Tornados"
 local timerFlameSlashCD							= mod:NewCDCountTimer(11, 403203, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --Слияние пламени Тьмы
@@ -75,6 +75,7 @@ local warnShadowflame							= mod:NewCountAnnounce(405394, 2, nil, nil, DBM_CORE
 local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, nil, 167180, nil, nil, nil, true) --Обжигающий сумрак (Бомбы)
 local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3) --Взрыв пламени Тьмы
 
+local specWarnShadowandFlame					= mod:NewSpecialWarningMoveAway(409385, nil, nil, nil, 3, 2) --Тьма и пламя
 local specWarnGloomConflag						= mod:NewSpecialWarningSoakCount(405437, nil, nil, nil, 2, 2) --Возгорание мрака
 local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2) --Обжигающий сумрак (Бомба)
 local specWarnConvergentEruption				= mod:NewSpecialWarningSoakCount(408193, nil, nil, nil, 2, 2) --Объединенный взрыв
@@ -82,8 +83,8 @@ local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, 
 local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
 
 local timerPhaseCD								= mod:NewStageTimer(30)
-local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Тьма и пламя
-local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3) --Возгорание мрака
+local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тьма и пламя
+local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Возгорание мрака
 local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомба)
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
 local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
@@ -509,9 +510,11 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerShadowflameBurstCD:Start(timer, self.vb.shadowflameBurstCount+1)
 		end
-	elseif spellId == 409385 then
+	elseif spellId == 409385 then --Тьма и пламя
 		self.vb.SandFCount = self.vb.SandFCount + 1
-		warnShadowandFlame:Show(self.vb.SandFCount)
+		warnShadowandFlame:Show()
+		specWarnShadowandFlame:Show()
+		specWarnShadowandFlame:Play("runaway")
 		timerShadowandFlameCD:Start(self.vb.SandFCount == 1 and 52 or 47, self.vb.SandFCount+1)
 	end
 end
@@ -553,7 +556,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 401809 and args:IsPlayer() then
+	if spellId == 401809 and args:IsPlayer() then --Оскверняющая тень
 		local amount = args.amount or 1
 		if (amount % 3 == 0) and amount >= 18 then--Adjust as needed
 			warnCorruptingShadow:Show(amount)
@@ -562,7 +565,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Unschedule(yellRepeater)
 			yellRepeater(self, 3)
 		end
-	elseif spellId == 402617 and args:IsPlayer() then
+	elseif spellId == 402617 and args:IsPlayer() then --Пылающий жар
 		local amount = args.amount or 1
 		if (amount % 3 == 0) and amount >= 18 then--Adjust as needed
 			warnBlazingHeat:Show(amount)
