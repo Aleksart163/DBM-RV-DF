@@ -81,7 +81,6 @@ local timerBurningClaws							= mod:NewTargetTimer(27, 401330, nil, "Tank|Healer
 mod:AddSetIconOption("SetIconOnMassDisintegrate", 401680, true, 0, {1, 2, 3, 4}) --Массовая дезинтеграция (Дезинтеграция)
 --Stage Two: A Touch of the Forbidden
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
-local warnVoidFracture							= mod:NewTargetAnnounce(404027, 3, nil, false) --Раскол Бездны
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
@@ -809,20 +808,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		timerVoidSlash:Start(21, args.destName)--Needs to show for even non tanks getting hit though
 	elseif spellId == 404218 or spellId == 410642 then --Бомба Бездны
-		if args:IsPlayer() then
+		if args:IsPlayer() and Phase2 then
 			playerVoidFracture = true
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
-			yellVoidBomb:Yell()
-			yellVoidFractureFades:Countdown(spellId)
-			if Phase2 then
+			if self:GetStage(2) then
+				specWarnVoidFracture2:Schedule(1.5, BetweenStars)
+				specWarnVoidFracture2:ScheduleVoice(1.5, "findshadow")
+			else
 				specWarnVoidFracture2:Schedule(1.5, BetweenStars)
 				specWarnVoidFracture2:ScheduleVoice(1.5, "runout")
-				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-				if expireTime then
-					local remaining = expireTime-GetTime()
-					timerVoidBomb:Start(remaining)
-				end
+			end
+			yellVoidBomb:Yell()
+			yellVoidFractureFades:Countdown(spellId)
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			if expireTime then
+				local remaining = expireTime-GetTime()
+				timerVoidBomb:Start(remaining)
+			end
 			--[[	if spellId == 404218 then
 					specWarnVoidFracture2:Schedule(2, BetweenStars)
 					specWarnVoidFracture2:ScheduleVoice(2, "runout")
@@ -832,9 +835,6 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnVoidFracture2:ScheduleVoice(4, "runout")
 					timerVoidBomb:Start(14)
 				end]]
-			end
-		else
-			warnVoidFracture:CombinedShow(1, args.destName)
 		end
 	elseif spellId == 404705 then
 		if self.Options.NPAuraOnRescind then
