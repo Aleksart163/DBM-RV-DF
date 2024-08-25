@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RaidSpells", "DBM-Raid-Spells")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240813070000")
+mod:SetRevision("20240826070000")
 mod:SetZone()
 --mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
@@ -109,31 +109,31 @@ local timerEndlessCloaks			= mod:NewCastTimer(300, 391789, nil, nil, nil, 7) --�
 local timerRearranger				= mod:NewCastTimer(120, 256155, nil, nil, nil, 7) --Портативный трансмогрификатор
 --local timerRallyingCry				= mod:NewBuffActiveTimer(10, 97462, nil, nil, nil, 7) --Ободряющий клич
 
-local yellEndlessCloaks				= mod:NewYell(391776, L.SpellNameYell, nil, nil, "YELL") --Шкафчик с множеством плащей
-local yellRearranger				= mod:NewYell(256153, L.SpellNameYell, nil, nil, "YELL") --Портативный трансмогрификатор
-local yellMobileBanking				= mod:NewYell(83958, L.SpellNameYell, nil, nil, "YELL") --Мобильный банк
-local yellTimeWarp					= mod:NewYell(80353, L.SpellNameYell, nil, nil, "YELL") --Искажение времени
-local yellFuryoftheAspects			= mod:NewYell(390386, L.SpellNameYell, nil, nil, "YELL") --Ярость Аспектов
-local yellHeroism					= mod:NewYell(32182, L.SpellNameYell, nil, nil, "YELL") --Героизм
-local yellBloodlust					= mod:NewYell(2825, L.SpellNameYell, nil, nil, "YELL") --Кровожадность
-local yellFeralHideDrums			= mod:NewYell(381301, L.SpellNameYell, nil, nil, "YELL") --Барабаны из дикой шкуры
-local yellAuraMastery				= mod:NewYell(31821, L.SpellNameYell, nil, nil, "YELL") --Владение аурами
-local yellRitualSummoning			= mod:NewYell(698, L.SpellNameYell, nil, nil, "YELL") --Ритуал призыва
-local yellRewind					= mod:NewYell(363534, L.SpellNameYell, nil, nil, "YELL") --Перемотка
-local yellDivineHymn				= mod:NewYell(64843, L.SpellNameYell, nil, nil, "YELL") --Божественный гимн
-local yellTranquility				= mod:NewYell(740, L.SpellNameYell, nil, nil, "YELL") --Спокойствие
-local yellRallyingCry				= mod:NewYell(97462, L.SpellNameYell, nil, nil, "YELL") --Ободряющий клич
-local yellPowerWordBarrier			= mod:NewYell(62618, L.SpellNameYell, nil, nil, "YELL") --Слово силы: Барьер
-local yellAncestralProtectionTotem	= mod:NewYell(207399, L.SpellNameYell, nil, nil, "YELL") --Тотем защиты Предков
-local yellSpiritLinkTotem			= mod:NewYell(98008, L.SpellNameYell, nil, nil, "YELL") --Тотем духовной связи
-local yellSymbolHope				= mod:NewYell(64901, L.SpellNameYell, nil, nil, "YELL") --Символ надежды
+local yellEndlessCloaks				= mod:NewYell(391776, nil, nil, nil, "YELL") --Шкафчик с множеством плащей
+local yellRearranger				= mod:NewYell(256153, nil, nil, nil, "YELL") --Портативный трансмогрификатор
+local yellMobileBanking				= mod:NewYell(83958, nil, nil, nil, "YELL") --Мобильный банк
+local yellTimeWarp					= mod:NewYell(80353, nil, nil, nil, "YELL") --Искажение времени
+local yellFuryoftheAspects			= mod:NewYell(390386, nil, nil, nil, "YELL") --Ярость Аспектов
+local yellHeroism					= mod:NewYell(32182, nil, nil, nil, "YELL") --Героизм
+local yellBloodlust					= mod:NewYell(2825, nil, nil, nil, "YELL") --Кровожадность
+local yellFeralHideDrums			= mod:NewYell(381301, nil, nil, nil, "YELL") --Барабаны из дикой шкуры
+local yellAuraMastery				= mod:NewYell(31821, nil, nil, nil, "YELL") --Владение аурами
+local yellRitualSummoning			= mod:NewYell(698, nil, nil, nil, "YELL") --Ритуал призыва
+local yellRewind					= mod:NewYell(363534, nil, nil, nil, "YELL") --Перемотка
+local yellDivineHymn				= mod:NewYell(64843, nil, nil, nil, "YELL") --Божественный гимн
+local yellTranquility				= mod:NewYell(740, nil, nil, nil, "YELL") --Спокойствие
+local yellRallyingCry				= mod:NewYell(97462, nil, nil, nil, "YELL") --Ободряющий клич
+local yellPowerWordBarrier			= mod:NewYell(62618, nil, nil, nil, "YELL") --Слово силы: Барьер
+local yellAncestralProtectionTotem	= mod:NewYell(207399, nil, nil, nil, "YELL") --Тотем защиты Предков
+local yellSpiritLinkTotem			= mod:NewYell(98008, nil, nil, nil, "YELL") --Тотем духовной связи
+local yellSymbolHope				= mod:NewYell(64901, nil, nil, nil, "YELL") --Символ надежды
 local yellTricksTheTrade			= mod:NewYell(57934, L.SpellNameYell2, nil, nil, "YELL") --Маленькие хитрости
 local yellMisdirection				= mod:NewYell(34477, L.SpellNameYell2, nil, nil, "YELL") --Перенаправление
-local yellYusasHeartyStew			= mod:NewYell(382423, L.SpellNameYell, nil, nil, "YELL") --Сытная похлебка Юсы
-local yellGrandBanquet				= mod:NewYell(382427, L.SpellNameYell, nil, nil, "YELL") --Большой калуакский банкет
-local yellDraconicDelicacies		= mod:NewYell(383063, L.SpellNameYell, nil, nil, "YELL") --Гора драконьих деликатесов
-local yellPotionCauldronofPower		= mod:NewYell(371515, L.SpellNameYell, nil, nil, "YELL") --Котел с зельями мощи
-local yellPotionCauldronofPower2	= mod:NewYell(406963, L.SpellNameYell, nil, nil, "YELL") --Котел с зельями великой мощи
+local yellYusasHeartyStew			= mod:NewYell(382423, nil, nil, nil, "YELL") --Сытная похлебка Юсы
+local yellGrandBanquet				= mod:NewYell(382427, nil, nil, nil, "YELL") --Большой калуакский банкет
+local yellDraconicDelicacies		= mod:NewYell(383063, nil, nil, nil, "YELL") --Гора драконьих деликатесов
+local yellPotionCauldronofPower		= mod:NewYell(371515, nil, nil, nil, "YELL") --Котел с зельями мощи
+local yellPotionCauldronofPower2	= mod:NewYell(406963, nil, nil, nil, "YELL") --Котел с зельями великой мощи
 
 --mod:AddBoolOption("YellOnRaidCooldown", true) --рейд кд
 --mod:AddBoolOption("YellOnResurrect", true) --бр
