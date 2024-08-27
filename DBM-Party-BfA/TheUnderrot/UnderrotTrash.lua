@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 272609 266106 265019 265089 265091 265433 265540 272183 278961 278755 265487 272592 265081 272180 266209 413044",
 	"SPELL_CAST_SUCCESS 265523 265016 266201 266265 265668",
-	"SPELL_AURA_APPLIED 265568 266107 266209 265091 278789 278961 266201",
+	"SPELL_AURA_APPLIED 265568 266107 266209 265091 278789 278961 266201 266265",
 	"SPELL_AURA_REMOVED 266107",
 	"UNIT_DIED"
 )
@@ -34,7 +34,10 @@ local warnHarrowingDespair			= mod:NewCastAnnounce(278755, 3) --Мучитель
 local warnWickedFrenzy				= mod:NewCastAnnounce(266209, 3) --Жуткое бешенство
 local warnVoidSpit					= mod:NewCastAnnounce(272180, 2, nil, nil, false) --Плево Бездны AKA Dark Bolt prior to 10.1
 local warnDarkEchoes				= mod:NewCastAnnounce(413044, 4) --Темное эхо
+local warnWickedEmbrace				= mod:NewTargetNoFilterAnnounce(266265, 4) --Злые объятия
 
+local specWarnWickedEmbrace			= mod:NewSpecialWarningYou(266265, nil, nil, nil, 1, 2) --Злые объятия
+local specWarnWickedEmbrace2		= mod:NewSpecialWarningDispel(266265, "RemoveMagic", nil, nil, 3, 4) --Злые объятия
 local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2) --Сводящий с ума взор
 local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2) --Яростное рассечение
 local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2) --Гнилая желчь
@@ -68,13 +71,14 @@ local timerDecayingMindCD			= mod:NewCDNPTimer(25, 278961, nil, nil, nil, 4, nil
 --local timerVoidSpitCD				= mod:NewCDNPTimer(9.7, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное эхо
 local timerBoneShieldCD				= mod:NewCDNPTimer(25, 266201, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Костяной щит
-local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Злые объятия
+local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Злые объятия
 local timerWickedFrenzyCD			= mod:NewCDNPTimer(6.4, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON) --Жуткое бешенство
 local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Плево Бездны
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел Тьмы 25.4-27.7
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
 local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
+local yellWickedEmbrace				= mod:NewShortYell(266265, nil, nil, nil, "YELL") --Злые объятия
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
 local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
@@ -255,6 +259,16 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not args:IsPlayer() and self:IsSpellCaster() then
 			specWarnDecayingMindDispel:Show(args.destName)
 			specWarnDecayingMindDispel:Play("helpdispel")
+		end
+	elseif spellId == 266265 then --Злые объятия
+		if args:IsPlayer() then
+			specWarnWickedEmbrace:Show()
+			specWarnWickedEmbrace:Play("targetyou")
+			yellWickedEmbrace:Yell()
+		else
+			warnWickedEmbrace:Show(args.destName)
+			specWarnWickedEmbrace2:Show(args.destName)
+			specWarnWickedEmbrace2:Play("helpdispel")
 		end
 	end
 end

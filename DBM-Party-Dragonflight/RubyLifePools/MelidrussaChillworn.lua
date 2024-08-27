@@ -106,7 +106,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFrozenSolid:Yell()
 		else
 			specWarnFrozenSolid:CombinedShow(0.5, args.destName)
-			specWarnFrozenSolid:Play("helpdispel")
+			specWarnFrozenSolid:ScheduleVoice(0.5, "helpdispel")
 		end
 		warnFrozenSolid:CombinedShow(1, args.destName)--Slower aggregation to reduce spam
 	elseif spellId == 373680 then
