@@ -86,12 +86,6 @@ local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") -
 local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --Смерч
 local yellCyclone2								= mod:NewFadesYell(88010, nil, nil, nil, "YELL") --Смерч
 
---23 06 52 106
---18.2
---23 07 10 326
-
---23 10 14 434
---23 10 32 703
 mod:AddSetIconOption("SetIconOnLightningLash", 87762, true, 0, {8}) --Искрящаяся плеть
 
 --local playerName = UnitName("player")
