@@ -36,7 +36,7 @@ local warnVoidSpit					= mod:NewCastAnnounce(272180, 2, nil, nil, false) --Пл�
 local warnDarkEchoes				= mod:NewCastAnnounce(413044, 4) --Темное эхо
 local warnWickedEmbrace				= mod:NewTargetNoFilterAnnounce(266265, 4) --Злые объятия
 
-local specWarnWickedEmbrace			= mod:NewSpecialWarningYou(266265, nil, nil, nil, 1, 2) --Злые объятия
+local specWarnWickedEmbrace			= mod:NewSpecialWarningYou(266265, nil, nil, nil, 3, 2) --Злые объятия
 local specWarnWickedEmbrace2		= mod:NewSpecialWarningDispel(266265, "RemoveMagic", nil, nil, 3, 4) --Злые объятия
 local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2) --Сводящий с ума взор
 local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2) --Яростное рассечение
