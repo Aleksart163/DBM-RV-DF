@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("VortexPinnacleTrash", "DBM-Party-Cataclysm", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20240828070000")
 --mod:SetModelID(47785)
 mod:SetZone(657)
+mod:SetUsedIcons(8)
 
 mod.isTrashMod = true
 
@@ -68,6 +69,7 @@ local timerStormSurgeCD							= mod:NewCDNPTimer(16.1, 88055, nil, nil, nil, 2) 
 local timerGaleStrikeCD							= mod:NewCDNPTimer(17, 88061, nil, "Tank|Healer|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Ураганный удар
 local timerRallyCD								= mod:NewCDNPTimer(26.7, 87761, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Поддержка в бою
 local timerShockwaveCD							= mod:NewCDNPTimer(20.2, 87759, nil, "Tank|Healer", nil, 3) --Ударная волна
+local timerChillingBreathCD						= mod:NewCDNPTimer(18, 411012, 18357, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание)
 local timerIcyBuffetCD							= mod:NewCDNPTimer(28, 88194, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
 local timerWindBlastCD							= mod:NewCDNPTimer(10.1, 87923, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Порыв ветра
 local timerCloudGuardCD							= mod:NewCDNPTimer(19.1, 411000, nil, nil, nil, 5) --Облачная защита
@@ -83,6 +85,14 @@ local yellLethalCurrent							= mod:NewShortYell(411001, nil, nil, nil, "YELL") 
 local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
 local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --Смерч
 local yellCyclone2								= mod:NewFadesYell(88010, nil, nil, nil, "YELL") --Смерч
+
+--23 06 52 106
+--18.2
+--23 07 10 326
+
+--23 10 14 434
+--23 10 32 703
+mod:AddSetIconOption("SetIconOnLightningLash", 87762, true, 0, {8}) --Искрящаяся плеть
 
 --local playerName = UnitName("player")
 
@@ -112,6 +122,9 @@ function mod:LitTarget(targetname)
 		yellLightningLash:Yell()
 	else
 		warnLightningLash:Show(targetname)
+	end
+	if self.Options.SetIconOnLightningLash then
+		self:SetIcon(targetname, 8, 9)
 	end
 end
 
@@ -153,9 +166,12 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(3, 5) then
 			warnRally:Show()
 		end
-	elseif spellId == 411012 and self:AntiSpam(2, 2) then
-		specWarnChillingBreath:Show()
-		specWarnChillingBreath:Play("breathsoon")
+	elseif spellId == 411012 then --Студеное дыхание (Дыхание)
+		timerChillingBreathCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(2, 5) then
+			specWarnChillingBreath:Show()
+			specWarnChillingBreath:Play("breathsoon")
+		end
 	elseif spellId == 411000 then
 		timerCloudGuardCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 6) then
@@ -266,6 +282,7 @@ function mod:UNIT_DIED(args)
 		timerPressurizedBlastCD:Stop(args.destGUID)--New
 	elseif cid == 45919 then--Young Storm Dragon
 		timerIcyBuffetCD:Stop(args.destGUID)
+		timerChillingBreathCD:Stop(args.destGUID)
 	elseif cid == 45912 then--Wild Vortex
 		timerCycloneCD:Stop(args.destGUID)
 	elseif cid == 45477 then--Gust Soldier
