@@ -55,7 +55,7 @@ local timerStoneGazeCD					= mod:NewCDNPTimer(20.6, 202181, nil, nil, nil, 4, ni
 local timerAvalancheCD					= mod:NewCDNPTimer(19, 183088, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Лавина
 local timerPetrifyingTotemCD			= mod:NewCDNPTimer(35.1, 202108, nil, nil, nil, 3) --Каменящий тотем
 local timerEmberSwipeCD					= mod:NewCDNPTimer(10.5, 226406, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий размах
-local timerFrenzyCD						= mod:NewCDNPTimer(20.6, 201983, nil, "RemoveEnrage|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Бешенство
+local timerFrenzyCD						= mod:NewCDNPTimer(20, 201983, nil, "RemoveEnrage|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Бешенство
 local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Скованность
 
 local timerRP							= mod:NewRPTimer(30)
