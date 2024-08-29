@@ -37,7 +37,7 @@ local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, nil, nil, nil, 3, nil
 local timerRP								= mod:NewRPTimer(30)
 
 local yellDreamBurst						= mod:NewShortYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
-local yellDreamBurst2						= mod:NewShortFadesYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
+--local yellDreamBurst2						= mod:NewShortFadesYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
 local yellSlimeInjection					= mod:NewShortYell(411808, nil, nil, nil, "YELL") --Разбрызгивание слизи
 local yellSlimeInjectionFades				= mod:NewShortFadesYell(411808, nil, nil, nil, "YELL")
 local yellDarkBindings						= mod:NewShortYell(413785, nil, nil, nil, "YELL") --Темные путы
@@ -58,7 +58,6 @@ function mod:DreamBurstTarget(targetname, uId)
 		specWarnDreamBurst:Show()
 		specWarnDreamBurst:Play("runout")
 		yellDreamBurst:Yell()
-		yellDreamBurst2:Countdown(3.5)
 	else
 		warnDreamBurst:Show(targetname)
 	end
