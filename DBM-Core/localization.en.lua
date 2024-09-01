@@ -3,15 +3,16 @@ local L = {}
 
 DBM_CORE_L = L
 
+L.DBM_RV_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think that some module needs an additional warning, timer, feature or localization? \nAny questions can be addressed to discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r or leave requests at |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r\n|h|cffa0000fATTENTION!|r Starting from season 3, the support for this addon is temporarily discontinued. You can still support the addon at |h|cff3588ffhttps://www.donationalerts.com/r/aleksart163|r"
+
 L.DEADLY_BOSS_MODS						= "Dungeon Boss Master" -- NO TRANSLATE
 L.DBM									= "DBM RV" -- NO TRANSLATE
 L.DBM_RV_PROSHLYAPATION_OF_MURCHAL_URL	= "https://github.com/Aleksart163/DBM-RV-DF"
-L.DBM_RV_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think that some module needs an additional warning, timer, feature or localization? \nAny questions can be addressed to discord |h|cff3588ffAleksart163|r, /w |h|cff3588ffКуплиняш|r or leave requests at |h|cff3588ffhttps://github.com/Aleksart163/DBM-RV-DF/pulls|r\n|h|cffa0000fATTENTION!|r Starting from season 3, the support for this addon is temporarily discontinued. You can still support the addon at |h|cff3588ffhttps://www.donationalerts.com/r/aleksart163|r"
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
-	L.DEADLY_BOSS_MODS					= "Harmless Minion Mods"
-	L.DBM								= "HMM"
+	L.DEADLY_BOSS_MODS					= "Murchal Ochken Proshlyapation"
+	L.DBM								= "MOP"
 end
 
 L.HOW_TO_USE_MOD						= "Welcome to " .. L.DBM .. ". Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. " .. L.DBM .. " will setup defaults for your spec, but you may want to fine tune these."
@@ -196,7 +197,7 @@ L.UPDATEREMINDER_HEADER					= "Your version of " .. L.DEADLY_BOSS_MODS.. " is ou
 L.UPDATEREMINDER_HEADER_SUBMODULE		= "Your %s module is out-of-date.\n Version %s is available for download through " .. L.DBM_RV_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.UPDATEREMINDER_FOOTER					= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 L.UPDATEREMINDER_FOOTER_GENERIC			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy to your clipboard."
-L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
+L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with current game version or newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
 L.UPDATEREMINDER_DISABLETEST			= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and this being a test/beta realm, it has been force disabled and cannot be used until updated. This is to ensure out of date mods aren't being used to generate test feedback"
 L.UPDATEREMINDER_HOTFIX					= L.DBM .. " version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 L.UPDATEREMINDER_HOTFIX_ALPHA			= L.DBM .. " version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
@@ -347,7 +348,7 @@ L.AUTO_ANNOUNCE_OPTIONS = {
 	target								= "Announce $spell:%s targets",
 	targetNF							= "Announce $spell:%s targets (ignores global target filter)",
 	targetsource						= "Announce $spell:%s targets (with source)",
-	targetsource2						= "Announce the source of the spell $spell:%s",
+	targetsource2						= "Announce the source of the $spell:%s",
 	targetcount							= "Announce $spell:%s targets (with count)",
 	spell								= "Announce when $spell:%s has been cast",
 	spellsource							= "Announce when $spell:%s has been cast (with source)",
@@ -401,6 +402,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	dodgeloc							= "%s - dodge from %%s",
 	moveaway							= "%s - move away from others",
 	moveawaycount						= "%s (%%s) - move away from others",
+	moveawaytarget						= "%s - move away from %%s",
 	moveto								= "%s - move to >%%s<",
 	soak								= "%s - soak it",
 	soakcount							= "%s - soak (%%s)",
@@ -414,6 +416,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	stack								= "%%d stacks of %s on you",
 	switch								= "%s - switch targets",
 	switchcount							= "%s - switch targets (%%s)",
+	switchcustom						= "%s - switch targets (%%s)",
 	gtfo								= "%%s damage - move away",
 	adds								= "Incoming Adds - switch targets",--Basically a generic of switch
 	addscount							= "Incoming Adds - switch targets (%%s)",--Basically a generic of switch
@@ -452,6 +455,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	dodgeloc							= "Show special announce (with location) to dodge $spell:%s",
 	moveaway							= "Show special announce to move away from others for $spell:%s",
 	moveawaycount						= "Show special announce (with count) to move away from others for $spell:%s",
+	moveawaytarget						= "Show special announce (with target) to move away from others for $spell:%s",
 	moveto								= "Show special announce to move to someone or some place for $spell:%s",
 	soak								= "Show special announce to soak for $spell:%s",
 	soakcount							= "Show special announce (with count) to soak for $spell:%s",
@@ -465,6 +469,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	stack 								= "Show special announce when you are affected by >=%d stacks of $spell:%s",
 	switch								= "Show special announce to switch targets for $spell:%s",
 	switchcount							= "Show special announce (with count) to switch targets for $spell:%s",
+	switchcustom						= "Show special announce (with info) to switch targets for $spell:%s",
 	gtfo 								= "Show special announce to move out of bad stuff on ground",
 	adds								= "Show special announce to switch targets for incoming adds",
 	addscount							= "Show special announce (with count) to switch targets for incoming adds",
@@ -578,7 +583,8 @@ L.AUTO_YELL_OPTION_TEXT = {
 	shortposition						= "Yell (with position) when you are affected by $spell:%s",
 	combo								= "Yell (with custom text) when you are affected by $spell:%s and other spells at same time",
 	repeatplayer						= "Yell repeatedly (with player name) when you are affected by $spell:%s",
-	repeaticon							= "Yell repeatedly (with icon) when you are affected by $spell:%s"
+	repeaticon							= "Yell repeatedly (with icon) when you are affected by $spell:%s",
+	icontarget							= "Yell icons when you are targeted by $spell:%s to warn others",
 }
 L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortyell							= "%s", -- OPTIONAL
@@ -591,10 +597,11 @@ L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortposition 						= "{rt%%1$d}%s %%2$d",--Icon, Spellname, number -- OPTIONAL
 	combo								= "%s and %%s",--Spell name (from option, plus spellname given in arg)
 	repeatplayer						= UnitName("player"),--Doesn't need translation, it's just player name spam -- OPTIONAL
-	repeaticon							= "{rt%%1$d}"--Doesn't need translation. It's just icon spam -- OPTIONAL
+	repeaticon							= "{rt%%1$d}",--Doesn't need translation. It's just icon spam -- OPTIONAL
+	icontarget							= "{rt%%1$d}{rt%%1$d}{rt%%1$d}",--Doesn't need translation. It's just an icon repeated 3 times-- OPTIONAL
 }
 L.AUTO_YELL_CUSTOM_POSITION				= "{rt%d}%s"--Doesn't need translating. Has no strings (Used in niche situations such as icon repeat yells) -- OPTIONAL
-L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}" -- OPTIONAL Нужно для прошляпа Мурчаля и его очколизов в ключах
+L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}" -- OPTIONAL Прошляпано Мурчалем Прошляпенко ещё с 1 сезона
 L.AUTO_YELL_CUSTOM_FADE					= "%s faded"
 L.AUTO_HUD_OPTION_TEXT					= "Show HudMap for $spell:%s (Retired)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "Show HudMap for various mechanics (Retired)"
@@ -681,3 +688,16 @@ L.WORLD_BUFFS = {
 	rendHead							= "The false Warchief, Rend Blackhand, has fallen!",
 	blackfathomBoon						= "boon of Blackfathom"
 }
+
+-- Annoying popup, especially for classic players
+L.DBM_INSTALL_REMINDER_HEADER	= "Incomplete DBM installation detected!"
+L.DBM_INSTALL_REMINDER_EXPLAIN	= "Welcome to %s. DBM mods for bosses here are in the %s which you do not have installed. DBM will not show timers or warnings in this zone unless you install the %s!"
+L.DBM_INSTALL_REMINDER_DISABLE	= "Disable all DBM warnings and timers in this zone." -- Used when we believe it's a user error that the mod isn't installed (i.e., current raids)
+L.DBM_INSTALL_REMINDER_DISABLE2 = "Do not show this message again for this package." -- Used for unimportant mods, i.e., dungeons
+L.DBM_INSTALL_REMINDER_DL_WAGO	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the Wago.io link to your clipboard."
+L.DBM_INSTALL_REMINDER_DL_CURSE	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the Curseforge link to your clipboard."
+--"Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "
+L.DBM_INSTALL_PACKAGE_VANILLA	= "Vanilla and Season of Discovery package"
+L.DBM_INSTALL_PACKAGE_WRATH		= "Wrath package"
+L.DBM_INSTALL_PACKAGE_CATA		= "Cataclysm package"
+L.DBM_INSTALL_PACKAGE_DUNGEON	= "Dungeons, Delves, and Events package"
