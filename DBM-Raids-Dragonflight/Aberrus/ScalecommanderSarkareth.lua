@@ -588,7 +588,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		specWarnScouringEternity:Show(self.vb.blossomCount)
-		specWarnScouringEternity:Play("watchstep")
+		specWarnScouringEternity:Play("findshelter")
+		specWarnScouringEternity:ScheduleVoice(4, "watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
 		if timer then
 			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
@@ -857,6 +858,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnEmbraceofNothingness:Show()
 			specWarnEmbraceofNothingness:Play("gathershare")
+			specWarnEmbraceofNothingness:ScheduleVoice(5, "defensive")
 			yellEmbraceofNothingness:Yell()
 			yellEmbraceofNothingnessFades:Countdown(spellId)
 		else
