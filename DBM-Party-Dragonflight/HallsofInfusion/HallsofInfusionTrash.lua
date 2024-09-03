@@ -34,7 +34,7 @@ local warnZephyrsCall						= mod:NewCastAnnounce(374823, 2) --Зов ветра
 local warnTidalDivergence					= mod:NewCastAnnounce(377341, 3)
 local warnAqueousBarrier					= mod:NewCastAnnounce(377402, 4)
 local warnRefreshingTides					= mod:NewCastAnnounce(376171, 3) --Освежающие волны
-local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4)
+local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подлый трюк
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
@@ -78,6 +78,7 @@ local timerFlashFloodCD						= mod:NewCDNPTimer(23, 390290, nil, nil, nil, 2, ni
 local timerRefreshingTidesCD				= mod:NewCDNPTimer(25, 376171, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Освежающие волны
 --local timerThunderstrikeCD					= mod:NewCDNPTimer(19.4, 437719, nil, nil, nil, 3)
 
+local yellCheapShot							= mod:NewShortYell(374615, nil, nil, nil, "YELL") --Подлый трюк
 local yellThunderstrike						= mod:NewShortYell(437719, nil, nil, nil, "YELL") --Громовой удар
 local yellThunderstorm						= mod:NewShortYell(385141, nil, nil, nil, "YELL") --Гром и молния
 
@@ -238,8 +239,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 374724 then
 		warnMoltenSubduction:Show(args.destName)
 		timerMoltenSubductionCD:Start(nil, args.sourceGUID)
-	elseif spellId == 374615 then
-		warnCheapShot:Show(args.destName)
+	elseif spellId == 374615 then --Подлый трюк
+		if args:IsPlayer() then
+			yellCheapShot:Yell()
+		else
+			warnCheapShot:CombinedShow(0.5, args.destName)
+		end
 	elseif spellId == 391610 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
 		specWarnBindingWinds:Show(args.destName)
 		specWarnBindingWinds:Play("helpdispel")
