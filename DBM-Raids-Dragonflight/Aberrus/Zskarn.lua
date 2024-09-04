@@ -41,7 +41,7 @@ local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil,
 local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2) --Активация ловушки драконьего огня
 local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, 149213, nil, 2, 2) --Взрывная волна (Отпор)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2) --Нестабильные угли
-local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 6, nil, nil, 1, 4) --Обжигающие когти
+local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 8, nil, nil, 1, 4) --Обжигающие когти
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
@@ -206,7 +206,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 404942 then --Обжигающие когти
 		local amount = args.amount or 1
 		murchalProshlyapStacks[args.destName] = amount
-		if amount >= 6 and amount % 2 == 0 then
+		if amount >= 8 and amount % 2 == 0 then
 			if args:IsPlayer() then
 				specWarnSearingClaws:Show(amount)
 				specWarnSearingClaws:Play("stackhigh")
