@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100107, 100207
 ## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (Legion)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Gruppe-Legion|r
@@ -30,7 +30,7 @@
 ## X-DBM-Mod-Name-koKR: 던전 (군단)
 ## X-DBM-Mod-Sort: 502
 ## X-DBM-Mod-MapID: 1501, 1466, 1456, 1477, 1458, 1516, 1571, 1492, 1544, 1493, 1651, 1677, 1753
-## X-DBM-Mod-MinCoreRevision: 20240909070000
+## X-DBM-Mod-MinCoreRevision: 20250228150000
 ## X-DBM-Mod-MinExpansion: 6
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904

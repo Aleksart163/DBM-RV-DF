@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100107, 100207
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Status Bar Timers|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Temporizadores de Estado|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM RV Core|r|cffffe00a>|r |cff69ccf0Temporizadores de Estado|r
@@ -20,7 +20,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 10.2.62
+## Version: 10.2.63
 ## X-Website: https://github.com/Aleksart163/DBM-RV-DF
 
 DBT.lua

@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100107, 100207
 ## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (MoP)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0던전 (판다)|r
@@ -30,7 +30,7 @@
 ## X-DBM-Mod-Name-frFR: Groupe (MoP)
 ## X-DBM-Mod-Sort: 702
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
-## X-DBM-Mod-MinCoreRevision: 20240909070000
+## X-DBM-Mod-MinCoreRevision: 20250228150000
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904

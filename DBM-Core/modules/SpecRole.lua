@@ -385,14 +385,14 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["MeleeDps"] = true,
 				["Physical"] = true,
 				["HasInterrupt"] = true,
-				["MagicDispeller"] = true,
+				["MagicDispeller"] = IsSpellKnown(278326),
 			},
 			[581] = {	--Vengeance Demon Hunter
 				["Tank"] = true,
 				["Melee"] = true,
 				["Physical"] = true,
 				["HasInterrupt"] = true,
-				["MagicDispeller"] = true,
+				["MagicDispeller"] = IsSpellKnown(278326),
 			},
 			[1456] = {	--Initial Demon Hunter (used in exiles reach tutorial mode). Treated as hybrid. Utility disabled because that'd require checking tutorial progress
 				["Tank"] = true,
