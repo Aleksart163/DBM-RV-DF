@@ -89,7 +89,7 @@ local specWarnEbonDestructionMove				= mod:NewSpecialWarningMoveTo(407917, nil, 
 
 local timerSunderRealityCD						= mod:NewCDCountTimer(29.2, 407936, 109401, nil, nil, 5) --Раскол реальности (Порталы)
 local timerEbonDestructionCD					= mod:NewCDCountTimer(35.2, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Черное разрушение (Большой взрыв)
-local timerEbonDestruction						= mod:NewCastTimer(6, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerEbonDestruction						= mod:NewCastTimer(12, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 
 --local yellVolcanicHeart							= mod:NewShortYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
 --local yellVolcanicHeartFades					= mod:NewShortFadesYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
