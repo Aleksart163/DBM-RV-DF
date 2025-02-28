@@ -153,14 +153,14 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 192955 then
+	if cid == 192955 and self:IsMythic() then
 		self.vb.wardens = self.vb.wardens - 1
 		if Perephase then
 			if self:AntiSpam(2, "UnstableMagic") then
 				specWarnUnstableMagic:Show()
 				specWarnUnstableMagic:Play("watchstep")
 			end
-			warnDraconicImageLeft:Schedule(2, self.vb.wardens)
+			warnDraconicImageLeft:Schedule(1, self.vb.wardens)
 		end
 	end
 end
