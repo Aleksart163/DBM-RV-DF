@@ -80,9 +80,9 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20250303150000")
+DBM.Revision = parseCurseDate("20250303170000")
 
-local fakeBWVersion, fakeBWHash = 450, "pr0sh19p"
+local fakeBWVersion, fakeBWHash = 460, "pr0sh19p"
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version

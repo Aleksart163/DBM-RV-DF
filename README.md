@@ -1,4 +1,4 @@
-# <p align="center"> DBM RV (Right Version) </p>
+# <p align="center"> DBM RV (Right Version) for Firestorm</p>
 # Особенности
 * DBM RV - это адаптация аддона DBM для ключей и рейдов под сервер Dragonflight на проекте [Firestorm](https://firestorm-servers.com/ru/).
 * Работоспособность аддона лучше чем у оригинального DBM или его аналога BigWigs.
