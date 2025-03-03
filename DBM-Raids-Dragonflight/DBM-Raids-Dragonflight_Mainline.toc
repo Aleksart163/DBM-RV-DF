@@ -56,3 +56,14 @@ Aberrus\Magmorax.lua
 Aberrus\EchoofNeltharion.lua
 Aberrus\ScalecommanderSarkareth.lua
 Aberrus\AberrusTrash.lua
+
+Amirdrassil\Gnarlroot.lua
+Amirdrassil\IgiratheCruel.lua
+Amirdrassil\Volcoross.lua
+Amirdrassil\CouncilofDreams.lua
+Amirdrassil\Larodar.lua
+Amirdrassil\Nymue.lua
+Amirdrassil\Smolderon.lua
+Amirdrassil\TindralSageswift.lua
+Amirdrassil\Fyrakk.lua
+Amirdrassil\AmirdrassilTrash.lua
