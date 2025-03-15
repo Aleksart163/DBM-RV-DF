@@ -105,13 +105,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnStormBreath:Show()
 			specWarnStormBreath:Play("breathsoon")
 		end
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
+	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
 	elseif spellId == 391723 then
 		if self:AntiSpam(2, "FlameBreath") then
 			specWarnFlameBreath:Show()
 			specWarnFlameBreath:Play("breathsoon")
 		end
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
+	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
 	elseif spellId == 373614 and self:AntiSpam(1, "Burnout") then
 		if self:IsMelee() then
 			specWarnBurnout:Show()

@@ -1,5 +1,5 @@
 ## Interface: 100107, 100207
-## Version: 10.2.65
+## Version: 10.2.66
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Affixes|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010신화+ 어픽스|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Мод|r|cffffe00a>|r |cffff6010М+ Аффиксы|r
@@ -19,7 +19,7 @@
 ## X-DBM-Mod-Name-ruRU: М+ Аффиксы
 ## X-DBM-Mod-MapID: 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527
 ## X-DBM-Mod-Sort: 211
-## X-DBM-Mod-MinCoreRevision: 20250303150000
+## X-DBM-Mod-MinCoreRevision: 20250315190000
 
 localization.en.lua
 localization.kr.lua
