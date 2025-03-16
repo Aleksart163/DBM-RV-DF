@@ -399,6 +399,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["Melee"] = true,
 				["MeleeDps"] = true,
 				["Physical"] = true,
+				["MagicDispeller"] = IsSpellKnown(278326),
 			},
 			[1467] = {	--Evoker Devastation
 				["Dps"] = true,
