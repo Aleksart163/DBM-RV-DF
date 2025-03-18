@@ -42,7 +42,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
 
-local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
+local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, nil, nil) --Погружение
 
 mod.vb.GlobCount = 0
 mod.vb.tempestCount = 0
@@ -58,7 +58,7 @@ function mod:OnCombatStart(delay)
 	timerTempestsFuryCD:Start(4-delay, 1)--
 	timerInfusedGlobuleCD:Start(7.9-delay)--
 	timerSquallBuffetCD:Start(15.9-delay)--
-	timerSubmergedCD:Start(53-delay)--
+--	timerSubmergedCD:Start(53-delay)-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
 	self:Schedule(53, startProshlyapationOfMurchal, self)
 end
 
@@ -76,15 +76,15 @@ function mod:SPELL_CAST_START(args)
 		warnTempestsFury:Show(self.vb.tempestCount)
 		specWarnTempestsFury:Show()
 		specWarnTempestsFury:Play("defensive")
-		if self.vb.tempestCount == 1 then--Only 2 cast per rotation
-			timerTempestsFuryCD:Start(31, 2)
+		if self.vb.tempestCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
+			timerTempestsFuryCD:Start(31, self.vb.tempestCount+1)
 		end
 	elseif spellId == 387559 then
 		self.vb.GlobCount = self.vb.GlobCount + 1
 		warnInfusedGlobule:Show(self.vb.GlobCount)
 		specWarnInfusedGlobule:Show()
 		specWarnInfusedGlobule:Play("watchstep")
-		if self.vb.GlobCount == 1 then--Only 2 cast per rotation
+		if self.vb.GlobCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
 			timerInfusedGlobuleCD:Start(17.5)
 		end
 	end
@@ -94,7 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 387585 and self:GetStage(1) then --Погружение
 		self:SetStage(2)
-		timerSubmergedCD:Stop()
+	--	timerSubmergedCD:Stop()
 		timerSquallBuffetCD:Stop()
 		timerInfusedGlobuleCD:Stop()
 		timerTempestsFuryCD:Stop()
