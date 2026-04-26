@@ -1,10 +1,14 @@
 ## Interface: 100107, 100207
-## Version: 10.2.66
+## Version: 10.2.67
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Affixes|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010신화+ 어픽스|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM RV Мод|r|cffffe00a>|r |cffff6010М+ Аффиксы|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010傳奇+詞綴|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010副本词缀|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Afijos|r
+## Title-esMX:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Afijos|r
+## Title-ptBR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Afixos|r
+## Title-frFR:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffff6010M+ Affixes|r
 ## Author: MysticalOS and Aleksart163
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -17,9 +21,13 @@
 ## X-DBM-Mod-Name: M+ Affixes
 ## X-DBM-Mod-Name-koKR: 신화+ 어픽스
 ## X-DBM-Mod-Name-ruRU: М+ Аффиксы
+## X-DBM-Mod-Name-esES: М+ Afijos
+## X-DBM-Mod-Name-esMX: М+ Afijos
+## X-DBM-Mod-Name-ptBR: М+ Afixos
+## X-DBM-Mod-Name-frFR: М+ Affixes
 ## X-DBM-Mod-MapID: 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527
 ## X-DBM-Mod-Sort: 211
-## X-DBM-Mod-MinCoreRevision: 20250315190000
+## X-DBM-Mod-MinCoreRevision: 20260427070000
 
 localization.en.lua
 localization.kr.lua

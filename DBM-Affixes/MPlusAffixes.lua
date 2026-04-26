@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240813070000")
+mod:SetRevision("20260427070000")
 mod:SetZone()
 
 mod.noStatistics = true
@@ -20,7 +20,12 @@ mod:RegisterEvents(
 	"CHALLENGE_MODE_RESET"
 )
 
---Прошляпанное очко Мурчаля Прошляпенко [✔✔✔]
+--Новые прошляпы Мурчаля Прошляпенко [✔✔✔]
+--Рубиновые Омуты Жизни 2521, ﻿Наступление клана Нокхуд 2516, Лазурное Хранилище 2515, Академия Алгет'ар 2526, Чертоги доблести 1477, Квартал звёзд 1571, Некрополь 1176, Храм нефритовой 960
+--﻿Ульдаман: Наследие Тира 2451, Чертоги Насыщения 2527, Лощина Бурошкуров 2520, Нелтарий 2519, Логово Нелтариона 1458, Подгнилье 1841, Вольная Гавань 1754, Вершина Смерча 657
+--﻿Рассвет Бесконечности (2 квартала) 2579, ﻿﻿Усадьба Уэйкрестов 1862, ﻿﻿Атал'Дазар 1763, Чаща Темного Сердца 1466, ﻿﻿Крепость Черной Ладьи 1501, Вечное цветение 1279, Трон Приливов 643
+--﻿Ульдаман: Наследие Тира 2451, Чертоги Насыщения 2527, Лощина Бурошкуров 2520, Нелтарий 2519, Рубиновые Омуты Жизни 2521, Наступление клана Нокхуд 2516, Лазурное Хранилище 2515, Академия Алгет'ар 2526
+
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
