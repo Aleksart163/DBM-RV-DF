@@ -25,7 +25,7 @@
 ## X-DBM-Mod-Name-esMX: М+ Afijos
 ## X-DBM-Mod-Name-ptBR: М+ Afixos
 ## X-DBM-Mod-Name-frFR: М+ Affixes
-## X-DBM-Mod-MapID: 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527
+## X-DBM-Mod-MapID: 2521, 2516, 2515, 2526, 1477, 1571, 1176, 960, 2451, 2527, 2520, 2519, 1458, 1841, 1754, 657, 2579, 1862, 1763, 1466, 1501, 1279, 643
 ## X-DBM-Mod-Sort: 211
 ## X-DBM-Mod-MinCoreRevision: 20260427070000
 
