@@ -72,7 +72,7 @@ function mod:CrackleTarget(targetname, uId)
 		warnCrackle:Show(DBM_COMMON_L.UNKNOWN)
 		return
 	end
-	if targetname == UnitName("player") and self:AntiSpam(3, "Crackle") then
+	if targetname == UnitName("player") and self:AntiSpam(1, "Crackle") then
 		specWarnCrackle:Show()
 		specWarnCrackle:Play("targetyou")
 		yellCrackle:Yell()
