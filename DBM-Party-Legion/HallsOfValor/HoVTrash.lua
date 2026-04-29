@@ -20,7 +20,7 @@ mod:RegisterEvents(
 
 --TODO wicked dagger (199674)?
 local warnAegis						= mod:NewTargetNoFilterAnnounce(193783, 1) --Эгида Агграмара
-local warnCrackle					= mod:NewTargetNoFilterAnnounce(199805, 2)
+local warnCrackle					= mod:NewTargetNoFilterAnnounce(199805, 2) --Разряд
 local warnCracklingStorm			= mod:NewTargetAnnounce(198892, 2)
 local warnThunderousBolt			= mod:NewCastAnnounce(198595, 3)
 local warnCleansingFlame			= mod:NewCastAnnounce(192563, 4)
@@ -35,7 +35,7 @@ local specWarnChargePulse			= mod:NewSpecialWarningDodge(210875, nil, nil, nil, 
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2, 5)
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
 local specWarnEyeofStorm2			= mod:NewSpecialWarningDefensive(200901, nil, nil, nil, 3, 2)
-local specWarnCrackle				= mod:NewSpecialWarningYou(199805, nil, nil, nil, 1, 2)
+local specWarnCrackle				= mod:NewSpecialWarningYou(199805, nil, nil, nil, 1, 2) --Разряд
 local specWarnCracklingStorm		= mod:NewSpecialWarningYou(198892, nil, nil, nil, 1, 2)
 local specWarnThunderstrike			= mod:NewSpecialWarningMoveAway(215430, nil, nil, nil, 1, 2)
 local specWarnThunderousBolt		= mod:NewSpecialWarningInterrupt(198595, "HasInterrupt", nil, nil, 1, 2)
@@ -57,7 +57,7 @@ local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3, nil, D
 local timerRP						= mod:NewRPTimer(28.5)
 
 local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL") --Эгида Агграмара
-local yellCrackle					= mod:NewShortYell(199805, nil, nil, nil, "YELL")
+local yellCrackle					= mod:NewShortYell(199805, nil, nil, nil, "YELL") --Разряд
 local yellCracklingStorm			= mod:NewShortYell(198892, nil, nil, nil, "YELL")
 local yellThunderstrike				= mod:NewShortYell(215430, nil, nil, nil, "YELL")
 
@@ -72,7 +72,7 @@ function mod:CrackleTarget(targetname, uId)
 		warnCrackle:Show(DBM_COMMON_L.UNKNOWN)
 		return
 	end
-	if targetname == UnitName("player") then
+	if targetname == UnitName("player") and self:AntiSpam(3, "Crackle") then
 		specWarnCrackle:Show()
 		specWarnCrackle:Play("targetyou")
 		yellCrackle:Yell()
