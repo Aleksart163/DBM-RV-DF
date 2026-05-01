@@ -83,7 +83,7 @@ local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2) --Ионизирующий заряд
 
-local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Прошляп Мурчаля
+local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 3, 5) --Прошляп Мурчаля
 --local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
 local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON) --Удар из-под земли
 local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3) --Подземные толчки
