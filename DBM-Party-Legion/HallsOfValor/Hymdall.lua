@@ -96,7 +96,8 @@ function mod:SPELL_CAST_START(args)
 			timerBreathCast:Start(5, self.vb.breathCount+1)
 		end
 	elseif spellId == 193092 then --Кровопролитный круговой удар
-		self:BossTargetScanner(args.sourceGUID, "SweepTarget", 0.1, 2)
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "SweepTarget", 0.1, 2)
+	--	self:BossTargetScanner(args.sourceGUID, "SweepTarget", 0.1, 2)
 		timerSweepCD:Start()
 	end
 end
