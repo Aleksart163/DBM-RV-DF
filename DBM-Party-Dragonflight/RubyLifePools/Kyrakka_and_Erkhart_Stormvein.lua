@@ -48,6 +48,7 @@ local specWarnInterruptingCloudburst			= mod:NewSpecialWarningCast(381516, "Spel
 local timerWindsofChangeCD						= mod:NewCDCountTimer(15.8, 381517, 227878, nil, nil, 3)--Not actually a count timer, but has best localized text
 local timerStormslamCD							= mod:NewCDTimer(17, 381515, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Сметающая буря
 local timerCloudburstCD							= mod:NewCDTimer(18.8, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
+local timerCloudburst							= mod:NewCastTimer(3, 381516, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 3)
 
 local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
 local yellStormslam								= mod:NewShortYell(381515, nil, nil, nil, "YELL") --Сметающая буря
@@ -139,6 +140,7 @@ function mod:SPELL_CAST_START(args)
 		if spellId == 381516 and self.Options.SpecWarn381516cast then--Mythic
 			specWarnInterruptingCloudburst:Show()
 			specWarnInterruptingCloudburst:Play("stopcast")
+			timerCloudburst:Start()
 		else--Normal/Heroic
 			warnCloudburst:Show()
 		end
@@ -207,10 +209,12 @@ function mod:UNIT_DIED(args)
 		if self.vb.mainGUID then
 			--In season 4, bosses cloudburst Cd resets on dragon death, he basically instant casts it even if it was JUST cast
 			timerCloudburstCD:Stop(self.vb.mainGUID)
+			timerCloudburst:Stop(self.vb.mainGUID)
 		end
 	elseif cid == 190485 then--Erkhart
 		timerWindsofChangeCD:Stop(args.destGUID)
 		timerStormslamCD:Stop(args.destGUID)
 		timerCloudburstCD:Stop(args.destGUID)
+		timerCloudburst:Stop(args.destGUID)
 	end
 end
