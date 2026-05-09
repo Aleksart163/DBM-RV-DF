@@ -5,7 +5,7 @@
 * Регулярные обновления, что придают аддону актуальную информацию, что представлена на сервере.
 * Встроенный апдейтер(батник), что поможет в 1 нажатие обновить ваш аддон до самой актуальной версии.
 # Features
-* DBM RV is an adaptation of the DBM addon for keys and raids under the Dragonflight server on project [Firestorm](https://firestorm-servers.com/en) and [Wowcircle](https://wowcircle.me/dragonflight/).
+* DBM RV is an adaptation of the DBM addon for keys and raids under the Dragonflight server on project [Firestorm](https://firestorm-servers.com/en) and [Wowcircle](https://wowcircle.me/dragonflight/en/).
 * The addon's performance is better than the original DBM or its BigWigs analog.
 * Regular updates, which gives the addon up-to-date information that is presented on the server.
 * Built-in updater will help in 1 click to update your addon to the most current version.
