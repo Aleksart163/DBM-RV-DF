@@ -237,7 +237,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDividingStrikeCD:Start(12.5, 1)
 		timerSiphonOathCD:Start(45.7, self.vb.barrierCount+1)
 	elseif spellId == 413595 then
-		timerRP:Start(33.3)
+	--	timerRP:Start(33.3) --устаревшая инфа
+		timerRP:Start(30)
 	end
 end
 
