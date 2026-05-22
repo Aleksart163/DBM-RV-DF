@@ -14,7 +14,8 @@ mod:RegisterEvents(
 --	"SPELL_AURA_REMOVED 339525",
 	"SPELL_PERIODIC_DAMAGE 383399",
 	"SPELL_PERIODIC_MISSED 383399",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"GOSSIP_SHOW"
 )
 
 --TODO, half the mobs in zone cast Bloody Bite, is it worth having a Cd bar? cause it's pretty hard to vet for so many diff mobs
@@ -83,6 +84,9 @@ local yellspecWarnWithering					= mod:NewYell(368081, nil, nil, nil, "YELL") --�
 local yellWitheringContagion				= mod:NewYell(383087, nil, nil, nil, "YELL") --Иссушающее заражение
 local yellWitheringBurst					= mod:NewYell(367503, nil, nil, nil, "YELL") --Губительный прорыв
 local yellRottenMeatYou						= mod:NewYell(384974, nil, nil, nil, "YELL") --Протухшее мясо
+
+mod:AddBoolOption("AGBuffs", true)
+
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
@@ -298,5 +302,14 @@ function mod:UNIT_DIED(args)
 		timerRottingSurgeCD:Stop(args.destGUID)
 	elseif cid == 186208 then--rotbow ranger
 		--timerRottenMeatCD:Stop(args.destGUID)
+	end
+end
+
+function mod:GOSSIP_SHOW()
+	local gossipOptionID = self:GetGossipID()
+	if gossipOptionID then
+		if self.Options.AGBuffs and gossipOptionID == 194675 then --Алхимический котёл
+			self:SelectGossip(gossipOptionID)
+		end
 	end
 end

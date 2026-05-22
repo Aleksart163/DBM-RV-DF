@@ -32,6 +32,10 @@ L:SetGeneralLocalization({
 	name =	"Brackenhide Hollow Trash"
 })
 
+L:SetOptionLocalization({
+	AGBuffs		= "Auto select gossip to activate usable buffs"
+})
+
 -----------------------
 -- <<<Uldaman: Legacy of Tyr >>> --
 -----------------------

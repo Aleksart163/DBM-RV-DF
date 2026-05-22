@@ -220,8 +220,8 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") and self:AntiSpam(3, 3) then
-		specWarnCurseofStone:Show(args.destName)
+	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") then
+		specWarnCurseofStone:CombinedShow(0.5, args.destName)
 		specWarnCurseofStone:Play("helpdispel")
 	elseif spellId == 369828 then
 		local amount = args.amount or 1

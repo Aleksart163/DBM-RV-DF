@@ -30,7 +30,11 @@ local L
 L = DBM:GetModLocalization("BrackenhideHollowTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Пещера Бурошкуров"
+	name =	"Трэш мобы Лощина Бурошкуров"
+})
+
+L:SetOptionLocalization({
+	AGBuffs = "Автоматически выбирать диалог, чтобы активировать полезные баффы"
 })
 
 -----------------------
