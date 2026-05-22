@@ -72,12 +72,12 @@ local timerMoltenCoreCD						= mod:NewCDNPTimer(8.1, 378282, nil, nil, nil, 4, n
 local timerEruptiveCrushCD					= mod:NewCDNPTimer(15.7, 376186, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Разбивающее сокрушение
 local timerScorchingBreathCD				= mod:NewCDNPTimer(16.1, 372201, nil, nil, nil, 3) --Обжигающее дыхание
 local timerMoteofCombustionCD				= mod:NewCDNPTimer(16.4, 384161, nil, nil, nil, 3) --Частица возгорания
-local timerThrowLavaCD						= mod:NewCDNPTimer(11.3, 379406, nil, nil, nil, 3) --Бросок лавы
+local timerThrowLavaCD						= mod:NewCDNPTimer(11, 379406, nil, nil, nil, 3) --Бросок лавы
 local timerPierceMarrowCD					= mod:NewCDNPTimer(10.9, 372262, nil, nil, nil, 3) --Пронзание кости
 local timerScorchingFusilladeCD				= mod:NewCDNPTimer(23, 372543, nil, nil, nil, 3) --Обжигающий обстрел
 local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Огненная батарея
 --local timerReverbSlamCD					= mod:NewCDNPTimer(17, 372971, nil, nil, nil, 3)--8-17? needs further review
-local timerCandescentTempestCD				= mod:NewCDNPTimer(27.8, 381663, nil, nil, nil, 2) --Раскаленная буря
+local timerCandescentTempestCD				= mod:NewCDNPTimer(27, 381663, nil, nil, nil, 2) --Раскаленная буря
 local timerForgestompCD						= mod:NewCDNPTimer(16.1, 384623, nil, nil, nil, 2) --Топот кузнеца
 
 local yellBindingSpear						= mod:NewShortYell(372561, nil, nil, nil, "YELL") --Приковывающее копье

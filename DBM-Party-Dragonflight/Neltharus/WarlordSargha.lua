@@ -38,12 +38,14 @@ local warnMoltenGold							= mod:NewTargetNoFilterAnnounce(377018, 2, nil, "Heal
 local warnHardenedGold							= mod:NewYouAnnounce(377022, 2)--So inconsiquential it doesn't even deserve a special announcement
 local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3)
 
+local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 2, 2) --Щит магмы
 local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2)
 local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2)
 local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377542, nil, nil, nil, 1, 8)
 
-local timerMagmaShieldCD						= mod:NewCDCountTimer(33.4, 376780, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток
+local timerMagmaShieldCD						= mod:NewCDTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
 local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3)
 local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, nil, nil, nil, 3)
 local timerBurningEmberCD						= mod:NewCDTimer(28.2, 377477, nil, nil, nil, 1)--Timer extrapolated by reversing spell queues and pauses then vetting it multiple times as accurate within a less than ~1 deviation
@@ -81,7 +83,7 @@ function mod:OnCombatStart(delay)
 	timerDragonsKilnCD:Start(7-delay)
 	timerMoltenGoldCD:Start(14.3-delay)
 	timerBurningEmberCD:Start(21.6-delay)
-	timerMagmaShieldCD:Start(34.1-delay, 1)
+	timerMagmaShieldCD:Start(34.1-delay)
 end
 
 function mod:OnCombatEnd()
@@ -93,6 +95,8 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 376780 then
+		specWarnMagmaShield:Show()
+		specWarnMagmaShield:Play("watchstep")
 		timerDragonsKilnCD:Pause()
 		timerMoltenGoldCD:Pause()
 		timerBurningEmberCD:Pause()
@@ -129,7 +133,7 @@ local function pointlessDelay(self)
 	timerDragonsKilnCD:AddTime(9)
 	timerMoltenGoldCD:AddTime(9)
 	timerBurningEmberCD:AddTime(9)
-	timerMagmaShieldCD:AddTime(9, self.vb.shieldCount+1)
+	timerMagmaShieldCD:AddTime(9)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -153,6 +157,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnBurningPursuit:Show(args.destName)
 		end
 	elseif spellId == 377014 then--Backdraft
+		timerBackdraft:Start(args.destName)
 		self:Schedule(1, pointlessDelay, self)
 	end
 end
@@ -167,7 +172,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDragonsKilnCD:Resume()
 		timerMoltenGoldCD:Resume()
 		timerBurningEmberCD:Resume()
-		timerMagmaShieldCD:Start(30.1, self.vb.shieldCount+1)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
+		timerMagmaShieldCD:Start(37)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
 	end
 end
 
