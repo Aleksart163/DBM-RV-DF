@@ -38,7 +38,7 @@ local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подл�
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
-local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, nil, 3, 4) --Затопление
+local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, nil, 4, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
