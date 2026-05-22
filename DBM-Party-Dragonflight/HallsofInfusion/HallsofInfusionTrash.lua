@@ -6,7 +6,7 @@ mod:SetRevision("20240412075414")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 390290 374080 375351 375348 375327 375384 374563 374045 374339 374066 374020 395694 374699 374706 375079 374823 385141 377341 377402 376171",--437719
+	"SPELL_CAST_START 390290 374080 375351 375348 375327 375384 374563 374045 374339 374066 374020 395694 374699 374706 375079 374823 385141 377341 377402 376171 388882",--437719
 	"SPELL_AURA_APPLIED 374724 374615 391610 391613 377384 377402 437717",
 	"SPELL_AURA_APPLIED_DOSE 374389",
 --	"SPELL_AURA_REMOVED 437717",
@@ -38,6 +38,7 @@ local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подл�
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
+local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, nil, 3, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
@@ -64,6 +65,7 @@ local specWarnTidalDivergence				= mod:NewSpecialWarningInterrupt(377341, "HasIn
 local specWarnAqueousBarrier				= mod:NewSpecialWarningInterrupt(377402, "HasInterrupt", nil, nil, 1, 2) --Водяная преграда
 local specWarnRefreshingTides				= mod:NewSpecialWarningInterrupt(376171, "HasInterrupt", nil, nil, 1, 2) --Освежающие волны
 
+local timerInundateCD 						= mod:NewCDNPTimer(20, 388882, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Затопление
 local timerDemoShoutCD						= mod:NewCDNPTimer(30, 374339, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Деморализующий крик
 local timerDazzleCD							= mod:NewCDNPTimer(15, 374563, nil, nil, nil, 3) --Блеск
 local timerZephyrsCallCD					= mod:NewCDNPTimer(11.7, 374823, nil, nil, nil, 1) --Зов ветра (23.1)
@@ -222,6 +224,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 385141 then
 		timerThunderstormCD:Start(nil, args.sourceGUID)
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ThunderstormTarget", 0.1, 8)
+	elseif spellId == 388882 then --Затопление
+		specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
+		specWarnInundate:Play("breaklos")
+	--	timerInundateCD:Start(nil, args.sourceGUID)
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)
 	end
@@ -308,13 +314,15 @@ function mod:UNIT_DIED(args)
 		timerTectonicBreathCD:Stop(args.destGUID)
 	elseif cid == 190377 then--Primalist Icecaller
 		timerRefreshingTidesCD:Stop(args.destGUID)
+	elseif cid == 190405 then--Насыщательница Сария
+		timerInundateCD:Stop(args.destGUID)
 	end
 end
 
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if self.Options.AGBuffs and (gossipOptionID == 107192 or gossipOptionID == 107206) then -- Engineer/Herb Buff
+		if self.Options.AGBuffs and (gossipOptionID == 107192 or gossipOptionID == 107206 or gossipOptionID == 197654) then -- Engineer/Herb Buff
 			self:SelectGossip(gossipOptionID)
 		end
 	end

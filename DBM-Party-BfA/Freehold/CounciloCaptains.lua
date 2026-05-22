@@ -191,6 +191,16 @@ function mod:OnTimerRecovery()
 	scanCaptains(self)
 end
 
+--[[function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 258381 then
+		specWarnGrapeShot:Show()
+		specWarnGrapeShot:Play("stilldanger")
+		timerGrapeShotCD:Start(nil, args.sourceGUID)
+		DBM:Debug("Murchal Proshlyap", 2)
+	end
+end]]
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 258338 then --Бочка черной пелены
@@ -239,16 +249,6 @@ function mod:SPELL_CAST_START(args)
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "PowderShotTarget", 0.1, 16, true, nil, nil, nil, true)
 	end
 end
-
---[[
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 258381 then
-		specWarnGrapeShot:Show()
-		specWarnGrapeShot:Play("stilldanger")
-		timerGrapeShotCD:Start(nil, args.sourceGUID)
-	end
-end]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
