@@ -308,7 +308,7 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if self.Options.AGBuffs and gossipOptionID == 194675 then --Алхимический котёл
+		if self.Options.AGBuffs and gossipOptionID == 56024 then --Алхимический котёл
 			self:SelectGossip(gossipOptionID)
 		end
 	end
