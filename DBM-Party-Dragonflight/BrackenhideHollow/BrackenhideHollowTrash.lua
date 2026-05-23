@@ -107,14 +107,14 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
-	if spellId == 382555 and self:AntiSpam(3, 1) then
+	if spellId == 382555 and self:AntiSpam(2, 1) then
 		specWarnRagestorm:Show()
 		specWarnRagestorm:Play("justrun")
 	elseif spellId == 367500 then
 		if self.Options.SpecWarn367500interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnHidiousCackle:Show(args.sourceName)
 			specWarnHidiousCackle:Play("kickcast")
-		elseif self:AntiSpam(3, 7) then
+		elseif self:AntiSpam(2, "HidiousCackle") then
 			warnHidiousCackle:Show()
 		end
 	elseif spellId == 382474 then
