@@ -5370,9 +5370,6 @@ do
 
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: " .. encounterID .. " " .. name .. " " .. difficulty .. " " .. size .. " " .. success)
-		if self:AntiSpam(5, "FM") then
-			self:AddMsg(L.DBM_RV_FORUMS_MESSAGE)
-		end
 		if success == 0 then
 			--Only nag on wipes (in any content)
 			self:CheckAvailableMods()
@@ -5429,6 +5426,9 @@ do
 				end
 				return
 			end
+		end
+		if self:AntiSpam(5, "ForumsMessage") then
+			self:AddMsg(L.DBM_RV_FORUMS_MESSAGE)
 		end
 	end
 
