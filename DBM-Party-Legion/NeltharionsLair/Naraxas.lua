@@ -28,12 +28,12 @@ local warnFrenzy					= mod:NewTargetNoFilterAnnounce(199775, 4) --Бешенст
 
 local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, 2, 2, 2) --Призыв прислужников
 local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) --Самопожертвование фанатика
-local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 2) --Шипастый язык
+local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 4) --Шипастый язык
 local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8) --Зловонная пасть
 
 local timerSpikedTongueCD			= mod:NewCDTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
 local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, "Tank|Healer", nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
-local timerAddsCD					= mod:NewCDTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 1 or nil, 5) --Призыв прислужников
+local timerAddsCD					= mod:NewCDTimer(120, 199817, nil, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Призыв прислужников
 local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
 local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
