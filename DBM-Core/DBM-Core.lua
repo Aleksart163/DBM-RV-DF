@@ -5427,9 +5427,6 @@ do
 				return
 			end
 		end
-		if self:AntiSpam(5, "ForumsMessage") then
-			self:AddMsg(L.DBM_RV_FORUMS_MESSAGE)
-		end
 	end
 
 	local function checkExpressionList(exp, str)
@@ -6233,6 +6230,7 @@ do
 						self:Schedule(private.isRetail and 1.5 or 3, delayedGCSync, modId, usedDifficultyIndex, difficulties.difficultyModifier, name, thisTimeString)
 					end
 					self:Schedule(1, self.AddMsg, self, msg)
+					self:Schedule(2, self.AddMsg, self, (L.DBM_RV_FORUMS_MESSAGE))
 				end
 				local msg
 				for k, _ in pairs(autoRespondSpam) do
