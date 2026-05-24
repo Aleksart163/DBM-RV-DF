@@ -56,7 +56,7 @@ mod:AddNamePlateOption("NPAuraOnHunterleadersTactics", 387889)
 --mod:GroupSpells(384764, 384725)--Group the two frenzy IDs
 
 function mod:OnCombatStart(delay)
-	timerEnsnaringTrapCD:Start(8.4-delay)
+	timerEnsnaringTrapCD:Start(8-delay)
 	timerGutShotCD:Start(12-delay)
 	timerMeatTossCD:Start(20.5-delay)
 	timerCallHyenasCD:Start(31-delay)

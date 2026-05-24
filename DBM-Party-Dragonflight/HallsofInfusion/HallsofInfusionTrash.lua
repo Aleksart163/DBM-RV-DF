@@ -65,7 +65,7 @@ local specWarnTidalDivergence				= mod:NewSpecialWarningInterrupt(377341, "HasIn
 local specWarnAqueousBarrier				= mod:NewSpecialWarningInterrupt(377402, "HasInterrupt", nil, nil, 1, 2) --Водяная преграда
 local specWarnRefreshingTides				= mod:NewSpecialWarningInterrupt(376171, "HasInterrupt", nil, nil, 1, 2) --Освежающие волны
 
-local timerInundateCD 						= mod:NewCDNPTimer(20, 388882, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Затопление
+local timerInundateCD 						= mod:NewCDNPTimer(10.5, 388882, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Затопление
 local timerDemoShoutCD						= mod:NewCDNPTimer(30, 374339, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Деморализующий крик
 local timerDazzleCD							= mod:NewCDNPTimer(15, 374563, nil, nil, nil, 3) --Блеск
 local timerZephyrsCallCD					= mod:NewCDNPTimer(5.5, 374823, nil, nil, nil, 1) --Зов ветра (23.1)
@@ -224,10 +224,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 385141 then
 		timerThunderstormCD:Start(nil, args.sourceGUID)
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ThunderstormTarget", 0.1, 8)
-	elseif spellId == 388882 then --Затопление
+	elseif spellId == 388882 then --Затопление (1ый каст через 2.9 сек)
 		specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
 		specWarnInundate:Play("breaklos")
-	--	timerInundateCD:Start(nil, args.sourceGUID)
+		timerInundateCD:Start(nil, args.sourceGUID)
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)
 	end
@@ -322,7 +322,7 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if self.Options.AGBuffs and (gossipOptionID == 107192 or gossipOptionID == 107206 or gossipOptionID == 197654) then -- Engineer/Herb Buff
+		if self.Options.AGBuffs and (gossipOptionID == 107192 or gossipOptionID == 107206 or gossipOptionID == 107205) then -- Engineer/Herb Buff
 			self:SelectGossip(gossipOptionID)
 		end
 	end
