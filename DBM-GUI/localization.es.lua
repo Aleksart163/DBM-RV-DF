@@ -3,7 +3,6 @@ if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Traducido por "
 L.TranslationBy 			= "Saispai, Woopy"
 --L.Website					= "Visita nuestro canal de Discord (|cFF73C2FBhttps://discord.gg/deadlybossmods|r) y síguenos en Twitter (@deadlybossmods)."

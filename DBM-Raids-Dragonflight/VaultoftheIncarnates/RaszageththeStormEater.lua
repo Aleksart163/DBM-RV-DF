@@ -118,7 +118,7 @@ local specWarnTempestWing					= mod:NewSpecialWarningCount(385574, nil, 63533, n
 local specWarnFulminatingCharge				= mod:NewSpecialWarningYouPos(377467, nil, 345338, nil, 4, 2) --Сверкающий заряд (Заряд)
 
 local timerStormsurgeCD						= mod:NewCDCountTimer(35, 387261, nil, nil, nil, 7) --Энергия бури
-local timerTempestWingCD					= mod:NewCDCountTimer(35, 385574, 63533, nil, nil, 2) --Крыло бури (Штормовая волна)
+local timerTempestWingCD					= mod:NewCDCountTimer(35, 385574, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Крыло бури (Штормовая волна)
 local timerFulminatingChargeCD				= mod:NewCDCountTimer(35, 377467, 345338, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сверкающий заряд (Заряды)
 local timerInversionCD						= mod:NewCDTimer(6, 394584, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Инверсия
 

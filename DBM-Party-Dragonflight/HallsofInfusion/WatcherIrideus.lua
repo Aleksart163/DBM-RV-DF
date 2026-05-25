@@ -31,7 +31,7 @@ local warnPowerLoverload						= mod:NewTargetAnnounce(389179, 3) --Перегр�
 
 local specWarnPowerOverload						= mod:NewSpecialWarningMoveAway(389179, nil, nil, nil, 1, 2) --Перегрузка
 local specWarnSparkVolley						= mod:NewSpecialWarningDodge(384351, nil, nil, nil, 4, 2) --Череда разрядов
-local specWarnStaticSurge						= mod:NewSpecialWarningDefensiveCount(384014, nil, nil, nil, 2, 2) --Статический выброс
+local specWarnStaticSurge						= mod:NewSpecialWarningDefensive(384014, nil, nil, nil, 2, 2) --Статический выброс
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389181, nil, nil, nil, 1, 8) --Статическое поле
 local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, nil, 2, 2) --Кулак титана
 
@@ -101,7 +101,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 384014 then --Статический выброс
 		self.vb.surgeCount = self.vb.surgeCount + 1
-		specWarnStaticSurge:Show(self.vb.surgeCount)
+		specWarnStaticSurge:Show()
 		specWarnStaticSurge:Play("aesoon")
 		timerStaticSurgeCD:Start(nil, self.vb.surgeCount+1)
 	elseif spellId == 384524 then --Кулак титана

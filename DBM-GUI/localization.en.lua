@@ -2,11 +2,11 @@ DBM_GUI_L = {}
 
 local L = DBM_GUI_L
 
-L.MainFrame							= "Dungeon Boss Master" -- OPTIONAL
+L.MainFrame							= "Deadly Boss Mods" -- OPTIONAL
 
 L.TranslationByPrefix				= "Translated by "
 L.TranslationBy 					= nil -- your name here, localizers!
-L.Website							= "Website with the latest up-to-date version: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r Discord for contact with questions |cFF73C2FBAleksart163|r"
+L.Website							= "Visit us on discord at |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Follow on most socials @deadlybossmods or @mysticalos"
 L.WebsiteButton						= "Website"
 
 L.OTabBosses						= "Boss Options"--Deprecated and will be deleted once tabs no longer use this
@@ -19,7 +19,6 @@ L.OTabOptions						= "Core Options"
 L.OTabAbout							= "About"
 
 L.FOLLOWER							= "Follower"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
-L.STORY					    		= "Story"--i.e. the new dungeon type in 11.0.0. I haven't found a translated string yet
 
 L.TabCategory_CURRENT_SEASON		= "Current Season"
 
@@ -115,13 +114,13 @@ L.RecordOnlyBosses					= "Do not record trash (Only records Bosses. Use '/dbm pu
 L.DoNotLogLFG						= "Do not record LFG or LFR (queued content)"
 --Auto Logging: Recorded Content types
 L.Area_AutoLoggingContent			= "Auto Logging Content"
-L.LogCurrentMythicRaids				= "Current level (or remix) Mythic raids"--Retail Only
-L.LogCurrentRaids					= "Current level (or remix) non Mythic raids (Heroic, Normal, and LFR if LFG/LFR filter is disabled)"
-L.LogTWRaids						= "Timewalking or Chromie Time raids (does NOT include remix)"--Retail Only
+L.LogCurrentMythicRaids				= "Current level Mythic raids"--Retail Only
+L.LogCurrentRaids					= "Current level non Mythic raids (Heroic, Normal, and LFR if LFG/LFR filter is disabled)"
+L.LogTWRaids						= "Timewalking or Chromie Time raids"--Retail Only
 L.LogTrivialRaids					= "Trivial (below character level) raids"
-L.LogCurrentMPlus					= "Current level (or remix) M+ dungeons"--Retail Only
-L.LogCurrentMythicZero				= "Current level (or remix) Mythic 0 dungeons"--Retail Only
-L.LogTWDungeons						= "Timewalking or Chromie Time dungeons (does NOT include remix)"--Retail Only
+L.LogCurrentMPlus					= "Current level M+ dungeons"--Retail Only
+L.LogCurrentMythicZero				= "Current level Mythic 0 dungeons"--Retail Only
+L.LogTWDungeons						= "Timewalking or Chromie Time dungeons"--Retail Only
 L.LogCurrentHeroic					= "Current level Heroic dungeons (Note: if you are doing heroic via queuing and want it logged, turn off LFG filter)"
 
 -- Panel: Extra Features
@@ -420,10 +419,6 @@ L.Area_DBMFiltersSetup				= "DBM Filters guide"
 L.Area_BlizzFiltersSetup			= "Blizzard Filters guide"
 
 -- Panel: Toggle DBM Features
-L.AreaMurchalOchkenProshlyapation 	= "Options mythic+ keys"
-
-L.AutoKeyLink						= "Link your mythic+ key in raid/group/guild chat by command !keys"
-
 L.Panel_SpamFilter					= "Disable DBM Features"
 
 L.Area_SpamFilter_SpecFeatures		= "Announce Features"

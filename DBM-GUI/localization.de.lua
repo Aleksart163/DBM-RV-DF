@@ -2,7 +2,6 @@ if GetLocale() ~= "deDE" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Übersetzt von "
 L.TranslationBy				= "Jods - Allanâ-Malfurion (EU)"
 --L.Website					= "Besuche uns auf Discord: |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Folge auf Twitter: @deadlybossmods oder @MysticalOS"

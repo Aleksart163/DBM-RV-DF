@@ -210,7 +210,6 @@ local specInstructionalRemapTable = {
 	["interrupt"] = "spell",
 	["interruptcount"] = "count",
 	["defensive"] = "spell",
-	["defensivecount"] = "count",
 	["taunt"] = "target",
 	["soak"] = "spell",
 	["soakcount"] = "count",
@@ -277,9 +276,6 @@ function specialWarningPrototype:SetText(customName)
 	self.spellName = spellName
 end
 
----Not to be confused with SetText, which only sets the text of object.
----<br>This changes actual ID so announce callback also swaps ID for WAs
----@param altSpellId string|number
 function specialWarningPrototype:UpdateKey(altSpellId)
 	self.spellId = altSpellId
 	self.icon = DBM:ParseSpellIcon(altSpellId, self.announceType, self.icon)
@@ -317,7 +313,6 @@ local specTypeFilterTable = {
 	["interrupt"] = "interrupt",
 	["interruptcount"] = "interrupt",
 	["defensive"] = "defensive",
-	["defensivecount"] = "defensive",
 	["taunt"] = "taunt",
 	["soak"] = "soak",
 	["soakcount"] = "soak",
@@ -483,9 +478,7 @@ function specialWarningPrototype:Show(...)
 	end
 end
 
----Object that's used when precision isn't possible (number of targets variable or unknown
----@param delay number
----@param ... any
+--Object that's used when precision isn't possible (number of targets variable or unknown
 function specialWarningPrototype:CombinedShow(delay, ...)
 	--Check if option for this warning is even enabled
 	if self.option and not self.mod.Options[self.option] then return end
@@ -506,16 +499,13 @@ function specialWarningPrototype:CombinedShow(delay, ...)
 		end
 	end
 	DBMScheduler:Unschedule(self.Show, self.mod, self)
-	local id = DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
-	test:Trace(self.mod, "SchedulerHideFromTraceIfUnscheduled", id)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "CombinedShow", ...)
+	DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
 end
 
 ---New object that allows defining count instead of scheduling for more efficient and immediate warnings when precise count is known
 ---@param maxTotal number
 ---@param ... any
 function specialWarningPrototype:PreciseShow(maxTotal, ...)
-	test:Trace(self.mod, "CombinedWarningPreciseShow", self, maxTotal)
 	--Check if option for this warning is even enabled
 	if self.option and not self.mod.Options[self.option] then return end
 	--Now, check if all special warning filters are enabled to save cpu and abort immediately if true.
@@ -538,11 +528,8 @@ function specialWarningPrototype:PreciseShow(maxTotal, ...)
 	local viableTotal = DBM:NumRealAlivePlayers()
 	if (maxTotal == #self.combinedtext) or (viableTotal == #self.combinedtext) then--All targets gathered, show immediately
 		self:Show(...)--Does this need self or mod? will it have this bug? https://github.com/DeadlyBossMods/DBM-Unified/issues/153
-		test:Trace(self.mod, "CombinedWarningPreciseShowSuccess", self, maxTotal)
 	else--And even still, use scheduling backup in case counts still fail
-		local id = DBMScheduler:Schedule(1.2, self.Show, self.mod, self, ...)
-		test:Trace(self.mod, "SchedulerHideFromTraceIfUnscheduled", id)
-		test:Trace(self.mod, "SetScheduleMethodName", id, self, "PreciseShow", maxTotal, ...)
+		DBMScheduler:Schedule(1.2, self.Show, self.mod, self, ...)
 	end
 end
 
@@ -551,17 +538,13 @@ end
 ---@param ... any
 function specialWarningPrototype:DelayedShow(delay, ...)
 	DBMScheduler:Unschedule(self.Show, self.mod, self, ...)
-	local id = DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
-	test:Trace(self.mod, "SchedulerHideFromTraceIfUnscheduled", id)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "DelayedShow", ...)
+	DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
 end
 
 ---@param t number
 ---@param ... any
 function specialWarningPrototype:Schedule(t, ...)
-	local id = DBMScheduler:Schedule(t, self.Show, self.mod, self, ...)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "Schedule", ...)
-	return id
+	return DBMScheduler:Schedule(t, self.Show, self.mod, self, ...)
 end
 
 ---@param time number
@@ -649,9 +632,7 @@ end
 function specialWarningPrototype:ScheduleVoice(t, name, customPath)
 	if not canVoiceReplace(self) then return end
 	DBMScheduler:Unschedule(self.Play, self.mod, self)--Allow ScheduleVoice to be used in same way as CombinedShow
-	local id = DBMScheduler:Schedule(t, self.Play, self.mod, self, name, customPath)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "ScheduleVoice", name, customPath)
-	return id
+	return DBMScheduler:Schedule(t, self.Play, self.mod, self, name, customPath)
 end
 
 ---Object Permits scheduling voice multiple times for same object
@@ -660,9 +641,7 @@ end
 ---@param customPath? string|number
 function specialWarningPrototype:ScheduleVoiceOverLap(t, name, customPath)
 	if not canVoiceReplace(self) then return end
-	local id = DBMScheduler:Schedule(t, self.Play, self.mod, self, name, customPath)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "ScheduleVoiceOverLap", name, customPath)
-	return id
+	return DBMScheduler:Schedule(t, self.Play, self.mod, self, name, customPath)
 end
 
 function specialWarningPrototype:CancelVoice(...)
@@ -675,7 +654,7 @@ end
 ---@param optionDefault SpecFlags|boolean?
 ---@param optionName string|boolean? String for custom option name. Using false hides option completely
 ---@param optionVersion any optional: has to be number, but luaLS has a fit if we tell it that
----@param runSound number? 1 = Personal, 2 = Everyone, 3 = Very Important, 4 = Run Away
+---@param runSound boolean|number? 1 = Personal, 2 = Everyone, 3 = Very Important, 4 = Run Away
 ---@param hasVoice boolean|number? Voice pack version required for used sound file.
 ---@param difficulty number? Raid Difficulty index used for displaying difficulty icon next to option
 ---@param icon number|string? Use number for spellId, -number for journalID, number as string for textureID
@@ -688,7 +667,11 @@ function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, opt
 	if type(text) == "string" and text:match("OptionVersion") then
 		error("NewSpecialWarning: you must provide remove optionversion hack for " .. optionDefault)
 	end
-	runSound = runSound or 1
+	if runSound == true then
+		runSound = 2
+	elseif not runSound then
+		runSound = 1
+	end
 	if hasVoice == true then--if not a number, set it to 2, old mods that don't use new numbered system
 		hasVoice = 2
 	end
@@ -888,11 +871,6 @@ end
 ---@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning
 function bossModPrototype:NewSpecialWarningDefensive(spellId, optionDefault, ...)
 	return newSpecialWarning(self, "defensive", spellId, nil, optionDefault, ...)
-end
-
----@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning
-function bossModPrototype:NewSpecialWarningDefensiveCount(spellId, optionDefault, ...)
-	return newSpecialWarning(self, "defensivecount", spellId, nil, optionDefault, ...)
 end
 
 ---@overload fun(self: DBMMod, spellId: number|string, optionDefault: SpecFlags|boolean?, optionName: number|string|boolean?, optionVersion: number?, runSound: number|boolean?, hasVoice: number?, difficulty: number?): SpecialWarning

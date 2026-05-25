@@ -3,8 +3,7 @@ if GetLocale() ~= "ruRU" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
-L.TranslationByPrefix		= "Адаптация под Firestorm - Aleksart163"
+L.TranslationByPrefix		= "Адаптация под сервер - Aleksart163"
 L.TranslationBy 			= "Перевод на русский язык - Hollicsh"
 L.Website					= "Сайт с последней актуальной версией: |cFF73C2FBhttps://github.com/Aleksart163/DBM-RV-DF|r Discord для связи по вопросам: |cFF73C2FBAleksart163|r"
 L.WebsiteButton				= "Форумы"
@@ -112,13 +111,13 @@ L.RecordOnlyBosses			= "Не записывать трэш. Записывать
 L.DoNotLogLFG				= "Не записывать LFG или LFR (случайные группы)"
 --Auto Logging: Recorded Content types
 L.Area_AutoLoggingContent	= "Содержимое автоматической записи"
-L.LogCurrentMythicRaids		= "Эпохальные рейды актуального уровня (или Пандария Ремикс)"--Только для актуальной версии WoW
-L.LogCurrentRaids			= "НЕэпохальные рейды актуального уровня (или Пандария Ремикс), (героический, нормальный и LFR, если фильтр LGF/LFR отключен)"
-L.LogTWRaids				= "Путешествие во времени или рейды времени Хроми (НЕ включает Пандарию Ремикс)"--Только для актуальной версии WoW
+L.LogCurrentMythicRaids		= "Эпохальные рейды актуального уровня"
+L.LogCurrentRaids			= "НЕэпохальные рейды актуального уровня (героический, нормальный и LFR, если фильтр LGF/LFR отключен)"
+L.LogTWRaids				= "Путешествие во времени или рейды времени Хроми"
 L.LogTrivialRaids			= "Тривиальные рейды (ниже уровня персонажа)"
-L.LogCurrentMPlus			= "Подземелья актуального уровня М+ (или Пандария Ремикс)"--Только для актуальной версии WoW
-L.LogCurrentMythicZero		= "Актуальные подземелья эпохального уровня +0 (или Пандария Ремикс)"--Только для актуальной версии WoW
-L.LogTWDungeons				= "Путешествие во времени или подземелья времени Хроми (НЕ включает Пандарию Ремикс)"--Только для актуальной версии WoW
+L.LogCurrentMPlus			= "Подземелья актуального уровня М+"
+L.LogCurrentMythicZero		= "Актуальные подземелья эпохального уровня +0"
+L.LogTWDungeons				= "Путешествие во времени или подземелья времени Хроми"
 L.LogCurrentHeroic			= "Героические подземелья актуального уровня<br/>Примечание: если Вы посещаете героические подземелья через очередь и хотите, чтобы это регистрировалось, отключите фильтр LFG"
 
 -- Panel: Extra Features
@@ -416,7 +415,7 @@ L.Area_BlizzFiltersSetup	= "Руководство по фильтрам Blizzar
 -- Panel: Toggle DBM Features
 L.AreaMurchalOchkenProshlyapation 	= "Параметры эпохальных+ ключей"
 
-L.AutoKeyLink						= "Линковать свой эпохальный+ ключ в рейд/групп/гильд чат по команде !keys"
+L.AutoKeyLink				= "Линковать свой эпохальный+ ключ в рейд/групп/гильд чат по команде !keys"
 
 L.Panel_SpamFilter			= "Отключение функций DBM"
 

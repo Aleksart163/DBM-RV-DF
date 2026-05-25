@@ -2,7 +2,6 @@ if GetLocale() ~= "frFR" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Traduit par "
 L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre/Leybola@EU-Sargeras/Noleen@EU-Hyjal" -- your name here, localizers!
 --L.Website					= "Visitez notre discord sur |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Suivez-nous sur twitter @deadlybossmods ou @MysticalOS"

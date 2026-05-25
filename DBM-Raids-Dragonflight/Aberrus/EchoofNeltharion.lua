@@ -65,13 +65,14 @@ local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26421))
 ----Voice From Beyond
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(26456))
+local warnUmbralAnnihilation					= mod:NewCountAnnounce(405433, 4, nil, nil, 246664) --Темное уничтожение (Аннигиляция)
 local warnCorruption							= mod:NewTargetNoFilterAnnounce(401010, 2) --Порча Class Call Parent
 local warnShadowShadowStrike					= mod:NewCastAnnounce(407796, 2, nil, nil, "Tank|Healer")
 local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many are still hidden, but also kinda acts as a "one has also become unhidden" alert
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
-local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensiveCount(405433, nil, 246664, nil, 2, 2) --Темное уничтожение (Аннигиляция)
+local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensive(405433, nil, 246664, nil, 2, 2) --Темное уничтожение (Аннигиляция)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
@@ -227,7 +228,8 @@ function mod:SPELL_CAST_START(args)
 		timerSunderShadowCD:Start(nil, self.vb.tankCount+1)
 	elseif args:IsSpellID(405436, 405434, 405433, 404038) then --Темное уничтожение 10, 7.5, 5, 2.5 (405433 used on heroic AND normal, others used?)
 		self.vb.annihilatingCount = self.vb.annihilatingCount + 1
-		specWarnUmbralAnnihilation:Show(self.vb.annihilatingCount)
+		warnUmbralAnnihilation:Show(self.vb.annihilatingCount)
+		specWarnUmbralAnnihilation:Show()
 		specWarnUmbralAnnihilation:Play("aesoon")
 		timerUmbralAnnihilationCD:Start(29.8, self.vb.annihilatingCount+1)
 	elseif spellId == 407796 then
@@ -285,7 +287,7 @@ function mod:SPELL_CAST_START(args)
 		timerSunderShadowCD:Start(14.8, 1)
 		timerVolcanicHeartCD:Start(20.7, 1)
 		timerUmbralAnnihilationCD:Start(28.9, 1) --Темное уничтожение (норм под гер)
-		timerRushingDarknessCD:Start(32.9, 1) --Стремительная тьма (норм под гер)
+		timerRushingDarknessCD:Start(32.5, 1) --Стремительная тьма (норм под гер)
 		if self:IsHard() then
 			timerTwistedEarthCD:Start(self:IsMythic() and 41.5 or 71.5, 1)
 		end
@@ -432,9 +434,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:Unschedule(fixBrokenHeartTimer)
 		timerRushingDarknessCD:Start(10.8, 1)--Start initial timer (you know, for the cast that's skipped 95% of time)
 		self:Schedule(15.8, checkForSkippedDarkness, self)--Schedule checker to see if the normally skipped cast happened, and if not, start backup timer for second cast
-		timerSunderRealityCD:Start(22.3, 1) --Порталы (норм под гер)
+		timerSunderRealityCD:Start(19.5, 1) --Порталы (норм под гер)
 		timerCalamitousStrikeCD:Start(39.7, 1) --Гибельный удар
-		timerEbonDestructionCD:Start(42.7, 1) --Большой взрыв (норм под гер)
+		timerEbonDestructionCD:Start(39.3, 1) --Большой взрыв (норм под гер)
 --[[	elseif spellId == 407182 then --Стремительная тьма
 		if self.Options.SetIconOnRushingDarkness then
 			self:SetIcon(args.destName, 0)

@@ -2,7 +2,6 @@ if GetLocale() ~= "itIT" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "Tradotto da "
 L.TranslationBy 			= "Kaliad, Mattmagic @ Pozzo dell'Eternità"
 --L.Website					= "Visitaci su Discord a |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Sequici su Twitter @deadlybossmods o @MysticalOS"

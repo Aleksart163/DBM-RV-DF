@@ -1,4 +1,5 @@
-## Interface: 100107, 100207
+## Interface: 100207
+## X-Min-Interface: 100107
 ## Interface-Cata: 40400
 ## Interface-Classic: 11502
 ## Title: Lib: LibDropDownMenu

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2557, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240612024811")
+mod:SetRevision("20240428104643")
 mod:SetCreatureID(208478)
 mod:SetEncounterID(2737)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -42,17 +42,12 @@ local warnSerpentsWrath								= mod:NewSpellAnnounce(421703, 4)
 local warnVolcanicDisgorge							= mod:NewTargetCountAnnounce(421616, 3, nil, nil, nil, nil, nil, nil, true)
 
 local specWarnCoilingFlames							= mod:NewSpecialWarningYou(421207, nil, 7897, nil, 1, 2)
-local yellCoilingFlames								= mod:NewYell(421207, 7897)--Shortname Flames
-local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207)
 local specWarnCoilingEruption						= mod:NewSpecialWarningYou(427201, nil, nil, nil, 1, 2)
-local yellCoilingEruption							= mod:NewShortYell(427201, DBM_COMMON_L.GROUPSOAK, nil, nil, "YELL")
-local yellCoilingEruptionFades						= mod:NewShortFadesYell(427201, nil, nil, nil, "YELL")
 
 --local specWarnMoltenVenom							= mod:NewSpecialWarningStack(419054, nil, 6, nil, nil, 1, 6)
 --local specWarnMoltenVenomSwap						= mod:NewSpecialWarningTaunt(419054, nil, nil, nil, 1, 2)--Need to evaulate whether tanks swap for this or jaws. double tank mechanic fights are redundant
 local specWarnFloodoftheFirleands					= mod:NewSpecialWarningSoakCount(420933, nil, nil, nil, 2, 2)
 local specWarnVolcanicDisgorge						= mod:NewSpecialWarningYou(421616, nil, nil, nil, 2, 2)
-local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS)
 local specWarnScorchtailCrash						= mod:NewSpecialWarningDodgeCount(420415, nil, 136870, nil, 3, 2)
 local specWarnCataclysmJaws							= mod:NewSpecialWarningDefensive(423117, nil, nil, nil, 1, 2)
 local specWarnCataclysmJawsTaunt					= mod:NewSpecialWarningTaunt(423117, nil, nil, nil, 1, 2)
@@ -66,7 +61,11 @@ local timerVolcanicDisgorgeCD						= mod:NewNextCountTimer(10, 421616, DBM_COMMO
 local timerScorchtailCrashCD						= mod:NewCDCountTimer(20, 420415, 136870, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--Short name "Tail Slam"
 local timerCataclysmJawsCD							= mod:NewNextCountTimer(10, 423117, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local berserkTimer								= mod:NewBerserkTimer(600)
-
+local yellCoilingFlames								= mod:NewYell(421207, 7897)--Shortname Flames
+local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207)
+local yellCoilingEruption							= mod:NewShortYell(427201, DBM_COMMON_L.GROUPSOAK, nil, nil, "YELL")--NewShortPosYell
+local yellCoilingEruptionFades						= mod:NewShortFadesYell(427201, nil, nil, nil, "YELL")--NewIconFadesYell
+local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS)
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnCoilingFlames", 421207, false, 0, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnCoilingEruption", 427201, false, 0, {1, 2, 3, 4})--Off by default since other mods don't use icons at all

@@ -21,7 +21,6 @@ local yellPrototype = private:GetPrototype("Yell")
 local mt = {__index = yellPrototype}
 local voidForm = DBM:GetSpellName(194249)
 
----@param self DBMMod
 local function newYell(self, yellType, spellId, yellText, optionDefault, optionName, chatType)
 	if not spellId and not yellText then
 		error("NewYell: you must provide either spellId or yellText", 2)
@@ -40,7 +39,7 @@ local function newYell(self, yellType, spellId, yellText, optionDefault, optionN
 				spellId = -spellId
 				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:EJ_GetSectionInfo(spellId) or CL.UNKNOWN)
 			else
-				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(SpellLinks(spellId) or CL.UNKNOWN) --Необходимо для прошляпа Мурчаля
+				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(SpellLinks(spellId) or CL.UNKNOWN) --Прошляп Мурчаля
 			end
 		else
 			displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(CL.UNKNOWN)
@@ -111,14 +110,10 @@ function yellPrototype:Say(...)
 end
 
 function yellPrototype:Schedule(t, ...)
-	local id = DBMScheduler:Schedule(t, self.Yell, self.mod, self, ...)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "Schedule", ...)
-	return id
+	return DBMScheduler:Schedule(t, self.Yell, self.mod, self, ...)
 end
 
----Standard schedule object to schedule a say/yell based on what's defined in object
----@param time number
----@param numAnnounces number?
+--Standard schedule object to schedule a say/yell based on what's defined in object
 function yellPrototype:Countdown(time, numAnnounces, ...)
 	if time > 60 then--It's a spellID not a time
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", time)
@@ -131,9 +126,7 @@ function yellPrototype:Countdown(time, numAnnounces, ...)
 	end
 end
 
----Scheduled Force override to use SAY message, even when object defines "YELL"
----@param time number
----@param numAnnounces number?
+--Scheduled Force override to use SAY message, even when object defines "YELL"
 function yellPrototype:CountdownSay(time, numAnnounces, ...)
 	if time > 60 then--It's a spellID not a time
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", time)

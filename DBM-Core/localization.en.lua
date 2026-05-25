@@ -198,7 +198,7 @@ L.UPDATEREMINDER_HEADER					= "Your version of " .. L.DEADLY_BOSS_MODS.. " is ou
 L.UPDATEREMINDER_HEADER_SUBMODULE		= "Your %s module is out-of-date.\n Version %s is available for download through " .. L.DBM_RV_PROSHLYAPATION_OF_MURCHAL_URL .. "."
 L.UPDATEREMINDER_FOOTER					= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 L.UPDATEREMINDER_FOOTER_GENERIC			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy to your clipboard."
-L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with current game version or newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
+L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
 L.UPDATEREMINDER_DISABLETEST			= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and this being a test/beta realm, it has been force disabled and cannot be used until updated. This is to ensure out of date mods aren't being used to generate test feedback"
 L.UPDATEREMINDER_HOTFIX					= L.DBM .. " version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 L.UPDATEREMINDER_HOTFIX_ALPHA			= L.DBM .. " version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
@@ -292,8 +292,7 @@ L.TIMER_USAGE							= {
 	"/dbm timer endloop: Stops any looping ltimer."
 }
 
-L.ERROR_NO_PERMISSION					= "You don't have the required permission to send pull/break timer."
-L.ERROR_NO_PERMISSION_COMBAT			= "Pull/Break timer cannot be sent while encounter in progress"
+L.ERROR_NO_PERMISSION					= "You don't have the required permission to do this."
 L.PULL_TIME_TOO_SHORT					= "Pull timer must be longer than 3 seconds."
 L.PULL_TIME_TOO_LONG					= "Pull timer cannot be longer than 60 seconds. Consider using a /break timer instead."
 
@@ -320,7 +319,7 @@ L.AUTO_ANNOUNCE_TEXTS = {
 	you									= "%s on YOU",
 	target								= "%s on >%%s<",
 	targetsource						= ">%%s< cast %s on >%%s<",
-	targetsource2						= ">%%s< uses %s",
+	targetsource2						= ">%%s< uses %s", --Прошляп Мурчаля
 	targetcount							= "%s (%%s) on >%%s<",
 	spell								= "%s", -- OPTIONAL
 	spellsource							= ">%%s< cast %s",
@@ -349,7 +348,7 @@ L.AUTO_ANNOUNCE_OPTIONS = {
 	target								= "Announce $spell:%s targets",
 	targetNF							= "Announce $spell:%s targets (ignores global target filter)",
 	targetsource						= "Announce $spell:%s targets (with source)",
-	targetsource2						= "Announce the source of the $spell:%s",
+	targetsource2						= "Announce the source of the $spell:%s", --Прошляп Мурчаля
 	targetcount							= "Announce $spell:%s targets (with count)",
 	spell								= "Announce when $spell:%s has been cast",
 	spellsource							= "Announce when $spell:%s has been cast (with source)",
@@ -392,7 +391,6 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	target								= "%s on >%%s<",
 	targetcount							= "%s (%%s) on >%%s< ",
 	defensive							= "%s - defensive",
-	defensivecount						= "%s (%%s) - defensive",
 	taunt								= "%s on >%%s< - taunt now",
 	close								= "%s on >%%s< near you",
 	move								= "%s - move away",
@@ -403,7 +401,6 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	dodgeloc							= "%s - dodge from %%s",
 	moveaway							= "%s - move away from others",
 	moveawaycount						= "%s (%%s) - move away from others",
-	moveawaytarget						= "%s - move away from %%s",
 	moveto								= "%s - move to >%%s<",
 	soak								= "%s - soak it",
 	soakcount							= "%s - soak (%%s)",
@@ -417,7 +414,6 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	stack								= "%%d stacks of %s on you",
 	switch								= "%s - switch targets",
 	switchcount							= "%s - switch targets (%%s)",
-	switchcustom						= "%s - switch targets (%%s)",
 	gtfo								= "%%s damage - move away",
 	adds								= "Incoming Adds - switch targets",--Basically a generic of switch
 	addscount							= "Incoming Adds - switch targets (%%s)",--Basically a generic of switch
@@ -445,7 +441,6 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	target 								= "Show special announce when someone is affected by $spell:%s",
 	targetcount 						= "Show special announce (with count) when someone is affected by $spell:%s",
 	defensive 							= "Show special announce to use defensive abilites for $spell:%s",
-	defensivecount 						= "Show special announce (with count) to use defensive abilites for $spell:%s",
 	taunt 								= "Show special announce to taunt when other tank affected by $spell:%s",
 	close 								= "Show special announce when someone close to you is affected by $spell:%s",
 	move 								= "Show special announce to move out from $spell:%s",
@@ -456,7 +451,6 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	dodgeloc							= "Show special announce (with location) to dodge $spell:%s",
 	moveaway							= "Show special announce to move away from others for $spell:%s",
 	moveawaycount						= "Show special announce (with count) to move away from others for $spell:%s",
-	moveawaytarget						= "Show special announce (with target) to move away from others for $spell:%s",
 	moveto								= "Show special announce to move to someone or some place for $spell:%s",
 	soak								= "Show special announce to soak for $spell:%s",
 	soakcount							= "Show special announce (with count) to soak for $spell:%s",
@@ -470,7 +464,6 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	stack 								= "Show special announce when you are affected by >=%d stacks of $spell:%s",
 	switch								= "Show special announce to switch targets for $spell:%s",
 	switchcount							= "Show special announce (with count) to switch targets for $spell:%s",
-	switchcustom						= "Show special announce (with info) to switch targets for $spell:%s",
 	gtfo 								= "Show special announce to move out of bad stuff on ground",
 	adds								= "Show special announce to switch targets for incoming adds",
 	addscount							= "Show special announce (with count) to switch targets for incoming adds",
@@ -584,8 +577,7 @@ L.AUTO_YELL_OPTION_TEXT = {
 	shortposition						= "Yell (with position) when you are affected by $spell:%s",
 	combo								= "Yell (with custom text) when you are affected by $spell:%s and other spells at same time",
 	repeatplayer						= "Yell repeatedly (with player name) when you are affected by $spell:%s",
-	repeaticon							= "Yell repeatedly (with icon) when you are affected by $spell:%s",
-	icontarget							= "Yell icons when you are targeted by $spell:%s to warn others",
+	repeaticon							= "Yell repeatedly (with icon) when you are affected by $spell:%s"
 }
 L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortyell							= "%s", -- OPTIONAL
@@ -598,11 +590,9 @@ L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortposition 						= "{rt%%1$d}%s %%2$d",--Icon, Spellname, number -- OPTIONAL
 	combo								= "%s and %%s",--Spell name (from option, plus spellname given in arg)
 	repeatplayer						= UnitName("player"),--Doesn't need translation, it's just player name spam -- OPTIONAL
-	repeaticon							= "{rt%%1$d}",--Doesn't need translation. It's just icon spam -- OPTIONAL
-	icontarget							= "{rt%%1$d}{rt%%1$d}{rt%%1$d}",--Doesn't need translation. It's just an icon repeated 3 times-- OPTIONAL
+	repeaticon							= "{rt%%1$d}"--Doesn't need translation. It's just icon spam -- OPTIONAL
 }
 L.AUTO_YELL_CUSTOM_POSITION				= "{rt%d}%s"--Doesn't need translating. Has no strings (Used in niche situations such as icon repeat yells) -- OPTIONAL
-L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}" -- OPTIONAL Прошляпано Мурчалем Прошляпенко ещё с 1 сезона
 L.AUTO_YELL_CUSTOM_FADE					= "%s faded"
 L.AUTO_HUD_OPTION_TEXT					= "Show HudMap for $spell:%s (Retired)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "Show HudMap for various mechanics (Retired)"
@@ -618,10 +608,6 @@ L.AUTO_INFO_FRAME_OPTION_TEXT3			= "Show info frame for $spell:%s (when threshol
 L.AUTO_READY_CHECK_OPTION_TEXT			= "Play ready check sound when boss is pulled (even if it's not targeted)"
 L.AUTO_SPEEDCLEAR_OPTION_TEXT			= "Show timer for fastest clear of %s"
 L.AUTO_PRIVATEAURA_OPTION_TEXT			= "Play DBM sound alerts for $spell:%s private auras on this fight."
-
-L.AUTO_GOSSIP_BUFFS						= "Auto select gossip choice(s) for npc or profession buffs"
-L.AUTO_GOSSIP_PERFORM_ACTION			= "Auto select gossip choice(s) to perform actions (such as using transports)"
-L.AUTO_GOSSIP_START_ENCOUNTER			= "Auto select gossip choice to start encounter"--This will never need to be plural, since it won't be in a trash mod like other two
 
 -- New special warnings
 L.MOVE_WARNING_BAR						= "Announce movable"
@@ -689,16 +675,3 @@ L.WORLD_BUFFS = {
 	rendHead							= "The false Warchief, Rend Blackhand, has fallen!",
 	blackfathomBoon						= "boon of Blackfathom"
 }
-
--- Annoying popup, especially for classic players
-L.DBM_INSTALL_REMINDER_HEADER	= "Incomplete DBM installation detected!"
-L.DBM_INSTALL_REMINDER_EXPLAIN	= "Welcome to %s. DBM mods for bosses here are in the %s which you do not have installed. DBM will not show timers or warnings in this zone unless you install the %s!"
-L.DBM_INSTALL_REMINDER_DISABLE	= "Disable all DBM warnings and timers in this zone." -- Used when we believe it's a user error that the mod isn't installed (i.e., current raids)
-L.DBM_INSTALL_REMINDER_DISABLE2 = "Do not show this message again for this package." -- Used for unimportant mods, i.e., dungeons
-L.DBM_INSTALL_REMINDER_DL_WAGO	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the Wago.io link to your clipboard."
-L.DBM_INSTALL_REMINDER_DL_CURSE	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the Curseforge link to your clipboard."
---"Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "
-L.DBM_INSTALL_PACKAGE_VANILLA	= "Vanilla and Season of Discovery package"
-L.DBM_INSTALL_PACKAGE_WRATH		= "Wrath package"
-L.DBM_INSTALL_PACKAGE_CATA		= "Cataclysm package"
-L.DBM_INSTALL_PACKAGE_DUNGEON	= "Dungeons, Delves, and Events package"

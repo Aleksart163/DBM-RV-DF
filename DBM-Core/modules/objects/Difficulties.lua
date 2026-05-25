@@ -60,8 +60,7 @@ if private.isRetail then
 		[2286] = {60, 2}, [2289] = {60, 2}, [2290] = {60, 2}, [2287] = {60, 2}, [2285] = {60, 2}, [2293] = {60, 2}, [2291] = {60, 2}, [2284] = {60, 2}, [2441] = {60, 2},--Shadowlands Dungeons
 		[2520] = {70, 2}, [2451] = {70, 2}, [2516] = {70, 2}, [2519] = {70, 2}, [2526] = {70, 2}, [2515] = {70, 2}, [2521] = {70, 2}, [2527] = {70, 2}, [2579] = {70, 2},--Dragonflight Dungeons
 		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2},--War Within Dungeons
-		--Delves
-		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}--War Within Delves
+		--Delves (TODO, will be type 4 and use local map/delve maps)
 	}
 elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata dungeons, it has it's own table and it's NOT using retail table cause the dungeons reworked in Mop are still vanilla dungeons in classic (plus diff level caps)
 	instanceDifficultyBylevel = {
@@ -117,8 +116,8 @@ end
 function difficulties:RefreshCache(force)
 	if force or not self.savedDifficulty or not self.difficultyText or not self.difficultyIndex then
 		self.savedDifficulty, self.difficultyText, self.difficultyIndex, groupSize, self.difficultyModifier = DBM:GetCurrentInstanceDifficulty()
-		DBM:Debug(("GetInstanceInfo() = %s, %s, %s, %s, %s, %s, %s, %s, %s"):format(tostringall(GetInstanceInfo())), 3, nil, true)
-		DBM:Debug(("DBM:GetCurrentInstanceDifficulty() = %s, %s, %s, %s, %s"):format(tostringall(self.savedDifficulty, self.difficultyText, self.difficultyIndex, groupSize, self.difficultyModifier)), 3, nil, true)
+		DBM:Debug(("GetInstanceInfo() = %s, %s, %s, %s, %s, %s, %s, %s, %s"):format(tostringall(GetInstanceInfo())), 2)
+		DBM:Debug(("DBM:GetCurrentInstanceDifficulty() = %s, %s, %s, %s, %s"):format(tostringall(self.savedDifficulty, self.difficultyText, self.difficultyIndex, groupSize, self.difficultyModifier)), 2)
 	end
 end
 
@@ -142,7 +141,7 @@ end
 function DBM:IsTrivial(customLevel)
 	local lastInstanceMapId = DBM:GetCurrentArea()
 	--if timewalking or chromie time or challenge modes. it's always non trivial content
-	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or self:IsRemix() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
+	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
 		return false
 	end
 	--if custom level passed, we always hard check that level for trivial vs non trivial
@@ -181,7 +180,7 @@ function DBM:IsRemix(match)
 	local seasonID = PlayerGetTimerunningSeasonID and PlayerGetTimerunningSeasonID() or 0
 	if match and seasonID == match then
 		return true
-	elseif seasonID >= 1 then
+	elseif seasonID >= 0 then
 		return true
 	end
 	return false
@@ -206,7 +205,7 @@ end
 ---Dungeons: follower, normal. (Raids excluded)
 function bossModPrototype:IsEasyDungeon()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "normal5" or diff == "follower" or diff == "quest"
+	return diff == "normal5" or diff == "follower5"
 end
 
 ---Dungeons: Any 5 man dungeon
@@ -218,7 +217,7 @@ end
 ---Dungeons: follower, normal, heroic. Raids: LFR, normal (rescope this to exclude heroic now that heroic5 is the new mythic 0?)
 function bossModPrototype:IsEasy()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower" or diff == "quest"
+	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower5"
 end
 
 ---Dungeons: mythic, mythic+. Raids: heroic, mythic
@@ -233,16 +232,10 @@ function bossModPrototype:IsNormal()
 	return diff == "normal" or diff == "normal5" or diff == "normal10" or diff == "normal20" or diff == "normal25" or diff == "normal40" or diff == "normalisland" or diff == "normalwarfront"
 end
 
----Dungeons with AI "follower" npcs. 1-5 players
+
 function bossModPrototype:IsFollower()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "follower"
-end
-
----Dungeons designed for just the player. "quest dungeons"
-function bossModPrototype:IsQuest()
-	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "quest"
 end
 
 ---Pretty much ANYTHING that has a heroic mode
@@ -310,7 +303,7 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 8 then--Dungeon, Mythic+ (Challenge modes in mists and wod)
 		local keystoneLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() or 0
 		return "challenge5", PLAYER_DIFFICULTY6 .. "+ (" .. keystoneLevel .. ") - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 148 or difficulty == 185 or difficulty == 215 or difficulty == 226 then--20 man classic raid / 226 is SoD 20
+	elseif difficulty == 148 or difficulty == 185 or difficulty == 215 then--20 man classic raid
 		return "normal20", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 9 or difficulty == 186 then--Legacy 40 man raids, no longer returned as index 3 (normal 10man raids)
 		return "normal40", difficultyName .. " - ", difficulty, instanceGroupSize, 0
@@ -360,13 +353,9 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "humilityscenario", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 --	elseif difficulty == 192 then--Non Instanced Challenge 1 (Unknown)
 --		return "delve1", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 205 then--Follower (Party Dungeon - Dragonflight 10.2.5+)
+	elseif difficulty == 205 then--Follower Dungeon (Dragonflight 10.2.5+)
 		return "follower", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 208 then--Delves (War Within 11.0.0+)
-		return "delves", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 216 then--Quest (Party Dungeon - War Within 11.0.0+)
-		return "quest", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 220 then--Story (Raid Dungeon - War Within 11.0.0+)
 		return "delves", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
@@ -378,7 +367,7 @@ function DBM:IsLogableContent(force)
 	--2: Check for what content specifically selected for logging
 	--3: Boss Only filter is handled somewhere else (where StartLogging is called)
 	local lastInstanceMapId = DBM:GetCurrentArea()
-	if self.Options.DoNotLogLFG and (private.isRetail or private.isCata) and IsPartyLFG() then
+	if self.Options.DoNotLogLFG and private.isRetail and IsPartyLFG() then
 		return false
 	end
 
@@ -398,23 +387,23 @@ function DBM:IsLogableContent(force)
 
 	--Now we do checks relying on pre coded trivial check table
 	--Current level Mythic raid
-	if self.Options.LogCurrentMythicRaids and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId] and instanceDifficultyBylevel[lastInstanceMapId][2] == 3) and difficulties.difficultyIndex == 16 then
+	if self.Options.LogCurrentMythicRaids and instanceDifficultyBylevel[lastInstanceMapId] and (instanceDifficultyBylevel[lastInstanceMapId][1] >= private.playerLevel) and (instanceDifficultyBylevel[lastInstanceMapId] and instanceDifficultyBylevel[lastInstanceMapId][2] == 3) and difficulties.difficultyIndex == 16 then
 		return true
 	end
 	--Current player level non Mythic raid
-	if self.Options.LogCurrentRaids and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 3) and difficulties.difficultyIndex ~= 16 then
+	if self.Options.LogCurrentRaids and instanceDifficultyBylevel[lastInstanceMapId] and (instanceDifficultyBylevel[lastInstanceMapId][1] >= private.playerLevel) and (instanceDifficultyBylevel[lastInstanceMapId][2] == 3) and difficulties.difficultyIndex ~= 16 then
 		return true
 	end
 	--Trivial raid (ie one below players level)
-	if self.Options.LogTrivialRaids and instanceDifficultyBylevel[lastInstanceMapId] and self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 3) then
+	if self.Options.LogTrivialRaids and instanceDifficultyBylevel[lastInstanceMapId] and (instanceDifficultyBylevel[lastInstanceMapId][1] < private.playerLevel) and (instanceDifficultyBylevel[lastInstanceMapId][2] == 3) then
 		return true
 	end
 	--Current level Mythic dungeon
-	if self.Options.LogCurrentMythicZero and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 2) and difficulties.difficultyIndex == 23 then
+	if self.Options.LogCurrentMythicZero and instanceDifficultyBylevel[lastInstanceMapId] and (instanceDifficultyBylevel[lastInstanceMapId][1] >= private.playerLevel) and (instanceDifficultyBylevel[lastInstanceMapId][2] == 2) and difficulties.difficultyIndex == 23 then
 		return true
 	end
 	--Current level Heroic dungeon
-	if self.Options.LogCurrentHeroic and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 2) and (difficulties.difficultyIndex == 2 or difficulties.difficultyIndex == 174) then
+	if self.Options.LogCurrentHeroic and instanceDifficultyBylevel[lastInstanceMapId] and (instanceDifficultyBylevel[lastInstanceMapId][1] >= private.playerLevel) and (instanceDifficultyBylevel[lastInstanceMapId][2] == 2) and (difficulties.difficultyIndex == 2 or difficulties.difficultyIndex == 174) then
 		return true
 	end
 

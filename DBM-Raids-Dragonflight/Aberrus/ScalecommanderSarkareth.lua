@@ -62,7 +62,7 @@ local warnDazzled								= mod:NewTargetNoFilterAnnounce(401905, 4, nil, false) 
 local warnMassDisintegrate						= mod:NewTargetCountAnnounce(401680, 3, nil, nil, 405391, nil, nil, nil, true) --Массовая дезинтеграция (Дезинтеграция)
 local warnBurningClaws							= mod:NewStackAnnounce(401330, 2, nil, "Tank|Healer") --Обжигающие когти
 
-local specWarnGlitteringSurge					= mod:NewSpecialWarningDefensiveCount(401810, nil, nil, nil, 2, 2) --Сияющий всплеск
+local specWarnGlitteringSurge					= mod:NewSpecialWarningDefensive(401810, nil, nil, nil, 2, 2) --Сияющий всплеск
 local specWarnScorchingBomb						= mod:NewSpecialWarningCount(401500, nil, 167180, nil, 2, 2) --Опаляющая бомба (Бомбы)
 
 local specWarnMassDisintegrateYou				= mod:NewSpecialWarningYou(401680, nil, 405391, nil, 1, 2) --Массовая дезинтеграция (Дезинтеграция)
@@ -70,8 +70,8 @@ local specWarnSearingBreath						= mod:NewSpecialWarningCount(402050, nil, 18357
 local specWarnBurningClaws						= mod:NewSpecialWarningDefensive(401330, nil, nil, nil, 3, 2) --Обжигающие когти
 local specWarnBurningClawsTaunt					= mod:NewSpecialWarningTaunt(401330, nil, nil, nil, 1, 2) --Обжигающие когти
 
-local timerOppressingHowlCD						= mod:NewNextTimer(29.9, 401383, nil, nil, nil, 7) --Подавляющий вой
-local timerGlitteringSurgeCD					= mod:NewCDCountTimer(29.9, 401810, nil, nil, nil, 2) --Сияющий всплеск
+local timerOppressingHowlCD						= mod:NewNextTimer(29.9, 401383, DBM_COMMON_L.PUSHBACK, nil, nil, 7) --Подавляющий вой
+local timerGlitteringSurgeCD					= mod:NewCDCountTimer(29.9, 401810, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Сияющий всплеск
 local timerScorchingBombCD						= mod:NewCDCountTimer(29.9, 401500, 167180, nil, nil, 3) --Опаляющая бомба (Бомбы)
 local timerMassDisintegrateCD					= mod:NewCDCountTimer(29.9, 401680, 405391, nil, nil, 3) --Массовая дезинтеграция (Дезинтеграция)
 local timerSearingBreathCD						= mod:NewCDCountTimer(29.9, 402050, 18357, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Опаляющее дыхание (Дыхание)
@@ -98,7 +98,7 @@ local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2) --Когти пустоты
 
 local timerEndExistenceCast						= mod:NewCastTimer(30, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
-local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7) --Бомба Бездны
+local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsRanged() and 2 or nil, 5) --Бомба Бездны
 local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
@@ -458,7 +458,7 @@ function mod:SPELL_CAST_START(args)
 		warnOppressingHowl:Play("carefly")
 	elseif spellId == 401810 then
 		self.vb.surgeCount = self.vb.surgeCount + 1
-		specWarnGlitteringSurge:Show(self.vb.surgeCount)
+		specWarnGlitteringSurge:Show()
 		specWarnGlitteringSurge:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
 		if timer then
@@ -814,19 +814,20 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
 			if self:GetStage(2) then
-				specWarnVoidFracture2:Schedule(1.5, BetweenStars)
-				specWarnVoidFracture2:ScheduleVoice(1.5, "findshadow")
+				specWarnVoidFracture2:Schedule(2.5, BetweenStars)
+				specWarnVoidFracture2:ScheduleVoice(2.5, "findshadow")
 			else
-				specWarnVoidFracture2:Schedule(1.5, BetweenStars)
-				specWarnVoidFracture2:ScheduleVoice(1.5, "runout")
+				specWarnVoidFracture2:Schedule(2.5, BetweenStars)
+				specWarnVoidFracture2:ScheduleVoice(2.5, "runout")
 			end
 			yellVoidBomb:Yell()
 			yellVoidFractureFades:Countdown(spellId)
-			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-			if expireTime then
-				local remaining = expireTime-GetTime()
-				timerVoidBomb:Start(remaining)
-			end
+			timerVoidBomb:Start(spellId)
+		--	local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+		--	if expireTime then
+		--		local remaining = expireTime-GetTime()
+		--		timerVoidBomb:Start(remaining)
+		--	end
 			--[[	if spellId == 404218 then
 					specWarnVoidFracture2:Schedule(2, BetweenStars)
 					specWarnVoidFracture2:ScheduleVoice(2, "runout")
@@ -1049,11 +1050,11 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+--[[function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 402746 then --Парящие угли
 		DBM:Debug("Check Murchal proshlyap 2", 2)
 	end
-end
+end]]
 
 function mod:OnSync(msg)
 	if msg == "Phase 3 RP" then

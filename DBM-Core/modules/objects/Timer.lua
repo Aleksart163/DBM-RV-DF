@@ -437,15 +437,12 @@ end
 
 function timerPrototype:DelayedStart(delay, ...)
 	DBMScheduler:Unschedule(self.Start, self.mod, self, ...)
-	local id = DBMScheduler:Schedule(delay or 0.5, self.Start, self.mod, self, ...)
-	test:Trace(self.mod, "SchedulerHideFromTraceIfUnscheduled", id)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "DelayedStart", ...)
+	DBMScheduler:Schedule(delay or 0.5, self.Start, self.mod, self, ...)
 end
 timerPrototype.DelayedShow = timerPrototype.DelayedStart
 
 function timerPrototype:Schedule(t, ...)
-	local id = DBMScheduler:Schedule(t, self.Start, self.mod, self, ...)
-	test:Trace(self.mod, "SetScheduleMethodName", id, self, "Schedule", ...)
+	return DBMScheduler:Schedule(t, self.Start, self.mod, self, ...)
 end
 
 function timerPrototype:Unschedule(...)
@@ -516,6 +513,19 @@ function timerPrototype:HardStop(guid)
 		tremove(self.startedTimers, i)
 	end
 end
+
+--In past boss mods have always had to manually call Stop just to restart a timer, to avoid triggering false debug messages
+--This function should simplify boss mod creation by allowing you to "Restart" a timer with one call in mod instead of 2
+function timerPrototype:Restart(timer, ...)
+	if self.type and (self.type == "cdcount" or self.type == "nextcount") and not self.allowdouble then
+		self:Stop()--Cleanup any count timers left over on a restart
+	else
+		self:Stop(...)
+	end
+	self:Unschedule(...)--Also unschedules not yet started timers that used timer:Schedule()
+	self:Start(timer, ...)
+end
+timerPrototype.Reboot = timerPrototype.Restart
 
 function timerPrototype:Cancel(...)
 	self:Stop(...)
@@ -1069,27 +1079,26 @@ end
 function bossModPrototype:NewStageTimer(...)
 	return newTimer(self, "stage", ...)
 end
+bossModPrototype.NewPhaseTimer = bossModPrototype.NewStageTimer--Deprecated naming, once all mods are converted over, NewPhaseTimer will be wiped out for NewStageTimer
 
 ---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: SpecFlags|boolean?, optionName: string|number|boolean?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?): Timer
 function bossModPrototype:NewStageCountTimer(...)
 	return newTimer(self, "stagecount", ...)
 end
 
----Used mainly for compat with BW/LW timers where they use "stages" but then use the spell/journal descriptor instead of "stage d"
----<br>Basically, it's a generic spellName timer for "stages" callback
+--Used mainly for compat with BW/LW timers where they use "stages" but then use the spell/journal descriptor instead of "stage d"
+--Basically, it's a generic spellName timer for "stages" callback
 ---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: SpecFlags|boolean?, optionName: string|number|boolean?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?): Timer
 function bossModPrototype:NewStageContextTimer(...)
 	return newTimer(self, "stagecontext", ...)
 end
 
----Same as NewStageContextTimer, with count
----<br>Basically, it's a generic spellName timer for "stages" callback
+--Same as NewStageContextTimer, with count
 ---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: SpecFlags|boolean?, optionName: string|number|boolean?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?): Timer
 function bossModPrototype:NewStageContextCountTimer(...)
 	return newTimer(self, "stagecontextcount", ...)
 end
 
----For a fight that alternates stage 1 and stage 2, but also tracks total cycles. Example: Stage 2 (3)
 ---@overload fun(self: DBMMod, timer: number|string, spellId: number|string?, timerText: number|string?, optionDefault: SpecFlags|boolean?, optionName: string|number|boolean?, colorType: number?, texture: number|string?, inlineIcon: string?, keep: boolean?, countdown: number?, countdownMax: number?, r: number?, g: number?, b: number?, requiresCombat: boolean?): Timer
 function bossModPrototype:NewStageCountCycleTimer(...)
 	return newTimer(self, "stagecountcycle", ...)

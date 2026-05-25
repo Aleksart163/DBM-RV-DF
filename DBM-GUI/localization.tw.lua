@@ -2,7 +2,6 @@ if GetLocale() ~= "zhTW" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
 local L = DBM_GUI_L
 
-
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "三皈依@暗影之月 & Imbav@聖光之願"
 --L.Website					= "拜訪討論/支援論壇:|cFF73C2Fhttps://discord.gg/deadlybossmods|r. 請在推特上關注@deadlybossmods或@MysticalOS"
