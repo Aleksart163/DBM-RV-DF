@@ -86,7 +86,8 @@ local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
-local specWarnVoidFracture2						= mod:NewSpecialWarningMoveTo(404027, nil, nil, nil, 4, 6) --Бомба Бездны
+local specWarnVoidFracture2						= mod:NewSpecialWarningFades(404027, nil, nil, nil, 1, 2) --Бомба Бездны
+local specWarnVoidFracture3						= mod:NewSpecialWarningMoveTo(404027, nil, nil, nil, 4, 6) --Бомба Бездны
 local specWarnAbyssalBreath						= mod:NewSpecialWarningCount(404456, nil, 18357, nil, 2, 2) --Дыхание Бездны (Дыхание)
 local specWarnEmptyStrike						= mod:NewSpecialWarningDefensive(404769, nil, nil, nil, 1, 2, 4) --Пустой удар
 local specWarnCosmicVolley						= mod:NewSpecialWarningInterruptCount(411302, "HasInterrupt", 31295, nil, 1, 2, 4) --Космический залп (Крик)
@@ -97,9 +98,10 @@ local specWarnVoidClaws							= mod:NewSpecialWarningDefensive(411241, nil, nil,
 local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil, nil, 4, 4) --Когти пустоты For Void Blast (411238) effect
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2) --Когти пустоты
 
-local timerEndExistenceCast						= mod:NewCastTimer(30, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
+local timerEndExistenceCast						= mod:NewCastTimer(27, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsRanged() and 2 or nil, 5) --Бомба Бездны
-local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
+local timerVoidBombCast							= mod:NewCastTimer(20, 404027, 60523, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON) --Бомба Бездны
+--local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
 --local timerCosmicVolleyCD						= mod:NewCDTimer(4.8, 411302, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Mythic Add
@@ -142,7 +144,7 @@ local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
 local yellVoidSlash								= mod:NewShortYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
-local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
+--local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
 local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция
 local yellInfiniteDuress						= mod:NewShortPosYell(404288, nil, nil, nil, "YELL") --Бесконечное заключение
@@ -632,6 +634,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerVoidBombCD:Start(timer, self.vb.bombCount+1)
 		end
+		timerVoidBombCast:Start()
 	elseif spellId == 408422 then --Рассечение Бездны
 		self.vb.tankCount = self.vb.tankCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
@@ -696,8 +699,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnEmptynessBetweenStars:Show()
 			specWarnEmptynessBetweenStars:Play("teleyou")
-			specWarnVoidFracture2:Cancel()
-			specWarnVoidFracture2:CancelVoice()
+			specWarnVoidFracture3:Cancel()
+			specWarnVoidFracture3:CancelVoice()
 			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 			if expireTime then--Buff has various durations based on difficulty, 15-25, this is just easiest
 				local remaining = expireTime-GetTime()
@@ -705,7 +708,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not Phase2Preshlyap then
 				Phase2Preshlyap = true
-				timerEndExistenceCast:Start(21)
+				timerEndExistenceCast:Start()
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
@@ -814,27 +817,26 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidFracture:Show()
 			specWarnVoidFracture:Play("bombyou")
 			if self:GetStage(2) then
-				specWarnVoidFracture2:Schedule(2.5, BetweenStars)
-				specWarnVoidFracture2:ScheduleVoice(2.5, "findshadow")
+				specWarnVoidFracture3:Schedule(2.5, BetweenStars)
+				specWarnVoidFracture3:ScheduleVoice(2.5, "findshadow")
 			else
-				specWarnVoidFracture2:Schedule(2.5, BetweenStars)
-				specWarnVoidFracture2:ScheduleVoice(2.5, "runout")
+				specWarnVoidFracture3:Schedule(2.5, BetweenStars)
+				specWarnVoidFracture3:ScheduleVoice(2.5, "runout")
 			end
 			yellVoidBomb:Yell()
-			yellVoidFractureFades:Countdown(spellId)
-			timerVoidBomb:Start(spellId)
+		--	yellVoidFractureFades:Countdown(spellId)
 		--	local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 		--	if expireTime then
 		--		local remaining = expireTime-GetTime()
 		--		timerVoidBomb:Start(remaining)
 		--	end
 			--[[	if spellId == 404218 then
-					specWarnVoidFracture2:Schedule(2, BetweenStars)
-					specWarnVoidFracture2:ScheduleVoice(2, "runout")
+					specWarnVoidFracture3:Schedule(2, BetweenStars)
+					specWarnVoidFracture3:ScheduleVoice(2, "runout")
 					timerVoidBomb:Start()
 				else
-					specWarnVoidFracture2:Schedule(4, BetweenStars)
-					specWarnVoidFracture2:ScheduleVoice(4, "runout")
+					specWarnVoidFracture3:Schedule(4, BetweenStars)
+					specWarnVoidFracture3:ScheduleVoice(4, "runout")
 					timerVoidBomb:Start(14)
 				end]]
 		end
@@ -930,10 +932,11 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 404218 or spellId == 410642 then --Бомба Бездны
 		if args:IsPlayer() then
 			playerVoidFracture = false
-			specWarnVoidFracture2:Cancel()
-			specWarnVoidFracture2:CancelVoice()
-			yellVoidFractureFades:Cancel()
-			timerVoidBomb:Stop()
+			specWarnVoidFracture2:Show()
+			specWarnVoidFracture2:Play("end")
+			specWarnVoidFracture3:Cancel()
+			specWarnVoidFracture3:CancelVoice()
+		--	yellVoidFractureFades:Cancel()
 		end
 	elseif spellId == 404705 then
 		if self.Options.NPAuraOnRescind then
