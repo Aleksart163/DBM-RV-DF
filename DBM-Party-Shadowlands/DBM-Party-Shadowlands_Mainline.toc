@@ -1,4 +1,4 @@
-## Interface: 100107, 100207
+## Interface: 100207
 ## X-Min-Interface: 100107
 ## Title:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Dungeons (SL)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM RV Mod|r|cffffe00a>|r |cffc030c0Mazmorras (SL)|r

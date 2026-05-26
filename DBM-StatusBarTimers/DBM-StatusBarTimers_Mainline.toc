@@ -21,7 +21,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 10.2.68
+## Version: 10.2.69
 ## X-Website: https://github.com/Aleksart163/DBM-RV-DF
 
 DBT.lua
