@@ -100,7 +100,6 @@ local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, 
 
 local timerEndExistenceCast						= mod:NewCastTimer(27, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsRanged() and 2 or nil, 5) --Бомба Бездны
-local timerVoidBombCast							= mod:NewCastTimer(20, 404027, 60523, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON) --Бомба Бездны
 --local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
 local timerEmptyStrikeCD						= mod:NewCDTimer(12.2, 404769, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пустой удар Mythic Add
@@ -634,7 +633,6 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerVoidBombCD:Start(timer, self.vb.bombCount+1)
 		end
-		timerVoidBombCast:Start()
 	elseif spellId == 408422 then --Рассечение Бездны
 		self.vb.tankCount = self.vb.tankCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
@@ -708,7 +706,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not Phase2Preshlyap then
 				Phase2Preshlyap = true
-				timerEndExistenceCast:Start()
+				if self:IsEasy() then
+					timerEndExistenceCast:Start()
+				else
+					timerEndExistenceCast:Start(20)
+				end
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
