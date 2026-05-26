@@ -581,8 +581,8 @@ private.IsEncounterInProgress = IsEncounterInProgress
 
 local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS-- for Phanx' Class Colors
 
--- Polyfill for C_AddOns, Cata, Era and Retail have the fully featured table, Wrath has only Metadata (as of Jun 6th 2024)
-local C_AddOns --Прошляп Мурчаля
+--[[ Polyfill for C_AddOns, Cata, Era and Retail have the fully featured table, Wrath has only Metadata (as of Jun 6th 2024)
+local C_AddOns --Тут был прошляп Мурчаля Прошляпенко
 do
 	local cachedAddOns = nil
 	C_AddOns = {
@@ -605,7 +605,7 @@ do
 			return cachedAddOns[addon]
 		end,
 	}
-end --Прошляп Мурчаля
+end]]
 
 ---------------------------------
 --  General (local) functions  --
@@ -672,7 +672,7 @@ end
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
-local function sendSync(protocol, prefix, msg)
+--[[local function sendSync(protocol, prefix, msg)
 	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -700,9 +700,9 @@ local function sendSync(protocol, prefix, msg)
 		end
 	end
 end
-private.sendSync = sendSync
+private.sendSync = sendSync]]
 
---[[local function sendSync(protocol, prefix, msg)
+local function sendSync(protocol, prefix, msg)
 	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -729,14 +729,14 @@ private.sendSync = sendSync
 		end
 	end
 end
-private.sendSync = sendSync]]
+private.sendSync = sendSync
 
 ---Customized syncing specifically for guild comms
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
-local function sendGuildSync(protocol, prefix, msg)
+--[[local function sendGuildSync(protocol, prefix, msg)
 	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -748,9 +748,9 @@ local function sendGuildSync(protocol, prefix, msg)
 		end
 	end
 end
-private.sendGuildSync = sendGuildSync
+private.sendGuildSync = sendGuildSync]]
 
---[[local function sendGuildSync(protocol, prefix, msg)
+local function sendGuildSync(protocol, prefix, msg)
 	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -760,14 +760,14 @@ private.sendGuildSync = sendGuildSync
 		end
 	end
 end
-private.sendGuildSync = sendGuildSync]]
+private.sendGuildSync = sendGuildSync
 
 ---Custom sync function that should only be used for user generated sync messages
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
-local function sendLoggedSync(protocol, prefix, msg)
+--[[local function sendLoggedSync(protocol, prefix, msg)
 	if dbmIsEnabled then
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -783,9 +783,9 @@ local function sendLoggedSync(protocol, prefix, msg)
 			end
 		end
 	end
-end
+end]]
 
---[[local function sendLoggedSync(protocol, prefix, msg)
+local function sendLoggedSync(protocol, prefix, msg)
 	if dbmIsEnabled then
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -810,7 +810,7 @@ end
 			end
 		end
 	end
-end]]
+end
 
 ---Sync Object specifically for out in the world sync messages that have different rules than standard syncs
 ---@param self DBM
@@ -819,7 +819,7 @@ end]]
 ---@param msg any
 ---@param noBNet boolean?
 --Прошляп Мурчаля
-local function SendWorldSync(self, protocol, prefix, msg, noBNet)
+--[[local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 	if not dbmIsEnabled then return end--Block all world syncs if force disabled
 	DBM:Debug("SendWorldSync running for " .. prefix)
 	local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -873,9 +873,9 @@ local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 			end
 		end
 	end
-end
+end]]
 
---[[local function SendWorldSync(self, protocol, prefix, msg, noBNet)
+local function SendWorldSync(self, protocol, prefix, msg, noBNet)
 	if not dbmIsEnabled then return end--Block all world syncs if force disabled
 	DBM:Debug("SendWorldSync running for " .. prefix)
 	local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -931,7 +931,7 @@ end
 			end
 		end
 	end
-end]]
+end
 
 -- sends a whisper to a player by their character name or BNet presence id
 -- returns true if the message was sent, nil otherwise
