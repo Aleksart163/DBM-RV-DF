@@ -193,7 +193,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 405592 then
-		warnSalvageParts:Show(args.destName)--Aggregate?
+		warnSalvageParts:CombinedShow(0.7, args.destName) --Сбор запчастей
 	elseif spellId == 404010 then
 		if args:IsPlayer() then
 			specWarnUnstableEmbers:Show()
