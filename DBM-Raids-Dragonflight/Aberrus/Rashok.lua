@@ -35,7 +35,7 @@ local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеюща�
 local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4)
 
 local specWarnShadowflameFissures					= mod:NewSpecialWarningDodge(404431, nil, 205181, nil, 2, 2) --Разломы пламени Тьмы (Пламя тьмы)
-local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 3, 4) --Сломанный проводник
+local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 2, 4) --Сломанный проводник
 local specWarnAncientFury							= mod:NewSpecialWarningDefensive(405316, nil, nil, nil, 3, 4) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, nil, nil, 4, 4) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
@@ -127,6 +127,7 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	local proshlyap  = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 1 and heroicFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 1 and normalFirstMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
 	local proshlyap2 = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 2 and heroicSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 2 and normalSecondMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
 	local proshlyap3 = self:IsMythic() and self.vb.murchalOchkenProshlyapationCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsHeroic() and self.vb.murchalOchkenProshlyapationCount == 3 and heroicThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] or self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 3 and normalThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1]
+	local proshlyap4 = self:IsEasy() and self.vb.murchalOchkenProshlyapationCount == 4 and normalThirdMurchalProshlyapTimers[self.vb.proshlyapMurchalCount+1] --надо будет проверить, если неточно, то сделать новую
 	if proshlyap then
 		timerVolcanicComboCD:Start(proshlyap, self.vb.proshlyapMurchalCount+1)
 		self:Schedule(proshlyap, startProshlyapationOfMurchal, self)
@@ -136,6 +137,9 @@ local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
 	elseif proshlyap3 then
 		timerVolcanicComboCD:Start(proshlyap3, self.vb.proshlyapMurchalCount+1)
 		self:Schedule(proshlyap3, startProshlyapationOfMurchal, self)
+	elseif proshlyap4 then
+		timerVolcanicComboCD:Start(proshlyap4, self.vb.proshlyapMurchalCount+1)
+		self:Schedule(proshlyap4, startProshlyapationOfMurchal, self)
 	end
 	warnWrathDjaruun:Show()
 end
@@ -439,20 +443,31 @@ function mod:SPELL_AURA_REMOVED(args)
 				timerSearingSlamCD:Start(10.1, 1) --
 			end
 			DBM:Debug("Murchal proshlyap 2", 2)
-		elseif self.vb.murchalOchkenProshlyapationCount == 3 then
-			specWarnShatteredConduit:Show()
-			specWarnShatteredConduit:Play("speedup")
+		elseif self.vb.murchalOchkenProshlyapationCount == 3 then --Сломался последний проводник в гере и мифе
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
+			if self:IsHard() then
+				specWarnShatteredConduit:Show()
+				specWarnShatteredConduit:Play("speedup")
+			end
 			if self:IsMythic() then
-				timerUnleashedShadowflameCD:Start(6.2, 1)
-				timerSearingSlamCD:Start(11.1, 1)
+				timerUnleashedShadowflameCD:Start(6.2, 1) --пока неизвестно
+				timerSearingSlamCD:Start(11.1, 1) --пока неизвестно
 			elseif self:IsHeroic() then
+				timerUnleashedShadowflameCD:Start(6.2, 1) --
 				timerSearingSlamCD:Start(11.1, 1) --
 			else
+				timerUnleashedShadowflameCD:Start(6.2, 1) --пока неизвестно
 				timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
 			end
 			DBM:Debug("Murchal proshlyap 3", 2)
+		elseif self.vb.murchalOchkenProshlyapationCount == 4 then --Сломался последний проводник в обычке и лфр
+			timerVolcanicComboCD:Start(30.2, 1)
+			self:Schedule(30.2, startProshlyapationOfMurchal, self)
+			specWarnShatteredConduit:Show()
+			specWarnShatteredConduit:Play("speedup")
+			timerUnleashedShadowflameCD:Start(6.2, 1) --пока неизвестно
+			timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
 		end
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
