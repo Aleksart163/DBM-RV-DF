@@ -373,3 +373,7 @@ L = DBM:GetModLocalization("DawnoftheInfiniteTrash")
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Рассвет Бесконечности"
 })
+
+L:SetMiscLocalization({
+	ProshlyapMurchalRP1 = "Враги угрожают нам и сверху, и снизу."
+})

@@ -14,6 +14,8 @@ mod:RegisterEvents(
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"UNIT_DIED",
+	"CHAT_MSG_MONSTER_YELL",
+	"CHAT_MSG_MONSTER_SAY",
 	"GOSSIP_SHOW"
 )
 
@@ -114,6 +116,7 @@ local timerVolatileMortarCD					= mod:NewCDNPTimer(19.5, 407205, nil, nil, nil, 
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
 local timerBronzeExhalationCD				= mod:NewCDNPTimer(19.8, 419351, nil, nil, nil, 3)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerRP								= mod:NewRPTimer(10)
 
 local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL")--targets off a player, but everyone needs to dodge the orb
 local yellEnervate							= mod:NewShortYell(415437, nil, nil, nil, "YELL")
@@ -488,5 +491,23 @@ function mod:GOSSIP_SHOW()
 		if self.Options.AutoRift and gossipOptionID == 110513 then
 			self:SelectGossip(gossipOptionID)
 		end
+	end
+end
+
+--[[function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.proshlyapMurchalRP then
+		self:SendSync("RP1")
+	end
+end]]
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if msg == L.ProshlyapMurchalRP1 then
+		self:SendSync("RP1")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "RP1" then
+		timerRP:Start(85.5)
 	end
 end

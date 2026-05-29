@@ -373,3 +373,7 @@ L = DBM:GetModLocalization("DawnoftheInfiniteTrash")
 L:SetGeneralLocalization({
 	name =	"DotI Trash"
 })
+
+L:SetMiscLocalization({
+	ProshlyapMurchalRP1 = "We face enemies above and below."
+})
