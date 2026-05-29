@@ -37,27 +37,28 @@ mod:RegisterEventsInCombat(
  --TODO, attach GUID to timers in a way that's compat with multi target
  --TODO, need much longer logs to fix many of timers again
 --]]
-local warnCorrosion							= mod:NewTargetNoFilterAnnounce(407406, 3)
-local warnCorruptedMind						= mod:NewTargetNoFilterAnnounce(418346, 4)
+local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
+local warnCorrosion							= mod:NewTargetNoFilterAnnounce(407406, 3) --Коррозия
+local warnCorruptedMind						= mod:NewTargetNoFilterAnnounce(418346, 4, nil, nil, 362075) --Зараженный разум (подчинение)
 
-local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, nil, nil, 1, 2)
-local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 1, 2)
-local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 1, 2)
-local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, nil, 2, 2)
-local specWarnNecroticWinds					= mod:NewSpecialWarningDodgeCount(407978, nil, nil, nil, 1, 2)
-local specWarnNecrofrost					= mod:NewSpecialWarningSwitchCount(408029, "Dps", nil, nil, 1, 2)
-local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodgeCount(408141, nil, nil, nil, 1, 2)
-local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
+local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, 407406, nil, 1, 2) --Разъедающее насыщение (Коррозия)
+local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 1, 2) --Коррозия
+local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 1, 2) --Коррозия
+local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, nil, 2, 2) --Возвращение гнили
+local specWarnNecroticWinds					= mod:NewSpecialWarningDodgeCount(407978, nil, nil, nil, 1, 2) --Некротические ветра
+local specWarnNecrofrost					= mod:NewSpecialWarningSwitchCount(408029, "Dps", nil, nil, 1, 2) --Некрохлад
+local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodgeCount(408141, nil, 18357, nil, 1, 2) --Испепеляющее гнилостное дыхание (Дыхание)
+local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8) --Просачивающаяся гниль
 
-local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, nil, nil, nil, 3)
-local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, nil, nil, nil, 2)
-local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, nil, nil, nil, 3)
+local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, 407406, nil, nil, 3) --Разъедающее насыщение (Коррозия)
+local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Возвращение гнили
+local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Некротические ветра (Откидывание)
+local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад
+local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, 18357, nil, nil, 3) --Испепеляющее гнилостное дыхание (Дыхание)
 
-local yellCorrosion							= mod:NewYell(407406, nil, nil, nil, "YELL")
-local yellCorrosionFades					= mod:NewShortFadesYell(407406, nil, nil, nil, "YELL")--WHen countdown shows, it needs to be passed, so it's a share yell not an avoid one, IE red text
-local yellNecrofrost						= mod:NewYell(408029, nil, nil, nil, "YELL")
+local yellCorrosion							= mod:NewYell(407406, nil, nil, nil, "YELL") --Коррозия
+local yellCorrosionFades					= mod:NewShortFadesYell(407406, nil, nil, nil, "YELL") --Коррозия WHen countdown shows, it needs to be passed, so it's a share yell not an avoid one, IE red text
+local yellNecrofrost						= mod:NewYell(408029, nil, nil, nil, "YELL") --Некрохлад
 
 mod.vb.corrosiveCount = 0
 mod.vb.reclaimCount = 0
@@ -98,7 +99,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCorrosiveInfusion:Play("watchstep")
 		local timer
 		if self:GetStage(1) then
-			timer = 17
+			timer = 16.2 --Было 17
 		elseif self:GetStage(2) then
 			timer = 31.5
 		else--Stage 3
@@ -174,7 +175,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 407147 and args:IsPlayer() and self:AntiSpam(3, 2) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 415097 then--Malignant Transferal (stage 2)
+	elseif spellId == 415097 then --Тлетворное перенаправление (Фаза 2)
 		self:SetStage(2)
 		self.vb.corrosiveCount = 0
 		self.vb.reclaimCount = 0
@@ -197,7 +198,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Unschedule(checkDebuffPass)
 			self:Schedule(7, checkDebuffPass, self)--Check pass conditions 5 seconds til expire
 		else
-			warnCorrosion:Show(args.destName)
+			warnCorrosion:CombinedShow(0.5, args.destName)
 		end
 	elseif spellId == 418346 then
 		warnCorruptedMind:Show(args.destName)
@@ -211,17 +212,21 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellCorrosionFades:Cancel()
 			self:Unschedule(checkDebuffPass)
 		end
-	elseif spellId == 415097 then--Malignant Transferal (stage 2)
+	elseif spellId == 415097 then --Тлетворное перенаправление (начало Фазы 2)
 		--Starting timers here better
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 		timerCorrosiveInfusionCD:Start(6.1, 1)
 		timerNecroticWindsCD:Start(16, 1)
 		timerBlightReclamationCD:Start(30.1, 1)
-	elseif spellId == 415114 then--Malignant Transferal (stage 3)
+	elseif spellId == 415114 then --Тлетворное перенаправление (начало Фазы 3)
 		--Starting timers here better
-		timerCorrosiveInfusionCD:Start(14.5, 1)
-		timerIncineratingBlightbreathCD:Start(22.8, 1)
-		timerNecrofrostCD:Start(31.4, 1)
-		timerBlightReclamationCD:Start(64, 1)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Play("pthree")
+		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
+		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
+		timerNecrofrostCD:Start(30, 1) --было 31.4 
+		timerBlightReclamationCD:Start(64, 1) --Пока неизвестно
 	end
 end
 
