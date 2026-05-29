@@ -492,7 +492,7 @@ dummybarcolor8:ApplyStyle()
 local bar7OptionsText = ImpBarColors:CreateText(L.Bar7Header, 405)
 bar7OptionsText:SetPoint("TOPLEFT", color1Type7reset, "TOPLEFT", 0, -30)
 
-local forceLarge = ImpBarColors:CreateCheckButton(L.Bar7ForceLarge, false, nil, nil, "Bar7ForceLarge")
+local forceLarge = ImpBarColors:CreateCheckButton(L.Bar7ForceLarge, true, nil, nil, "Bar7ForceLarge")
 forceLarge:SetPoint("TOPLEFT", bar7OptionsText, "BOTTOMLEFT")
 forceLarge:SetScript("OnClick", function()
 	DBT:SetOption("Bar7ForceLarge", not DBT.Options.Bar7ForceLarge)
