@@ -35,7 +35,7 @@ local warnRendingCleave						= mod:NewCastAnnounce(412505, 3, nil, nil, "Tank")-
 local warnTitanicBulwark					= mod:NewCastAnnounce(413024, 3, nil, nil, "Tank")
 local warnStatickyPunch						= mod:NewCastAnnounce(412262, 3, nil, nil, "Tank")
 local warnBloom								= mod:NewCastAnnounce(413544, 3)
-local warnCorrodingVolley					= mod:NewCastAnnounce(413607, 4)--High Prio Off Interrupt
+local warnCorrodingVolley					= mod:NewCastAnnounce(413607, 4)--Разъедающий залп High Prio Off Interrupt
 local warnEnervateKick						= mod:NewCastAnnounce(415437, 4)--High Prio Off Interrupt
 local warnInfiniteBoltVolley				= mod:NewCastAnnounce(415770, 4)--High Prio Off Interrupt
 local warnDisplacedChronosequence			= mod:NewCastAnnounce(417481, 4)--High Prio Off Interrupt
@@ -69,7 +69,7 @@ local specWarnChronomelt					= mod:NewSpecialWarningInterrupt(411994, "HasInterr
 local specWarnInfiniteBolt					= mod:NewSpecialWarningInterrupt(415435, "HasInterrupt", nil, nil, 1, 2)
 local specWarnEnervate						= mod:NewSpecialWarningInterrupt(415437, "HasInterrupt", nil, nil, 1, 2)--High Prio
 local specWarnStonebolt						= mod:NewSpecialWarningInterrupt(411958, "HasInterrupt", nil, nil, 1, 2)
-local specWarnCorrodingVolley				= mod:NewSpecialWarningInterrupt(413607, "HasInterrupt", nil, nil, 1, 2)
+local specWarnCorrodingVolley				= mod:NewSpecialWarningInterrupt(413607, "HasInterrupt", nil, nil, 1, 2) --Разъедающий залп
 local specWarnEpochBolt						= mod:NewSpecialWarningInterrupt(400165, false, nil, 2, 1, 2)--Lower prio over Corroding Volley
 local specWarnBindingGrasp					= mod:NewSpecialWarningInterrupt(412922, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisplacedChronosequence		= mod:NewSpecialWarningInterrupt(417481, "HasInterrupt", nil, nil, 1, 2)--High Prio
@@ -96,7 +96,7 @@ local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
 local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 --Second half
 local timerRendingCleaveCD					= mod:NewCDNPTimer(8.4, 412505, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--10.5-13.3
-local timerCorrodingVolleyCD				= mod:NewCDNPTimer(18.2, 413607, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerCorrodingVolleyCD				= mod:NewCDNPTimer(15, 413607, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Разъедающий залп (18.2 с офы)
 local timerTemporalStrikeCD					= mod:NewCDNPTimer(11.2, 412136, nil, nil, nil, 2)--11.2-18
 local timerTitanticBulwarkCD				= mod:NewCDNPTimer(25.4, 413024, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerAncientRadianceCD				= mod:NewCDNPTimer(9.7, 413023, nil, nil, nil, 2)--9.7-15
@@ -445,7 +445,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 201222 then--Valow, Timesworn Keeper
 		timerTemporalStrikeCD:Stop(args.destGUID)
 		timerTitanticBulwarkCD:Stop(args.destGUID)
-	elseif cid == 413023 then--Lerai, Timesworn Maiden
+	elseif cid == 205152 then--Lerai, Timesworn Maiden (413023)
 		timerAncientRadianceCD:Stop(args.destGUID)
 		timerOrbofContemplationCD:Stop(args.destGUID)
 	elseif cid == 412922 then--Binding Grasp
@@ -494,11 +494,11 @@ function mod:GOSSIP_SHOW()
 	end
 end
 
---[[function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.proshlyapMurchalRP then
-		self:SendSync("RP1")
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.ProshlyapMurchalRP2 then
+		self:SendSync("RP2")
 	end
-end]]
+end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if msg == L.ProshlyapMurchalRP1 then
@@ -509,5 +509,7 @@ end
 function mod:OnSync(msg)
 	if msg == "RP1" then
 		timerRP:Start(85.5)
+	else if msg == "RP2" then
+		timerRP:Start(32.6)
 	end
 end

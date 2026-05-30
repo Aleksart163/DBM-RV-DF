@@ -22,10 +22,6 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_MISSED",
 )
 
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
-)
-
 --[[
 (ability.id = 409261 or ability.id = 414535 or ability.id = 409456 or ability.id = 409635 or ability.id = 414184 or ability.id = 414652) and type = "begincast"
  or (ability.id = 409456 or ability.id = 414177) and type = "removebuff"
@@ -43,16 +39,17 @@ local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, ni
 local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2) --Дробящий выдох
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
-local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребляющий взрыв
+local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Истребляющий взрыв
 local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
 local timerCataclysmicObliterationCD			= mod:NewCDTimer(120, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
-local timerRP									= mod:NewRPTimer(19.8)
 
 local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
+local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
 
+mod:AddInfoFrameOption(409456, true)
 mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв
 
 mod.vb.surgeCount = 0
@@ -61,8 +58,8 @@ function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.surgeCount = 0
 	timerExtinctionBlastCD:Start(8.5, 1)
-	timerStonecrackerBarrageCD:Start(16.3, 1)
-	timerEarthSurgeCD:Start(35.2, 1)
+	timerStonecrackerBarrageCD:Start(14, 1) --а было 16.3
+	timerEarthSurgeCD:Start(35, 1) --а было 35.2
 end
 
 function mod:SPELL_CAST_START(args)
@@ -97,6 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnExtinctionBlast:Show(DBM_COMMON_L.SHIELD)
 			specWarnExtinctionBlast:Play("findshelter")
 			yellExtinctionBlast:Yell()
+			yellExtinctionBlastFades:Countdown(6)
 		else
 			warnExtinctionBlast:Show(args.destName)
 		end
@@ -106,17 +104,25 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 414376 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
+	elseif spellId == 409456 then
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(366548))
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
+		end
 	end
 end
-
+	
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 409456 then --Земляной импульс
 		warnEarthsurgeOver:Show()
 		timerPulverizingExhalationCD:Start(9, self.vb.surgeCount)
-		timerExtinctionBlastCD:Start(41.8, self.vb.surgeCount+1)
-		timerStonecrackerBarrageCD:Start(49.4, self.vb.surgeCount+1)
-		timerEarthSurgeCD:Start(68.5, self.vb.surgeCount+1)
+		timerExtinctionBlastCD:Start(41, self.vb.surgeCount+1) --41.8
+		timerStonecrackerBarrageCD:Start(46.5, self.vb.surgeCount+1) --49.4
+		timerEarthSurgeCD:Start(67, self.vb.surgeCount+1)
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
+		end
 	elseif spellId == 414177 then
 		timerCataclysmicObliteration:Stop()
 	end
@@ -137,15 +143,3 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --"<416.01 22:15:59> [CHAT_MSG_MONSTER_SAY] It looks kind of like the Dragon Soul, but even more ancient.#Chromie###Alphal##0#0##0#14600#nil#0#false#false#false#false", -- [2645]
 --"<423.68 22:16:07> [CHAT_MSG_MONSTER_YELL] A hunger lost to the ages. One which I shall reclaim!#Iridikron###Alphal##0#0##0#14601#nil#0#false#false#false#false", -- [2646]
 --"<437.69 22:16:21> [DBM_Debug] ENCOUNTER_START event fired: 2669 Iridikron 8 5#nil", -- [2655]
-
---[[function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.PrePullRP or msg:find(L.PrePullRP)) then
-		self:SendSync("IridikronRP")--Syncing to help unlocalized clients
-	end
-end]]
-
-function mod:OnSync(msg)
-	if msg == "IridikronRP" and self:AntiSpam(10, 2) then
-		timerRP:Start(34.6)
-	end
-end

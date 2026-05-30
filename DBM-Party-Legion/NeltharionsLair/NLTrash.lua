@@ -81,7 +81,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 183088 then
 		timerAvalancheCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 2) then
+		if self:AntiSpam(2, 2) then
 			specWarnAvalanche:Show()
 			specWarnAvalanche:Play("watchstep")
 		end

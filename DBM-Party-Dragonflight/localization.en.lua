@@ -375,5 +375,6 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
-	ProshlyapMurchalRP1 = "We face enemies above and below."
+	ProshlyapMurchalRP1 = "We face enemies above and below.",
+	ProshlyapMurchalRP2 = "So the titans' puppets have come to face me."
 })

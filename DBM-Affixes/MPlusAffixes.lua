@@ -222,7 +222,7 @@ function mod:SPELL_CAST_START(args)
 		self:Unschedule(checkAfflicted)
 		checkForCombat(self)
 		self:Schedule(40, checkAfflicted, self)
-	elseif spellId == 408805 and self:AntiSpam(3, "aff3") then --Дестабилизация (Ослабление)
+	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
 		if unitId and UnitIsEnemy("player", unitId) then
 			warnDestabalize:Show()
