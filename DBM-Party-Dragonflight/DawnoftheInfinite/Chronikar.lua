@@ -27,21 +27,23 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 413142 and type = "applydebuff"
 --]]
-local warnEonShatter						= mod:NewCountAnnounce(413142, 3, nil, nil, 47482)--Second and Third Jump
-local warnChronoShear						= mod:NewFadesAnnounce(413013, 1, nil, "Healer|Tank")
+local warnEonShatter						= mod:NewCountAnnounce(413142, 3, nil, nil, 47482) --Раскол эонов (Прыжок) Второй и третий прыжок
+local warnChronoShear						= mod:NewFadesAnnounce(413013, 1, nil, "Healer|Tank") --Темпоральное иссечение
 
-local specWarnEonShatter					= mod:NewSpecialWarningDodgeCount(413142, nil, 47482, nil, 2, 2)--Warn on initial casts
-local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil, nil, 1, 2)
-local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, nil, 2, 2)
+
+local specWarnShearedLifespan				= mod:NewSpecialWarningDispel(413041, nil, nil, nil, 4, 4) --Иссеченная жизнь
+local specWarnEonShatter					= mod:NewSpecialWarningDodgeCount(413142, nil, 47482, nil, 2, 2) --Раскол эонов (Прыжок) Warn on initial casts
+local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil, nil, 3, 2) --Темпоральное иссечение
+local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, nil, 2, 2) --Песчаный топот
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
 
-local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Leap" shorttext
-local timerEonResidue						= mod:NewCastCountTimer("d7.5", 403486, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerSandStompCD						= mod:NewCDCountTimer(19.4, 401421, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3)
+local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок) "Leap" shorttext
+local timerEonResidue						= mod:NewCastCountTimer("d7.5", 403486, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Осадок эонов (Поглощение)
+local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Темпоральное иссечение
+local timerSandStompCD						= mod:NewCDCountTimer(19.4, 401421, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Песчаный топот (Лужи)
 
-local yellEonShatter						= mod:NewYell(413142, 47482, nil, nil, "YELL")
-local yellEonShatterFades					= mod:NewShortFadesYell(413142, nil, nil, nil, "YELL")
+local yellEonShatter						= mod:NewYell(413142, 47482, nil, nil, "YELL") --Раскол эонов (Прыжок)
+local yellEonShatterFades					= mod:NewShortFadesYell(413142, nil, nil, nil, "YELL") --Раскол эонов (Прыжок)
 
 mod.vb.shatterCount = 0
 mod.vb.shatterSet = 0
@@ -53,18 +55,22 @@ function mod:OnCombatStart(delay)
 	self.vb.shatterSet = 0
 	self.vb.shearCount = 0
 	self.vb.stompCount = 0
-	timerSandStompCD:Start(7.4-delay, 1)
-	timerEonShatterCD:Start(19.5-delay)
+	timerSandStompCD:Start(7.2-delay, 1) --7.2
+	timerEonShatterCD:Start(18-delay) --19.5
 	timerChronoShearCD:Start(43.4, 1)
+	--15 49 10 038 пулл босса
+	--15 49 28 038 прыжок 1
+	--15 50 21 542 прыжок 2
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 413105 then
+		--18, 53.5
 		if self:AntiSpam(15, 1) then
 			self.vb.shatterSet = self.vb.shatterSet + 1
 			self.vb.shatterCount = 0
-			timerEonShatterCD:Start(47, self.vb.shatterSet+1)
+			timerEonShatterCD:Start(53.5, self.vb.shatterSet+1) --47
 		end
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		if self:IsMythic() then
@@ -87,13 +93,14 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerChronoShearCD:Start(47, self.vb.shearCount+1)
 	elseif spellId == 401421 then
+		--7.2, 37.5, 17
 		self.vb.stompCount = self.vb.stompCount + 1
 		specWarnSandStomp:Show(self.vb.stompCount)
 		specWarnSandStomp:Play("scatter")
 		if self.vb.stompCount % 2 == 0 then
-			timerSandStompCD:Start(17, self.vb.stompCount+1)--17-18.6
+			timerSandStompCD:Start(17, self.vb.stompCount+1) --(3,5,7)
 		else--Eon Shatter causes delay
-			timerSandStompCD:Start(29, self.vb.stompCount+1)--29-31.1
+			timerSandStompCD:Start(37.5, self.vb.stompCount+1) --(2,4,6)
 		end
 	end
 end
@@ -111,8 +118,10 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 413013 then
+	if spellId == 413013 then --Темпоральное иссечение (танковский дебаф, нельзя диспелить)
 		warnChronoShear:Show()
+		specWarnShearedLifespan:Show(args.destName)
+		specWarnShearedLifespan:Play("helpdispel")
 	elseif spellId == 413142 then
 		if args:IsPlayer() then
 			yellEonShatterFades:Cancel()

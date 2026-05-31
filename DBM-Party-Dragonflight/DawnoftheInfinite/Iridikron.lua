@@ -16,8 +16,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 414535 409456 409635 414184 414652",
-	"SPELL_AURA_APPLIED 409266 414376",
-	"SPELL_AURA_REMOVED 409456 414177"
+	"SPELL_AURA_APPLIED 409266 414376 410719",
+	"SPELL_AURA_REMOVED 409456 414177 410719"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 )
@@ -49,7 +49,7 @@ local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, n
 local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
 local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
 
-mod:AddInfoFrameOption(409456, true)
+mod:AddInfoFrameOption(410719, true)
 mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв
 
 mod.vb.surgeCount = 0
@@ -104,10 +104,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 414376 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 409456 then
+	elseif spellId == 410719 then
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM:GetSpellName(366548))
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
 		end
 	end
 end
@@ -125,6 +125,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 414177 then
 		timerCataclysmicObliteration:Stop()
+	elseif spellId == 410719 then
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
+		end
 	end
 end
 
