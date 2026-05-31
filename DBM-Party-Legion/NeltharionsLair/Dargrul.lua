@@ -27,8 +27,8 @@ local specWarnCrystalSpikes			= mod:NewSpecialWarningDodge(200551, "-Tank", nil,
 local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 4) --Магматический удар
 local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil, 1, 2) --Оползень
 local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitchCount(200637, "Dps", nil, nil, 1, 2) --Ваятель магмы
-local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, nil, 2, 2) --Магматическая волна
-local specWarnMagmaWave2			= mod:NewSpecialWarningSpell(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
+local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, nil, 4, 4) --Магматическая волна
+local specWarnMagmaWave2			= mod:NewSpecialWarningDefensive(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
 local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 96306, nil, 4, 2) --Пламенная ненависть (Преследование)
 
 local timerMoltenCrashCD			= mod:NewCDTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23

@@ -39,7 +39,7 @@ local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, 
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
 
-local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6) --Очищающее пламя Maybe swap for activate keepers instead
+local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
 local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающий хлопок
 
@@ -107,7 +107,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--These also now replace pull timers since no point in not combining code together
 	--	timerSearingClapCD:Start(4.4, self.vb.tankCount+1)--Non resetting, for healer/tank CDs
 		timerUnstableEmbersCD:Start(11.9, 1)
-		timerPurgingFlamesCD:Start(39.7, self.vb.purgingCount+1)--40-42, due to travel time back to center of room
+		timerPurgingFlamesCD:Start(39, self.vb.purgingCount+1)--40-42, due to travel time back to center of room
 	end
 end
 

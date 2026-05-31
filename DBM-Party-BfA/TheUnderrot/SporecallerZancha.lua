@@ -32,9 +32,9 @@ local specWarnFesteringHarvest		= mod:NewSpecialWarningCount(259732, nil, nil, n
 local specWarnShockwave				= mod:NewSpecialWarningDefensive(272457, "Tank", nil, nil, 3, 4) --Ударная волна
 local specWarnUpheaval				= mod:NewSpecialWarningMoveTo(259718, nil, nil, nil, 4, 2) --Дрожь земли
 
-local timerFesteringHarvestCD		= mod:NewCDCountTimer(55.5, 259732, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Гниющий урожай
+local timerFesteringHarvestCD		= mod:NewCDCountTimer(55.5, 259732, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Гниющий урожай
 local timerFungistormCD				= mod:NewCDTimer(21.5, 330422, nil, nil, nil, 7, nil, nil, nil, 2, 3) --Грибошторм
-local timerShockwaveCD				= mod:NewCDTimer(60, 272457, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна
+local timerShockwaveCD				= mod:NewCDTimer(60, 272457, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна
 local timerUpheavalCD				= mod:NewCDTimer(60, 259718, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дрожь земли
 
 local yellUpheaval					= mod:NewShortYell(259718, nil, nil, nil, "YELL") --Дрожь земли
@@ -80,7 +80,7 @@ function mod:OnCombatStart(delay)
 		timerFungistormCD:Start(21.5-delay, 1)
 		self:Schedule(21.5, startProshlyapationOfMurchal, self)
 	end
-	timerFesteringHarvestCD:Start(51.7-delay, 1)
+	timerFesteringHarvestCD:Start(51.5-delay, 1)
 end
 
 function mod:SPELL_CAST_START(args)

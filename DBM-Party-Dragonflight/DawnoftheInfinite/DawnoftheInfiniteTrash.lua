@@ -495,21 +495,25 @@ function mod:GOSSIP_SHOW()
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.ProshlyapMurchalRP2 then
+	if (msg == L.MurchalProshlyapRP2 or msg:find(L.MurchalProshlyapRP2)) then
 		self:SendSync("RP2")
+	elseif (msg == L.MurchalProshlyapRP3 or msg:find(L.MurchalProshlyapRP3)) then
+		self:SendSync("RP3")
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
-	if msg == L.ProshlyapMurchalRP1 then
+	if (msg == L.MurchalProshlyapRP1 or msg:find(L.MurchalProshlyapRP1)) then
 		self:SendSync("RP1")
 	end
 end
 
 function mod:OnSync(msg)
-	if msg == "RP1" then
+	if msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
 		timerRP:Start(85.5)
-	else if msg == "RP2" then
-		timerRP:Start(32.6)
+	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
+		timerRP:Start(29)
+	elseif msg == "RP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
+		timerRP:Start(88)
 	end
 end

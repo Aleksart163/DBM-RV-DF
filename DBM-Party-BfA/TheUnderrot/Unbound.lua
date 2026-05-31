@@ -1,16 +1,18 @@
 local mod	= DBM:NewMod(2158, "DBM-Party-BfA", 8, 1022)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260531000000")
 mod:SetCreatureID(133007)
 mod:SetEncounterID(2123)
 mod.sendMainBossGUID = true
-mod:SetHotfixNoticeRev(20230528000000)
+mod:SetHotfixNoticeRev(20260530000000)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 269843 269310",
+	"SPELL_AURA_APPLIED 269301",
+	"SPELL_AURA_APPLIED_DOSE 269301",
 	"SPELL_PERIODIC_DAMAGE 269838",
 	"SPELL_PERIODIC_MISSED 269838",
 	"UNIT_DIED",
@@ -25,24 +27,32 @@ mod:RegisterEventsInCombat(
 --]]
 local warnVisage					= mod:NewAddsLeftAnnounce(-18312, 1, 269692)
 
+local specWarnPutridBlood			= mod:NewSpecialWarningStack(269301, nil, 4, nil, nil, 3, 4) --Порченая кровь
 local specWarnBloodVisage			= mod:NewSpecialWarningSwitch(-18312, "-Healer", nil, nil, 1, 2)
 local specWarnVileExpulsion			= mod:NewSpecialWarningDodge(269843, nil, nil, nil, 2, 2) --Гнусный выброс
 local specWarnCleansingLight		= mod:NewSpecialWarningSpell(269310, nil, nil, nil, 1, 2) --Очищающий свет
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(269838, nil, nil, nil, 1, 8) --Гнусный выброс
 
-local timerBloodVisageCD			= mod:NewCDTimer(15.7, -18312, nil, nil, nil, 1, 269692)
-local timerVileExpulsionCD			= mod:NewNextTimer(15.7, 269843, nil, nil, nil, 3) --Гнусный выброс
-local timerCleansingLightCD			= mod:NewCDTimer(15.7, 269310, nil, nil, nil, 5) --Очищающий свет 21.8-37 pre 10.1, 15.7-18 now
+local timerBloodVisageCD			= mod:NewCDTimer(15.7, -18312, nil, nil, nil, 1, 269692) --Кровавый образ
+local timerVileExpulsionCD			= mod:NewNextTimer(15.7, 269843, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Гнусный выброс
+local timerCleansingLightCD			= mod:NewCDCountTimer(15.7, 269310, nil, nil, nil, 7) --Очищающий свет 21.8-37 pre 10.1, 15.7-18 now
 
 mod:AddInfoFrameOption(269301, "Healer")
 
 mod.vb.remainingAdds = 6
+mod.vb.lightCount = 0
+
+local allProshlyapationsOfMurchal = {
+	--Очищающий свет
+	[269310] = {18, 26, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
+}
 
 function mod:OnCombatStart(delay)
+	self.vb.lightCount = 0
 	self.vb.remainingAdds = 6
 	timerVileExpulsionCD:Start(8.2-delay)
-	timerCleansingLightCD:Start(18.2-delay)
-	timerBloodVisageCD:Start(22.3-delay)
+	timerCleansingLightCD:Start(18-delay, 1)
+--	timerBloodVisageCD:Start(22.3-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(269301))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 269301, 1)
@@ -61,12 +71,30 @@ function mod:SPELL_CAST_START(args)
 		specWarnVileExpulsion:Show()
 		specWarnVileExpulsion:Play("watchwave")
 		timerVileExpulsionCD:Start()
-	elseif spellId == 269310 then
+	elseif spellId == 269310 then --Очищающий свет
+		self.vb.lightCount = self.vb.lightCount + 1
 		specWarnCleansingLight:Show()
 		specWarnCleansingLight:Play("gathershare")
-		timerCleansingLightCD:Start()
+		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.lightCount+1)
+		if timer then
+			timerCleansingLightCD:Start(timer, self.vb.lightCount+1)
+		end
 	end
 end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 269301 then --Порченая кровь
+		local amount = args.amount or 1
+		if args:IsPlayer() then
+			if amount >= 4 then
+				specWarnPutridBlood:Show(amount)
+				specWarnPutridBlood:Play("stackhigh")
+			end
+		end
+	end
+end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 269838 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then

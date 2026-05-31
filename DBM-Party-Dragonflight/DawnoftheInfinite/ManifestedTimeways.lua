@@ -15,7 +15,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 405696 405431",--414303
+	"SPELL_CAST_START 405696 405431 414303",--414303
 	"SPELL_AURA_APPLIED 404141",
 	"SPELL_AURA_REMOVED 404141"
 --	"SPELL_PERIODIC_DAMAGE",
@@ -33,18 +33,22 @@ mod:RegisterEvents(
 --TODO, more data, but I need to figure out what causes the fluke non 30.3 timers (one higher by 7 seconds, and one lower by 7 seconds)
 --TODO, Add RP timer, still missing for this boss
 --NOTE: 10.2 seems to have utterly deleted "Unwind" from encounter. For now its commented but kept in case this is an error or still around but not noted
-local warnChronoFaded								= mod:NewTargetCountAnnounce(405696, 3)
+local warnChronoFaded								= mod:NewTargetNoFilterAnnounce(405696, 3) --Временное затухание
+local warnUnwind									= mod:NewCountAnnounce(414303, 2) --Обращение вспять
 
-local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2)
-local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2)
+local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, nil, 2, 2) --Обращение вспять
+local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2) --Временное затухание
+local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2) --Фрагменты времени
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
-local timerRP										= mod:NewRPTimer(13.3)
-local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 3)
+local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Временное затухание
+local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Фрагменты времени
+local timerUnwindCD									= mod:NewCDTimer(20, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil) --Обращение вспять
+local timerRP										= mod:NewRPTimer(23)
 
-local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL")
-local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL")
+local yellUnwind									= mod:NewShortYell(414303, nil, nil, nil, "YELL") --Обращение вспять
+local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL") --Временное затухание
+local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL") --Временное затухание
 
 mod:AddSetIconOption("SetIconOnChronoFaded", 405696, true, 0, {1, 2})
 
@@ -52,13 +56,13 @@ local fastTime = DBM:GetSpellName(403912)
 mod.vb.DebuffIcon = 1
 mod.vb.fadedCount = 0
 mod.vb.fragmentsCount = 0
---mod.vb.unwindCount = 0
+mod.vb.unwindCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.fadedCount = 0
 	self.vb.fragmentsCount = 0
---	self.vb.unwindCount = 0
---	timerUnwindCD:Start(5.9-delay, 1)
+	self.vb.unwindCount = 0
+	timerUnwindCD:Start(6-delay, 1)
 	timerFragmentsofTimeCD:Start(15.6-delay, 1)
 	timerChronofadedCD:Start(30.2-delay, 1)
 end
@@ -74,13 +78,15 @@ function mod:SPELL_CAST_START(args)
 		specWarnFragmentsofTime:Show(self.vb.fragmentsCount)
 		specWarnFragmentsofTime:Play("watchorb")
 		timerFragmentsofTimeCD:Start(nil, self.vb.fragmentsCount+1)
---	elseif spellId == 414303 then
---		self.vb.unwindCount = self.vb.unwindCount + 1
---		if self:IsTanking("player", "boss1", nil, true) then
---			specWarnUnwind:Show()
---			specWarnUnwind:Play("defensive")
---		end
---		timerUnwindCD:Start(nil, self.vb.unwindCount+1)
+	elseif spellId == 414303 then
+		self.vb.unwindCount = self.vb.unwindCount + 1
+		warnUnwind:Show(self.vb.unwindCount)
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnUnwind:Show()
+			specWarnUnwind:Play("defensive")
+			yellUnwind:Yell()
+		end
+--		timerUnwindCD:Start()
 	end
 end
 
@@ -97,7 +103,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellChronofaded:Yell(icon, icon)
 			yellChronofadedFades:Countdown(spellId, nil, icon)
 		end
-		warnChronoFaded:CombinedShow(0.5, self.vb.fadedCount, args.destName)
+		warnChronoFaded:CombinedShow(0.3, args.destName)
 		self.vb.DebuffIcon = self.vb.DebuffIcon + 1
 	end
 end
