@@ -107,7 +107,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 410719 then
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM:GetSpellName(366548))
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
 		end
 	end
 end
