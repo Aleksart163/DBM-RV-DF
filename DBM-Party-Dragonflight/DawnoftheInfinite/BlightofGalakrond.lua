@@ -91,6 +91,12 @@ local function checkDebuffPass(self)
 	end
 end
 
+local function checkProshlyapMurchal(self)
+	timerCorrosiveInfusionCD:Start(6.1, 1)
+	timerNecroticWindsCD:Start(16, 1)
+	timerBlightReclamationCD:Start(30.1, 1)
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 406886 then
@@ -175,17 +181,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 407147 and args:IsPlayer() and self:AntiSpam(3, 2) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 415097 then --Тлетворное перенаправление (Фаза 2)
+	elseif spellId == 415097 then --Тлетворное перенаправление (На Гнили, до появления 1-го дракона)
 		self:SetStage(2)
 		self.vb.corrosiveCount = 0
 		self.vb.reclaimCount = 0
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 		timerCorrosiveInfusionCD:Stop()
 		timerBlightReclamationCD:Stop()
-	elseif spellId == 415114 then--Malignant Transferal (stage 2)
+		self:Schedule(2, checkProshlyapMurchal, self)
+	elseif spellId == 415114 then --Тлетворное перенаправление (На Гнили, до появления 2ых драконов)
 		self:SetStage(3)
 		self.vb.corrosiveCount = 0
 		self.vb.reclaimCount = 0
 		self.vb.windsCount = 0
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Play("pthree")
 		timerCorrosiveInfusionCD:Stop()
 		timerBlightReclamationCD:Stop()
 		timerNecroticWindsCD:Stop()
@@ -214,15 +225,15 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 415097 then --Тлетворное перенаправление (начало Фазы 2)
 		--Starting timers here better
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
-		warnPhase:Play("ptwo")
-		timerCorrosiveInfusionCD:Start(6.1, 1)
-		timerNecroticWindsCD:Start(16, 1)
-		timerBlightReclamationCD:Start(30.1, 1)
+		--Включить, если заработает
+		DBM:Debug("Murchal proshlyap (Таймеры заработали, необходимо поправить)", 2)
+	--	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+	--	warnPhase:Play("ptwo")
+	--	timerCorrosiveInfusionCD:Start(6.1, 1)
+	--	timerNecroticWindsCD:Start(16, 1)
+	--	timerBlightReclamationCD:Start(30.1, 1)
 	elseif spellId == 415114 then --Тлетворное перенаправление (начало Фазы 3)
 		--Starting timers here better
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
-		warnPhase:Play("pthree")
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
 		timerNecrofrostCD:Start(30, 1) --было 31.4 

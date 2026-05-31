@@ -34,19 +34,18 @@ mod:RegisterEvents(
 --TODO, Add RP timer, still missing for this boss
 --NOTE: 10.2 seems to have utterly deleted "Unwind" from encounter. For now its commented but kept in case this is an error or still around but not noted
 local warnChronoFaded								= mod:NewTargetNoFilterAnnounce(405696, 3) --Временное затухание
-local warnUnwind									= mod:NewCountAnnounce(414303, 2) --Обращение вспять
 
-local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, nil, 2, 2) --Обращение вспять
+local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, nil, 2, 2) --Обращение вспять (Фронталка)
 local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2) --Временное затухание
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2) --Фрагменты времени
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
 local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Временное затухание
 local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Фрагменты времени
-local timerUnwindCD									= mod:NewCDTimer(20, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil) --Обращение вспять
-local timerRP										= mod:NewRPTimer(23)
+local timerUnwindCD									= mod:NewCDTimer(30, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil) --Обращение вспять (Фронталка)
+local timerRP										= mod:NewRPTimer(22)
 
-local yellUnwind									= mod:NewShortYell(414303, nil, nil, nil, "YELL") --Обращение вспять
+local yellUnwind									= mod:NewShortYell(414303, nil, nil, nil, "YELL") --Обращение вспять (Фронталка)
 local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL") --Временное затухание
 local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL") --Временное затухание
 
@@ -62,7 +61,7 @@ function mod:OnCombatStart(delay)
 	self.vb.fadedCount = 0
 	self.vb.fragmentsCount = 0
 	self.vb.unwindCount = 0
-	timerUnwindCD:Start(6-delay, 1)
+	timerUnwindCD:Start(5.5-delay, 1)
 	timerFragmentsofTimeCD:Start(15.6-delay, 1)
 	timerChronofadedCD:Start(30.2-delay, 1)
 end
@@ -80,13 +79,12 @@ function mod:SPELL_CAST_START(args)
 		timerFragmentsofTimeCD:Start(nil, self.vb.fragmentsCount+1)
 	elseif spellId == 414303 then
 		self.vb.unwindCount = self.vb.unwindCount + 1
-		warnUnwind:Show(self.vb.unwindCount)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnUnwind:Show()
 			specWarnUnwind:Play("defensive")
 			yellUnwind:Yell()
 		end
---		timerUnwindCD:Start()
+		timerUnwindCD:Start()
 	end
 end
 

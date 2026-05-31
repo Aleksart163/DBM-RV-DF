@@ -375,7 +375,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalProshlyapRP1 = "Враги угрожают нам и сверху, и снизу.",
+	MurchalProshlyapRP1 = "Драконы Бесконечности здесь, их надо остановить. Поверьте мне!",
 	MurchalProshlyapRP2 = "Слуги титанов пришли сразиться со мной.",
 	MurchalProshlyapRP3 = "Пошли! Аспекты впереди. Ну, то есть... прото-аспекты."
 })

@@ -30,8 +30,7 @@ mod:RegisterEventsInCombat(
 local warnEonShatter						= mod:NewCountAnnounce(413142, 3, nil, nil, 47482) --Раскол эонов (Прыжок) Второй и третий прыжок
 local warnChronoShear						= mod:NewFadesAnnounce(413013, 1, nil, "Healer|Tank") --Темпоральное иссечение
 
-
-local specWarnShearedLifespan				= mod:NewSpecialWarningDispel(413041, nil, nil, nil, 4, 4) --Иссеченная жизнь
+local specWarnShearedLifespan				= mod:NewSpecialWarningDispel(413041, "Healer", nil, nil, 3, 4) --Иссеченная жизнь
 local specWarnEonShatter					= mod:NewSpecialWarningDodgeCount(413142, nil, 47482, nil, 2, 2) --Раскол эонов (Прыжок) Warn on initial casts
 local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil, nil, 3, 2) --Темпоральное иссечение
 local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, nil, 2, 2) --Песчаный топот
@@ -58,19 +57,16 @@ function mod:OnCombatStart(delay)
 	timerSandStompCD:Start(7.2-delay, 1) --7.2
 	timerEonShatterCD:Start(18-delay) --19.5
 	timerChronoShearCD:Start(43.4, 1)
-	--15 49 10 038 пулл босса
-	--15 49 28 038 прыжок 1
-	--15 50 21 542 прыжок 2
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 413105 then
-		--18, 53.5
+		--18, 53.5, 51.5
 		if self:AntiSpam(15, 1) then
 			self.vb.shatterSet = self.vb.shatterSet + 1
 			self.vb.shatterCount = 0
-			timerEonShatterCD:Start(53.5, self.vb.shatterSet+1) --47
+			timerEonShatterCD:Start(51.5, self.vb.shatterSet+1)
 		end
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		if self:IsMythic() then
@@ -92,6 +88,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnChronoShear:Play("defensive")
 		end
 		timerChronoShearCD:Start(47, self.vb.shearCount+1)
+		DBM:Debug("Murchal proshlyap (каст танковского удара)", 2)
 	elseif spellId == 401421 then
 		--7.2, 37.5, 17
 		self.vb.stompCount = self.vb.stompCount + 1
@@ -100,7 +97,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.stompCount % 2 == 0 then
 			timerSandStompCD:Start(17, self.vb.stompCount+1) --(3,5,7)
 		else--Eon Shatter causes delay
-			timerSandStompCD:Start(37.5, self.vb.stompCount+1) --(2,4,6)
+			timerSandStompCD:Start(36.5, self.vb.stompCount+1) --(2,4,6)
 		end
 	end
 end

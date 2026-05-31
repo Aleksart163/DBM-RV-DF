@@ -514,6 +514,6 @@ function mod:OnSync(msg)
 	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
 		timerRP:Start(29)
 	elseif msg == "RP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
-		timerRP:Start(88)
+		timerRP:Start(81)
 	end
 end
