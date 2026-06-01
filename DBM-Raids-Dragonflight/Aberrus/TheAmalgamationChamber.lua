@@ -40,32 +40,32 @@ mod:AddBoolOption("AdvancedBossFiltering", true, "misc")--May be default to off 
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26336))
 local warnCorruptingShadow						= mod:NewCountAnnounce(401809, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401809))
 local warnCorruptingShadowFades					= mod:NewFadesAnnounce(401809, 1)
-local warnUmbralDetonation						= mod:NewTargetCountAnnounce(405036, 3, nil, nil, 167180, nil, nil, nil, true)
+local warnUmbralDetonation						= mod:NewTargetCountAnnounce(405036, 3, nil, nil, 167180, nil, nil, nil, true) --Теневая детонация (Бомбы)
 
 local specWarnCoalescingVoid					= mod:NewSpecialWarningCount(403459, nil, nil, nil, 2, 2)--Possibly use a run away warning if idea is to actualy move away? Something tells me falloff is just designed to scope damage to players on THIS boss only
-local specWarnUmbralDetonation					= mod:NewSpecialWarningYou(405036, nil, 49685, nil, 1, 2)
+local specWarnUmbralDetonation					= mod:NewSpecialWarningYou(405036, nil, 49685, nil, 1, 2) --Теневая детонация (Бомбы)
 local specWarnShadowsConvergence				= mod:NewSpecialWarningDodgeCount(407640, nil, nil, nil, 2, 2, 3)
 
 local timerCoalescingVoidCD						= mod:NewCDCountTimer(21.9, 403459, nil, nil, nil, 2)
-local timerUmbralDetonationCD					= mod:NewCDCountTimer(21.9, 405036, 167180, nil, nil, 3)--"Bombs"
+local timerUmbralDetonationCD					= mod:NewCDCountTimer(21.9, 405036, 167180, nil, nil, 3) --Теневая детонация (Бомбы)
 local timerShadowsConvergenceCD					= mod:NewCDCountTimer(20.7, 407640, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerShadowSpikeCD						= mod:NewCDCountTimer(11, 403699, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnUmbral", 405036, false, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnUmbral", 405036, false, 0, {1, 2, 3}) --Теневая детонация (Бомбы)
 --Вечный Пожар
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26337))
 local warnBlazingHeat							= mod:NewCountAnnounce(402617, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(402617))
 local warnBlazingHeatFades						= mod:NewFadesAnnounce(402617, 1)
 
 local specWarnFlameSlash						= mod:NewSpecialWarningDefensive(403203, nil, nil, nil, 1, 3) --Пылающий взмах
-local specWarnFieryMeteor						= mod:NewSpecialWarningSoakCount(404732, nil, nil, nil, 2, 2) --Огненный метеор
+local specWarnFieryMeteor						= mod:NewSpecialWarningSoakCount(404732, nil, 140660, nil, 2, 2) --Огненный метеор (Метеор)
 local specWarnMoltenEruption					= mod:NewSpecialWarningSoakCount(403101, nil, nil, nil, 2, 2, 3) --Извержение лавы
-local specWarnSwirlingFlame						= mod:NewSpecialWarningDodgeCount(404896, nil, 86189, nil, 2, 2)
+local specWarnSwirlingFlame						= mod:NewSpecialWarningDodgeCount(404896, nil, 86189, nil, 2, 2) --Завихряющееся пламя (воронки)
 
-local timerFieryMeteorCD						= mod:NewCDCountTimer(31.7, 404732, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненный метеор
+local timerFieryMeteorCD						= mod:NewCDCountTimer(31.7, 404732, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Огненный метеор (Метеор)
 local timerMoltenEruptionCD						= mod:NewCDCountTimer(22.3, 403101, nil, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON) --Извержение лавы
-local timerSwirlingFlameCD						= mod:NewCDCountTimer(20.7, 404896, 86189, nil, nil, 3)--"Tornados"
+local timerSwirlingFlameCD						= mod:NewCDCountTimer(20.7, 404896, 86189, nil, nil, 3) --Завихряющееся пламя (воронки)
 local timerFlameSlashCD							= mod:NewCDCountTimer(11, 403203, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --Слияние пламени Тьмы
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26338))
@@ -76,18 +76,18 @@ local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, ni
 local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3) --Взрыв пламени Тьмы
 
 local specWarnShadowandFlame					= mod:NewSpecialWarningMoveAway(409385, nil, nil, nil, 3, 2) --Тьма и пламя
-local specWarnGloomConflag						= mod:NewSpecialWarningSoakCount(405437, nil, nil, nil, 2, 2) --Возгорание мрака
-local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2) --Обжигающий сумрак (Бомба)
+local specWarnGloomConflag						= mod:NewSpecialWarningSoakCount(405437, nil, 248815, nil, 2, 2) --Возгорание мрака
+local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 167180, nil, 1, 2) --Обжигающий сумрак (Бомбы)
 local specWarnConvergentEruption				= mod:NewSpecialWarningSoakCount(408193, nil, nil, nil, 2, 2) --Объединенный взрыв
-local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
-local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, nil, nil, 3, 2) --Иссушающая слабость
+local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, 160149, nil, 3, 2) --Иссушающая слабость
+local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, nil, 160149, nil, 3, 2) --Иссушающая слабость
 
 local timerPhaseCD								= mod:NewStageTimer(30)
 local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тьма и пламя
-local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Возгорание мрака
-local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомба)
+local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Возгорание мрака
+local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомбы)
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
-local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
+local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, 160149, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
 local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Взрыв пламени Тьмы Might be redundant if always after crushing
 
 local yellWitheringVulnerability				= mod:NewShortYell(405914, nil, nil, nil, "YELL") --Иссушающая слабость
@@ -215,32 +215,32 @@ local allTimers = {
 		----Fire Duder
 		--Flame Slash
 		[403203] = {7, 15.7, 26.7, 15.3, 19.4, 15.8, 18.2, 15.7, 18.6},
-		--Swirling Flame
-		[404896] = {10.6, 14.5, 25.8, 14.1, 20.3, 14.6, 18.2, 14.6, 20.7},
+		--Завихряющееся пламя (воронки)
+		[404896] = {10.6, 14.5, 14.5, 14.1, 20.3, 14.6, 18.2, 14.6, 20.7}, --10.6, 14.5, 25.8, 14.1, 20.3, 14.6, 18.2, 14.6, 20.7 по инфе с офы
 		--Fiery Meteor
 		[404732] = {35.2, 35.2, 35.3, 35.3},
 		--Molten Eruption
-		[403101] = {16.7, 40.5, 34.5, 34},
+		[403101] = {16.7, 34.6, 34.5, 34}, --16.7, 40.5, 34.5, 34 по инфе с офы
 		----Shadow Duder
 		--Shadow Spike
 		[403699] = {9.5, 15.8, 15.8, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4},
 		--Umbral Detonation
-		[405016] = {14.2, 41.7, 34.5, 35.2},
+		[405016] = {14.2, 34.6, 34.5, 35.2}, --14.2, 41.7, 34.5, 35.2 по инфе с офы
 		--Coalescing Void
 		[403459] = {35.2, 35.2, 35.3, 35.3},
-		--Shadows Convergence
-		[407640] = {22.7, 41.3, 35.3, 35.2},
+		--Слияние теней
+		[407640] = {22.7, 35.3, 35.3, 35.2}, --22.7, 41.3, 35.3, 35.2 по инфе с офы
 		----Phase 2
 		--Shadow and Flame (mythic Only)
 		[409385] = {29.5, 51, 47.4, 47.3, 47.3, 47.3},
 		--Gloom Conflag
 		[405437] = {50.4, 47.5, 47.6, 47.5, 47.4, 47.4},
-		--Blistering Twilight
-		[405641] = {21.4, 51.3, 47.5, 47.6, 47.5, 47.4},
-		--Convergent Eruption (Heroic+)
-		[408193] = {33.6, 51, 47.4, 47.3, 47.5, 47.4},
-		--Withering Vulnerability
-		[405914] = {16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3},
+		--Обжигающий сумрак (Бомбы)
+		[405641] = {21.4, 49.4, 46.6, 47.6, 47.5, 47.4}, --21.4, 51.3, 47.5, 47.6, 47.5, 47.4 по инфе с офы
+		--Объединенный взрыв (Heroic+)
+		[408193] = {33.6, 47.4, 47.4, 47.3, 47.5, 47.4}, --33.6, 51, 47.4, 47.3, 47.5, 47.4 по инфе с офы
+		--Иссушающая слабость (Слабость) 7 штук точные под гер
+		[405914] = {15.6, 26.8, 24.2, 24.1, 24.2, 22.1, 24.2, 24.2, 23.1, 24.3, 23.1, 24.3}, --16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3 по инфе с офы
 		--Shadowflame Burst
 		[406783] = {19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3},
 	},
@@ -477,14 +477,14 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerGloomConflagCD:Start(timer, self.vb.meteorCast+1)
 		end
-	elseif spellId == 405641 then
+	elseif spellId == 405641 then --Обжигающий сумрак (Бомбы)
 		self.vb.umbralCount = self.vb.umbralCount + 1
 		self.vb.umbralIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.umbralCount+1) or altTimers[difficultyName][spellId]
 		if timer then
 			timerBlisteringTwilightCD:Start(timer, self.vb.umbralCount+1)
 		end
-	elseif spellId == 408193 then
+	elseif spellId == 408193 then --Объединенный взрыв
 		self.vb.moltenEruptionCast = self.vb.moltenEruptionCast + 1
 		specWarnConvergentEruption:Show(self.vb.moltenEruptionCast)
 		specWarnConvergentEruption:Play("helpsoak")
@@ -492,7 +492,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerConvergentEruptionCD:Start(timer, self.vb.moltenEruptionCast+1)
 		end
-	elseif spellId == 405914 then
+	elseif spellId == 405914 then --Иссушающая слабость
 		self.vb.witheringVulnCount = self.vb.witheringVulnCount + 1
 		self:BossTargetScanner(args.sourceGUID, "WitheringVulnerabilityTarget", 0.1, 2)
 	--[[	if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
@@ -503,13 +503,14 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerWitheringVulnerabilityCD:Start(timer, self.vb.witheringVulnCount+1)
 		end
-	elseif spellId == 406783 then
+	elseif spellId == 406783 then --Взрыв пламени Тьмы
 		self.vb.shadowflameBurstCount = self.vb.shadowflameBurstCount + 1
 		warnShadowflameBurst:Show(self.vb.shadowflameBurstCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.shadowflameBurstCount+1) or altTimers[difficultyName][spellId]
 		if timer then
 			timerShadowflameBurstCD:Start(timer, self.vb.shadowflameBurstCount+1)
 		end
+		DBM:Debug("Murchal proshlyap (каст Взрыва пламени Тьмы)", 2)
 	elseif spellId == 409385 then --Тьма и пламя
 		self.vb.SandFCount = self.vb.SandFCount + 1
 		warnShadowandFlame:Show()
@@ -521,7 +522,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 406730 and self:GetStage(2, 1) then--Crucible Instability
+	if spellId == 406730 and self:GetStage(2, 1) then --Нестабильность горнила (начало фазы 2)
 		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
@@ -544,13 +545,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerShadowandFlameCD:Start(29, 1)
 			timerConvergentEruptionCD:Start(35.7, 1)
 		elseif self:IsHeroic() then
-			timerConvergentEruptionCD:Start(32.4, 1)
+			timerConvergentEruptionCD:Start(32.5, 1) --под героик норм
 		end
-		--Same in all
-		timerWitheringVulnerabilityCD:Start(15.8, 1)
-		timerShadowflameBurstCD:Start(18.5, 1)
-		timerBlisteringTwilightCD:Start(20.2, 1)
-		timerGloomConflagCD:Start(50, 1)
+		--норм под геру
+		timerWitheringVulnerabilityCD:Start(15.6, 1) --Иссушающая слабость
+		timerShadowflameBurstCD:Start(17.6, 1) --Взрыв пламени Тьмы
+		timerBlisteringTwilightCD:Start(21.4, 1) --Обжигающий сумрак (Бомба)
+		timerGloomConflagCD:Start(50, 1) --Возгорание мрака
 	end
 end
 

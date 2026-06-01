@@ -11,7 +11,7 @@ mod.respawnTime = 30
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 401258 401867 408959 397383 409271 401108 407009 410351 397386 408620",
+	"SPELL_CAST_START 401258 401867 408959 397383 409271 401108 407009 410351 397386 408620 397514",
 	"SPELL_CAST_SUCCESS 397514 401258 410351",
 	"SPELL_AURA_APPLIED 401867 402066 401381 409275 408873 410353 401452",
 	"SPELL_AURA_APPLIED_DOSE 408873 410353",
@@ -97,13 +97,13 @@ local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, ni
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26683))
 local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer") --Горящая дубина
 
-local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 2, 2) --Катастрофический удар
+local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 3, 3) --Катастрофический удар
 local specWarnFlamingCudgel							= mod:NewSpecialWarningCount(410351, nil, nil, nil, 2, 2) --Горящая дубина Count because it's hybrid warning
 local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6) --Горящая дубина
 local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2) --Горящая дубина
 
 --local timerIgnarasFuryCD							= mod:NewAITimer(29.9, 406585, nil, nil, nil, 2)
-local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Катастрофический удар
+local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Катастрофический удар
 local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
 
 local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
@@ -286,17 +286,18 @@ function mod:SPELL_CAST_START(args)
 		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
 			timerScorchingRoarCD:Start(nil, args.sourceGUID)
 		end
+	elseif spellId == 397514 then--Отчаянное испепеление (каст начала 2 фазы)
+		self:SetStage(2)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 397514 then--Desperate Immolation
+	if spellId == 397514 then--Отчаянное испепеление (каст начала 2 фазы)
 		self.vb.cudgelCount = 0
 		self.vb.leapCount = 0--Reused with demo slam
-		self:SetStage(2)
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
-		warnPhase:Play("ptwo")
 		Proshlyap = false
 		timerHeavyCudgelCD:Stop()
 		timerDevastatingLeapCD:Stop()
