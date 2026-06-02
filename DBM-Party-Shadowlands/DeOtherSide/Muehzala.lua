@@ -37,7 +37,7 @@ local warnShatterReality			= mod:NewCastAnnounce(326171, 4)
 local specWarnMasterofDeath			= mod:NewSpecialWarningDodge(325258, nil, nil, nil, 2, 2)
 local specWarnCosmicArtifice		= mod:NewSpecialWarningMoveAway(325725, nil, nil, nil, 1, 2)
 local specWarnSoulcrusher			= mod:NewSpecialWarningDefensive(327646, nil, nil, nil, 2, 2)
-local specWarnDeathgate				= mod:NewSpecialWarningMoveTo(324698, nil, nil, nil, 3, 2)
+local specWarnShatterReality 		= mod:NewSpecialWarningMoveTo(326171, nil, nil, nil, 3, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 --Stage 2: Shattered Reality
 
@@ -57,7 +57,7 @@ local yellCosmicArtificeFades		= mod:NewShortFadesYell(325725, nil, nil, nil, "Y
 mod.vb.cosmicCount = 0
 mod.vb.soulCount = 0
 
-local Deathgate = DBM:GetSpellName(324698)
+local deathGate = DBM:GetSpellName(324698)
 
 function mod:OnCombatStart(delay)
 	self.vb.cosmicCount = 0
@@ -91,8 +91,8 @@ function mod:SPELL_CAST_START(args)
 		timerSoulcrusherCD:Stop()
 		warnShatterReality:Show()
 		timerShatterReality:Start()
-		specWarnDeathgate:Schedule(4, Deathgate)
-		specWarnDeathgate:ScheduleVoice(4, "findshelter")
+		specWarnShatterReality:Schedule(4, deathGate)
+		specWarnShatterReality:ScheduleVoice(4, "findshelter")
 	end
 end
 
