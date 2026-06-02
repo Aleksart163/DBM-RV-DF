@@ -29,7 +29,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage 1: The Master of Death
 local warnCosmicArtifice			= mod:NewTargetAnnounce(325725, 3)
-local warnShatterReality			= mod:NewCastAnnounce(326171, 4)
+local warnShatterReality			= mod:NewCastAnnounce(326171, 4) --Раскол реальности
 --Stage 2: Shattered Reality
 --local warnAddsRemaining				= mod:NewAddsLeftAnnounce(-22186, 2, 264049)--A nice shackle icon
 
@@ -37,7 +37,8 @@ local warnShatterReality			= mod:NewCastAnnounce(326171, 4)
 local specWarnMasterofDeath			= mod:NewSpecialWarningDodge(325258, nil, nil, nil, 2, 2)
 local specWarnCosmicArtifice		= mod:NewSpecialWarningMoveAway(325725, nil, nil, nil, 1, 2)
 local specWarnSoulcrusher			= mod:NewSpecialWarningDefensive(327646, nil, nil, nil, 2, 2)
-local specWarnShatterReality 		= mod:NewSpecialWarningMoveTo(326171, nil, nil, nil, 3, 2)
+local specWarnShatterReality 		= mod:NewSpecialWarningMoveTo(326171, nil, nil, nil, 3, 4) --Раскол реальности
+local specWarnShatterReality2		= mod:NewSpecialWarningSpell(326171, nil, nil, nil, 2, 2) --Раскол реальности
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 --Stage 2: Shattered Reality
 
@@ -45,8 +46,8 @@ local specWarnShatterReality 		= mod:NewSpecialWarningMoveTo(326171, nil, nil, n
 local timerMasterofDeathCD			= mod:NewCDTimer(32.8, 325258, nil, nil, nil, 3)
 local timerCosmicArtificeCD			= mod:NewCDCountTimer(19.5, 325725, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerSoulcrusherCD			= mod:NewCDCountTimer(17.8, 327646, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerShatterRealityCD			= mod:NewCDTimer(25.3, 326171, nil, nil, nil, 6)
-local timerShatterReality			= mod:NewCastTimer(10, 326171, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerShatterRealityCD			= mod:NewCDCountTimer(25.3, 326171, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол реальности
+local timerShatterReality			= mod:NewCastTimer(10, 326171, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол реальности
 --Stage 2: Shattered Reality
 local timerCoalescing				= mod:NewCastTimer(25, 334970, nil, nil, nil, 6)
 
@@ -56,16 +57,18 @@ local yellCosmicArtificeFades		= mod:NewShortFadesYell(325725, nil, nil, nil, "Y
 --mod.vb.addsLeft = 3
 mod.vb.cosmicCount = 0
 mod.vb.soulCount = 0
+mod.vb.realityCount = 0
 
 local deathGate = DBM:GetSpellName(324698)
 
 function mod:OnCombatStart(delay)
 	self.vb.cosmicCount = 0
 	self.vb.soulCount = 0
+	self.vb.realityCount = 0
 	timerCosmicArtificeCD:Start(3.7-delay, 1)--SUCCESS
 	timerSoulcrusherCD:Start(5.9-delay, 1)
 	timerMasterofDeathCD:Start(9.3-delay)
-	timerShatterRealityCD:Start(60)
+	timerShatterRealityCD:Start(60, 1)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -85,12 +88,15 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerSoulcrusherCD:Start(20, self.vb.soulCount+1)
 		end
-	elseif spellId == 326171 then--Phase 1 End and big aoe
+	elseif spellId == 326171 then --Раскол реальности
+		self.vb.realityCount = self.vb.realityCount + 1
 		timerMasterofDeathCD:Stop()
 		timerCosmicArtificeCD:Stop()
 		timerSoulcrusherCD:Stop()
 		warnShatterReality:Show()
 		timerShatterReality:Start()
+		specWarnShatterReality2:Show()
+		specWarnShatterReality2:Play("specialsoon")
 		specWarnShatterReality:Schedule(4, deathGate)
 		specWarnShatterReality:ScheduleVoice(4, "findshelter")
 	end
@@ -136,14 +142,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellCosmicArtificeFades:Cancel()
 		end
-	elseif spellId == 334970 then--Coalescing
+	elseif spellId == 334970 then --Слияние
 		self.vb.cosmicCount = 0
 		self.vb.soulCount = 0
 		timerCoalescing:Stop()
 		timerCosmicArtificeCD:Start(11.1, 1)--11-19 (maybe a case of pause/resume from previous stage?)
 		timerMasterofDeathCD:Start(15.6)
 		timerSoulcrusherCD:Start(21.8, 1)
-		timerShatterRealityCD:Start(76.4)
+		timerShatterRealityCD:Start(76.4, self.vb.realityCount+1)
 	end
 end
 
