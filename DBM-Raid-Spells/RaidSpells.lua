@@ -837,14 +837,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 47788 then --Оберегающий дух
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
-		if args:IsPlayer() then
+		if args:IsPlayer() and not args:IsPlayerSource() then
 			specWarnGuardianSpirit:Show()
 			specWarnGuardianSpirit:Play("targetyou")
 		end
 	elseif spellId == 10060 then --Придание сил
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
-		if args:IsPlayer() then
+		if args:IsPlayer() and not args:IsPlayerSource() then
 			specWarnPowerInfusion:Show()
 			specWarnPowerInfusion:Play("targetyou")
 		end
@@ -863,7 +863,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 6940 then --Жертвенное благословение
 	--	if typeInstance ~= "party" and typeInstance ~= "raid" then return end
 	--	if DBM:GetNumRealGroupMembers() < 2 then return end
-		if args:IsPlayer() then
+		if args:IsPlayer() and not args:IsPlayerSource() then
 			specWarnBlessingSacrifice:Show()
 			specWarnBlessingSacrifice:Play("targetyou")
 		end
