@@ -16,7 +16,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 414535 409456 409635 414184 414652",
-	"SPELL_AURA_APPLIED 409266 414376 410719",
+	"SPELL_AURA_APPLIED 409266 414376 410719 414293",
 	"SPELL_AURA_REMOVED 409456 414177 410719"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
@@ -34,7 +34,8 @@ local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной 
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
 local warnCataclysmicObliteration				= mod:NewSpellAnnounce(414184, 4) --Катастрофическое истребление
 
-local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 4, 4) --Истребляющий взрыв
+local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
+local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 3, 4) --Истребляющий взрыв
 local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2) --Камнекрушащий шквал
 local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2) --Дробящий выдох
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
@@ -106,9 +107,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnGTFO:Play("watchfeet")
 	elseif spellId == 410719 then
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellName(366548))
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount or UnitGetTotalAbsorbs("boss1"), "boss1")
 		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов на боссе)", 2)
+	elseif spellId == 414293 then --Трансцендентность временной линии
+		specWarnCataclysmicObliteration:Show(args.destName)
+		specWarnCataclysmicObliteration:Play("findshelter")
 	end
 end
 	
@@ -129,6 +134,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов спала с босса)", 2)
 	end
 end
 
