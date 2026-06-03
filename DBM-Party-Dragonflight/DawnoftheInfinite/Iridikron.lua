@@ -32,7 +32,7 @@ mod:RegisterEventsInCombat(
 local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4) --Истребляющий взрыв
 local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной импульс
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
-local warnCataclysmicObliteration				= mod:NewSpellAnnounce(414184, 4) --Катастрофическое истребление
+local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Катастрофическое истребление
 
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 3, 4) --Истребляющий взрыв
@@ -44,7 +44,6 @@ local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, n
 local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
-local timerCataclysmicObliterationCD			= mod:NewCDTimer(120, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 
 local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
@@ -128,7 +127,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
-	elseif spellId == 414177 then
+	elseif spellId == 414177 then --Катастрофическое истребление (сбитие спелла)
 		timerCataclysmicObliteration:Stop()
 	elseif spellId == 410719 then
 		if self.Options.InfoFrame then
