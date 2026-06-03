@@ -374,6 +374,10 @@ L:SetGeneralLocalization({
 	name =	"DotI Trash"
 })
 
+L:SetOptionLocalization({
+	AutoRift			= "Auto select gossip to activate the portal"
+})
+
 L:SetMiscLocalization({
 	MurchalProshlyapRP1 = "The infinites are here and we have to stop them. They want to... oh, oh there's no time to explain!",
 	MurchalProshlyapRP2 = "So the titans' puppets have come to face me.",

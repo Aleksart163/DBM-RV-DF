@@ -374,6 +374,10 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Рассвет Бесконечности"
 })
 
+L:SetOptionLocalization({
+	AutoRift 			= "Автоматически выбирать диалог для активации портала"
+})
+
 L:SetMiscLocalization({
 	MurchalProshlyapRP1 = "Ноздорму! Алекстраза! И остальные! Драконы Бесконечности здесь, их надо остановить.",
 	MurchalProshlyapRP2 = "Слуги титанов пришли сразиться со мной.",
