@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 local warnShatter					= mod:NewCountAnnounce(188114, 2) --Дробление
 
 local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, nil, 2, 4) --Дробление
-local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, nil, 3, 4) --Бритвенно-острые осколки
+local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, nil, 2, 2) --Бритвенно-острые осколки
 local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8) --Удушающая пыль
 
 local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Дробление

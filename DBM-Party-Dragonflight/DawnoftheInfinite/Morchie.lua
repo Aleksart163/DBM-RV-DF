@@ -34,20 +34,27 @@ mod:RegisterEventsInCombat(
 --TODO, nameplate aura on trapped familar face? need to see how good visual is for it first
 --TODO, detect when your add breaks free from trap and warn you it's lose again?
 --TODO Familiar Faces timers
-local warnMoreProblems								= mod:NewCountAnnounce(403891, 3)
-local warnFamiliarFaces								= mod:NewCountAnnounce(405279, 3)
-local warnFixate									= mod:NewYouAnnounce(401200, 4)
-local warnTimeStasis								= mod:NewTargetNoFilterAnnounce(401667, 4)
+local warnMoreProblems								= mod:NewCastAnnounce(403891, 3) --Новые проблемы!
+local warnDragonBreath								= mod:NewCastAnnounce(404364, 4) --Дыхание дракона
+local warnFamiliarFaces								= mod:NewCountAnnounce(405279, 3) --Знакомые лица
+local warnFixate									= mod:NewYouAnnounce(401200, 4) --Сосредоточение внимания
+local warnTimeStasis								= mod:NewTargetNoFilterAnnounce(401667, 4) --Временной стазис
 
-local specWarnSandBlast								= mod:NewSpecialWarningCount(404916, nil, nil, nil, 2, 2)
-local specWarnDragonBreath							= mod:NewSpecialWarningDodge(404364, nil, nil, nil, 2, 2)
-local specWarnTimeTraps								= mod:NewSpecialWarningDodgeCount(406481, nil, nil, nil, 2, 2)
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8)
+local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil, nil, 2, 2) --Песчаный вихрь (Фронталка)
+local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, nil, nil, 3, 4) --Новые проблемы!
+local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, nil, 2, 2) --Песчаный вихрь (Фронталка)
+local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, nil, 4, 4) --Дыхание дракона
+local specWarnTimeTraps								= mod:NewSpecialWarningDodgeCount(406481, nil, nil, nil, 2, 2) --Временные ловушки
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8) --Безвременное разложение
 
-local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--21.8-38.8
-local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, nil, nil, nil, 6)--40-52
-local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, nil, nil, nil, 5)
-local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil, 3)
+local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Песчаный вихрь (Фронталка) 21.8-38.8
+local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Новые проблемы!
+local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, nil, nil, 2, 3) --Знакомые лица
+local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil, 3) --Временные ловушки
+local timerDragonBreath								= mod:NewCastTimer(8, 404364, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона
+
+local yellTimeStasis								= mod:NewShortYell(401667, nil, nil, nil, "YELL") --Временной стазис
+local yellSandBlast									= mod:NewShortYell(404916, nil, nil, nil, "YELL") --Песчаный вихрь
 
 --mod:AddInfoFrameOption(391977, true)
 mod:AddSetIconOption("SetIconOnImages", 403891, true, 5, {1, 2, 3, 4, 5, 6})
@@ -62,13 +69,13 @@ mod.vb.facesCount = 0
 mod.vb.trapsCount = 0
 --Even on a +25 I could not find a pull longer than this
 local allTimers = {--Timers up to 3:43 for 10.2+ (with late october timer changes).
-	--Sand Blast
+	--Песчаный вихрь
 	[404916] = {3, 27, 19.9, 28.9, 12, 12, 11.9, 24, 11.9, 12.0, 12.0, 24.0, 12.0, 12.0},
-	--More Problems
+	--Новые проблемы!
 	[403891] = {10, 50, 60, 60, 60},
-	--Time Traps
+	--Временные ловушки
 	[406481] = {36, 48, 24, 47.9, 48.0},
-	--Familiar Faces
+	--Знакомые лица
 	[405279] = {43, 52.9, 48, 23.9, 48.0, 48.0, 24.0},
 }
 
@@ -120,10 +127,16 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 404916 then
+	if spellId == 404916 then --Песчаный вихрь (Фронталка)
 		self.vb.blastCount = self.vb.blastCount + 1
-		specWarnSandBlast:Show(self.vb.blastCount)
-		specWarnSandBlast:Play("shockwave")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnSandBlast:Show()
+			specWarnSandBlast:Play("defensive")
+			yellSandBlast:Yell()
+		else
+			specWarnSandBlast2:Show()
+			specWarnSandBlast2:Play("shockwave")
+		end
 		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.blastCount+1)
 		if timer then
 			timerSandBlastCD:Start(timer, self.vb.blastCount+1)
@@ -134,10 +147,12 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 --		updateAllTimers(self, 4.9)
-	elseif spellId == 403891 then
+	elseif spellId == 403891 then --Новые проблемы!
 		self.vb.problemsCount = self.vb.problemsCount + 1
 		self.vb.problemIcons = 1
-		warnMoreProblems:Show(self.vb.problemIcons)
+		warnMoreProblems:Show()
+		specWarnMoreProblems:Show()
+		specWarnMoreProblems:Play("specialsoon")
 		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.problemsCount+1)
 		if timer then
 			timerMoreProblemsCD:Start(timer, self.vb.problemsCount+1)
@@ -148,8 +163,10 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 404364 and self:AntiSpam(3, 1) then--All 6 cast it at once
+		warnDragonBreath:Show()
 		specWarnDragonBreath:Show()
 		specWarnDragonBreath:Play("breathsoon")
+		timerDragonBreath:Start()
 	elseif spellId == 405279 or spellId == 407504 then
 		self.vb.facesCount = self.vb.facesCount + 1
 		warnFamiliarFaces:Show(self.vb.facesCount)
@@ -180,7 +197,7 @@ end
 
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
-	if spellId == 403902 then
+	if spellId == 403902 then --Новые проблемы!
 		if self.Options.SetIconOnImages then
 			self:ScanForMobs(args.destGUID, 2, self.vb.problemIcons, 1, nil, 12, "SetIconOnImages")
 		end
@@ -196,8 +213,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.NPAuraOnFixate then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 		end
-	elseif spellId == 401667 then
+	elseif spellId == 401667 then --Временной стазис
 		warnTimeStasis:Show(args.destName)
+		if args:IsPlayer() then
+			yellTimeStasis:Yell()
+		end
 --	elseif spellId == 412768 then--Anachronistic Decay applying, adds free
 --		if myGUIDAdd and myGUIDAdd == args.destGUID then
 --

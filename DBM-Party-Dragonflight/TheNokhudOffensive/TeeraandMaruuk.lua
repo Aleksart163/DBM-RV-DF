@@ -36,8 +36,8 @@ local specWarnGaleArrow							= mod:NewSpecialWarningDefensive(382670, nil, nil,
 local specWarnGaleArrow2						= mod:NewSpecialWarningDodge(382670, nil, nil, nil, 2, 4) --Ураганная стрела
 local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
-local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Ураганная стрела
-local timerRepelCD								= mod:NewCDCountTimer(60, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Отпор
+local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Ураганная стрела
+local timerRepelCD								= mod:NewCDCountTimer(60, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 5) --Отпор
 local timerSpiritLeapCD							= mod:NewCDTimer(20.4, 385434, nil, nil, nil, 3) --Прыжок духа 20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
 
 --Maruuk

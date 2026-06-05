@@ -24,24 +24,24 @@ mod:RegisterEventsInCombat(
  or (ability.id = 374635 or ability.id = 374534) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnBlazinAegis							= mod:NewTargetNoFilterAnnounce(374842, 3)
-local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 3)
+local warnBlazinAegis							= mod:NewTargetNoFilterAnnounce(374842, 3) --Пылающая эгида
+local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 3) --Разгоряченные удары
 
-local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2)
-local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2)
-local specWarnHeatedSwings						= mod:NewSpecialWarningMoveAway(374534, nil, nil, nil, 1, 2)
+local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2) --Сила кузни
+local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2) --Пылающая эгида
+local specWarnHeatedSwings						= mod:NewSpecialWarningMoveAway(374534, nil, nil, nil, 1, 2) --Разгоряченные удары
 local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2)
 
 --All timers are 30-31 ish
-local timerMightoftheForgeCD					= mod:NewNextCountTimer(30.3, 374635, nil, nil, nil, 6, nil, DBM_COMMON_L.HEALER_ICON)--Technically Blazing Hammer is healer icon, but it's passive of this stage
+local timerMightoftheForgeCD					= mod:NewNextCountTimer(30.3, 374635, nil, nil, nil, 6, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
 local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, nil, 3)
-local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Tracked by all since it has 8 yard splash damage
+local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
 local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2)
 
-local yellBlazinAegis							= mod:NewYell(374842, nil, nil, nil, "YELL")
-local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL")
-local yellHeatedSwings							= mod:NewYell(374534, nil, nil, nil, "YELL")
-local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL")
+local yellBlazinAegis							= mod:NewShortYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
+local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
+local yellHeatedSwings							= mod:NewShortYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
+local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
 
 mod.vb.setCount = 0
 

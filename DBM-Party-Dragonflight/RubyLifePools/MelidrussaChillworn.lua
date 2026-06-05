@@ -40,7 +40,7 @@ local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasIn
 local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2) --Пробуждение дракончиков
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8) --Ледяная буря
 
-local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3) --Ледяная буря
+local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Ледяная буря
 local timerHailbombsCD							= mod:NewCDTimer(20, 396044, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывные градины
 local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка
 

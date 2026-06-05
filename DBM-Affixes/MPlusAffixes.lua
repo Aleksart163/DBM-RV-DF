@@ -28,7 +28,7 @@ mod:RegisterEvents(
 
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
-local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души Flagged to only warn players who actually have literally any skill to deal with spirits, else alert is just extra noise to some rogue or warrior with no skills for mechanic
+local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души (Призыв духов)
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление) 322274
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
@@ -56,8 +56,8 @@ local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil
 --
 local timerQuakingCD						= mod:NewCDTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewNextTimer(30, 408556, 311634, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, nil, nil, nil, true) --Запутывание (Гнев деревьев)
-local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Крик изнемогающей души Timer is still on for all, cause knowing when they spawn still informs decisions like running ahead or pulling
-local timerIncorporealCD					= mod:NewCDTimer(45, 408801, 173254, nil, nil, 5, nil, nil, nil, 3, 3) --Бесплотность (Призыв духов) 173254
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsHealer() and 3 or nil, 3)--Крик изнемогающей души (Призыв духов)
+local timerIncorporealCD					= mod:NewCDTimer(45, 408801, 173254, nil, nil, 5, nil, nil, nil, 3, 3) --Бесплотность (Призыв духов)
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
@@ -421,7 +421,7 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	timerAfflictedCD:Stop()
 	timerIncorporealCD:Stop()
 	timerEntangledCD:Stop()
-	DBM:Debug("Murchal proshlyap", 2)
+	DBM:Debug("Murchal proshlyap (Ключ закрыт)", 2)
 end
 mod.CHALLENGE_MODE_RESET = mod.CHALLENGE_MODE_COMPLETED
 

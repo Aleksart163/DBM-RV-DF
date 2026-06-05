@@ -42,7 +42,7 @@ local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil
 local specWarnBurnout2							= mod:NewSpecialWarningDodge(373087, nil, nil, nil, 2, 2) --Выгорание
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
-local timerBurnout								= mod:NewCastTimer(5, 373087, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Выгорание
+local timerBurnout								= mod:NewCastTimer(5, 373087, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Выгорание
 local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerMoltenBoulderCD						= mod:NewCDCountTimer(16.9, 372107, nil, nil, nil, 3)
 local timerRitualofBlazebindingCD				= mod:NewCDCountTimer(33.9, 372863, nil, nil, nil, 1)

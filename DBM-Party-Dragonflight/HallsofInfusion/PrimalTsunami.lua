@@ -37,6 +37,8 @@ local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", 
 local timerInfusedGlobuleCD						= mod:NewCDTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
 local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури
 
+local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
+
 --Stage Two: Infused Waters
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
@@ -59,7 +61,7 @@ function mod:OnCombatStart(delay)
 	timerInfusedGlobuleCD:Start(7.9-delay)--
 	timerSquallBuffetCD:Start(15.9-delay)--
 --	timerSubmergedCD:Start(53-delay)-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
-	self:Schedule(53, startProshlyapationOfMurchal, self)
+--	self:Schedule(53, startProshlyapationOfMurchal, self)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -68,6 +70,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSquallBuffet:Show()
 			specWarnSquallBuffet:Play("defensive")
+			yellSquallBuffet:Yell()
 		end
 	elseif spellId == 387571 then
 		warnFocusedDeluge:Show()
@@ -94,6 +97,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 387585 and self:GetStage(1) then --Погружение
 		self:SetStage(2)
+		warnSubmerged:Show()
 	--	timerSubmergedCD:Stop()
 		timerSquallBuffetCD:Stop()
 		timerInfusedGlobuleCD:Stop()
@@ -112,6 +116,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerInfusedGlobuleCD:Start(11.4)--
 		timerSquallBuffetCD:Start(19.4)--
 		timerSubmergedCD:Start(57)--
-		self:Schedule(57, startProshlyapationOfMurchal, self)
+	--	self:Schedule(57, startProshlyapationOfMurchal, self)
 	end
 end

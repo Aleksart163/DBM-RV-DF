@@ -35,7 +35,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(386916, nil, nil, nil, 1, 
 
 local timerLightingStrikeCD						= mod:NewCDTimer(20.2, 384316, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар молнии
 local timerElectricStormCD						= mod:NewCDTimer(77.9, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Электрическая буря 60-61+3sec cast
-local timerElectricStorm						= mod:NewCastTimer(18, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Электрическая буря
+local timerElectricStorm						= mod:NewCastTimer(18, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Электрическая буря
 local timerEnergySurgeCD						= mod:NewCDTimer(16.5, 384686, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Волна энергии
 
 local yellLightningStrike						= mod:NewShortFadesYell(384185, nil, nil, nil, "YELL") --Удар молнии

@@ -41,7 +41,7 @@ local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
 local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Временное затухание
-local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Фрагменты времени
+local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Фрагменты времени
 local timerUnwindCD									= mod:NewCDTimer(30, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil) --Обращение вспять (Фронталка)
 local timerRP										= mod:NewRPTimer(22)
 
