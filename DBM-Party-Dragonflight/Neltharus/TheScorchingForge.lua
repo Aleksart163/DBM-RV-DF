@@ -29,14 +29,15 @@ local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 3) --Раз
 
 local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2) --Сила кузни
 local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2) --Пылающая эгида
-local specWarnHeatedSwings						= mod:NewSpecialWarningMoveAway(374534, nil, nil, nil, 1, 2) --Разгоряченные удары
-local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2)
+local specWarnHeatedSwings						= mod:NewSpecialWarningDefensive(374534, nil, nil, nil, 3, 2) --Разгоряченные удары
+local specWarnHeatedSwings2						= mod:NewSpecialWarningRun(374534, nil, 47482, nil, 4, 4) --Разгоряченные удары (Прыжок)
+local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2) --Огонь кузни
 
 --All timers are 30-31 ish
-local timerMightoftheForgeCD					= mod:NewNextCountTimer(30.3, 374635, nil, nil, nil, 6, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
-local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, nil, 3)
+local timerMightoftheForgeCD					= mod:NewNextCountTimer(30, 374635, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
+local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, nil, 3) --Пылающая эгида
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
-local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2)
+local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2) --Огонь кузни
 
 local yellBlazinAegis							= mod:NewShortYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
 local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
@@ -47,10 +48,10 @@ mod.vb.setCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.setCount = 1--All timers are 30, so only need one variable that'll increment after each set of all 4 casts
-	timerMightoftheForgeCD:Start(3.1-delay, 1)
-	timerBlazinAegisCD:Start(11.5-delay, 1)
-	timerHeatedSwingsCD:Start(20.1-delay, 1)
-	timerForgestormCD:Start(26.6-delay, 1)
+	timerMightoftheForgeCD:Start(3.4-delay, 1) --
+	timerBlazinAegisCD:Start(12-delay, 1) --
+	timerHeatedSwingsCD:Start(19.9-delay, 1) --
+	timerForgestormCD:Start(28.9-delay, 1) --
 end
 
 function mod:SPELL_CAST_START(args)
@@ -90,6 +91,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnHeatedSwings:Show(self.vb.setCount)
 			specWarnHeatedSwings:Play("specialsoon")
+			specWarnHeatedSwings2:Schedule(4)
+			specWarnHeatedSwings2:ScheduleVoice(4, "justrun")
 			yellHeatedSwings:Yell()
 			yellHeatedSwingsFades:Countdown(spellId)
 		else
