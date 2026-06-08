@@ -28,16 +28,19 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, longer pulls for decaying strength timer (needs more data, single pull with 3 casts but still all over the place)
-local warnDecayigStrength						= mod:NewSpellAnnounce(373960, 3)
+local warnDecayigStrength						= mod:NewCastAnnounce(373960, 4) --Угасающие силы
 
-local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", nil, 2, 1, 2)
-local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, nil, 2, 2, 4)
-local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 1, 2)
+local specWarnDecayigStrength					= mod:NewSpecialWarningMoveAway(373960, nil, nil, 2, 1, 2) --Угасающие силы
+local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", nil, 2, 1, 2) --Тотем взрывной гнили
+local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, nil, 2, 2, 4) --Удушающее облако гнили
+local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 3, 2) --Удар разложения
 
-local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2)
-local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--18-21
-local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Угасающие силы
+local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 3) --Тотем взрывной гнили 18-21
+local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Удушающее облако гнили (Фронталка)
+local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар разложения
+
+local yellChokingRotcloud						= mod:NewShortYell(376170, nil, nil, nil, "YELL") --Удушающее облако гнили (Фронталка)
 
 mod:AddRangeFrameOption(5, 373941)
 mod:AddInfoFrameOption(373896, true)
@@ -76,15 +79,20 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 373960 then
+	if spellId == 373960 then --Угасающие силы
 		warnDecayigStrength:Show()
-		timerChokingRotcloutCD:Start(10)
-		timerDecayStrikeCD:Start(14.5)
-		timerRotburstTotemCD:Start(22.9)
+		specWarnDecayigStrength:Show()
+		specWarnDecayigStrength:Play("runout")
+		timerChokingRotcloutCD:Start(8.1)
+		timerDecayStrikeCD:Start(14.5, self.vb.decayStrike+1)
+		timerRotburstTotemCD:Start(25)
 		timerDecayingStrengthCD:Start(44.9)
 	elseif spellId == 376170 then
 		specWarnChokingRotcloud:Show()
 		specWarnChokingRotcloud:Play("watchstep")
+		if self:IsTanking("player", "boss1", nil, true) then
+			 yellChokingRotcloud:Yell()
+		end
 --		timerChokingRotcloutCD:Start()
 	elseif spellId == 373912 then
 		self.vb.decayStrike = self.vb.decayStrike + 1
