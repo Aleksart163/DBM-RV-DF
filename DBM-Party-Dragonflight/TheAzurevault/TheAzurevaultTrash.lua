@@ -252,6 +252,8 @@ function mod:UNIT_DIED(args)
 		timerNullStompCD:Stop(args.destGUID)
 	elseif cid == 196116 then--Another mob name I didn't look up
 		timerPiercingShardsCD:Stop(args.destGUID)
+	elseif cid == 187160 then
+		timerPiercingShardsCD:Stop(args.destGUID)
 	elseif cid == 189555 then--Yet another i didn't look up
 		timerUnstablePowerCD:Stop(args.destGUID)
 	end

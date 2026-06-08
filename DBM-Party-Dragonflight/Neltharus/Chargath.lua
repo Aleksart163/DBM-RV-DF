@@ -43,7 +43,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 
 local timerDragonStrikeCD						= mod:NewCDTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, nil, 2, 5) --Удар дракона
 local timerMagmaWaveCD							= mod:NewCDTimer(12.1, 373742, nil, nil, nil, 3) --Магматическая волна Actual CD still not known, since you'd never fully see it unhindered by blade lock or reset by fetter
 local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3) --Сбивающее копье
-local timerFetter								= mod:NewBuffActiveTimer(12, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы
+local timerFetter								= mod:NewBuffActiveTimer(14, 374655, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы
 local timerFieryFocusCD							= mod:NewCDTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Огненное преследование
 
 local yellGroundingSpear						= mod:NewShortYell(373424, nil, nil, nil, "YELL") --Сбивающее копье

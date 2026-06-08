@@ -29,7 +29,7 @@ mod:RegisterEvents(
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 417018 407122 410234 418059 410254 418056 408228 418047 418046",
-	"SPELL_AURA_APPLIED 417030 407121",
+	"SPELL_AURA_APPLIED 417030 407121 410235",
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"SPELL_DAMAGE 418052 410496",
@@ -64,21 +64,24 @@ local timerAddAoECD									= mod:NewCDNPTimer(12.1, addAOESpellId, nil, nil, ni
 --mod:AddInfoFrameOption(391977, true)
 --Boss (Anduin Lothar / Grommash Hellscream
 mod:AddTimerLine(DBM_COMMON_L.BOSS)
-local warnBladestorm								= mod:NewCountAnnounce(410235, 3, nil, nil, nil, nil, nil, 2)
+local warnBladestorm								= mod:NewCountAnnounce(410235, 3, nil, nil, nil, nil, nil, 2) --Вихрь клинков
 local warnRally										= mod:NewCountAnnounce(rallySpellId, 2)
 local warnCry										= mod:NewCountAnnounce(crySpellId, 2)
 local warnShockwave									= mod:NewCountAnnounce(shockwaveSpellId, 3)--2nd and 3rd cast
 
-local specWarnBladestorm							= mod:NewSpecialWarningDodgeCount(410235, "Melee", nil, nil, 2, 2)
+local specWarnBladestorm2							= mod:NewSpecialWarningRun(410235, nil, nil, nil, 4, 4) --Вихрь клинков
+local specWarnBladestorm							= mod:NewSpecialWarningDodgeCount(410235, "Melee", nil, nil, 2, 2) --Вихрь клинков
 local specWarnTankBuster							= mod:NewSpecialWarningDefensive(tankSpellId, nil, nil, nil, 1, 2)
 local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, nil, nil, nil, 2, 2)--First cast in set
 
 local timerRP										= mod:NewRPTimer(8)
-local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3)
+local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3) --Вихрь клинков
 local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, nil, nil, nil, 3)
 local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, nil, nil, nil, 5)--For the X
 local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, nil, nil, nil, 2)
+
+local yellBladestorm								= mod:NewShortYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 
 --Write the custom WA keys into the spell headers
 mod:JustSetCustomKeys(rallySpellId, L.customWAMessage:format(418047, 418046))
@@ -179,7 +182,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 417018 or spellId == 407122 then--Blizzard / Rain of Fire
 		warnAddAoE:Show()
 		timerAddAoECD:Start(nil, args.sourceGUID)
-	elseif spellId == 410234 then--Same spell in both
+	elseif spellId == 410234 then --Вихрь клинков Same spell in both
 		self.vb.bladestormCount = self.vb.bladestormCount + 1
 		if self.Options.SpecWarn410234dodgecount then
 			specWarnBladestorm:Show(self.vb.bladestormCount)
@@ -240,6 +243,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 417030 or spellId == 407121 then--Fireball / Immolate
 		warnAddDebuff:Show(args.destName)
+	elseif spellId == 410235 then --Вихрь клинков
+		if args:IsPlayer() and self:AntiSpam(7, "Bladestorm") then
+			specWarnBladestorm2:Show()
+			specWarnBladestorm2:Play("justrun")
+			yellBladestorm:Yell()
+		end
 	end
 end
 

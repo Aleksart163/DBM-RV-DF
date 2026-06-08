@@ -38,6 +38,7 @@ local warnMoltenGold							= mod:NewTargetNoFilterAnnounce(377018, 2, nil, "Heal
 local warnHardenedGold							= mod:NewYouAnnounce(377022, 2)--So inconsiquential it doesn't even deserve a special announcement
 local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3)
 
+local specWarnTakeTreasure						= mod:NewSpecialWarningSpell(119664, nil, nil, nil, 3, 4) --Хватай сокровище!
 local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 2, 2) --Щит магмы
 local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2)
 local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2)
@@ -97,6 +98,8 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 376780 then
 		specWarnMagmaShield:Show()
 		specWarnMagmaShield:Play("watchstep")
+		specWarnTakeTreasure:Schedule(1)
+		specWarnTakeTreasure:ScheduleVoice(1, "useitem")
 		timerDragonsKilnCD:Pause()
 		timerMoltenGoldCD:Pause()
 		timerBurningEmberCD:Pause()

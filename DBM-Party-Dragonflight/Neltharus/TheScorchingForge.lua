@@ -25,7 +25,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnBlazinAegis							= mod:NewTargetNoFilterAnnounce(374842, 3) --Пылающая эгида
-local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 3) --Разгоряченные удары
+local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 4) --Разгоряченные удары
 
 local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2) --Сила кузни
 local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2) --Пылающая эгида
@@ -45,9 +45,16 @@ local yellHeatedSwings							= mod:NewShortYell(374534, nil, nil, nil, "YELL") -
 local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
 
 mod.vb.setCount = 0
+mod.vb.heatedSwingsCount = 0
+
+local allTimers = {
+	--Разгоряченные удары
+	[374534] = {19.9, 40.9, 20, 42.4, 60, 60, 60, 60},
+}
 
 function mod:OnCombatStart(delay)
 	self.vb.setCount = 1--All timers are 30, so only need one variable that'll increment after each set of all 4 casts
+	self.vb.heatedSwingsCount = 0
 	timerMightoftheForgeCD:Start(3.4-delay, 1) --
 	timerBlazinAegisCD:Start(12-delay, 1) --
 	timerHeatedSwingsCD:Start(19.9-delay, 1) --
@@ -72,8 +79,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnMightoftheForge:Show(self.vb.setCount)
 		specWarnMightoftheForge:Play("aesoon")
 		timerMightoftheForgeCD:Start(nil, self.vb.setCount+1)
-	elseif spellId == 374534 then
-		timerHeatedSwingsCD:Start(nil, self.vb.setCount+1)
+--[[	elseif spellId == 374534 then --Сломано и не работает
+		timerHeatedSwingsCD:Start(nil, self.vb.setCount+1)]]
 	end
 end
 
@@ -87,7 +94,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellBlazinAegis:Yell()
 			yellBlazinAegisFades:Countdown(spellId)
 		end
-	elseif spellId == 374534 then
+	elseif spellId == 374534 then --Разгоряченные удары
+		self.vb.heatedSwingsCount = self.vb.heatedSwingsCount + 1
 		if args:IsPlayer() then
 			specWarnHeatedSwings:Show(self.vb.setCount)
 			specWarnHeatedSwings:Play("specialsoon")
@@ -97,6 +105,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellHeatedSwingsFades:Countdown(spellId)
 		else
 			warnHeatedSwings:Show(args.destName)
+		end
+		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.heatedSwingsCount+1)
+		if timer then
+			timerHeatedSwingsCD:Start(timer, self.vb.heatedSwingsCount+1)
 		end
 	end
 end
