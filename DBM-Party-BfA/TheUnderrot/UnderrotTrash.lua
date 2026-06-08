@@ -62,7 +62,7 @@ local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDisp
 local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2) --Призыв тотема поглощения духа
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
-local timerBloodHarvestCD			= mod:NewCDNPTimer(11.7, 265016, nil, nil, nil, 3) --Кровавая жатва
+local timerBloodHarvestCD			= mod:NewCDNPTimer(11.4, 265016, nil, nil, nil, 3) --Кровавая жатва
 local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
 local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3) --Волна разложения Off by default to reduce clutter, but optional for those that want it
 local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2) --Боевой клич
@@ -78,7 +78,7 @@ local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
 local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
-local yellWickedEmbrace				= mod:NewShortYell(266265, nil, nil, nil, "YELL") --Злые объятия
+local yellWickedEmbrace				= mod:NewYell(266265, nil, nil, nil, "YELL") --Злые объятия
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
 local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)

@@ -31,7 +31,7 @@ local specWarnIndigestion			= mod:NewSpecialWarningDefensive(260793, "Tank", nil
 local specWarnCharge				= mod:NewSpecialWarningDodge(260292, nil, nil, nil, 3, 2) --Рывок
 local specWarnTantrum				= mod:NewSpecialWarningCount(260333, nil, nil, nil, 2, 2) --Припадок
 
-local timerIndigestionCD			= mod:NewCDTimer(30, 260793, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение
+local timerIndigestionCD			= mod:NewCDTimer(30, 260793, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение
 local timerChargeCD					= mod:NewCDTimer(30, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
 local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, nil, nil, nil, 7) --Припадок
 
@@ -88,7 +88,7 @@ function mod:OnCombatStart(delay)
 	--he casts random ability first, it's charge like 95% of time though
 	timerChargeCD:Start(7.9-delay) --
 	timerIndigestionCD:Start(18.9-delay) --
-	timerTantrumCD:Start(46.4, 1) --
+	timerTantrumCD:Start(46.2, 1) --
 end
 
 function mod:OnCombatEnd()
