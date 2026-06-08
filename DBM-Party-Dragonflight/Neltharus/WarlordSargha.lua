@@ -39,7 +39,7 @@ local warnHardenedGold							= mod:NewYouAnnounce(377022, 2)--So inconsiquential
 local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3)
 
 local specWarnTakeTreasure						= mod:NewSpecialWarningSpell(119664, nil, nil, nil, 3, 4) --Хватай сокровище!
-local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 2, 2) --Щит магмы
+local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 1, 2) --Щит магмы
 local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2)
 local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2)
 local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, nil, nil, 1, 2)
