@@ -32,24 +32,24 @@ ability.id = 376780 and (type = "begincast" or type = "applybuff" or type = "rem
  or ability.id = 377014
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnMagmaShield							= mod:NewTargetNoFilterAnnounce(376780, 3)
-local warnMagmaShieldOver						= mod:NewEndAnnounce(376780, 1)
-local warnMoltenGold							= mod:NewTargetNoFilterAnnounce(377018, 2, nil, "Healer")
-local warnHardenedGold							= mod:NewYouAnnounce(377022, 2)--So inconsiquential it doesn't even deserve a special announcement
-local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3)
+local warnMagmaShield							= mod:NewTargetNoFilterAnnounce(376780, 3) --Щит магмы
+local warnMagmaShieldOver						= mod:NewEndAnnounce(376780, 1) --Щит магмы
+local warnMoltenGold							= mod:NewTargetNoFilterAnnounce(377018, 2, nil, "Healer") --Расплавленное золото
+local warnHardenedGold							= mod:NewYouAnnounce(377022, 2) --Отвердевшее золото So inconsiquential it doesn't even deserve a special announcement
+local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3, nil, nil, 96306) --Огненное преследование (Преследование)
 
 local specWarnTakeTreasure						= mod:NewSpecialWarningSpell(119664, nil, nil, nil, 3, 4) --Хватай сокровище!
 local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 1, 2) --Щит магмы
-local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2)
-local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2)
-local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, nil, nil, 1, 2)
+local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2) --Драконий горн
+local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2) --Раскаленный уголь
+local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, 96306, nil, 4, 2) --Огненное преследование (Преследование)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377542, nil, nil, nil, 1, 8)
 
 local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток
 local timerMagmaShieldCD						= mod:NewCDTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
-local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3)
-local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, nil, nil, nil, 3)
-local timerBurningEmberCD						= mod:NewCDTimer(28.2, 377477, nil, nil, nil, 1)--Timer extrapolated by reversing spell queues and pauses then vetting it multiple times as accurate within a less than ~1 deviation
+local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3) --Расплавленное золото
+local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Драконий горн
+local timerBurningEmberCD						= mod:NewCDTimer(28.2, 377477, nil, nil, nil, 1) --Раскаленный уголь Timer extrapolated by reversing spell queues and pauses then vetting it multiple times as accurate within a less than ~1 deviation
 
 mod:AddInfoFrameOption(376780, true)
 

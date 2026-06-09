@@ -35,9 +35,9 @@ local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil
 
 --All timers are 30-31 ish
 local timerMightoftheForgeCD					= mod:NewNextCountTimer(30, 374635, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
-local timerBlazinAegisCD						= mod:NewNextCountTimer(30.3, 374842, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Пылающая эгида
+local timerBlazinAegisCD						= mod:NewNextCountTimer(30, 374842, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Пылающая эгида
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
-local timerForgestormCD							= mod:NewNextCountTimer(30.3, 374969, nil, nil, nil, 2) --Огонь кузни
+local timerForgestormCD							= mod:NewNextCountTimer(28, 374969, nil, nil, nil, 2) --Огонь кузни
 
 local yellBlazinAegis							= mod:NewShortYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
 local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
@@ -56,7 +56,7 @@ function mod:OnCombatStart(delay)
 	self.vb.setCount = 1--All timers are 30, so only need one variable that'll increment after each set of all 4 casts
 	self.vb.heatedSwingsCount = 0
 	timerMightoftheForgeCD:Start(3.4-delay, 1) --
-	timerBlazinAegisCD:Start(12-delay, 1) --
+	timerBlazinAegisCD:Start(11.8-delay, 1) --
 	timerHeatedSwingsCD:Start(19.9-delay, 1) --
 	timerForgestormCD:Start(28.9-delay, 1) --
 end
