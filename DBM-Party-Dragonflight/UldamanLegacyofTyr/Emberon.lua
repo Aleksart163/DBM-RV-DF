@@ -35,13 +35,14 @@ local warnKeepersRemaining						= mod:NewAddsLeftAnnounce(369033, 3) --Акти�
 local warnUnstableEmbers						= mod:NewTargetNoFilterAnnounce(369110, 3) --Нестабильные угли
 local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false) --Ищущее пламя In case you want to know, but not totally practical to enable by default
 
-local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2) --Очищающее пламя
+local specWarnPurgingFlames						= mod:NewSpecialWarningSwitch(368990, nil, nil, nil, 1, 2) --Очищающее пламя
+local specWarnPurgingFlames2					= mod:NewSpecialWarningDodge(368990, nil, nil, nil, 2, 2) --Очищающее пламя
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
 
 local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
-local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обжигающий хлопок
+local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий хлопок
 
 local yellSearingClap							= mod:NewShortYell(369061, nil, nil, nil, "YELL") --Обжигающий хлопок
 local yellUnstableEmbers						= mod:NewShortYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
@@ -78,8 +79,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 368990 then --Очищающее пламя
 		self.vb.purgingCount = self.vb.purgingCount + 1
-		specWarnPurgingFlames:Show(self.vb.purgingCount)
-		specWarnPurgingFlames:Play("laserrun")
+		specWarnPurgingFlames:Show()
+		specWarnPurgingFlames:Play("changetarget")
+		specWarnPurgingFlames2:Schedule(4)
+		specWarnPurgingFlames2:ScheduleVoice(4, "laserrun")
 
 		--Stop timers here as we enter intermissions.
 		timerUnstableEmbersCD:Stop()
