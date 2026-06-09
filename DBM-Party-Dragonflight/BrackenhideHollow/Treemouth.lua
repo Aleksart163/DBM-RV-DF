@@ -46,8 +46,9 @@ local timerGraspingVinesCD						= mod:NewCDTimer(47.3, 376933, nil, nil, nil, 6)
 local timerConsume								= mod:NewTargetTimer(10, 377222, nil, false, 2, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Поглощение
 local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Разлагающие брызги
 --local timerInfectiousSpitCD					= mod:NewCDTimer(20.1, 377864, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)
-local timerVineWhipCD							= mod:NewCDTimer(16.9, 377559, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза
+local timerVineWhipCD							= mod:NewCDTimer(16.9, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза
 
+local yellVineWhip								= mod:NewShortYell(377559, nil, nil, nil, "YELL") --Хлещущая лоза
 --local yellInfusedStrikes						= mod:NewShortFadesYell(361966)
 
 mod:AddInfoFrameOption(378022, true)
@@ -81,6 +82,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnVineWhip:Show()
 			specWarnVineWhip:Play("defensive")
+			yellVineWhip:Yell()
 		end
 		timerVineWhipCD:Start()--16-24 now thanks to worse spell queue than before
 	elseif spellId == 376934 then --Хваткие лозы

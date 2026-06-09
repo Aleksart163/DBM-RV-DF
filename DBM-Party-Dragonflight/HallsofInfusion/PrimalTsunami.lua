@@ -35,7 +35,7 @@ local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank"
 
 local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Шквальный толчок Squall Buffet/Focused Deluge tank combo
 local timerInfusedGlobuleCD						= mod:NewCDTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
-local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури
+local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури
 
 local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
 

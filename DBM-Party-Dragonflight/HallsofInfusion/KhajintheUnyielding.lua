@@ -37,7 +37,7 @@ local specWarnFrostShock2						= mod:NewSpecialWarningDispel(385963, "RemoveMagi
 
 local timerHailstormCD							= mod:NewCDTimer(22, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Буря с градом
 local timerHailstorm							= mod:NewCastTimer(7, 386757, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Буря с градом
-local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Ледяной всплеск
+local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Ледяной всплеск
 local timerFrostCycloneCD						= mod:NewCDTimer(29.9, 390111, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Морозный смерч
 local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, "RemoveMagic", nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяной шок
 

@@ -41,12 +41,12 @@ local specWarnGulp2								= mod:NewSpecialWarningMoveTo(385551, "Tank", nil, ni
 --local specWarnHangry							= mod:NewSpecialWarningDispel(385743, "RemoveEnrage", nil, nil, 1, 2) --Золоден
 local specWarnOverpoweringCroak					= mod:NewSpecialWarningDodge(385187, nil, nil, nil, 2, 2)--385181 is cast but lacks tooltip, so damage Id used for tooltip/option
 --local specWarnBodySlam							= mod:NewSpecialWarningMoveAway(385531, nil, nil, nil, 1, 2) --Удар пузом
-local specWarnBodySlam							= mod:NewSpecialWarningDodge(385531, nil, nil, nil, 2, 2) --Удар пузом
+local specWarnBodySlam							= mod:NewSpecialWarningDodge(385531, nil, 47482, nil, 2, 2) --Удар пузом
 
 local timerGulpCD								= mod:NewCDTimer(60, 385551, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Заглатывание
 local timerGulp									= mod:NewCastTimer(3, 385551, nil, nil, nil, 7, nil, nil, nil, 1, 3)
-local timerOverpoweringCroakCD					= mod:NewCDTimer(39, 385187, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Подавляющее кваканье
-local timerBodySlamCD							= mod:NewCDCountTimer(39, 385531, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Удар пузом
+local timerOverpoweringCroakCD					= mod:NewCDTimer(39, 385187, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Подавляющее кваканье
+local timerBodySlamCD							= mod:NewCDCountTimer(39, 385531, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Удар пузом (Прыжок)
 local timerToxicEffluviaaCD						= mod:NewCDTimer(27, 385442, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Токсичные испарения
 
 --local yellBodySlam								= mod:NewYell(385531, nil, nil, nil, "YELL") --Удар пузом

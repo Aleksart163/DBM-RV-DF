@@ -37,17 +37,18 @@ local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, n
 
 local timerPowerOverloadCD						= mod:NewCDTimer(28, 389179, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Перегрузка
 local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
-local timerStaticSurgeCD						= mod:NewCDCountTimer(28, 384014, nil, nil, nil, 2) --Статический выброс
-local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
+local timerStaticSurgeCD						= mod:NewCDCountTimer(28, 384014, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Статический выброс
+local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
 --Perephase: Ochken of Murchal
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25744))
-local warnAblativeBarrier						= mod:NewSpellAnnounce(383840, 2) --Абляционный барьер
 local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1) --Абляционный барьер
 local warnNullifyingPulse						= mod:NewCastAnnounce(389446, 4) --Нейтрализующая пульсация
 local warnPurifyingBlast						= mod:NewTargetNoFilterAnnounce(389443, 3, nil, false) --Очищающая вспышка
 
+local specWarnAblativeBarrier					= mod:NewSpecialWarningSwitch(383840, nil, nil, nil, 1, 2) --Абляционный барьер
 local specWarnNullifyingPulse					= mod:NewSpecialWarningRun(389446, "Melee", nil, nil, 4, 2) --Нейтрализующая пульсация
 
+local yellTitanicFist							= mod:NewShortYell(384524, nil, nil, nil, "YELL") --Кулак титана
 local yellPowerOverload							= mod:NewShortYell(389179, nil, nil, nil, "YELL") --Перегрузка
 local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL") --Перегрузка
 
@@ -109,6 +110,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnTitanticFist:Show()
 			specWarnTitanticFist:Play("shockwave")
+			yellTitanicFist:Yell()
 		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.ochkenProshlyapationsCount, spellId, self.vb.titanicFistCount+1)
 		if timer then
@@ -133,7 +135,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnPowerLoverload:CombinedShow(0.3, args.destName)
 		end
 	elseif spellId == 383840 then --Абляционный барьер
-		warnAblativeBarrier:Show()
+		specWarnAblativeBarrier:Show()
+		specWarnAblativeBarrier:Play("targetchange")
 		timerPowerOverloadCD:Stop()
 		timerSparkVolleyCD:Stop()
 		timerStaticSurgeCD:Stop()
