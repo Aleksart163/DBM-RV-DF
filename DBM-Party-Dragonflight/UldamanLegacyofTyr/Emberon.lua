@@ -35,7 +35,7 @@ local warnKeepersRemaining						= mod:NewAddsLeftAnnounce(369033, 3) --Акти�
 local warnUnstableEmbers						= mod:NewTargetNoFilterAnnounce(369110, 3) --Нестабильные угли
 local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false) --Ищущее пламя In case you want to know, but not totally practical to enable by default
 
-local specWarnPurgingFlames						= mod:NewSpecialWarningSwitch(368990, nil, nil, nil, 1, 2) --Очищающее пламя
+local specWarnPurgingFlames						= mod:NewSpecialWarningSwitch(368990, nil, 405812, nil, 1, 2) --Очищающее пламя (Оживление големов)
 local specWarnPurgingFlames2					= mod:NewSpecialWarningDodge(368990, nil, nil, nil, 2, 2) --Очищающее пламя
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
