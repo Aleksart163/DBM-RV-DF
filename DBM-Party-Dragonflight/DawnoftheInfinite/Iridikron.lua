@@ -43,7 +43,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 
 local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв
 local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
-local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
+local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 
 local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв

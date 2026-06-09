@@ -42,7 +42,7 @@ local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil
 
 local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
-local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий хлопок
+local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий хлопок
 
 local yellSearingClap							= mod:NewShortYell(369061, nil, nil, nil, "YELL") --Обжигающий хлопок
 local yellUnstableEmbers						= mod:NewShortYell(369110, nil, nil, nil, "YELL") --Нестабильные угли

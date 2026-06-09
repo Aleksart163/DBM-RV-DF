@@ -34,7 +34,7 @@ local specWarnHeatedSwings2						= mod:NewSpecialWarningRun(374534, nil, 47482, 
 local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2) --Огонь кузни
 
 --All timers are 30-31 ish
-local timerMightoftheForgeCD					= mod:NewNextCountTimer(30, 374635, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
+local timerMightoftheForgeCD					= mod:NewNextCountTimer(30, 374635, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
 local timerBlazinAegisCD						= mod:NewNextCountTimer(30, 374842, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Пылающая эгида
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
 local timerForgestormCD							= mod:NewNextCountTimer(28, 374969, nil, nil, nil, 2) --Огонь кузни

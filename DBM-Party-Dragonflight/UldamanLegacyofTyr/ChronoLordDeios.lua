@@ -43,8 +43,8 @@ local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 
 local timerRewindTimeflowCD						= mod:NewCDTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
 local timerRewindTimeflow						= mod:NewCastTimer(14, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени 12+2sec cast
 local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2) --Взмах крыльями 
-local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Пожиратель времени
-local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
+local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Пожиратель времени
+local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 
 local yellSandBreath							= mod:NewShortYell(375727, nil, nil, nil, "YELL") --Дыхание песка
 local yellTimeSink								= mod:NewShortYell(377405, nil, nil, nil, "YELL") --Пожиратель времени

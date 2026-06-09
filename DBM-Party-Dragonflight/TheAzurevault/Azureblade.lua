@@ -37,9 +37,9 @@ local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil
 local specWarnOverwhelmingEnergy				= mod:NewSpecialWarningSpell(384132, nil, nil, nil, 2, 2) --Переполняющая энергия
 local specWarnIllusionaryBolt					= mod:NewSpecialWarningInterrupt(373932, "HasInterrupt", nil, nil, 1, 2)
 
-local timerArcaneCleaveCD						= mod:NewCDTimer(13, 372222, nil, "Melee", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар тайной магии
+local timerArcaneCleaveCD						= mod:NewCDTimer(13, 372222, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар тайной магии
 local timerAncientOrbCD							= mod:NewCDTimer(15, 385578, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Древняя сфера
-local timerSummonDraconicImageCD				= mod:NewCDTimer(15, 384223, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Призыв драконьей иллюзии
+local timerSummonDraconicImageCD				= mod:NewCDTimer(15, 384223, DBM_COMMON_L.ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Призыв драконьей иллюзии
 local timerOverwhelmingenergyCD					= mod:NewCDTimer(35, 384132, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Переполняющая энергия
 
 local yellArcaneCleave							= mod:NewYell(372222, nil, nil, nil, "YELL") --Удар тайной магии

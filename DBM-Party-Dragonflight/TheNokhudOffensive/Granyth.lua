@@ -40,7 +40,7 @@ local specWarnTectonicStomp						= mod:NewSpecialWarningRun(385916, "Melee", nil
 local timerEruptionCD							= mod:NewCDTimer(35, 388283, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Извержение
 local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, nil, nil, nil, 2) --Каменные осколки
 local timerTectonicStompCD						= mod:NewCDTimer(35, 385916, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Тектонический топот
-local timerSummonSaboteurCD						= mod:NewNextCountTimer(14.9, 386320, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв диверсанта
+local timerSummonSaboteurCD						= mod:NewNextCountTimer(14.9, 386320, DBM_COMMON_L.ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв диверсанта
 local timerReload								= mod:NewCastTimer(25, 386921, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Перезарядка
 
 mod:AddSetIconOption("SetIconOnAdd", 386320, true, 5, {8})
