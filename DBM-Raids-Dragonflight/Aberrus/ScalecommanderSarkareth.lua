@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 401383 401810 401500 401642 402050 401325 404027 404456 404769 411302 404754 404403 411030 407496 404288 411236 403741 405022 403625 403517 408422 401704",
-	"SPELL_CAST_SUCCESS 402746",
+	"SPELL_CAST_SUCCESS 402746 403517",
 	"SPELL_SUMMON 404505 404507",
 	"SPELL_AURA_APPLIED 401951 401215 403997 407576 401905 401680 401330 404218 410642 404705 407496 404288 411241 405486 403520 408429 403284 410654 410625",
 	"SPELL_AURA_APPLIED_DOSE 401951 403997 407576 401330 404269 411241 408429",
@@ -125,7 +125,7 @@ local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil,
 
 local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Вознесение)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
-local specWarnScouringEternity					= mod:NewSpecialWarningDodgeCount(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
+local specWarnScouringEternity					= mod:NewSpecialWarningDodge(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
 local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 4) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
@@ -586,15 +586,20 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
-	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
+--[[	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
 		self.vb.blossomCount = self.vb.blossomCount + 1
-		specWarnScouringEternity:Show(self.vb.blossomCount)
+		specWarnScouringEternity:Show()
 		specWarnScouringEternity:Play("findshelter")
 		specWarnScouringEternity:ScheduleVoice(4, "watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
 		if timer then
-			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
+			timerScouringEternityCD:Start(timer)
 		end
+		self:SendSync("SupernovaCast")]]
+	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
+		specWarnScouringEternity:Show()
+		specWarnScouringEternity:Play("findshelter")
+		specWarnScouringEternity:ScheduleVoice(2, "watchstep")
 		self:SendSync("SupernovaCast")
 	elseif spellId == 403741 then --Космическое вознесение (Вознесение)
 		self.vb.addIcon = 7
@@ -612,12 +617,12 @@ function mod:SPELL_CAST_START(args)
 		--		timerEbonMight:Start(mightTimer)
 		--	end
 		--end
-	elseif spellId == 403517 then --Объятия пустоты
+--[[	elseif spellId == 403517 then --Объятия пустоты (Сломано на стороне сервера)
 		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
 		if timer then
 			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
-		end
+		end]]
 	elseif spellId == 407496 or spellId == 404288 then --Бесконечное заключение 407496 confirmed, 404288 unknown (mythic?)
 		self.vb.disintegrateCount = self.vb.disintegrateCount + 1
 		self.vb.disintegrateIcon = 1
@@ -651,6 +656,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 402746 then --Парящие угли
 		DBM:Debug("Check Murchal proshlyap", 2)
+	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
+		self:SendSync("BlackHole")
 	end
 end
 
@@ -1063,7 +1070,6 @@ end]]
 
 function mod:OnSync(msg)
 	if msg == "Phase 3 RP" then
-		DBM:Debug("Murchal proshlyap 2", 2)
 		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
 		timerDesolateBlossomCD:Stop()
@@ -1071,8 +1077,8 @@ function mod:OnSync(msg)
 		timerVoidClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 		timerPhaseCD:Start(13.5)
+		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
 	elseif msg == "Phase 3 Start" then
-		DBM:Debug("Murchal proshlyap 3", 2)
 		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
@@ -1111,7 +1117,21 @@ function mod:OnSync(msg)
 			timerVoidSlashCD:Start(21)
 			timerScouringEternityCD:Start(46.1, 1)
 		end
+		DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)
 	elseif msg == "SupernovaCast" then
+		self.vb.blossomCount = self.vb.blossomCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
+		if timer then
+			timerScouringEternityCD:Start(timer)
+		end
 		timerScouringEternity:Start()
+		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
+	elseif msg == "BlackHole" then
+		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
+		if timer then
+			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
+		end
+		DBM:Debug("Murchal proshlyap (Чёрная дыра)", 2)
 	end
 end
