@@ -1125,7 +1125,7 @@ function mod:OnSync(msg)
 			timerScouringEternityCD:Start(timer)
 		end
 		timerScouringEternity:Start()
-		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
+		DBM:Debug("Murchal proshlyap (Начало каста Сверхновая)", 2)
 	elseif msg == "BlackHole" then
 		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
