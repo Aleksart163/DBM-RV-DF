@@ -30,12 +30,12 @@ mod:RegisterEventsInCombat(
 --TODO, what do you actually do with Temporal Anomaly, soak it?
 --NOTE, Rending Charge is a private aura
 --General
-local warnInfusedStrikes							= mod:NewStackAnnounce(406311, 2, nil, "Tank|Healer")
+local warnInfusedStrikes							= mod:NewStackAnnounce(406311, 2, nil, "Tank|Healer") --Усиленные удары
 local warnInfusedExplosion							= mod:NewCountAnnounce(407302, 4, nil, "Tank|Healer")
 
-local specWarnInfusedStrikesSelf					= mod:NewSpecialWarningStack(406311, nil, 6, nil, nil, 3, 6)
-local specWarnInfusedStrikesTaunt					= mod:NewSpecialWarningTaunt(406311, nil, nil, nil, 1, 2)
-local specWarnInfusedStrikesHug						= mod:NewSpecialWarningMoveTo(406311, nil, nil, nil, 1, 2)
+local specWarnInfusedStrikesSelf					= mod:NewSpecialWarningStack(406311, nil, 6, nil, nil, 3, 6) --Усиленные удары
+local specWarnInfusedStrikesTaunt					= mod:NewSpecialWarningTaunt(406311, nil, nil, nil, 1, 2) --Усиленные удары
+local specWarnInfusedStrikesHug						= mod:NewSpecialWarningMoveTo(406311, nil, nil, nil, 1, 2) --Усиленные удары
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
 local timerInfusedExplosion							= mod:NewBuffFadesTimer(20, 407302, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)--Track the aura that needs to fall off before tanks "clear" again
@@ -45,45 +45,46 @@ mod:AddInfoFrameOption(406311, "Tank")
 --Neldris
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26001))
 
-local warnRendingCharge								= mod:NewIncomingCountAnnounce(406358, 3)
+local warnRendingCharge								= mod:NewIncomingCountAnnounce(406358, 3) --Раздирающий рывок
 
-local specWarnMassiveSlam							= mod:NewSpecialWarningDodgeCount(404472, nil, nil, nil, 2, 2)
-local specWarnBellowingRoar							= mod:NewSpecialWarningCount(404713, nil, nil, nil, 2, 2)
+local specWarnMassiveSlam							= mod:NewSpecialWarningDodgeCount(404472, nil, nil, nil, 2, 2) --Обширный удар
+local specWarnBellowingRoar							= mod:NewSpecialWarningCount(404713, nil, nil, nil, 2, 2) --Раскатистый рев
+local specWarnBellowingRoar2						= mod:NewSpecialWarningRunCount(404713, "Melee", nil, nil, 4, 4) --Раскатистый рев
 
-local timerRendingChargeCD							= mod:NewCDCountTimer(34.2, 406358, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON)
-local timerMassiveSlamCD							= mod:NewCDCountTimer(39, 404472, nil, nil, nil, 3)
-local timerBellowingRoarCD							= mod:NewCDCountTimer(23.1, 404713, nil, nil, nil, 2)
+local timerRendingChargeCD							= mod:NewCDCountTimer(34.2, 406358, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON) --Раздирающий рывок
+local timerMassiveSlamCD							= mod:NewCDCountTimer(39, 404472, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Обширный удар
+local timerBellowingRoarCD							= mod:NewCDCountTimer(23.1, 404713, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Раскатистый рев
 
-mod:AddPrivateAuraSoundOption(406317, true, 406358, 1)
+mod:AddPrivateAuraSoundOption(406317, true, 406358, 1) --Раздирающий рывок
 --Thadrion
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26322))
-local warnUnstableEssence							= mod:NewCastAnnounce(407327, 3)
-local warnUnstableEssenceTargets					= mod:NewTargetAnnounce(407327, 2)
+local warnUnstableEssence							= mod:NewCastAnnounce(407327, 3) --Нестабильная сущность
+local warnUnstableEssenceTargets					= mod:NewTargetAnnounce(407327, 2) --Нестабильная сущность
 
-local specWarnUnstableEssence						= mod:NewSpecialWarningYou(407327, nil, nil, nil, 1, 2)
-local specWarnVolatileSpew							= mod:NewSpecialWarningDodgeCount(405492, nil, nil, nil, 2, 2)
-local specWarnViolentEruption						= mod:NewSpecialWarningCount(405375, nil, nil, nil, 2, 2)
+local specWarnUnstableEssence						= mod:NewSpecialWarningYou(407327, nil, nil, nil, 1, 2) --Нестабильная сущность
+local specWarnVolatileSpew							= mod:NewSpecialWarningDodgeCount(405492, nil, nil, nil, 2, 2) --Нестабильный плевок
+local specWarnViolentEruption						= mod:NewSpecialWarningCount(405375, nil, nil, nil, 2, 2) --Яростное извержение
 
-local timerUnstableEssenceCD						= mod:NewCDCountTimer(29.2, 407327, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerVolatileSpewCD							= mod:NewCDCountTimer(26, 405492, nil, nil, nil, 3)
-local timerViolentEruptionCD						= mod:NewCDCountTimer(68.3, 405375, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerUnstableEssenceCD						= mod:NewCDCountTimer(29.2, 407327, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Нестабильная сущность
+local timerVolatileSpewCD							= mod:NewCDCountTimer(26, 405492, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Нестабильный плевок
+local timerViolentEruptionCD						= mod:NewCDCountTimer(68.3, 405375, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Яростное извержение
 
 mod:AddSetIconOption("SetIconOnEssence", 407327, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 --Rionthus
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26329))
-local warnTemporalAnomaly							= mod:NewCastAnnounce(407552, 3)
-local warnTemporalAnomalyAbsorbed					= mod:NewTargetNoFilterAnnounce(407552, 2)
-local warnDisintegrate								= mod:NewTargetAnnounce(405392, 2)
+local warnTemporalAnomaly							= mod:NewCastAnnounce(407552, 3) --Временная аномалия
+local warnTemporalAnomalyAbsorbed					= mod:NewTargetNoFilterAnnounce(407552, 2) --Временная аномалия
+local warnDisintegrate								= mod:NewTargetAnnounce(405392, 2) --Дезинтеграция
 
 local specWarnDeepBreath							= mod:NewSpecialWarningDodgeCount(406227, nil, 18357, nil, 2, 2)
-local specWarnDisintegrate							= mod:NewSpecialWarningMoveAway(405392, nil, nil, nil, 1, 2)
+local specWarnDisintegrate							= mod:NewSpecialWarningMoveAway(405392, nil, nil, nil, 1, 2) --Дезинтеграция
 
 local timerDeepBreathCD								= mod:NewCDCountTimer(42.7, 406227, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
-local timerTemporalAnomalyCD						= mod:NewCDCountTimer(43.7, 407552, nil, nil, nil, 5)
-local timerDisintegrateCD							= mod:NewCDCountTimer(43.7, 405392, nil, nil, nil, 3)
+local timerTemporalAnomalyCD						= mod:NewCDCountTimer(43.7, 407552, nil, nil, nil, 5) --Временная аномалия
+local timerDisintegrateCD							= mod:NewCDCountTimer(43.7, 405392, nil, nil, nil, 3) --Дезинтеграция
 
-local yellUnstableEssence							= mod:NewShortYell(407327, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, nil, nil, "YELL")
-local yellDisintegrate								= mod:NewShortYell(405392, nil, nil, nil, "YELL")
+local yellUnstableEssence							= mod:NewShortYell(407327, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, nil, nil, "YELL") --Нестабильная сущность
+local yellDisintegrate								= mod:NewShortYell(405392, nil, nil, nil, "YELL") --Дезинтеграция
 
 mod.vb.rendingCount = 0
 mod.vb.massiveSlamCount = 0
@@ -215,8 +216,13 @@ function mod:SPELL_CAST_START(args)
 		timerMassiveSlamCD:Start(timer, self.vb.massiveSlamCount+1)
 	elseif spellId == 404713 then
 		self.vb.roarCount = self.vb.roarCount + 1
-		specWarnBellowingRoar:Show(self.vb.roarCount)
-		specWarnBellowingRoar:Play("carefly")
+		if self:IsMelee() then
+			specWarnBellowingRoar2:Show(self.vb.roarCount)
+			specWarnBellowingRoar2:Play("runout")
+		else
+			specWarnBellowingRoar:Show(self.vb.roarCount)
+			specWarnBellowingRoar:Play("carefly")
+		end
 		local timer
 		if self:IsMythic() then
 			--Doesn't need energy calculation, it's always same rotation since it's engage boss
