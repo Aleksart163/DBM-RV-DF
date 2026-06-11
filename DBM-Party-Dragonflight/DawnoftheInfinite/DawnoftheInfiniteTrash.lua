@@ -51,7 +51,7 @@ local specWarnAncientRadiance				= mod:NewSpecialWarningSpell(413023, nil, nil, 
 local specWarnTemporalStrike				= mod:NewSpecialWarningDodge(412136, nil, nil, nil, 2, 2)
 local specWarnTimerip						= mod:NewSpecialWarningDodge(412063, nil, nil, nil, 2, 2)
 local specWarnUntwist						= mod:NewSpecialWarningDodge(413529, nil, nil, nil, 2, 2)
-local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, nil, 2, 2)
+local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, nil, 2, 2) --Вневременное проклятие
 local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil, 2, 2)
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2)--High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
@@ -90,7 +90,7 @@ local timerTaintedSandsCD					= mod:NewCDNPTimer(13.3, 415436, nil, nil, nil, 3)
 local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBloomCD							= mod:NewCDNPTimer(18.2, 413544, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, nil, nil, nil, 3)
-local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, nil, nil, nil, 3)
+local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие
 local timerInfiniteFuryCD					= mod:NewCDNPTimer(19.8, 413622, nil, nil, nil, 2)
 local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
 local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -504,14 +504,17 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
---[[function mod:CHAT_MSG_MONSTER_SAY(msg)
-	if (msg == L.MurchalProshlyapRP1 or msg:find(L.MurchalProshlyapRP1)) then
-		self:SendSync("RP1")
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.MurchalProshlyapRP0 or msg:find(L.MurchalProshlyapRP0)) then
+		self:SendSync("RP0")
 	end
-end]]
+end
 
 function mod:OnSync(msg)
-	if msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
+	if msg == "RP0" and self:AntiSpam(10, 2) then --Таймер пула перед 1-ым боссом
+		timerRP:Start(25)
+		timerTimelessCurseCD:Start(12)
+	elseif msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
 		timerRP:Start(74)
 	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
 		timerRP:Start(29)
