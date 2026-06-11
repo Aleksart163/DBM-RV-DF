@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 369675 369754 369703 382303",
 	"SPELL_CAST_SUCCESS 369605 369703",
-	"SPELL_AURA_APPLIED 369725"
+	"SPELL_AURA_APPLIED 369725 369660"
 )
 
 --TODO, warn trogg Ambush casts?
@@ -38,6 +38,7 @@ local specWarnQuakingTotem						= mod:NewSpecialWarningSwitch(369700, "-Healer",
 local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
 local specWarnThunderingSlam					= mod:NewSpecialWarningDodgeCount(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
+local timerTremor								= mod:NewCastTimer(10, 369660, nil, nil, nil, 7, nil, nil, nil, 2, 3)
 local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
 local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Сотрясающий тотем
 local timerBloodlustCD							= mod:NewCDTimer(30, 369754, nil, nil, nil, 5) --Жажда крови
@@ -100,5 +101,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerThunderingSlamCD:AddTime(10, self.vb.thunderingCount+1)
 		timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
 		timerBloodlustCD:AddTime(10)
+		timerTremor:Start()
+		DBM:Debug("Появился тотем 1", 2)
+	elseif spellId == 369660 and self:AntiSpam(2, 2) then
+		timerTremor:Start()
+		DBM:Debug("Появился тотем 2", 2)
 	end
 end
