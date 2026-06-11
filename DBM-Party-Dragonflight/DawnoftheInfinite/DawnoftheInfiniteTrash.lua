@@ -488,7 +488,7 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if self.Options.AutoRift and gossipOptionID == 110513 then
+		if self.Options.AutoRift and (gossipOptionID == 110513 or gossipOptionID == 110869) then
 			self:SelectGossip(gossipOptionID)
 		end
 	end
