@@ -209,7 +209,7 @@ function mod:SPELL_CAST_START(args)
 		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
 			timerVolcanicShieldCD:Start(nil, args.sourceGUID)
 		end
-	elseif spellId == 408959 then
+	elseif spellId == 408959 then --Прыжок
 		self.vb.leapCount = self.vb.leapCount + 1
 		specWarnDevastatingLeap:Show(self.vb.leapCount)
 		specWarnDevastatingLeap:Play("watchstep")
@@ -527,6 +527,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		specWarnCatastrophicSlam:Show(self.vb.leapCount)
 		specWarnCatastrophicSlam:Play("helpsoak")
 		--25.6, 26.7, 26.7, 26.7 (new heroic/normal timers)
+		if self.vb.leapCount == 2 then
+			self.vb.leapCount = 0
+		end
 		timerCatastrophicSlamCD:Start(26.7, self.vb.leapCount+1)
 	end
 end
