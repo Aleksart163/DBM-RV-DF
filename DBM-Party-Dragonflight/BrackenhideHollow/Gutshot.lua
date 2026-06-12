@@ -28,24 +28,24 @@ mod:RegisterEventsInCombat(
  or ability.id = 383979 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnEnsnaringTrap							= mod:NewTargetNoFilterAnnounce(384148, 3)--Trap going out
-local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3)
-local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2)
+local warnEnsnaringTrap							= mod:NewTargetNoFilterAnnounce(384148, 3) --Оплетающая ловушка
+local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3) --Пахнет мясом (Преследование)
+local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2) --Призыв гиен
 
-local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2)--Trap going out
-local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2)--Buff on mob
-local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, nil, nil, 4, 2)--Debuff on player
-local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 3, 2)--Trap going out
+local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2) --Оплетающая ловушка
+local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2) --Бешеный аппетит Buff on mob
+local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, 96306, nil, 4, 2) --Бешеный аппетит Debuff on player
+local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInterrupt", nil, nil, 1, 2) --Приказ хозяина
+local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 3, 2) --Выстрел в живот
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
-local timerEnsnaringTrapCD						= mod:NewCDTimer(17, 384148, nil, nil, nil, 3)--Trap going out
-local timerMeatTossCD							= mod:NewCDTimer(21.8, 384416, nil, nil, nil, 3)
-local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1)
+local timerEnsnaringTrapCD						= mod:NewCDTimer(17, 384148, nil, nil, nil, 3) --Оплетающая ловушка
+local timerMeatTossCD							= mod:NewCDTimer(21.8, 384416, nil, nil, nil, 3) --Бросок мяса
+local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв гиен
 --local timerMastersCallCD						= mod:NewCDTimer(35, 384638, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Doesn't seem to have an actual CD?
-local timerGutShotCD							= mod:NewCDTimer(18.2, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerGutShotCD							= mod:NewCDTimer(18.2, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Выстрел в живот
 
-local yellEnsnaringTrap							= mod:NewYell(384148, nil, false, nil, "YELL")--Trap going out
+local yellEnsnaringTrap							= mod:NewYell(384148, nil, false, nil, "YELL") --Оплетающая ловушка
 
 mod:AddRangeFrameOption(4, 384558)
 mod:AddNamePlateOption("NPAuraOnFixate", 384725)
@@ -56,10 +56,10 @@ mod:AddNamePlateOption("NPAuraOnHunterleadersTactics", 387889)
 --mod:GroupSpells(384764, 384725)--Group the two frenzy IDs
 
 function mod:OnCombatStart(delay)
-	timerEnsnaringTrapCD:Start(8-delay)
-	timerGutShotCD:Start(12-delay)
-	timerMeatTossCD:Start(20.5-delay)
-	timerCallHyenasCD:Start(31-delay)
+	timerEnsnaringTrapCD:Start(8-delay) --
+	timerGutShotCD:Start(16.4-delay) --
+	timerMeatTossCD:Start(13-delay) --
+	timerCallHyenasCD:Start(30-delay) --
 --	timerMastersCallCD:Start(37-delay)--Not timer based?
 	if self.Options.NPAuraOnFixate or self.Options.NPAuraOnMastersCall or self.Options.NPAuraOnEnsnaringTrap or self.Options.NPAuraOnHunterleadersTactics then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -67,6 +67,12 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(4)
 	end
+	--20 12 46 139 пул босса
+	--20 12 54 154 ловушка 1
+	--20 12 59 459 бросок мяса 1
+	--20 13 02 557 выстрел 1
+	--20 13 13 169 ловушка 2
+	--20 13 16 174 призыв гиен 1
 end
 
 function mod:OnCombatEnd()

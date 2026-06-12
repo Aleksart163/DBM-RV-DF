@@ -656,8 +656,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 402746 then --Парящие угли
 		DBM:Debug("Check Murchal proshlyap", 2)
-	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
-		self:SendSync("BlackHole")
+--	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
+	--	self:SendSync("BlackHole")
 	end
 end
 
@@ -876,6 +876,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEmbraceofNothingness:Show(args.destName)
 		end
+		self:SendSync("BlackHole")
 	elseif spellId == 403284 then--Stage 1-2 Intermission
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
 		if not Phase2 then
