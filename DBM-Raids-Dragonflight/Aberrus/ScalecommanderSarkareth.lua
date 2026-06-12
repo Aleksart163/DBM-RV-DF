@@ -223,7 +223,7 @@ local allTimers = {
 			[408422] = {19.8, 17.7, 36.4, 15.3, 55.2, 35.3},
 			--Scouring Eternity
 			[403625] = {44.6, 73.0, 76.5},
-			--Embrace of Nothingness
+			--Объятия пустоты (Чёрная дыра)
 			[403517] = {23.3, 38.2, 26.5, 40.0, 47.0, 34.7},
 		},
 	},
@@ -265,7 +265,7 @@ local allTimers = {
 			[408422] = {21, 36.2, 37.5, 85.0, 11.2, 61.3},
 			--Scouring Eternity
 			[403625] = {46.2, 76.5, 80.2, 77.9},
-			--Embrace of Nothingness
+			--Объятия пустоты (Чёрная дыра)
 			[403517] = {24.7, 111.2, 50.0},
 		},
 	},
@@ -305,7 +305,7 @@ local allTimers = {
 			[408422] = {22.3, 38.6, 39.9, 90.6, 11.9, 25.3, 39.9, 90.6, 11.9, 25.3},
 			--Scouring Eternity
 			[403625] = {49.7, 82.5, 86.1, 81.3, 82.5},
-			--Embrace of Nothingness
+			--Объятия пустоты (Чёрная дыра)
 			[403517] = {26.3, 118.6, 53.3, 114.7, 53.3},
 		},
 	},
@@ -362,6 +362,109 @@ local function startProshlyapationOfMurchal(self)
 		Phase2 = true
 		DBM:Debug("Murchal proshlyap", 2)
 	end
+end
+
+local function startPhase3RP(self) --Версия 1
+	self.vb.bombCount = 0
+	self.vb.breathCount = 0
+	self.vb.surgeCount = 0
+	self.vb.blossomCount = 0
+	self.vb.disintegrateCount = 0
+	self.vb.tankCount = 0
+	self:SetStage(3)
+	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+	warnPhase:Play("pthree")
+	timerPhaseCD:Stop()
+	timerVoidBombCD:Stop()
+	timerAbyssalBreathCD:Stop()
+	timerDesolateBlossomCD:Stop()
+	timerInfiniteDuressCD:Stop()
+	timerVoidClawsCD:Stop()
+	timerEbonMight:Start(24.5, 1)
+	timerPhaseCD:Start(13.5)
+	-----------------------------
+	if self:IsMythic() then
+		timerInfiniteDuressCD:Start(18, 1)
+		timerCosmicAscensionCD:Start(20.3, 1)
+		timerHurtlingBarrageCD:Start(32, 1)
+		timerVoidSlashCD:Start(33.3)--
+		timerEmbraceofNothingnessCD:Start(36.8, 1)
+		timerVoidBombCD:Start(38)
+		timerScouringEternityCD:Start(66.6, 1) --46.2
+	elseif self:IsHeroic() then
+		timerInfiniteDuressCD:Start(18.2, 1)
+		timerCosmicAscensionCD:Start(21, 1)
+		timerHurtlingBarrageCD:Start(33.2, 1)
+		timerVoidSlashCD:Start(34.5)
+		timerEmbraceofNothingnessCD:Start(38.2, 1)
+		timerVoidBombCD:Start(42)
+		timerScouringEternityCD:Start(64.3, 1) --46.2
+	elseif self:IsNormal() then
+		timerCosmicAscensionCD:Start(21.2, 1)
+		timerHurtlingBarrageCD:Start(34.5, 1)
+		timerVoidSlashCD:Start(35.8)
+		timerEmbraceofNothingnessCD:Start(39.8, 1)
+		timerVoidBombCD:Start(43.8)
+		timerScouringEternityCD:Start(66.6, 1) --48.6
+	else--LFR
+		timerCosmicAscensionCD:Start(20.7, 1)
+		timerVoidSlashCD:Start(34.5)
+		timerScouringEternityCD:Start(59.6, 1)
+	end
+	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении дебаффа)", 2)
+end
+
+--[[local function startPhase3RP(self) --Версия 2, если 1 не сработает
+	timerPhaseCD:Stop()
+	timerVoidBombCD:Stop()
+	timerAbyssalBreathCD:Stop()
+	timerDesolateBlossomCD:Stop()
+	timerInfiniteDuressCD:Stop()
+	timerVoidClawsCD:Stop()
+	timerPhaseCD:Start(13.5)
+	DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
+end]]
+
+local function startPhase3(self) --Версия 2, если 1 не сработает
+	self:SetStage(3)
+	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+	warnPhase:Play("pthree")
+	self.vb.bombCount = 0
+	self.vb.breathCount = 0
+	self.vb.surgeCount = 0
+	self.vb.blossomCount = 0
+	self.vb.disintegrateCount = 0
+	self.vb.tankCount = 0
+	timerEbonMight:Start(11, 1)
+	if self:IsMythic() then
+		timerInfiniteDuressCD:Start(4.5, 1)
+		timerCosmicAscensionCD:Start(6.8, 1)
+		timerHurtlingBarrageCD:Start(18.6, 1)
+		timerVoidSlashCD:Start(19.8)
+		timerEmbraceofNothingnessCD:Start(23.3, 1)
+		timerVoidBombCD:Start(24.5)
+		timerScouringEternityCD:Start(53.1, 1) --46.2
+	elseif self:IsHeroic() then
+		timerInfiniteDuressCD:Start(4.7, 1)
+		timerCosmicAscensionCD:Start(7.5, 1)
+		timerHurtlingBarrageCD:Start(19.7, 1)
+		timerVoidSlashCD:Start(21)
+		timerEmbraceofNothingnessCD:Start(24.7, 1)
+		timerVoidBombCD:Start(28.5)
+		timerScouringEternityCD:Start(50.8, 1) --46.2
+	elseif self:IsNormal() then
+		timerCosmicAscensionCD:Start(7.7, 1)
+		timerHurtlingBarrageCD:Start(21, 1)
+		timerVoidSlashCD:Start(22.3)
+		timerEmbraceofNothingnessCD:Start(26.3, 1)
+		timerVoidBombCD:Start(30.3)
+		timerScouringEternityCD:Start(53.1, 1) --48.6
+	else--LFR
+		timerCosmicAscensionCD:Start(7.2, 1)
+		timerVoidSlashCD:Start(21)
+		timerScouringEternityCD:Start(46.1, 1)
+	end
+	DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)
 end
 
 function mod:OnCombatStart(delay)
@@ -559,7 +662,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnEmptyStrike:Show()
 			specWarnEmptyStrike:Play("defensive")
 		end
-	elseif spellId == 404403 or spellId == 411030 then--404403 confirmed, 411030 unknown (probably LFR)
+	elseif spellId == 404403 or spellId == 411030 then--Опустошенный цветок 404403 confirmed, 411030 unknown (probably LFR)
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		specWarnDesolateBlossom:Show(self.vb.blossomCount)
 		specWarnDesolateBlossom:Play("watchstep")
@@ -657,8 +760,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 402746 then --Парящие угли
 		DBM:Debug("Check Murchal proshlyap", 2)
 	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
-		DBM:Debug("Murchal proshlyap (Чёрная дыра) каст случился", 2)
-	--	self:SendSync("BlackHole")
+		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 403517, self.vb.nothingnessCount+1)
+		if timer then
+			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
+		end
+		DBM:Debug("Murchal proshlyap (Чёрная дыра) Каст случился", 2)
 	end
 end
 
@@ -867,7 +974,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnHurtlingBarrage:CombinedShow(0.3, self.vb.surgeCount, args.destName)
 		self.vb.hurtlingIcon = self.vb.hurtlingIcon + 1
-	elseif spellId == 403520 then --Объятия пустоты (Черная дыра)
+	elseif spellId == 403520 then --Объятия пустоты (Черная дыра) аура на игроке
 		if args:IsPlayer() then
 			specWarnEmbraceofNothingness:Show()
 			specWarnEmbraceofNothingness:Play("gathershare")
@@ -877,12 +984,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEmbraceofNothingness:Show(args.destName)
 		end
-		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
-		if timer then
-			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
-		end
-		DBM:Debug("Murchal proshlyap (Чёрная дыра) аура наложилась", 2)
+		DBM:Debug("Murchal proshlyap (Чёрная дыра) Аура на игроке", 2)
 	--	self:SendSync("BlackHole")
 	elseif spellId == 403284 then--Stage 1-2 Intermission
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
@@ -897,7 +999,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSearingBreathCD:Stop()
 		timerBurningClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
-	elseif spellId == 410654 then--Stage 2-3 Intermission
+	elseif spellId == 410654 then --Начало фазы 3 (Дебафф на боссе)
 		warnVoidEmpowerment:Show(args.destName)
 		self:SendSync("Phase 3 RP")
 	end
@@ -974,8 +1076,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellHurtlingBarrageFades:Cancel()
 		end
-	elseif spellId == 410654 then --Начало фазы 3
-		self:SendSync("Phase 3 Start")
 	elseif spellId == 410625 then --Прекращение существования (Стартанула фаза 2)
 		timerEndExistenceCast:Stop()
 		--True start of phase 2 timers
@@ -1027,6 +1127,8 @@ function mod:SPELL_AURA_REMOVED(args)
 				end
 			end
 		end
+	elseif spellId == 410654 then --Начало фазы 3 (Дебафф с босса спал)
+		self:SendSync("Phase 3 Start")
 	end
 end
 
@@ -1078,16 +1180,18 @@ end]]
 
 function mod:OnSync(msg)
 	if msg == "Phase 3 RP" then
-		timerVoidBombCD:Stop()
+		self:Schedule(0.1, startPhase3RP, self)
+--[[		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
 		timerDesolateBlossomCD:Stop()
 		timerInfiniteDuressCD:Stop()
 		timerVoidClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 		timerPhaseCD:Start(13.5)
-		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
+		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)]]
 	elseif msg == "Phase 3 Start" then
-		self:SetStage(3)
+		DBM:Debug("Murchal proshlyap (Имунн с босса спал)", 2)]]
+--[[		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
 		self.vb.bombCount = 0
@@ -1125,12 +1229,12 @@ function mod:OnSync(msg)
 			timerVoidSlashCD:Start(21)
 			timerScouringEternityCD:Start(46.1, 1)
 		end
-		DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)
+		DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)]]
 	elseif msg == "SupernovaCast" then
 		self.vb.blossomCount = self.vb.blossomCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 403625, self.vb.blossomCount+1)
 		if timer then
-			timerScouringEternityCD:Start(timer)
+			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
 		end
 		timerScouringEternity:Start()
 		DBM:Debug("Murchal proshlyap (Начало каста Сверхновая)", 2)
