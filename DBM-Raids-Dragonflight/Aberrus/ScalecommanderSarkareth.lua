@@ -656,7 +656,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 402746 then --Парящие угли
 		DBM:Debug("Check Murchal proshlyap", 2)
---	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
+	elseif spellId == 403517 then --Объятия пустоты (Чёрная дыра)
+		DBM:Debug("Murchal proshlyap (Чёрная дыра) каст случился", 2)
 	--	self:SendSync("BlackHole")
 	end
 end
@@ -881,7 +882,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if timer then
 			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
 		end
-		DBM:Debug("Murchal proshlyap (Чёрная дыра)", 2)
+		DBM:Debug("Murchal proshlyap (Чёрная дыра) аура наложилась", 2)
 	--	self:SendSync("BlackHole")
 	elseif spellId == 403284 then--Stage 1-2 Intermission
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
