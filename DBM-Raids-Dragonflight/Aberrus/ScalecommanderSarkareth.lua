@@ -866,7 +866,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnHurtlingBarrage:CombinedShow(0.3, self.vb.surgeCount, args.destName)
 		self.vb.hurtlingIcon = self.vb.hurtlingIcon + 1
-	elseif spellId == 403520 then
+	elseif spellId == 403520 then --Объятия пустоты (Черная дыра)
 		if args:IsPlayer() then
 			specWarnEmbraceofNothingness:Show()
 			specWarnEmbraceofNothingness:Play("gathershare")
@@ -876,7 +876,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEmbraceofNothingness:Show(args.destName)
 		end
-		self:SendSync("BlackHole")
+		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
+		if timer then
+			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
+		end
+		DBM:Debug("Murchal proshlyap (Чёрная дыра)", 2)
+	--	self:SendSync("BlackHole")
 	elseif spellId == 403284 then--Stage 1-2 Intermission
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
 		if not Phase2 then
@@ -1127,12 +1133,12 @@ function mod:OnSync(msg)
 		end
 		timerScouringEternity:Start()
 		DBM:Debug("Murchal proshlyap (Начало каста Сверхновая)", 2)
-	elseif msg == "BlackHole" then
+--[[	elseif msg == "BlackHole" then
 		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
 		if timer then
 			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
 		end
-		DBM:Debug("Murchal proshlyap (Чёрная дыра)", 2)
+		DBM:Debug("Murchal proshlyap (Чёрная дыра)", 2)]]
 	end
 end
