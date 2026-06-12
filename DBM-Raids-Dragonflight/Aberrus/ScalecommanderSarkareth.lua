@@ -43,9 +43,8 @@ local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, ni
 local warnOblivionStack						= mod:NewCountAnnounce(401951, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401951)) --Забвение
 local warnMindFragment						= mod:NewAddsLeftAnnounce(403997, 1)--Not technically adds, but wording of option and alert text is ambigious that it doesn't matter, it fits
 local warnEmptynessBetweenStars				= mod:NewFadesAnnounce(401215, 1) --Межзвездная пустота
-local warnAstralFlare						= mod:NewCountAnnounce(407576, 1, nil, false, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(407576))--Optional, don't want it to drown out the important messages of collecting mind fragments
 
-local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil, nil, 1, 6) --Забвение
+local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil, nil, 1, 4) --Забвение
 local specWarnEmptynessBetweenStars			= mod:NewSpecialWarningYou(401215, nil, nil, nil, 1, 5) --Межзвездная пустота
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(406989, nil, nil, nil, 1, 8)
 
@@ -84,6 +83,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
+local specWarnAstralFlareStack					= mod:NewSpecialWarningStack(407576, nil, 5, 122149, nil, 1, 2) --Астральный огонь (Ускорение)
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
 local specWarnVoidFracture2						= mod:NewSpecialWarningFades(404027, nil, nil, nil, 1, 2) --Бомба Бездны
@@ -833,10 +833,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount < 3 then
 			warnMindFragment:Show(3-amount)
 		end
-	elseif spellId == 407576 and args:IsPlayer() then
+	elseif spellId == 407576 and args:IsPlayer() then --Астральный огонь
 		local amount = args.amount or 1
-		if amount % 2 == 0 then
-			warnAstralFlare:Show(amount)
+		if amount % 5 == 0 then
+			specWarnAstralFlareStack:Show(amount)
+			specWarnAstralFlareStack:Play("stackhigh")
 		end
 	elseif spellId == 404269 then
 		if (args.amount or 1) == 5 then
@@ -1190,7 +1191,7 @@ function mod:OnSync(msg)
 		timerPhaseCD:Start(13.5)
 		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)]]
 	elseif msg == "Phase 3 Start" then
-		DBM:Debug("Murchal proshlyap (Имунн с босса спал)", 2)]]
+		DBM:Debug("Murchal proshlyap (Имунн с босса спал)", 2)
 --[[		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
