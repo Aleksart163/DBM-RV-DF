@@ -33,7 +33,7 @@ local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4) --Дик
 local warnBladestorm							= mod:NewTargetNoFilterAnnounce(377827, 3) --Вихрь клинков
 
 local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, nil, nil, 1, 2) --Дикий рывок
-local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 1, 2) --Дикий рывок
+local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 3, 2) --Дикий рывок
 local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 3, 2) --Вихрь клинков
 
 local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок
@@ -54,7 +54,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(24734))
 local warnHextrick								= mod:NewTargetNoFilterAnnounce(381466, 3) --Хитрый сглаз
 local warnBloodlust								= mod:NewSpellAnnounce(377965, 3) --Кровавое бешенство
 
-local specWarnHextrickTotem						= mod:NewSpecialWarningSwitch(381470, "-Healer", nil, nil, 3, 2) --Тотем хитрого сглаза
+local specWarnHextrickTotem						= mod:NewSpecialWarningSwitch(381470, "Dps", nil, nil, 3, 4) --Тотем хитрого сглаза
 local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "HasInterrupt", nil, nil, 1, 2) --Великий исцеляющий поток
 
 local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Тотем хитрого сглаза
@@ -73,16 +73,16 @@ local function scanBosses(self, delay)
 		if UnitExists(unitID) then
 			local cid = self:GetUnitCreatureId(unitID)
 			local bossGUID = UnitGUID(unitID)
-			if cid == 186122 then--Rira Hackclaw
-				timerBladestormCD:Start(21.1-delay, bossGUID) --
+			if cid == 186122 then --Рира Когтерезка
+				timerBladestormCD:Start(19.9-delay, bossGUID) --
 				timerSavageChargeCD:Start(48.3-delay, bossGUID)
-			elseif cid == 186124 then--Gashtooth
+			elseif cid == 186124 then --Рви-зуб
 				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID)
 				timerDecayedSensesCD:Start(45.8-delay, bossGUID)
 				if self:IsMythic() then
 					timerMarkedforButcheryCD:Start(12.5-delay, 1, bossGUID)
 				end
-			else--Tricktotem
+			else --Лови-тотем
 				timerGreaterHealingRapidsCD:Start(11.9-delay, 1, bossGUID) --
 				timerHexrickTotemCD:Start(44.8-delay, bossGUID)
 			end
