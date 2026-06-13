@@ -102,20 +102,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	--	timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
 	--	timerBloodlustCD:AddTime(10)
 	--	timerTremor:Start()
-		DBM:Debug("Появился тотем 1", 2)
+		DBM:Debug("Сломался тотем 1", 2)
 	elseif spellId == 369660 then --Дрожь
-		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		local cid2 = self:GetCIDFromGUID(args.destGUID)
+		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 184018 then
-			timerThunderingSlamCD:Stop()
-			timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
-			timerThunderingSlamCD:Start(10, self.vb.thunderingCount+1)
-			timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
-			timerBloodlustCD:AddTime(10)
-			timerTremor:Start()
-			DBM:Debug("Сломался тотем 1", 2)
-		end
-		if cid2 == 184018 then
 			timerThunderingSlamCD:Stop()
 			timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
 			timerThunderingSlamCD:Start(10, self.vb.thunderingCount+1)
@@ -124,6 +114,5 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerTremor:Start()
 			DBM:Debug("Сломался тотем 2", 2)
 		end
-		DBM:Debug("Сломался тотем", 2)
 	end
 end
