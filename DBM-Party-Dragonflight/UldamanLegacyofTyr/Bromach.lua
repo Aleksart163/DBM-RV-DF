@@ -38,7 +38,7 @@ local specWarnQuakingTotem						= mod:NewSpecialWarningSwitch(369700, "-Healer",
 local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
 local specWarnThunderingSlam					= mod:NewSpecialWarningDodgeCount(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
-local timerTremor								= mod:NewCastTimer(10, 369660, nil, nil, nil, 7, nil, nil, nil, 2, 3)
+local timerTremor								= mod:NewCastTimer(10, 369660, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 2, 5)
 local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
 local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Сотрясающий тотем
 local timerBloodlustCD							= mod:NewCDTimer(30, 369754, nil, nil, nil, 5) --Жажда крови
@@ -97,14 +97,33 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 369725 then--Tremor
-		timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
-		timerThunderingSlamCD:AddTime(10, self.vb.thunderingCount+1)
-		timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
-		timerBloodlustCD:AddTime(10)
-		timerTremor:Start()
+	--	timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
+	--	timerThunderingSlamCD:AddTime(10, self.vb.thunderingCount+1)
+	--	timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
+	--	timerBloodlustCD:AddTime(10)
+	--	timerTremor:Start()
 		DBM:Debug("Появился тотем 1", 2)
-	elseif spellId == 369660 and self:AntiSpam(2, 2) then
-		timerTremor:Start()
-		DBM:Debug("Появился тотем 2", 2)
+	elseif spellId == 369660 then --Дрожь
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		local cid2 = self:GetCIDFromGUID(args.destGUID)
+		if cid == 184018 then
+			timerThunderingSlamCD:Stop()
+			timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
+			timerThunderingSlamCD:Start(10, self.vb.thunderingCount+1)
+			timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
+			timerBloodlustCD:AddTime(10)
+			timerTremor:Start()
+			DBM:Debug("Сломался тотем 1", 2)
+		end
+		if cid2 == 184018 then
+			timerThunderingSlamCD:Stop()
+			timerCalloftheDeepCD:AddTime(10, self.vb.callCount+1)
+			timerThunderingSlamCD:Start(10, self.vb.thunderingCount+1)
+			timerQuakingTotemCD:AddTime(10, self.vb.totemCount+1)
+			timerBloodlustCD:AddTime(10)
+			timerTremor:Start()
+			DBM:Debug("Сломался тотем 2", 2)
+		end
+		DBM:Debug("Сломался тотем", 2)
 	end
 end

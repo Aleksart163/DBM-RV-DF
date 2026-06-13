@@ -47,7 +47,7 @@ local allProshlyapationsOfMurchal = {
 		--Рывок
 		[260292] = {7.9, 23},
 		--Несварение
-		[260793] = {17.9},
+		[260793] = {18.9},
 	},
 	[2] = {
 		--Рывок
@@ -74,7 +74,7 @@ local allProshlyapationsOfMurchal = {
 		[260793] = {17.9},
 	},
 	--Припадок
-	[260333] = {46.4, 46.5, 57.7, 46.9, 48},
+	[260333] = {45.9, 46.5, 57.7, 46.9, 48},
 }
 
 function mod:OnCombatStart(delay)
@@ -88,7 +88,7 @@ function mod:OnCombatStart(delay)
 	--he casts random ability first, it's charge like 95% of time though
 	timerChargeCD:Start(7.9-delay) --
 	timerIndigestionCD:Start(18.9-delay) --
-	timerTantrumCD:Start(46.2, 1) --
+	timerTantrumCD:Start(45.9, 1) --
 end
 
 function mod:OnCombatEnd()

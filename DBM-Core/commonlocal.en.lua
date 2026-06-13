@@ -96,6 +96,8 @@ CL.CURSE							= "Curse"
 CL.CURSES							= "Curses"
 CL.SWIRLS							= "Swirls"--Plural of Swirl
 CL.BOMBING							= "Bombing"
+CL.DAMAGEUP							= "Increased damage"
+
 --NOTE, many common locals are auto localized:
 --Bomb (37859), Bombs (167180), Scream (31295), Breath (17088), Beam (173303), Beams (207544), Charge (100), Knockback (28405), Portal (161722), Portals (109400)
 --Fixate (12021), Trap (181341), Meteor (28884), Shield (151702), Teleport (4801), Fear (5782), Roar (140459), Leap (47482), Orb (265315), Tornados (86189)

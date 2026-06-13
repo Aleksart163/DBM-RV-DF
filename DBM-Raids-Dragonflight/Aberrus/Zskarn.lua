@@ -45,11 +45,11 @@ local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 9, nil
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
-local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тактическое разрушение
+local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Тактическое разрушение
 local timerShrapnalBombCD						= mod:NewCDCountTimer(42.5, 406725, 167180, nil, nil, 3) --Шрапнельная бомба (Бомбы)
 local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2) --Шрапнельная бомба (Взрыв)
 local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, nil, nil, nil, 1) --Оживление големов
-local timerBlastWaveCD							= mod:NewCDCountTimer(34, 403978, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Взрывная волна
+local timerBlastWaveCD							= mod:NewCDCountTimer(34, 403978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Взрывная волна (Отталкивание)
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(20.7, 404010, 264364, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Нестабильные угли (Угли)
 local timerEliminationProtocol					= mod:NewCastTimer(10, 409942, 207544, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Протокол устранения (Лучи)
 local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, nil, nil, nil, 3) --Ловушки драконьего огня
@@ -171,17 +171,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsMythic() then
 			timerEliminationProtocol:Start()
 		end
-	elseif spellId == 406725 then
+	elseif spellId == 406725 then --Шрапнельная бомба
 		self.vb.shrapnalSoakCount = 0
 		self.vb.trapCastCount = self.vb.trapCastCount + 1
 		warnScatterTraps:Show(self.vb.trapCastCount)
 		timerShrapnalBombCD:Start(self:IsMythic() and 45.3 or 30.3, self.vb.trapCastCount+1)
 		timerShrapnalBomb:Start()
+		DBM:Debug("Murchal proshlyap (Случился каст активации бомб)", 2)
 	elseif spellId == 405736 then
 		self.vb.dragonCount = self.vb.dragonCount + 1
 		specWarnDragonDeezTraps:Show(self.vb.dragonCount)
 		specWarnDragonDeezTraps:Play("watchstep")
-		timerDragonDeezTrapsCD:Start(self:IsMythic() and 34 or self:IsEasy() and 35 or 30.4, self.vb.dragonCount)
+		timerDragonDeezTrapsCD:Start(self:IsMythic() and 34 or self:IsEasy() and 35 or 30.4, self.vb.dragonCount+1)
 	elseif spellId == 181113 then--Encounter Spawn
 		if self.Options.SetIconOnGolems then
 			self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, nil, 12, "SetIconOnGolems")

@@ -37,10 +37,10 @@ local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, n
 local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 3, 2) --Вихрь клинков
 
 local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок
-local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вихрь клинков
+local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Вихрь клинков
 --Gashtooth
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24733))
-local warnMarkedforButchery						= mod:NewTargetCountAnnounce(378229, 4, nil, "Healer", nil, nil, nil, nil, true) --Метка свежевателя
+local warnMarkedforButchery						= mod:NewTargetNoFilterAnnounce(378229, 4) --Метка свежевателя
 
 local specWarnDecayedSenses						= mod:NewSpecialWarningDispel(381379, "RemoveMagic", nil, nil, 3, 2) --Гниющие глаза
 local specWarnGashFrenzy						= mod:NewSpecialWarningCount(378029, "Healer", nil, nil, 2, 2) --Разрывающее бешенство
@@ -60,7 +60,8 @@ local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "
 local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Тотем хитрого сглаза
 local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Великий исцеляющий поток
 
-local yellBladestorm							= mod:NewYell(377827, nil, nil, nil, "YELL") --Вихрь клинков
+local yellBladestorm							= mod:NewYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
+local yellBladestormFades						= mod:NewShortFadesYell(377827, nil, nil, nil, "YELL") --Вихрь клинков
 local yellSavageCharge							= mod:NewYell(381461, nil, nil, nil, "YELL") --Дикий рывок
 
 mod.vb.healingRapidsCount = 0
@@ -77,7 +78,7 @@ local function scanBosses(self, delay)
 				timerBladestormCD:Start(19.9-delay, bossGUID) --
 				timerSavageChargeCD:Start(48.3-delay, bossGUID)
 			elseif cid == 186124 then --Рви-зуб
-				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID)
+				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID) --
 				timerDecayedSensesCD:Start(45.8-delay, bossGUID)
 				if self:IsMythic() then
 					timerMarkedforButcheryCD:Start(12.5-delay, 1, bossGUID)
@@ -96,7 +97,7 @@ function mod:MarkedTarget(targetname, uId)
 		specWarnMarkedforButchery:Show()
 		specWarnMarkedforButchery:Play("defensive")
 	else
-		warnMarkedforButchery:Show(self.vb.markedCount, targetname)
+		warnMarkedforButchery:Show(targetname)
 	end
 end
 
@@ -116,6 +117,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnGashFrenzy:Show(self.vb.frenzyCount)
 		specWarnGashFrenzy:Play("healfull")
 		timerGashFrenzyCD:Start(nil, self.vb.frenzyCount+1, args.sourceGUID)
+		DBM:Debug("Murchal proshlyap (Разрывающее бешенство)", 2)
 	elseif spellId == 381470 then
 		specWarnHextrickTotem:Show()
 		specWarnHextrickTotem:Play("attacktotem")
@@ -170,6 +172,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBladestorm:Show()
 			specWarnBladestorm:Play("whirlwind")
 			yellBladestorm:Yell()
+			yellBladestormFades:Countdown(spellId)
 		else
 			warnBladestorm:Show(args.destName)
 		end

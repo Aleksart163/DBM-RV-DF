@@ -45,7 +45,7 @@ local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, n
 local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, 96306, nil, 4, 2) --Огненное преследование (Преследование)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377542, nil, nil, nil, 1, 8)
 
-local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток
+local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток
 local timerMagmaShieldCD						= mod:NewCDTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
 local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3) --Расплавленное золото
 local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Драконий горн
