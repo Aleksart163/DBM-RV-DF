@@ -141,9 +141,10 @@ function mod:SPELL_CAST_START(args)
 			specWarnSandBreath:Show()
 			specWarnSandBreath:Play("defensive")
 			yellSandBreath:Yell()
+		else
+			specWarnSandBreath2:Show()
+			specWarnSandBreath2:Play("watchstep")
 		end
-		specWarnSandBreath2:Show()
-		specWarnSandBreath2:Play("watchstep")
 		if not Proshlyap and self.vb.breathCount == 1 then
 			timerSandBreathCD:Start(19, self.vb.breathCount+1)
 		elseif Proshlyap then

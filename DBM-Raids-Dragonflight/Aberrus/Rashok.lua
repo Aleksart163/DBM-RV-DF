@@ -201,7 +201,7 @@ function mod:OnCombatStart(delay)
 	timerChargedSmashCD:Start(21.1-delay, 1)
 	timerDoomFlameCD:Start(39.1-delay, 1)
 	timerShadowlavaBlastCD:Start(95.2-delay)
-	timerAncientFuryCD:Start(118-delay) --
+	timerAncientFuryCD:Start(112-delay) --
 	if self:IsMythic() then
 		timerUnleashedShadowflameCD:Start(4.2-delay, 1)
 		timerVolcanicComboCD:Start(29.1-delay, 1)
@@ -472,7 +472,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerChargedSmashCD:Start(23.2, 1)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(96.8) --2 каст в героике точно
-		timerAncientFuryCD:Start(118)
+		timerAncientFuryCD:Start(112)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
@@ -505,7 +505,7 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 		local remaining = 100-bossPower
 		if remaining > 0 then
 			local elapsedTimer = 100-remaining
-			timerAncientFuryCD:Update(elapsedTimer, 118)
+			timerAncientFuryCD:Update(elapsedTimer, 112)
 		else
 			timerAncientFuryCD:Stop()
 		end

@@ -501,6 +501,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:SendSync("RP2")
 	elseif (msg == L.MurchalProshlyapRP3 or msg:find(L.MurchalProshlyapRP3)) then
 		self:SendSync("RP3")
+	elseif (msg == L.MurchalProshlyapRP4 or msg:find(L.MurchalProshlyapRP4)) or (msg == L.MurchalProshlyapRP5 or msg:find(L.MurchalProshlyapRP5)) then --Таймер пулла Гарроша возможно отличается
+		self:SendSync("RP4")
 	end
 end
 
@@ -522,5 +524,7 @@ function mod:OnSync(msg)
 		timerRP:Start(29)
 	elseif msg == "RP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
 		timerRP:Start(88)
+	elseif msg == "RP4" and self:AntiSpam(10, 2) then --Таймер пула Андуина или Гарроша
+		timerRP:Start(15.6)
 	end
 end

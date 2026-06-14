@@ -24,14 +24,15 @@ mod:RegisterEvents(
 
 local warnLavaPurge							= mod:NewCastAnnounce(409473, 2) --Лавовое истребление
 local warnDreamBurst						= mod:NewTargetNoFilterAnnounce(406282, 4) --Усыпляющий взрыв
+local warnSlimeInjection					= mod:NewTargetNoFilterAnnounce(411808, 2) --Разбрызгивание слизи
 
 local specWarnDreamBurst					= mod:NewSpecialWarningMoveAway(406282, nil, nil, nil, 4, 2) --Усыпляющий взрыв
 local specWarnLavaPurge						= mod:NewSpecialWarningDodge(409473, nil, nil, nil, 2, 2) --Лавовое истребление
 local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, nil, 2, 2) --Истребление
-local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2)
-local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil, nil, 1, 2)
-local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2)
-local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "HasInterrupt", nil, nil, 1, 2)
+local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2) --Теневой поток
+local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil, nil, 1, 2) --Разбрызгивание слизи
+local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2) --Темные путы
+local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "HasInterrupt", nil, nil, 1, 2) --Жестокое прижигание
 
 local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребление
 local timerRP								= mod:NewRPTimer(30)
@@ -39,7 +40,7 @@ local timerRP								= mod:NewRPTimer(30)
 local yellDreamBurst						= mod:NewShortYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
 --local yellDreamBurst2						= mod:NewShortFadesYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв
 local yellSlimeInjection					= mod:NewShortYell(411808, nil, nil, nil, "YELL") --Разбрызгивание слизи
-local yellSlimeInjectionFades				= mod:NewShortFadesYell(411808, nil, nil, nil, "YELL")
+local yellSlimeInjectionFades				= mod:NewShortFadesYell(411808, nil, nil, nil, "YELL") --Разбрызгивание слизи
 local yellDarkBindings						= mod:NewShortYell(413785, nil, nil, nil, "YELL") --Темные путы
 local yellDarkBindingsFades					= mod:NewShortFadesYell(413785, nil, nil, nil, "YELL") --Темные путы
 
@@ -106,6 +107,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSlimeInjection:Play("scatter")
 			yellSlimeInjection:Yell()
 			yellSlimeInjectionFades:Countdown(spellId)
+		else
+			warnSlimeInjection:CombinedShow(0.5, args.destName)
 		end
 	elseif spellId == 413785 or spellId == 409576 then --Темные путы
 		if args:IsPlayer() and self:AntiSpam(2, "DarkBindings") then

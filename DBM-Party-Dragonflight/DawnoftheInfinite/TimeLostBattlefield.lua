@@ -1,10 +1,10 @@
 local creatureID
 local addAOESpellId, addDebuffSpellId, tankSpellId, shockwaveSpellId, rallySpellId, crySpellId
 if UnitFactionGroup("player") == "Alliance" then--TODO, might have to change this to check party leader not player, due to cross faction groups.
-	creatureID = 203679--Anduin Lothar
+	creatureID = 203679 --Андуин Лотар
 	addAOESpellId, addDebuffSpellId, tankSpellId, shockwaveSpellId, rallySpellId, crySpellId = 417018, 417030, 418059, 418054, 418047, 418062
 else--Horde
-	creatureID = 203678--Grommash Hellscream
+	creatureID = 203678 --Громмаш Адский Крик
 	addAOESpellId, addDebuffSpellId, tankSpellId, shockwaveSpellId, rallySpellId, crySpellId = 407122, 407121, 410254, 408227, 418046, 410496
 end
 local mod	= DBM:NewMod(2533, "DBM-Party-Dragonflight", 9, 1209)--Alliance ID used, horde is 2534
@@ -51,35 +51,35 @@ mod:RegisterEventsInCombat(
 --TODO, targetscan/detect bladestorm target?
 --The Infinite Battlefield
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26514))
-local warnAddAoE									= mod:NewSpellAnnounce(addAOESpellId, 3)
-local warnAddDebuff									= mod:NewTargetNoFilterAnnounce(addDebuffSpellId, 3, nil, false)
+local warnAddAoE									= mod:NewSpellAnnounce(addAOESpellId, 3) --Снежная буря, Огненный ливень
+local warnAddDebuff									= mod:NewTargetNoFilterAnnounce(addDebuffSpellId, 3, nil, false) --Огненный шар, Жертвенный огонь
 
 --local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, nil, nil, 1, 2)
 --local yellManaBomb								= mod:NewYell(386181)
 --local yellManaBombFades							= mod:NewShortFadesYell(386181)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
-local timerAddAoECD									= mod:NewCDNPTimer(12.1, addAOESpellId, nil, nil, nil, 3)
+local timerAddAoECD									= mod:NewCDNPTimer(12.1, addAOESpellId, nil, nil, nil, 3) --Снежная буря, Огненный ливень
 
 --mod:AddInfoFrameOption(391977, true)
 --Boss (Anduin Lothar / Grommash Hellscream
 mod:AddTimerLine(DBM_COMMON_L.BOSS)
 local warnBladestorm								= mod:NewCountAnnounce(410235, 3, nil, nil, nil, nil, nil, 2) --Вихрь клинков
-local warnRally										= mod:NewCountAnnounce(rallySpellId, 2)
-local warnCry										= mod:NewCountAnnounce(crySpellId, 2)
-local warnShockwave									= mod:NewCountAnnounce(shockwaveSpellId, 3)--2nd and 3rd cast
+local warnRally										= mod:NewCountAnnounce(rallySpellId, 2) --ЗА АЛЬЯНС!, ЗА ОРДУ!
+local warnCry										= mod:NewCountAnnounce(crySpellId, 2) --Боевой крик
+local warnShockwave									= mod:NewCountAnnounce(shockwaveSpellId, 3) --Ударная волна
 
 local specWarnBladestorm2							= mod:NewSpecialWarningRun(410235, nil, nil, nil, 4, 4) --Вихрь клинков
 local specWarnBladestorm							= mod:NewSpecialWarningDodgeCount(410235, "Melee", nil, nil, 2, 2) --Вихрь клинков
-local specWarnTankBuster							= mod:NewSpecialWarningDefensive(tankSpellId, nil, nil, nil, 1, 2)
-local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, nil, nil, nil, 2, 2)--First cast in set
+local specWarnTankBuster							= mod:NewSpecialWarningDefensive(tankSpellId, nil, nil, nil, 3, 2) --Смертельные удары, Обезглавливание
+local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, nil, nil, nil, 2, 2) --Ударная волна
 
 local timerRP										= mod:NewRPTimer(8)
 local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3) --Вихрь клинков
-local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, nil, nil, nil, 3)
-local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, nil, nil, nil, 5)--For the X
-local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, nil, nil, nil, 2)
+local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные удары, Обезглавливание
+local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Ударная волна 2 варианта
+local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, nil, nil, nil, 5) --ЗА АЛЬЯНС!, ЗА ОРДУ!
+local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Боевой крик 2 варианта
 
 local yellBladestorm								= mod:NewShortYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 

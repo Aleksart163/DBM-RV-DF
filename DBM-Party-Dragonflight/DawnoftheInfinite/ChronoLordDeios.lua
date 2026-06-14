@@ -35,25 +35,28 @@ mod:RegisterEventsInCombat(
 --TODO, detect Nozdormu being freed and associated buffs going out?
 --Stage 1: We Are Infinite
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26751))
-local warnSummonInfiniteKeeper						= mod:NewCountAnnounce(416152, 3)
-local warnInfinityOrb								= mod:NewCountAnnounce(410904, 3)
-local warnAddsLeft									= mod:NewAddsLeftAnnounce(-27151, 2, 416152)
+local warnSummonInfiniteKeeper						= mod:NewCountAnnounce(416152, 3) --Призыв хранителя из рода Бесконечности
+local warnInfinityOrb								= mod:NewCountAnnounce(410904, 3) --Сфера бесконечности
+local warnAddsLeft									= mod:NewAddsLeftAnnounce(-27151, 2, 416152) --Призыв хранителя из рода Бесконечности
 
-local specWarnChronalBurn							= mod:NewSpecialWarningDispel(412027, "RemoveMagic", nil, nil, 1, 2)
-local specWarnInfiniteBlast							= mod:NewSpecialWarningInterrupt(411763, "HasInterrupt", nil, nil, 1, 2)
-local specWarnTemporalbreath						= mod:NewSpecialWarningCount(416139, nil, nil, nil, 2, 2)
+local specWarnChronalBurn							= mod:NewSpecialWarningDispel(412027, "RemoveMagic", nil, nil, 1, 2) --Темпоральный ожог
+local specWarnInfiniteBlast							= mod:NewSpecialWarningInterrupt(411763, "HasInterrupt", nil, nil, 1, 2) --Взрыв Бесконечности
+local specWarnTemporalbreath						= mod:NewSpecialWarningDefensive(416139, nil, nil, nil, 3, 4) --Темпоральное дыхание
+local specWarnTemporalbreath2						= mod:NewSpecialWarningDodge(416139, "-Tank", nil, nil, 2, 4) --Темпоральное дыхание
 
-local timerSummonInfiniteKeeperCD					= mod:NewCDCountTimer(24.2, 416152, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerInfinityOrbCD							= mod:NewCDCountTimer(14.5, 410904, nil, nil, nil, 3)
-local timerTemporalBreathCD							= mod:NewCDCountTimer(17, 416139, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerChronalBurnCD							= mod:NewCDNPTimer(13.3, 412027, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--13.3-15
+local timerSummonInfiniteKeeperCD					= mod:NewCDCountTimer(24.2, 416152, DBM_COMMON_L.ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв хранителя из рода Бесконечности
+local timerInfinityOrbCD							= mod:NewCDCountTimer(14.5, 410904, nil, nil, nil, 7) --Сфера бесконечности
+local timerTemporalBreathCD							= mod:NewCDCountTimer(17, 416139, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Темпоральное дыхание
+local timerChronalBurnCD							= mod:NewCDNPTimer(13.3, 412027, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Темпоральный ожог
 
 --Stage 2: Lord of the Infinite
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26757))
-local specWarnInfiniteCorruption					= mod:NewSpecialWarningDodgeCount(416264, nil, nil, nil, 2, 2)
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(417413, nil, nil, nil, 1, 8)
+local specWarnInfiniteCorruption					= mod:NewSpecialWarningDodgeCount(416264, nil, nil, nil, 2, 2) --Порча Бесконечности
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(417413, nil, nil, nil, 1, 8) --Темпоральный след
 
-local timerInfiniteCorruptionCD						= mod:NewCDCountTimer(24.2, 416264, nil, nil, nil, 3)
+local timerInfiniteCorruptionCD						= mod:NewCDCountTimer(24.2, 416264, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Порча Бесконечности
+
+local yellTemporalbreath							= mod:NewShortYell(416139, nil, nil, nil, "YELL") --Темпоральное дыхание
 
 mod.vb.keeperCount = 0
 mod.vb.orbCount = 0
@@ -117,8 +120,14 @@ function mod:SPELL_CAST_START(args)
 		--end
 	elseif spellId == 416139 then
 		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnTemporalbreath:Show(self.vb.breathCount)
-		specWarnTemporalbreath:Play("breathsoon")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnTemporalbreath:Show()
+			specWarnTemporalbreath:Play("defensive")
+			yellTemporalbreath:Yell()
+		else
+			specWarnTemporalbreath2:Show()
+			specWarnTemporalbreath2:Play("watchstep")
+		end
 		if self:GetStage(1) then
 			if self.vb.breathCount < 4 then--Seems to stop casting it after 4 casts in P1
 				timerTemporalBreathCD:Start(17, self.vb.breathCount+1)
