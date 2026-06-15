@@ -384,5 +384,6 @@ L:SetMiscLocalization({
 	MurchalProshlyapRP2 = "So the titans' puppets have come to face me.",
 	MurchalProshlyapRP3 = "Come on! The Aspects are just ahead. Uh, wait, uh, the Proto-Aspects I mean.",
 	MurchalProshlyapRP4 = "We need reinforcements!",
-	MurchalProshlyapRP5 = "I need fighters!"
+	MurchalProshlyapRP5 = "I need fighters!",
+	MurchalProshlyapRP6 = "We don't have time for this! Oh... where's that relic I picked up?"
 })
