@@ -95,7 +95,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 376780 then
+	if spellId == 376780 then --Щит магмы (Щит на боссе)
 		specWarnMagmaShield:Show()
 		specWarnMagmaShield:Play("watchstep")
 		specWarnTakeTreasure:Schedule(1)
@@ -136,7 +136,6 @@ local function pointlessDelay(self)
 	timerDragonsKilnCD:AddTime(9)
 	timerMoltenGoldCD:AddTime(9)
 	timerBurningEmberCD:AddTime(9)
-	timerMagmaShieldCD:AddTime(9)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -159,7 +158,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnBurningPursuit:Show(args.destName)
 		end
-	elseif spellId == 377014 then--Backdraft
+	elseif spellId == 377014 then --Обратный поток (Повышенный урон)
 		timerBackdraft:Start(args.destName)
 		self:Schedule(1, pointlessDelay, self)
 	end
@@ -167,7 +166,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 376780 and self:IsInCombat() then
+	if spellId == 376780 and self:IsInCombat() then --Щит магмы (Пробитый щит)
 		warnMagmaShieldOver:Show()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
@@ -175,7 +174,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDragonsKilnCD:Resume()
 		timerMoltenGoldCD:Resume()
 		timerBurningEmberCD:Resume()
-		timerMagmaShieldCD:Start(37)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
+		timerMagmaShieldCD:Start(32)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
 	end
 end
 

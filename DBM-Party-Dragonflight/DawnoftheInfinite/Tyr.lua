@@ -34,25 +34,25 @@ mod:RegisterEventsInCombat(
 --TODO, fine tune who should be soaking
 --TODO, Keep an eye on if the combo stays random order or if it gets normalized later to be static
 --TODO, *FIXME. Increased the cooldown of Double Strike and Triple Strike. 11-21-23
-local warnSparkofTyr								= mod:NewTargetNoFilterAnnounce(400681, 3, nil, "RemoveMagic|Healer")
-local warnSiphonOath								= mod:NewCountAnnounce(400642, 3)
-local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1)
+local warnSparkofTyr								= mod:NewTargetNoFilterAnnounce(400681, 3, nil, "RemoveMagic|Healer") --Искра Тира
+local warnSiphonOath								= mod:NewCountAnnounce(400642, 3) --Вытягивание энергии камня
+local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1) --Вытягивание энергии камня
 
-local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, nil, nil, 1, 2)
-local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, nil, 2, 2)
-local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, nil, 2, 2)
-local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil, nil, 1, 2)
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8)
+local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, nil, nil, 3, 4) --Титанический удар
+local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, nil, 2, 2) --Бесконечная аннигиляция
+local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, nil, 2, 2) --Разделяющий удар (Делёжка)
+local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil, nil, 1, 2) --Искра Тира
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8) --Освященная земля
 
 --These 3 are shared timers tied to Infinite Hand Technique
-local timerTitanicBlowCD							= mod:NewCDCountTimer(8, 401248, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerInfiniteAnnihilationCD					= mod:NewCDCountTimer(8, 401482, nil, nil, nil, 3)
-local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, nil, nil, nil, 5)
+local timerTitanicBlowCD							= mod:NewCDCountTimer(8, 401248, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Титанический удар
+local timerInfiniteAnnihilationCD					= mod:NewCDCountTimer(8, 401482, nil, nil, nil, 3) --Бесконечная аннигиляция
+local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5) --Разделяющий удар (Делёжка)
 
 --Bosses other abilities
 local timerRP										= mod:NewRPTimer(8)
-local timerSparkofTyrCD								= mod:NewCDCountTimer(60.7, 400681, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, nil, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerSparkofTyrCD								= mod:NewCDCountTimer(60.7, 400681, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Искра Тира
+local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, nil, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON) --Вытягивание энергии камня
 
 local yellSparkofTyr								= mod:NewShortPosYell(400681, nil, nil, nil, "YELL")
 
@@ -223,7 +223,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnSparkofTyr then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif spellId == 400642 then--Siphon ending
+	elseif spellId == 400642 then --Вытягивание энергии камня (Прекращение каста)
 		self:SetStage(1)
 		self.vb.sharedCount = 0
 		self.vb.firstShared = 0
@@ -236,7 +236,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerInfiniteAnnihilationCD:Start(12.5, 1)
 		timerDividingStrikeCD:Start(12.5, 1)
 		timerSiphonOathCD:Start(45.7, self.vb.barrierCount+1)
-	elseif spellId == 413595 then
+	elseif spellId == 413595 then --Медитация над камнем клятвы (Таймер с РП)
 	--	timerRP:Start(33.3) --устаревшая инфа
 		timerRP:Start(30)
 	end

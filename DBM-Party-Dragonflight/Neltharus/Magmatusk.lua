@@ -27,21 +27,20 @@ mod:RegisterEventsInCombat(
 --NOTE: Magma Lob is cast by EACH tentacle, it's downgraded to normal warning by default and timer disabled because it gets spammy later fight
 
 local warnMagmaLob								= mod:NewSpellAnnounce(375068, 3) --Бросок магмы
-local warnVolatileMutation						= mod:NewCountAnnounce(374365, 3) --Неустойчивая мутация
+local warnVolatileMutation						= mod:NewCountAnnounce(374365, 3, nil, nil, 184894) --Неустойчивая мутация
 local warnLavaSpray								= mod:NewTargetNoFilterAnnounce(375251, 3) --Поток лавы
 
-local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", 70311, nil, 2, 2) --Неустойчивая мутация
+local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", 184894, nil, 2, 2) --Неустойчивая мутация (Мутация)
 local specWarnMagmaLob							= mod:NewSpecialWarningDodge(375068, false, nil, 2, 2, 2) --Бросок магмы
-local specWarnLavaSpray							= mod:NewSpecialWarningDodge(375251, nil, nil, nil, 2, 2) --Поток лавы
 local specWarnLavaSpray2						= mod:NewSpecialWarningDefensive(375251, nil, nil, nil, 3, 4) --Поток лавы
-local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, nil, nil, 2, 4) --Пылающий рывок
+local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, 181886, nil, 2, 4) --Пылающий рывок
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(375204, nil, nil, nil, 1, 8) --Жидкая магма
 
 local timerRP									= mod:NewRPTimer(30)
 --local timerMagmaLobCD							= mod:NewCDTimer(6.5, 375068, nil, nil, nil, 3)--8 unless delayed by other casts
 local timerLavaSrayCD							= mod:NewCDCountTimer(90, 375251, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Поток лавы
-local timerBlazingChargeCD						= mod:NewCDCountTimer(90, 375436, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пылающий рывок
-local timerVolatileMutationCD					= mod:NewCDCountTimer(90, 374365, 70311, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 2, 5) --Неустойчивая мутация Can get spell queued behind other abilities
+local timerBlazingChargeCD						= mod:NewCDCountTimer(90, 375436, 181886, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пылающий рывок
+local timerVolatileMutationCD					= mod:NewCDCountTimer(90, 374365, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 2, 5) --Неустойчивая мутация (Мутация)
 
 local yellLavaSpray								= mod:NewYell(375251, nil, nil, nil, "YELL") --Поток лавы
 local yellBlazingCharge							= mod:NewYell(375436, nil, nil, nil, "YELL") --Пылающий рывок
@@ -54,9 +53,9 @@ local allProshlyapationsOfMurchal = {
 	--Поток лавы
 	[375251] = {7.2, 19.4, 58.4, 19.4, 19.4, 19.4, 79.6, 19.4, 38.9, 19.4},
 	--Пылающий рывок
-	[375436] = {19.3, 23, 69.6, 45.1, 69.1, 33, 46.3},
+	[375436] = {19.3, 23, 69.2, 23, 69.1, 33, 46.3},
 	--Мутация
-	[374365] = {30.8, 30.8, 31.4, 30.2, 37.3, 31, 31, 30.9, 31.1, 33.2},
+	[374365] = {30.8, 30.8, 30.2, 30.2, 30.7, 31, 31, 30.9, 31.1, 33.2},
 }
 
 function mod:LavaSprayTarget(targetname)
@@ -67,8 +66,6 @@ function mod:LavaSprayTarget(targetname)
 		yellLavaSpray:Yell()
 	else
 		warnLavaSpray:Show(targetname)
-		specWarnLavaSpray:Show()
-		specWarnLavaSpray:Play("shockwave")
 	end
 end
 
