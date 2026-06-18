@@ -174,7 +174,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDragonsKilnCD:Resume()
 		timerMoltenGoldCD:Resume()
 		timerBurningEmberCD:Resume()
-		timerMagmaShieldCD:Start(32)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
+		timerMagmaShieldCD:Start(46)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
 	end
 end
 
