@@ -74,7 +74,7 @@ local allProshlyapationsOfMurchal = {
 		[260793] = {17.9},
 	},
 	--Припадок
-	[260333] = {45.9, 46.5, 57.7, 46.9, 48},
+	[260333] = {45.9, 46.1, 57.7, 46.9, 48},
 }
 
 function mod:OnCombatStart(delay)

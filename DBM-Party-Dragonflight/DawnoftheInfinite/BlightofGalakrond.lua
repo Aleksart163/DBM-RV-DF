@@ -91,10 +91,11 @@ local function checkDebuffPass(self)
 	end
 end
 
-local function checkProshlyapMurchal(self)
+local function checkProshlyapOfMurchal(self) --Старт таймеров 2 фазы
 	timerCorrosiveInfusionCD:Start(6.1, 1)
-	timerNecroticWindsCD:Start(16, 1)
-	timerBlightReclamationCD:Start(30.1, 1)
+	timerNecroticWindsCD:Start(19.7, 1)
+	timerBlightReclamationCD:Start(16.7, 1) --
+	DBM:Debug("Murchal proshlyap (Начался бой с Анзон (Фаза 2))", 2)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -189,7 +190,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnPhase:Play("ptwo")
 		timerCorrosiveInfusionCD:Stop()
 		timerBlightReclamationCD:Stop()
-		self:Schedule(2, checkProshlyapMurchal, self)
+		self:Schedule(2, checkProshlyapOfMurchal, self)
 	elseif spellId == 415114 then --Тлетворное перенаправление (На Гнили, до появления 2ых драконов)
 		self:SetStage(3)
 		self.vb.corrosiveCount = 0
@@ -237,7 +238,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
 		timerNecrofrostCD:Start(30, 1) --было 31.4 
-		timerBlightReclamationCD:Start(64, 1) --Пока неизвестно
+		timerBlightReclamationCD:Start(20.9, 1) --Выглядит норм (Было 64)
+		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end
 end
 

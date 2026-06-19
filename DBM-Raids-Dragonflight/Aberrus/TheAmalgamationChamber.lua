@@ -88,7 +88,7 @@ local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, DBM_COMMON_L.GR
 local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомбы)
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
 local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, 160149, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
-local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв пламени Тьмы Might be redundant if always after crushing
+local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв пламени Тьмы Might be redundant if always after crushing
 
 local yellWitheringVulnerability				= mod:NewShortYell(405914, nil, nil, nil, "YELL") --Иссушающая слабость
 local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --Теневая детонация (Бомба)

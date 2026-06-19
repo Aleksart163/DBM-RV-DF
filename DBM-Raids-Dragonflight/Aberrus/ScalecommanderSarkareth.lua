@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 401383 401810 401500 401642 402050 401325 404027 404456 404769 411302 404754 404403 411030 407496 404288 411236 403741 405022 403625 403517 408422 401704",
-	"SPELL_CAST_SUCCESS 402746 403517",
+	"SPELL_CAST_SUCCESS 402746 403517 405022",
 	"SPELL_SUMMON 404505 404507",
 	"SPELL_AURA_APPLIED 401951 401215 403997 407576 401905 401680 401330 404218 410642 404705 407496 404288 411241 405486 403520 408429 403284 410654 410625",
 	"SPELL_AURA_APPLIED_DOSE 401951 403997 407576 401330 404269 411241 408429",
@@ -38,7 +38,6 @@ mod:RegisterEventsInCombat(
  or (ability.id = 401383 or ability.id = 401215 or ability.id = 403997 or ability.id = 407576 or ability.id = 401905 or ability.id = 401680 or ability.id = 401330 or ability.id = 404218 or ability.id = 410642 or ability.id = 404705 or ability.id = 407496 or ability.id = 404288 or ability.id = 411241 or ability.id = 405486 or ability.id = 403520 or ability.id = 408429) and type = "applydebuff"
 --]]
 --General
-local warnVoidEmpowerment					= mod:NewTargetNoFilterAnnounce(403284, 2) --Наделение силой Бездны
 local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnOblivionStack						= mod:NewCountAnnounce(401951, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401951)) --Забвение
 local warnMindFragment						= mod:NewAddsLeftAnnounce(403997, 1)--Not technically adds, but wording of option and alert text is ambigious that it doesn't matter, it fits
@@ -54,7 +53,7 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(401951, false)
 mod:AddDropdownOption("InfoFrameBehaviorTwo", {"OblivionOnly", "HowlOnly", "Hybrid"}, "OblivionOnly", "misc", nil, 401951)
---Stage One: The Legacy of the Dracthyr
+--Фаза 1: The Legacy of the Dracthyr
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26140))
 local warnOppressingHowl						= mod:NewSpellAnnounce(401383, 3, nil, nil, nil, nil, nil, 2) --Подавляющий вой
 local warnDazzled								= mod:NewTargetNoFilterAnnounce(401905, 4, nil, false) --Ослепление Not entirely much you can do about it's a lot but if it's a couple, a healer might want to see this to TRY and save them
@@ -78,12 +77,13 @@ local timerBurningClawsCD						= mod:NewCDTimer(29.9, 401330, nil, "Tank|Healer"
 local timerBurningClaws							= mod:NewTargetTimer(27, 401330, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Обжигающие когти
 
 mod:AddSetIconOption("SetIconOnMassDisintegrate", 401680, true, 0, {1, 2, 3, 4}) --Массовая дезинтеграция (Дезинтеграция)
---Stage Two: A Touch of the Forbidden
+--Фаза 2: A Touch of the Forbidden
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
-local specWarnAstralFlareStack					= mod:NewSpecialWarningStack(407576, nil, 5, 122149, nil, 1, 2) --Астральный огонь (Ускорение)
+local specWarnVoidEmpowerment					= mod:NewSpecialWarningReflect(403284, nil, 413106, nil, 3, 2) --Наделение силой Бездны
+local specWarnAstralFlareStack					= mod:NewSpecialWarningStack(407576, nil, 6, 122149, nil, 1, 2) --Астральный огонь (Ускорение)
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
 local specWarnVoidFracture2						= mod:NewSpecialWarningFades(404027, nil, nil, nil, 1, 2) --Бомба Бездны
@@ -98,7 +98,7 @@ local specWarnVoidClaws							= mod:NewSpecialWarningDefensive(411241, nil, nil,
 local specWarnVoidClawsOut						= mod:NewSpecialWarningMoveAway(411241, nil, nil, nil, 4, 4) --Когти пустоты For Void Blast (411238) effect
 local specWarnVoidClawsTaunt					= mod:NewSpecialWarningTaunt(411241, nil, nil, nil, 1, 2) --Когти пустоты
 
-local timerEndExistenceCast						= mod:NewCastTimer(27, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования
+--local timerEndExistenceCast						= mod:NewCastTimer(27, 410625, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Прекращение существования (Информация неточная, время каждый раз меняется)
 local timerVoidBombCD							= mod:NewCDTimer(29.9, 404027, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsRanged() and 2 or nil, 5) --Бомба Бездны
 --local timerVoidBomb								= mod:NewBuffActiveTimer(10, 404027, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Бомба Бездны
 local timerAbyssalBreathCD						= mod:NewCDCountTimer(29.9, 404456, 18357, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Дыхание Бездны (Дыхание)
@@ -116,7 +116,7 @@ mod:AddSetIconOption("SetIconOnNullGlimmer", 404507, true, 5, {7, 6, 5, 4, 3})
 mod:AddSetIconOption("SetIconOnInfiniteDuress", 404288, true, 0, {1})
 mod:AddNamePlateOption("NPAuraOnRescind", 404705)
 mod:AddNamePlateOption("NPAuraOnMight", 404269)
---Stage Three: The Seas of Infinity
+--Фаза 3: The Seas of Infinity
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26145))
 local warnEmbraceofNothingness					= mod:NewTargetNoFilterAnnounce(403520, 3, nil, nil, 229042) --Объятия пустоты (Черная дыра)
 local warnVoidSlash								= mod:NewStackAnnounce(408429, 2, nil, "Tank|Healer") --Рассечение Бездны
@@ -125,7 +125,7 @@ local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil,
 
 local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Вознесение)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
-local specWarnScouringEternity					= mod:NewSpecialWarningDodge(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
+local specWarnScouringEternity					= mod:NewSpecialWarningMoveTo(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
 local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 4) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
@@ -155,9 +155,10 @@ local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, n
 local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YELL") --Когти пустоты For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
+mod:AddSetIconOption("SetIconOnEmbraceofNothingness", 403520, true, 0, {8}) --Объятия пустоты (Черная дыра)
 
 local BetweenStars = DBM:GetSpellName(401215) --Межзвездная пустота
-
+local Asteroid = DBM:GetSpellName(61984)
 --P1 Variables
 mod.vb.surgeCount = 0
 mod.vb.bombCount = 0
@@ -218,7 +219,7 @@ local allTimers = {
 			--Ebon Might (5 stacks)
 			--[404269] = {},
 			--Hurtling Barrage
-			[405022] = {18.6, 80.0, 84.0},
+			[405022] = {18.6, 81.0, 85.0}, --{18.6, 80.0, 84.0} оригинальные с офы 
 			--Void Slash
 			[408422] = {19.8, 17.7, 36.4, 15.3, 55.2, 35.3},
 			--Scouring Eternity
@@ -260,11 +261,11 @@ local allTimers = {
 			--Cosmic Ascension
 			[403741] = {7.5, 61.2, 98.7, 58.7},
 			--Hurtling Barrage
-			[405022] = {19.7, 84.9, 54.9, 35, 67.5},
+			[405022] = {19.7, 85.9, 55.9, 36, 68.5}, --{19.7, 84.9, 54.9, 35, 67.5} оригинальные с офы 
 			--Void Slash
 			[408422] = {21, 36.2, 37.5, 85.0, 11.2, 61.3},
 			--Scouring Eternity
-			[403625] = {46.2, 76.5, 80.2, 77.9},
+			[403625] = {46.2, 77, 80.2, 77.9}, --{46.2, 76.5, 80.2, 77.9} 
 			--Объятия пустоты (Чёрная дыра)
 			[403517] = {24.7, 111.2, 50.0},
 		},
@@ -300,7 +301,7 @@ local allTimers = {
 			--Cosmic Ascension
 			[403741] = {7.7, 65.3, 105.3, 62.6, 105.3},
 			--Hurtling Barrage
-			[405022] = {21, 46.6, 102.6, 65.3, 102.6},
+			[405022] = {21, 47.6, 103.6, 66.3, 103.6}, --{21, 46.6, 102.6, 65.3, 102.6} оригинальные с офы 
 			--Void Slash
 			[408422] = {22.3, 38.6, 39.9, 90.6, 11.9, 25.3, 39.9, 90.6, 11.9, 25.3},
 			--Scouring Eternity
@@ -360,7 +361,7 @@ end
 local function startProshlyapationOfMurchal(self)
 	if not Phase2 then
 		Phase2 = true
-		DBM:Debug("Murchal proshlyap", 2)
+		DBM:Debug("Murchal proshlyap (Фаза 2)", 2)
 	end
 end
 
@@ -398,7 +399,7 @@ local function startPhase3RP(self) --Версия 1
 		timerVoidSlashCD:Start(34.5)
 		timerEmbraceofNothingnessCD:Start(38.2, 1)
 		timerVoidBombCD:Start(42)
-		timerScouringEternityCD:Start(64.3, 1) --46.2
+		timerScouringEternityCD:Start(64, 1)
 	elseif self:IsNormal() then
 		timerCosmicAscensionCD:Start(21.2, 1)
 		timerHurtlingBarrageCD:Start(34.5, 1)
@@ -681,14 +682,14 @@ function mod:SPELL_CAST_START(args)
 			specWarnVoidClaws:Show()
 			specWarnVoidClaws:Play("defensive")
 		end]]
-	elseif spellId == 405022 then
+--[[	elseif spellId == 405022 then --Опасный шквал (Сломано и не работает)
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		self.vb.hurtlingIcon = 3
 		warnHurtlingBarrageSoon:Show(self.vb.surgeCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
-		end
+		end]]
 --[[	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		specWarnScouringEternity:Show()
@@ -700,7 +701,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		self:SendSync("SupernovaCast")]]
 	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
-		specWarnScouringEternity:Show()
+		specWarnScouringEternity:Show(Asteroid)
 		specWarnScouringEternity:Play("findshelter")
 		specWarnScouringEternity:ScheduleVoice(2, "watchstep")
 		self:SendSync("SupernovaCast")
@@ -766,6 +767,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
 		end
 		DBM:Debug("Murchal proshlyap (Чёрная дыра) Каст случился", 2)
+	elseif spellId == 405022 then --Опасный шквал
+		self.vb.surgeCount = self.vb.surgeCount + 1
+		self.vb.hurtlingIcon = 3
+		warnHurtlingBarrageSoon:Show(self.vb.surgeCount)
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
+		if timer then
+			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
+		end
+		DBM:Debug("Murchal proshlyap (Случился каст Опасного шквала) ", 2)
 	end
 end
 
@@ -821,11 +831,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not Phase2Preshlyap then
 				Phase2Preshlyap = true
-				if self:IsEasy() then
-					timerEndExistenceCast:Start()
-				else
-					timerEndExistenceCast:Start(20)
-				end
 			end
 		end
 	elseif spellId == 403997 and args:IsPlayer() then
@@ -835,7 +840,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 407576 and args:IsPlayer() then --Астральный огонь
 		local amount = args.amount or 1
-		if amount % 5 == 0 then
+		if amount % 2 == 6 then
 			specWarnAstralFlareStack:Show(amount)
 			specWarnAstralFlareStack:Play("stackhigh")
 		end
@@ -985,13 +990,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEmbraceofNothingness:Show(args.destName)
 		end
-		DBM:Debug("Murchal proshlyap (Чёрная дыра) Аура на игроке", 2)
+		if self.Options.SetIconOnEmbraceofNothingness then
+			self:SetIcon(args.destName, 8, 8)
+		end
 	--	self:SendSync("BlackHole")
-	elseif spellId == 403284 then--Stage 1-2 Intermission
+	elseif spellId == 403284 then --Начало эвента фазы 2 (Дебафф на боссе)
 		self:Schedule(5.5, startProshlyapationOfMurchal, self)
 		if not Phase2 then
-			warnVoidEmpowerment:Show(args.destName)
-		--	timerEndExistenceCast:Start()
+			specWarnVoidEmpowerment:Show(args.destName)
+			specWarnVoidEmpowerment:Play("stopattack")
 		end
 		timerOppressingHowlCD:Stop()
 		timerGlitteringSurgeCD:Stop()
@@ -1000,8 +1007,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSearingBreathCD:Stop()
 		timerBurningClawsCD:Stop()
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
-	elseif spellId == 410654 then --Начало фазы 3 (Дебафф на боссе)
-		warnVoidEmpowerment:Show(args.destName)
+	elseif spellId == 410654 then --Начало эвента фазы 3 (Дебафф на боссе)
+		specWarnVoidEmpowerment:Show(args.destName)
+		specWarnVoidEmpowerment:Play("stopattack")
 		self:SendSync("Phase 3 RP")
 	end
 end
@@ -1078,7 +1086,6 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellHurtlingBarrageFades:Cancel()
 		end
 	elseif spellId == 410625 then --Прекращение существования (Стартанула фаза 2)
-		timerEndExistenceCast:Stop()
 		--True start of phase 2 timers
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
