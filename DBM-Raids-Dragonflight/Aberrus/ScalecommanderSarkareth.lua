@@ -218,7 +218,7 @@ local allTimers = {
 			[403741] = {6.8, 57.6, 93.0, 60},
 			--Ebon Might (5 stacks)
 			--[404269] = {},
-			--Hurtling Barrage
+			--Опасный шквал
 			[405022] = {18.6, 81.0, 85.0}, --{18.6, 80.0, 84.0} оригинальные с офы 
 			--Void Slash
 			[408422] = {19.8, 17.7, 36.4, 15.3, 55.2, 35.3},
@@ -260,8 +260,8 @@ local allTimers = {
 			[404027] = {28.5, 61.2, 61.2, 96.3},
 			--Cosmic Ascension
 			[403741] = {7.5, 61.2, 98.7, 58.7},
-			--Hurtling Barrage
-			[405022] = {19.7, 85.9, 55.9, 36, 68.5}, --{19.7, 84.9, 54.9, 35, 67.5} оригинальные с офы 
+			--Опасный шквал
+			[405022] = {19.7, 84.9, 54.9, 35, 67.5}, --{19.7, 84.9, 54.9, 35, 67.5} оригинальные с офы 
 			--Void Slash
 			[408422] = {21, 36.2, 37.5, 85.0, 11.2, 61.3},
 			--Scouring Eternity
@@ -300,7 +300,7 @@ local allTimers = {
 			[404027] = {30.3, 65.3, 65.3, 102.7, 65.3},
 			--Cosmic Ascension
 			[403741] = {7.7, 65.3, 105.3, 62.6, 105.3},
-			--Hurtling Barrage
+			--Опасный шквал
 			[405022] = {21, 47.6, 103.6, 66.3, 103.6}, --{21, 46.6, 102.6, 65.3, 102.6} оригинальные с офы 
 			--Void Slash
 			[408422] = {22.3, 38.6, 39.9, 90.6, 11.9, 25.3, 39.9, 90.6, 11.9, 25.3},
@@ -775,7 +775,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
-		DBM:Debug("Murchal proshlyap (Случился каст Опасного шквала) ", 2)
 	end
 end
 
@@ -840,7 +839,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 407576 and args:IsPlayer() then --Астральный огонь
 		local amount = args.amount or 1
-		if amount % 2 == 6 then
+		if amount >= 6 and amount % 2 == 0 then
 			specWarnAstralFlareStack:Show(amount)
 			specWarnAstralFlareStack:Play("stackhigh")
 		end

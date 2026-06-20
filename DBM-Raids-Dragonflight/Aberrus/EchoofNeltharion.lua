@@ -129,7 +129,7 @@ local mythicTwistedP1Timers = {2, 20.6, 19.4, 18.2, 18.2, 18.2, 19.5, 17.0}
 local mythicTwistedP2Timers = {41.6, 18.2, 12.1, 29.2, 13.4, 14.6}
 local volcanicP2Timers = {21.3, 15.7, 17.0, 14.8, 17.3, 16.7, 18, 14.5}
 local volcanicP2LFRTimers = {21.3, 15.6, 16.9, 17, 12, 16.9, 12, 16.9, 12, 17}
-local corruptionTimers = {7, 42.4, 47.3, 44.5, 45, 45} --героик норм
+local corruptionTimers = {7, 42.4, 47.3, 43.4, 45, 45} --Порча (героик норм)
 
 function mod:CalamitousStrikeTarget(targetname, uId)
 	if not targetname then return end
@@ -275,7 +275,7 @@ function mod:SPELL_CAST_START(args)
 		timerRushingDarknessCD:Stop()
 		timerCalamitousStrikeCD:Stop()
 		timerVolcanicHeartCD:Stop()
-	elseif spellId == 403057 then--Surrender To Corruption
+	elseif spellId == 403057 then --Подчинение порче (Начало фазы 2)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
@@ -286,7 +286,7 @@ function mod:SPELL_CAST_START(args)
 		timerCorruptionCD:Start(7, 1)
 		timerSunderShadowCD:Start(14.8, 1)
 		timerVolcanicHeartCD:Start(20.7, 1)
-		timerUmbralAnnihilationCD:Start(28.9, 1) --Темное уничтожение (норм под гер)
+		timerUmbralAnnihilationCD:Start(28.7, 1) --Темное уничтожение (норм под гер)
 		timerRushingDarknessCD:Start(32.5, 1) --Стремительная тьма (норм под гер)
 		if self:IsHard() then
 			timerTwistedEarthCD:Start(self:IsMythic() and 41.5 or 71.5, 1)
@@ -400,7 +400,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			if timer then
 				timerCorruptionCD:Start(timer, self.vb.corruptionCount+1)
 			end
-			DBM:Debug("Check Murchal corruption proshlyap", 2)
 		end
 		warnCorruption:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then

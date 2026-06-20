@@ -49,7 +49,7 @@ local specWarnShadowsConvergence				= mod:NewSpecialWarningDodgeCount(407640, ni
 local timerCoalescingVoidCD						= mod:NewCDCountTimer(21.9, 403459, nil, nil, nil, 2)
 local timerUmbralDetonationCD					= mod:NewCDCountTimer(21.9, 405036, 167180, nil, nil, 3) --Теневая детонация (Бомбы)
 local timerShadowsConvergenceCD					= mod:NewCDCountTimer(20.7, 407640, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
-local timerShadowSpikeCD						= mod:NewCDCountTimer(11, 403699, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerShadowSpikeCD						= mod:NewCDCountTimer(11, 403699, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Теневой шип
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("SetIconOnUmbral", 405036, false, 0, {1, 2, 3}) --Теневая детонация (Бомбы)
@@ -88,7 +88,7 @@ local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, DBM_COMMON_L.GR
 local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомбы)
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
 local timerWitheringVulnerabilityCD				= mod:NewCDCountTimer(35.3, 405914, 160149, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Иссушающая слабость 35-40
-local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв пламени Тьмы Might be redundant if always after crushing
+local timerShadowflameBurstCD					= mod:NewCDCountTimer(35.3, 406783, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв пламени Тьмы (Фронталка)
 
 local yellWitheringVulnerability				= mod:NewShortYell(405914, nil, nil, nil, "YELL") --Иссушающая слабость
 local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --Теневая детонация (Бомба)
@@ -154,7 +154,7 @@ local altTimers = {--Table of lowest averages for timers that are at least somew
 		--Molten Eruption
 		[403101] = 34,
 		----Shadow Duder
-		--Shadow Spike
+		--Теневой шип
 		[403699] = false,--Too variable
 		--Umbral Detonation
 		[405016] = 34.5,
@@ -173,7 +173,7 @@ local altTimers = {--Table of lowest averages for timers that are at least somew
 		[408193] = 47.3,
 		--Withering Vulnerability
 		[405914] = 23.1,
-		--Shadowflame Burst
+		--Взрыв пламени Тьмы (Фронталка)
 		[406783] = 23.1,
 	},
 	["easy"] = {
@@ -187,7 +187,7 @@ local altTimers = {--Table of lowest averages for timers that are at least somew
 		--Molten Eruption (Heroic+)
 --		[403101] = {},
 		----Shadow Duder
-		--Shadow Spike
+		--Теневой шип
 		[403699] = false,--Too variable
 		--Umbral Detonation
 		[405016] = false,--Too variable
@@ -206,7 +206,7 @@ local altTimers = {--Table of lowest averages for timers that are at least somew
 --		[408193] = {},
 		--Withering Vulnerability
 		[405914] = 23.1,
-		--Shadowflame Burst
+		--Взрыв пламени Тьмы (Фронталка)
 		[406783] = 23.1,
 	},
 }
@@ -222,8 +222,8 @@ local allTimers = {
 		--Molten Eruption
 		[403101] = {16.7, 34.6, 34.5, 34}, --16.7, 40.5, 34.5, 34 по инфе с офы
 		----Shadow Duder
-		--Shadow Spike
-		[403699] = {9.5, 15.8, 15.8, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4},
+		--Теневой шип
+		[403699] = {9.5, 15.8, 13.2, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4}, --{9.5, 15.8, 15.8, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4} по инфе с офы
 		--Umbral Detonation
 		[405016] = {14.2, 34.6, 34.5, 35.2}, --14.2, 41.7, 34.5, 35.2 по инфе с офы
 		--Coalescing Void
@@ -241,8 +241,8 @@ local allTimers = {
 		[408193] = {33.6, 47.4, 47.4, 47.3, 47.5, 47.4}, --33.6, 51, 47.4, 47.3, 47.5, 47.4 по инфе с офы
 		--Иссушающая слабость (Слабость) 7 штук точные под гер
 		[405914] = {15.6, 26.8, 24.2, 24.1, 24.2, 22.1, 24.2, 24.2, 23.1, 24.3, 23.1, 24.3}, --16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3 по инфе с офы
-		--Взрыв пламени Тьмы 9 штук точные под гер
-		[406783] = {17.6, 27.8, 24.2, 23.1, 24.2, 23, 24.2, 25.3, 23, 24.3, 23.1, 24.3}, --{19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3}, по инфе с офы
+		--Взрыв пламени Тьмы (Фронталка) 9 штук точные под гер
+		[406783] = {17.6, 27.8, 24.2, 23.1, 24.2, 23, 24.2, 24.3, 23, 24.3, 23.1, 24.3}, --{19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3}, по инфе с офы
 	},
 	["easy"] = {
 		----Fire Duder
@@ -255,7 +255,7 @@ local allTimers = {
 		--Molten Eruption (Heroic+)
 --		[403101] = {},
 		----Shadow Duder
-		--Shadow Spike
+		--Теневой шип
 		[403699] = {9.3, 15.7, 15.7, 10.9, 15.7, 19.5, 16.2, 19.4, 15.8, 19.5, 15.9},
 		--Umbral Detonation
 		[405016] = {16.6, 21.9, 18.3, 36.9, 34.0, 35.3},
@@ -274,7 +274,7 @@ local allTimers = {
 --		[408193] = {},
 		--Withering Vulnerability
 		[405914] = {15.8, 24.2, 28.1, 24.2, 23.1},
-		--Shadowflame Burst
+		--Взрыв пламени Тьмы (Фронталка)
 		[406783] = {18.5, 24.2, 28.1, 24.2, 23.1},
 	},
 }
@@ -503,7 +503,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerWitheringVulnerabilityCD:Start(timer, self.vb.witheringVulnCount+1)
 		end
-	elseif spellId == 406783 then --Взрыв пламени Тьмы
+	elseif spellId == 406783 then --Взрыв пламени Тьмы (Фронталка)
 		self.vb.shadowflameBurstCount = self.vb.shadowflameBurstCount + 1
 		warnShadowflameBurst:Show(self.vb.shadowflameBurstCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.shadowflameBurstCount+1) or altTimers[difficultyName][spellId]
