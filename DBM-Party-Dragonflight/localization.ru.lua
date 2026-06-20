@@ -385,5 +385,6 @@ L:SetMiscLocalization({
 	MurchalProshlyapRP3 = "Пошли! Аспекты впереди. Ну, то есть... прото-аспекты.",
 	MurchalProshlyapRP4 = "Нам нужно подкрепление!",
 	MurchalProshlyapRP5 = "Мне нужны бойцы!",
-	MurchalProshlyapRP6 = "У нас нет на это времени! Где та реликвия, которую я взяла?"
+	MurchalProshlyapRP6 = "У нас нет на это времени! Где та реликвия, которую я взяла?",
+	MurchalProshlyapRP7 = "Ладно, давайте это исправим. Надо просто... ой."
 })

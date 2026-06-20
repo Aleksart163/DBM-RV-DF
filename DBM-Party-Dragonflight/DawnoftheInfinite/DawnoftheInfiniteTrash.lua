@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 415770 413487 415435 415437 413529 413621 413622 412806 411958 412505 400165 413607 412136 413024 413023 412922 417481 419327 412378 412262 412233 412200 413427 407205 407535 419351 413544 412215 418200 411300 407891 415769 415436 412156",
 	"SPELL_CAST_SUCCESS 411994 412012 418435",
-	"SPELL_AURA_APPLIED 412063 415554 415437 413547",
+	"SPELL_AURA_APPLIED 412063 415554 415437 413547 419517",
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"UNIT_DIED",
@@ -47,7 +47,7 @@ local warnHealingWave						= mod:NewCastAnnounce(407891, 4)--High Prio Off Inter
 local warnEnervate							= mod:NewTargetAnnounce(415437, 3)
 local warnChronoburst						= mod:NewTargetNoFilterAnnounce(415769, 3, nil, nil, 167180) --Темпоральный взрыв (Бомбы)
 
-local specWarnInfiniteFury					= mod:NewSpecialWarningSpell(413622, nil, nil, nil, 2, 2)
+local specWarnInfiniteFury					= mod:NewSpecialWarningSpell(413622, nil, nil, nil, 2, 2) --Бесконечная ярость
 local specWarnAncientRadiance				= mod:NewSpecialWarningSpell(413023, nil, nil, nil, 2, 2)
 local specWarnTemporalStrike				= mod:NewSpecialWarningDodge(412136, nil, nil, nil, 2, 2)
 local specWarnTimerip						= mod:NewSpecialWarningDodge(412063, nil, nil, nil, 2, 2)
@@ -58,7 +58,7 @@ local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil,
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2)--High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
 local specWarnVolatileMortar				= mod:NewSpecialWarningDodge(407205, nil, nil, nil, 2, 2)
-local specWarnBronzeExhalation				= mod:NewSpecialWarningDodge(419351, nil, nil, nil, 2, 2)--High Prio
+local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, nil, 2, 2) --Бронзовый выдох High Prio
 local specWarnShroudingSandstorm			= mod:NewSpecialWarningDodge(412215, nil, nil, nil, 2, 2)--High Prio
 local specWarnBombingRun					= mod:NewSpecialWarningDodge(412156, nil, nil, nil, 2, 2)
 local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2)
@@ -93,7 +93,7 @@ local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, ni
 local timerBloomCD							= mod:NewCDNPTimer(16.7, 413544, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Цветение
 local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Распутывание (Фронталка)
 local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие
-local timerInfiniteFuryCD					= mod:NewCDNPTimer(19.8, 413622, nil, nil, nil, 2)
+local timerInfiniteFuryCD					= mod:NewCDNPTimer(19, 413622, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Бесконечная ярость (19 сек у Караульного из рода Бесконечности и Диверсанта)
 local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
 local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 --Second half
@@ -116,10 +116,11 @@ local timerBombingRunCD						= mod:NewCDNPTimer(17, 412156, nil, nil, nil, 3)
 local timerTimeBeamCD						= mod:NewCDNPTimer(7.2, 413427, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerVolatileMortarCD					= mod:NewCDNPTimer(19.5, 407205, nil, nil, nil, 3)
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
-local timerBronzeExhalationCD				= mod:NewCDNPTimer(19.8, 419351, nil, nil, nil, 3)
+local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.8, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Бронзовый выдох (Фронталка)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerRP								= mod:NewRPTimer(10)
 
+local yellChronalEruption					= mod:NewShortYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
 local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL")--targets off a player, but everyone needs to dodge the orb
 local yellEnervate							= mod:NewShortYell(415437, nil, nil, nil, "YELL")
 local yellChronoburst						= mod:NewShortYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв (Бомба)
@@ -414,6 +415,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 413547 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
 		specWarnBloom:Show(args.destName)
 		specWarnBloom:Play("helpdispel")
+	elseif spellId == 419517 then --Темпоральное извержение
+		if args:IsPlayer() then
+			yellChronalEruption:Yell()
+		end
 	end
 end
 
@@ -519,6 +524,8 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 		self:SendSync("RP0")
 	elseif (msg == L.MurchalProshlyapRP6 or msg:find(L.MurchalProshlyapRP6)) then
 		self:SendSync("RP6")
+	elseif (msg == L.MurchalProshlyapRP7 or msg:find(L.MurchalProshlyapRP7)) then
+		self:SendSync("RP7")
 	end
 end
 
@@ -538,5 +545,7 @@ function mod:OnSync(msg)
 		timerRP:Start(15.5)
 	elseif msg == "RP6" and self:AntiSpam(10, 2) then --Таймер на Гнили--
 		timerRP:Start(16.5)
+	elseif msg == "RP7" and self:AntiSpam(10, 2) then --Таймер на треш после Тира
+		timerRP:Start(15)
 	end
 end

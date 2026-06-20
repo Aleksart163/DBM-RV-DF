@@ -16,7 +16,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 414535 409456 409635 414184 414652",
-	"SPELL_AURA_APPLIED 409266 414376 410719 414293",
+	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456",
 	"SPELL_AURA_REMOVED 409456 414177 410719"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
@@ -101,18 +101,20 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnExtinctionBlast then
 			self:SetIcon(args.destName, 8, 6)
 		end
-	elseif spellId == 414376 and args:IsPlayer() and self:AntiSpam(3, 1) then
+	elseif spellId == 414376 and args:IsPlayer() and self:AntiSpam(3, 1) then --Пронзенная земля
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 410719 then
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount or UnitGetTotalAbsorbs("boss1"), "boss1")
-		end
-		DBM:Debug("Check Murchal proshlyap (Аура щитов на боссе)", 2)
 	elseif spellId == 414293 then --Трансцендентность временной линии
 		specWarnCataclysmicObliteration:Show(args.destName)
 		specWarnCataclysmicObliteration:Play("findshelter")
+	elseif spellId == 410719 then --Земляной импульс (аура щитов)
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
+		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
+	elseif spellId == 409456 then --Земляной импульс
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 2 на боссе)", 2)
 	end
 end
 	
@@ -127,13 +129,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 2 спала с босса)", 2)
 	elseif spellId == 414177 then --Катастрофическое истребление (сбитие спелла)
 		timerCataclysmicObliteration:Stop()
-	elseif spellId == 410719 then
+	elseif spellId == 410719 then --Земляной импульс (аура щитов)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
-		DBM:Debug("Check Murchal proshlyap (Аура щитов спала с босса)", 2)
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
 	end
 end
 

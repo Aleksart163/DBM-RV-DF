@@ -35,9 +35,10 @@ mod:RegisterEventsInCombat(
 --TODO, Keep an eye on if the combo stays random order or if it gets normalized later to be static
 --TODO, *FIXME. Increased the cooldown of Double Strike and Triple Strike. 11-21-23
 local warnSparkofTyr								= mod:NewTargetNoFilterAnnounce(400681, 3, nil, "RemoveMagic|Healer") --Искра Тира
-local warnSiphonOath								= mod:NewCountAnnounce(400642, 3) --Вытягивание энергии камня
-local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1) --Вытягивание энергии камня
+local warnSiphonOath								= mod:NewCountAnnounce(400642, 3, nil, nil, 181503) --Вытягивание энергии камня (Вытягивание энергии)
+local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1, nil, nil, 181503) --Вытягивание энергии камня (Вытягивание энергии)
 
+local specWarnSiphonOath							= mod:NewSpecialWarningSwitch(400642, nil, 181503, nil, 1, 2) --Вытягивание энергии камня (Вытягивание энергии)
 local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, nil, nil, 3, 4) --Титанический удар
 local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, nil, 2, 2) --Бесконечная аннигиляция
 local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, nil, 2, 2) --Разделяющий удар (Делёжка)
@@ -45,16 +46,18 @@ local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil,
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8) --Освященная земля
 
 --These 3 are shared timers tied to Infinite Hand Technique
-local timerTitanicBlowCD							= mod:NewCDCountTimer(8, 401248, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Титанический удар
-local timerInfiniteAnnihilationCD					= mod:NewCDCountTimer(8, 401482, nil, nil, nil, 3) --Бесконечная аннигиляция
-local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5) --Разделяющий удар (Делёжка)
+local timerTitanicBlowCD							= mod:NewCDCountTimer(8, 401248, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Титанический удар
+local timerInfiniteAnnihilationCD					= mod:NewCDCountTimer(8, 401482, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Бесконечная аннигиляция
+local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2) --Разделяющий удар (Делёжка)
 
 --Bosses other abilities
 local timerRP										= mod:NewRPTimer(8)
 local timerSparkofTyrCD								= mod:NewCDCountTimer(60.7, 400681, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Искра Тира
-local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, nil, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON) --Вытягивание энергии камня
+local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, 181503, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Вытягивание энергии камня (Вытягивание энергии)
+local timerSiphonOathCast							= mod:NewCastTimer(15, 400642, 181503, nil, nil, 6, nil, nil, nil, 2, 5) --Вытягивание энергии камня (Вытягивание энергии)
 
-local yellSparkofTyr								= mod:NewShortPosYell(400681, nil, nil, nil, "YELL")
+local yellTitanicBlow								= mod:NewShortYell(401248, nil, nil, nil, "YELL") --Титанический удар
+local yellSparkofTyr								= mod:NewShortPosYell(400681, nil, nil, nil, "YELL") --Искра Тира
 
 mod:AddSetIconOption("SetIconOnSparkofTyr", 400681, true, 0, {1, 2})
 
@@ -80,16 +83,17 @@ function mod:OnCombatStart(delay)
 	timerTitanicBlowCD:Start(12.5-delay, 1)
 	timerInfiniteAnnihilationCD:Start(12.5-delay, 1)
 	timerDividingStrikeCD:Start(12.5-delay, 1)
-	timerSiphonOathCD:Start(44.9-delay, 1)
+	timerSiphonOathCD:Start(46-delay, 1) --
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 401248 then
+	if spellId == 401248 then --Титанический удар
 		self.vb.sharedCount = self.vb.sharedCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnTitanicBlow:Show(self.vb.sharedCount)
-			specWarnTitanicBlow:Play("carefly")
+			specWarnTitanicBlow:Play("defensive")
+			yellTitanicBlow:Yell()
 		end
 		--Shared Cd between 3 abilities, have to do fancy logic stuffs
 		if self.vb.sharedCount == 1 then
@@ -116,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 				timerDividingStrikeCD:Start(nil, 4)
 			end
 		end
-	elseif spellId == 401482 then
+	elseif spellId == 401482 then --Бесконечная аннигиляция
 		self.vb.sharedCount = self.vb.sharedCount + 1
 		specWarnInfiniteAnnihilation:Show(self.vb.sharedCount)
 		specWarnInfiniteAnnihilation:Play("shockwave")
@@ -145,7 +149,7 @@ function mod:SPELL_CAST_START(args)
 				timerDividingStrikeCD:Start(nil, 4)
 			end
 		end
-	elseif spellId == 400641 then
+	elseif spellId == 400641 then --Разделяющий удар
 		self.vb.sharedCount = self.vb.sharedCount + 1
 		specWarnDividingStrike:Show(self.vb.sharedCount)
 		specWarnDividingStrike:Play("helpsoak")
@@ -174,7 +178,7 @@ function mod:SPELL_CAST_START(args)
 				timerDividingStrikeCD:Start(nil, 4)
 			end
 		end
-	elseif spellId == 400649 then
+	elseif spellId == 400649 then --Искра Тира
 		self.vb.DebuffIcon = 1
 		self.vb.sparkCount = self.vb.sparkCount + 1
 		--Timer not started here, since it's 1 cast per cycle at moment and we start itmer on shield end
@@ -184,10 +188,13 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 400642 then
+	if spellId == 400642 then --Вытягивание энергии камня
 		self:SetStage(2)
 		self.vb.barrierCount = self.vb.barrierCount + 1
 		warnSiphonOath:Show(self.vb.barrierCount)
+		specWarnSiphonOath:Show()
+		specWarnSiphonOath:Play("changetarget")
+		timerSiphonOathCast:Start()
 --		timerSiphonOathCD:Start(nil, self.vb.barrierCount+1)
 	end
 end
@@ -230,7 +237,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.secondShared = 0
 		warnSiphonOathOver:Show()
 		--Timers same as engage
-		timerSparkofTyrCD:Start(6, self.vb.sparkCount+1)
+		timerSparkofTyrCD:Start(8, self.vb.sparkCount+1) --
 		--Either one of these can be first, we don't know which until time of cast
 		timerTitanicBlowCD:Start(12.5, 1)
 		timerInfiniteAnnihilationCD:Start(12.5, 1)

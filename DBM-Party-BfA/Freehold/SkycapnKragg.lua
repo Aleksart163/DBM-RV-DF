@@ -28,20 +28,20 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnVilebombardment			= mod:NewSpellAnnounce(256005, 2, nil, false)--Every 6 seconds so off by default
-local warnPowderShot				= mod:NewSpellAnnounce(256106, 2)
+local warnVilebombardment			= mod:NewSpellAnnounce(256005, 2, nil, false) --Гнусная бомбардировка Every 6 seconds so off by default
+local warnPowderShot				= mod:NewSpellAnnounce(256106, 2) --Выстрел азеритовым порохом
 
-local specWarnCharge				= mod:NewSpecialWarningDodge(255952, nil, nil, nil, 2, 2)
-local specWarnDiveBomb				= mod:NewSpecialWarningDodge(272046, nil, nil, nil, 2, 2)
+local specWarnCharge				= mod:NewSpecialWarningDodge(255952, nil, nil, nil, 2, 2) --Р-р-рывок!
+local specWarnDiveBomb				= mod:NewSpecialWarningDodge(272046, nil, nil, nil, 2, 2) --Бреющий полет
 --local specWarnPowderShot			= mod:NewSpecialWarningSpell(256106, nil, nil, nil, 2, 2)--Dodge?
-local specWarnBrew					= mod:NewSpecialWarningInterrupt(256060, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(256016, nil, nil, nil, 1, 8)
+local specWarnBrew					= mod:NewSpecialWarningInterrupt(256060, "HasInterrupt", nil, nil, 1, 2) --Бодрящее пойло
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(256016, nil, nil, nil, 1, 8) --Гнусная субстанция
 
-local timerChargeCD					= mod:NewCDTimer(8.4, 255952, nil, nil, nil, 3)--8.4-11
-local timerDiveBombCD				= mod:NewCDTimer(13.1, 272046, nil, nil, nil, 3)
-local timerPowderShotCD				= mod:NewCDTimer(9.5, 256106, nil, nil, nil, 3)
-local timerVilebombardmentCD		= mod:NewCDTimer(5.9, 256005, nil, nil, nil, 3)
-local timerBrewCD					= mod:NewCDTimer(20.6, 256060, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerChargeCD					= mod:NewCDTimer(8.4, 255952, nil, nil, nil, 3) --Р-р-рывок! 8.4-11
+local timerDiveBombCD				= mod:NewCDTimer(13.1, 272046, nil, nil, nil, 3) --Бреющий полет
+local timerPowderShotCD				= mod:NewCDTimer(9.5, 256106, nil, nil, nil, 3) --Выстрел азеритовым порохом
+local timerVilebombardmentCD		= mod:NewCDTimer(5.9, 256005, nil, nil, nil, 3) --Гнусная бомбардировка
+local timerBrewCD					= mod:NewCDTimer(20.6, 256060, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Бодрящее пойло
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -62,7 +62,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 272046 then
 		specWarnDiveBomb:Show()
 		specWarnDiveBomb:Play("watchstep")
-		timerDiveBombCD:Start(self:IsMythicPlus() and 16.9 or 13.1)
+		timerDiveBombCD:Start(self:IsMythicPlus() and 16 or 13.1)
 	end
 end
 
@@ -70,7 +70,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 256005 then
 		warnVilebombardment:Show()
-		timerVilebombardmentCD:Start(self:IsMythicPlus() and 17 or 5.9)
+		timerVilebombardmentCD:Start(self:IsMythicPlus() and 16 or 5.9)
 	elseif spellId == 256060 then
 		specWarnBrew:Show(args.sourceName)
 		specWarnBrew:Play("kickcast")
@@ -83,7 +83,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 256016 and args:IsPlayer() and self:AntiSpam(2, 1) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 181089 and self:GetStage(1) then--Spawn Parrot
+	elseif spellId == 181089 and self:GetStage(1) then --2 фаза
 		self:SetStage(2)
 		timerChargeCD:Stop()
 		warnPhase2:Show()

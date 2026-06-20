@@ -30,7 +30,7 @@ local warnVisage					= mod:NewAddsLeftAnnounce(-18312, 1, 269692)
 local specWarnPutridBlood			= mod:NewSpecialWarningStack(269301, nil, 4, nil, nil, 3, 4) --Порченая кровь
 local specWarnBloodVisage			= mod:NewSpecialWarningSwitch(-18312, "-Healer", nil, nil, 1, 2)
 local specWarnVileExpulsion			= mod:NewSpecialWarningDodge(269843, nil, nil, nil, 2, 2) --Гнусный выброс
-local specWarnCleansingLight		= mod:NewSpecialWarningSpell(269310, nil, nil, nil, 1, 2) --Очищающий свет
+local specWarnCleansingLight		= mod:NewSpecialWarningMoveTo(269310, nil, nil, nil, 1, 2) --Очищающий свет
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(269838, nil, nil, nil, 1, 8) --Гнусный выброс
 
 local timerBloodVisageCD			= mod:NewCDTimer(15.7, -18312, nil, nil, nil, 1, 269692) --Кровавый образ
@@ -44,7 +44,7 @@ mod.vb.lightCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Очищающий свет
-	[269310] = {18, 26, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
+	[269310] = {18, 25, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
 }
 
 function mod:OnCombatStart(delay)
@@ -73,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 		timerVileExpulsionCD:Start()
 	elseif spellId == 269310 then --Очищающий свет
 		self.vb.lightCount = self.vb.lightCount + 1
-		specWarnCleansingLight:Show()
+		specWarnCleansingLight:Show(DBM_COMMON_L.ALLY)
 		specWarnCleansingLight:Play("gathershare")
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.lightCount+1)
 		if timer then

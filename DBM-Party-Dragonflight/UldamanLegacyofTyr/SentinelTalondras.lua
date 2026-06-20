@@ -39,11 +39,11 @@ local specWarnEarthenShards2					= mod:NewSpecialWarningTarget(372718, "Healer",
 local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, 123471, nil, 3, 4) --Титаническое усиление
 local specWarnTitanicEmpowerment2				= mod:NewSpecialWarningInterrupt(372719, "-Healer", 123471, nil, 3, 4) --Титаническое усиление
 local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2) --Резонирующая сфера
-local specWarnCrushingStomp						= mod:NewSpecialWarningCount(372701, nil, nil, nil, 2, 2) --Сокрушительная поступь
+local specWarnCrushingStomp						= mod:NewSpecialWarningSpell(372701, nil, nil, nil, 2, 2) --Сокрушительная поступь
 
 local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, 123471, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Титаническое усиление
 local timerResonatingOrbCD						= mod:NewCDTimer(27, 382071, nil, nil, nil, 3, nil, nil, true) --Резонирующая сфера 25-30ish
-local timerCrushingStompCD						= mod:NewCDTimer(12.5, 372701, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, nil, true) --Сокрушительная поступь
+local timerCrushingStompCD						= mod:NewCDTimer(12.5, 372701, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, nil, true) --Сокрушительная поступь
 local timerEarthenShardsCD						= mod:NewCDTimer(16, 372718, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, true) --Земляные осколки
 
 local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
@@ -99,7 +99,7 @@ function mod:SPELL_CAST_START(args)
 		timerResonatingOrbCD:Start() --27.7 хороший таймер, если босс под усилением, 27 хороший таймер, если босс без усиления
 	elseif spellId == 372701 then --Сокрушительная поступь (АОЕ)
 		self.vb.stompCount = self.vb.stompCount + 1
-		specWarnCrushingStomp:Show(self.vb.stompCount)
+		specWarnCrushingStomp:Show()
 		specWarnCrushingStomp:Play("carefly")
 		timerCrushingStompCD:Start() --12.5 сек хороший таймер, если босс под усилением (без усиления вроде тоже)
 	end
