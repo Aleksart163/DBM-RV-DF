@@ -28,14 +28,15 @@ local warnUpheaval					= mod:NewTargetNoFilterAnnounce(259718, 3) --Дрожь �
 local warnFungistorm				= mod:NewSpellAnnounce(330422, 3) --Грибошторм
 
 local specWarnFungistorm			= mod:NewSpecialWarningDodge(330422, nil, nil, nil, 2, 2) --Грибошторм
-local specWarnFesteringHarvest		= mod:NewSpecialWarningCount(259732, nil, nil, nil, 2, 2) --Гниющий урожай
-local specWarnShockwave				= mod:NewSpecialWarningDefensive(272457, "Tank", nil, nil, 3, 4) --Ударная волна
+local specWarnFesteringHarvest		= mod:NewSpecialWarningCount(259732, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Гниющий урожай
+local specWarnShockwave				= mod:NewSpecialWarningDefensive(272457, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Ударная волна (Фронталка)
+local specWarnShockwave2			= mod:NewSpecialWarningDodge(272457, "-Tank", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Ударная волна (Фронталка)
 local specWarnUpheaval				= mod:NewSpecialWarningMoveTo(259718, nil, nil, nil, 4, 2) --Дрожь земли
 
 local timerFesteringHarvestCD		= mod:NewCDCountTimer(55.5, 259732, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Гниющий урожай
 local timerFungistormCD				= mod:NewCDTimer(21.5, 330422, nil, nil, nil, 7, nil, nil, nil, 2, 3) --Грибошторм
-local timerShockwaveCD				= mod:NewCDTimer(60, 272457, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна
-local timerUpheavalCD				= mod:NewCDTimer(60, 259718, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дрожь земли
+local timerShockwaveCD				= mod:NewCDTimer(60, 272457, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна (Фронталка)
+local timerUpheavalCD				= mod:NewCDTimer(60, 259718, nil, nil, nil, 3, nil) --Дрожь земли
 
 local yellUpheaval					= mod:NewShortYell(259718, nil, nil, nil, "YELL") --Дрожь земли
 local yellUpheavalFades				= mod:NewShortFadesYell(259718, nil, nil, nil, "YELL") --Дрожь земли
@@ -95,8 +96,13 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 272457 then --Ударная волна
 		self.vb.shockwaveCount = self.vb.shockwaveCount + 1
-		specWarnShockwave:Show()
-		specWarnShockwave:Play("shockwave")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnShockwave:Show()
+			specWarnShockwave:Play("shockwave")
+		else
+			specWarnShockwave2:Show()
+			specWarnShockwave2:Play("watchstep")
+		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.shockwaveCount+1)
 		if timer then
 			timerShockwaveCD:Start(timer, self.vb.shockwaveCount+1)

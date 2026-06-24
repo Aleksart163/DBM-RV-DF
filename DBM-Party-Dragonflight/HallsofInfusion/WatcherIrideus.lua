@@ -31,9 +31,9 @@ local warnPowerLoverload						= mod:NewTargetAnnounce(389179, 3) --Перегр�
 
 local specWarnPowerOverload						= mod:NewSpecialWarningMoveAway(389179, nil, nil, nil, 1, 2) --Перегрузка
 local specWarnSparkVolley						= mod:NewSpecialWarningDodge(384351, nil, nil, nil, 4, 2) --Череда разрядов
-local specWarnStaticSurge						= mod:NewSpecialWarningDefensive(384014, nil, nil, nil, 2, 2) --Статический выброс
+local specWarnStaticSurge						= mod:NewSpecialWarningDefensive(384014, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Статический выброс
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389181, nil, nil, nil, 1, 8) --Статическое поле
-local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, nil, 2, 2) --Кулак титана
+local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Кулак титана
 --Perephase: Ochken of Murchal
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25744))
 local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1) --Абляционный барьер

@@ -39,7 +39,7 @@ local specWarnEarthenShards2					= mod:NewSpecialWarningTarget(372718, "Healer",
 local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, 123471, nil, 3, 4) --Титаническое усиление
 local specWarnTitanicEmpowerment2				= mod:NewSpecialWarningInterrupt(372719, "-Healer", 123471, nil, 3, 4) --Титаническое усиление
 local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2) --Резонирующая сфера
-local specWarnCrushingStomp						= mod:NewSpecialWarningSpell(372701, nil, nil, nil, 2, 2) --Сокрушительная поступь
+local specWarnCrushingStomp						= mod:NewSpecialWarningSpell(372701, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Сокрушительная поступь
 
 local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, 123471, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Титаническое усиление
 local timerResonatingOrbCD						= mod:NewCDTimer(27, 382071, nil, nil, nil, 3, nil, nil, true) --Резонирующая сфера 25-30ish

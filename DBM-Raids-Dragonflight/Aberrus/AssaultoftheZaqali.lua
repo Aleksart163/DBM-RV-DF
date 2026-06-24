@@ -56,13 +56,13 @@ local warnMagmaMystic								= mod:NewCountAnnounce(397383, 3) --Раскале�
 local warnWallClimber								= mod:NewCountAnnounce("ej26221", 2, 163789, false, 2)
 local warnHeavyCudgel2								= mod:NewTargetNoFilterAnnounce(401258, 4) --Тяжелая дубина
 
-local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, nil, 3, 2) --Тяжелая дубина
+local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Тяжелая дубина
 local specWarnHeavyCudgelStack						= mod:NewSpecialWarningStack(401258, nil, 2, nil, nil, 1, 6) --Тяжелая дубина
 local specWarnHeavyCudgelSwap						= mod:NewSpecialWarningTaunt(401258, nil, nil, nil, 1, 2) --Тяжелая дубина
 local specWarnDevastatingLeap						= mod:NewSpecialWarningDodgeCount(408959, nil, 67382, nil, 2, 2) --Разрушительный прыжок (Прыжок)
 local specWarnAdds									= mod:NewSpecialWarningAddsCustom(285849, "-Healer", nil, nil, 1, 2)
 
-local timerHeavyCudgelCD							= mod:NewCDCountTimer(21.0, 401258, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Тяжелая дубина
+local timerHeavyCudgelCD							= mod:NewCDCountTimer(21.0, 401258, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Тяжелая дубина
 local timerDevastatingLeapCD						= mod:NewCDCountTimer(29.9, 408959, 67382, nil, nil, 3) --Разрушительный прыжок (Прыжок)
 local timerMagmaMysticCD							= mod:NewCDCountTimer(29.9, 397383, nil, nil, nil, 1) --Раскаленный барьер
 local timerWallClimberCD							= mod:NewCDCountTimer(29.9, "ej26221", nil, false, 2, 1, 163789)--Ladder Icon
@@ -77,40 +77,41 @@ local specWarnLavaBolt								= mod:NewSpecialWarningInterruptCount(397386, "Has
 
 --local timerMoltenBarrierCD						= mod:NewAITimer(29.9, 397383, nil, nil, nil, 2)
 --local timerMagmaFlowCD							= mod:NewCDTimer(20.7, 409271, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
-----Obsidian Guard
+----Обсидиановый страж----
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26210))
 local warnScorchingRoar								= mod:NewCastAnnounce(408620, 4) --Обжигающий рык
 local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4) --Вулканический щит
 
 local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2)
 
-local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2) --Обжигающий рык
-local timerVolcanicShieldCD							= mod:NewCDTimer(15, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
-----Flamebound Huntsman
+--local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2) --Обжигающий рык
+--local timerVolcanicShieldCD							= mod:NewCDTimer(15, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
+----Скованный пламенем охотник----
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26213))
-local warnBlazingSpear								= mod:NewTargetAnnounce(401401, 3)
+local warnBlazingSpear								= mod:NewTargetAnnounce(401401, 3) --Пылающее копье
 
-local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, nil, nil, 1, 2)
+local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, nil, nil, 1, 2) --Пылающее копье
 
 --local timerBlazingSpearCD							= mod:NewAITimer(29.9, 401401, nil, nil, nil, 3)
---Stage Two: Warlord's Will
+
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26683))
 local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer") --Горящая дубина
 
 local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 3, 3) --Катастрофический удар
-local specWarnFlamingCudgel							= mod:NewSpecialWarningCount(410351, nil, nil, nil, 2, 2) --Горящая дубина Count because it's hybrid warning
+local specWarnFlamingCudgel							= mod:NewSpecialWarningDefensive(410351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Горящая дубина Count because it's hybrid warning
 local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6) --Горящая дубина
 local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2) --Горящая дубина
 
 --local timerIgnarasFuryCD							= mod:NewAITimer(29.9, 406585, nil, nil, nil, 2)
 local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Катастрофический удар
-local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
+local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
 
 local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
 local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL")
 local yellVolcanicShieldFades						= mod:NewShortFadesYell(401867, nil, nil, nil, "YELL")
-local yellBlazingSpear								= mod:NewShortYell(401401, nil, nil, nil, "YELL")
-local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil, "YELL")
+local yellBlazingSpear								= mod:NewShortYell(401401, nil, nil, nil, "YELL") --Пылающее копье
+local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil, "YELL") --Пылающее копье
 
 --mod:AddInfoFrameOption(361651, true)
 --mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
@@ -206,9 +207,9 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(2, "VolcanicShield") then
 			warnVolcanicShield:Show()
 		end
-		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
-			timerVolcanicShieldCD:Start(nil, args.sourceGUID)
-		end
+	--	if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
+	--		timerVolcanicShieldCD:Start(nil, args.sourceGUID)
+	--	end
 	elseif spellId == 408959 then --Прыжок
 		self.vb.leapCount = self.vb.leapCount + 1
 		specWarnDevastatingLeap:Show(self.vb.leapCount)
@@ -283,9 +284,9 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(2, "ScorchingRoar") then
 			warnScorchingRoar:Show()
 		end
-		if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
-			timerScorchingRoarCD:Start(nil, args.sourceGUID)
-		end
+	--	if self:CheckBossDistance(args.sourceGUID, true, 32698, 48) then
+	--		timerScorchingRoarCD:Start(nil, args.sourceGUID)
+	--	end
 	elseif spellId == 397514 then--Отчаянное испепеление (каст начала 2 фазы)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -433,15 +434,15 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 200836 or cid == 202937 then--obsidian-guard
-		timerVolcanicShieldCD:Stop(args.destGUID)
-		timerScorchingRoarCD:Stop(args.destGUID)
---	elseif cid == 200840 then--flamebound-huntsman
---		timerBlazingSpearCD:Stop(args.destGUID)
-	elseif cid == 199703 then--magma-mystic
+	if cid == 199703 then--magma-mystic
 		castsPerGUID[args.destGUID] = nil
 --		timerMoltenBarrierCD:Stop(args.destGUID)
 --		timerMagmaFlowCD:Stop(args.destGUID)
+--	elseif cid == 200836 or cid == 202937 then--obsidian-guard
+--		timerVolcanicShieldCD:Stop(args.destGUID)
+--		timerScorchingRoarCD:Stop(args.destGUID)
+--	elseif cid == 200840 then--flamebound-huntsman
+--		timerBlazingSpearCD:Stop(args.destGUID)
 	end
 end
 

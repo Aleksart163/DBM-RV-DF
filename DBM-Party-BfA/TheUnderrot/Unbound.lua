@@ -16,6 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 269838",
 	"SPELL_PERIODIC_MISSED 269838",
 	"UNIT_DIED",
+	"UNIT_POWER_UPDATE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
@@ -29,13 +30,13 @@ local warnVisage					= mod:NewAddsLeftAnnounce(-18312, 1, 269692)
 
 local specWarnPutridBlood			= mod:NewSpecialWarningStack(269301, nil, 4, nil, nil, 3, 4) --Порченая кровь
 local specWarnBloodVisage			= mod:NewSpecialWarningSwitch(-18312, "-Healer", nil, nil, 1, 2)
-local specWarnVileExpulsion			= mod:NewSpecialWarningDodge(269843, nil, nil, nil, 2, 2) --Гнусный выброс
+local specWarnVileExpulsion			= mod:NewSpecialWarningDodge(269843, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Гнусный выброс (Фронталка)
 local specWarnCleansingLight		= mod:NewSpecialWarningMoveTo(269310, nil, nil, nil, 1, 2) --Очищающий свет
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(269838, nil, nil, nil, 1, 8) --Гнусный выброс
 
 local timerBloodVisageCD			= mod:NewCDTimer(15.7, -18312, nil, nil, nil, 1, 269692) --Кровавый образ
-local timerVileExpulsionCD			= mod:NewNextTimer(15.7, 269843, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Гнусный выброс
-local timerCleansingLightCD			= mod:NewCDCountTimer(15.7, 269310, nil, nil, nil, 7) --Очищающий свет 21.8-37 pre 10.1, 15.7-18 now
+local timerVileExpulsionCD			= mod:NewNextTimer(15.7, 269843, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Гнусный выброс (Фронталка)
+local timerCleansingLightCD			= mod:NewCDCountTimer(15.7, 269310, nil, nil, nil, 7) --Очищающий свет
 
 mod:AddInfoFrameOption(269301, "Healer")
 
@@ -44,7 +45,7 @@ mod.vb.lightCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Очищающий свет
-	[269310] = {18, 25, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
+	[269310] = {18, 24.8, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
 }
 
 function mod:OnCombatStart(delay)
@@ -117,5 +118,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 		specWarnBloodVisage:Show()
 		specWarnBloodVisage:Play("killmob")
 		timerBloodVisageCD:Start(31.5)
+	end
+end
+
+function mod:UNIT_POWER_UPDATE()
+	local bossPower = UnitPower("boss1")
+	if bossPower == 100 then
+		DBM:Debug("Murchal proshlyap (У босса 100 энергии)", 2)
 	end
 end

@@ -21,24 +21,24 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnCrystalSpikes				= mod:NewCastAnnounce(200551, 2) --Кристальные шипы
-local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 96306) --Пламенная ненависть (Преследование)
+local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 62374) --Пламенная ненависть (Преследование)
 
 local specWarnCrystalSpikes			= mod:NewSpecialWarningDodge(200551, "-Tank", nil, nil, 2, 2) --Кристальные шипы
 local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 4) --Магматический удар
 local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil, 1, 2) --Оползень
 local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitchCount(200637, "Dps", nil, nil, 1, 2) --Ваятель магмы
-local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, nil, 4, 4) --Магматическая волна
+local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Магматическая волна
 local specWarnMagmaWave2			= mod:NewSpecialWarningDefensive(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
-local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 96306, nil, 4, 2) --Пламенная ненависть (Преследование)
+local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть (Преследование)
 
 local timerMoltenCrashCD			= mod:NewCDTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23
 local timerLandSlideCD				= mod:NewCDTimer(16, 200700, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оползень 16.5-27
 local timerCrystalSpikesCD			= mod:NewCDTimer(21.4, 200551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристальные шипы
-local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 2 or nil, 5) --Ваятель магмы Everyone?
+local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, DBM_COMMON_L.ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 2 or nil, 5) --Ваятель магмы Everyone?
 local timerMagmaWaveCD				= mod:NewCDTimer(90, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна
 local timerMagmaWave				= mod:NewCastTimer(2.5, 200404, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна
 
-local yellBurningHatred				= mod:NewShortYell(200154, 96306, nil, nil, "YELL") --Пламенная ненависть (Преследование)
+local yellBurningHatred				= mod:NewShortYell(200154, 62374, nil, nil, "YELL") --Пламенная ненависть (Преследование)
 
 mod:AddSetIconOption("SetIconOnBurningHatred", 200154, true, 0, {8}) --Пламенная ненависть (Преследование)
 

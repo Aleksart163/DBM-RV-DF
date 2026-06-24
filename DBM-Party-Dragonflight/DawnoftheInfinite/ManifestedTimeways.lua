@@ -35,7 +35,7 @@ mod:RegisterEvents(
 --NOTE: 10.2 seems to have utterly deleted "Unwind" from encounter. For now its commented but kept in case this is an error or still around but not noted
 local warnChronoFaded								= mod:NewTargetNoFilterAnnounce(405696, 3) --Временное затухание
 
-local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, nil, 2, 2) --Обращение вспять (Фронталка)
+local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Обращение вспять (Фронталка)
 local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2) --Временное затухание
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2) --Фрагменты времени
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)

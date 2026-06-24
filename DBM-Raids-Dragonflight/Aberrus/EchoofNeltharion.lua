@@ -72,13 +72,13 @@ local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many
 
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
-local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensive(405433, nil, 246664, nil, 2, 2) --Темное уничтожение (Аннигиляция)
+local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensive(405433, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Темное уничтожение (Аннигиляция)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
 
 local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5) --Порча
-local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, 246664, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение (Аннигиляция)
+local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение (Аннигиляция)
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --Stage Three: Reality Fractures

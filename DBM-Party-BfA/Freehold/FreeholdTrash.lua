@@ -58,11 +58,11 @@ local specWarnThunderingSquall			= mod:NewSpecialWarningInterrupt(257736, "HasIn
 --local specWarnSeaSpoutKick				= mod:NewSpecialWarningInterrupt(258777, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFrostBlast				= mod:NewSpecialWarningInterrupt(257784, "HasInterrupt", nil, nil, 1, 2)--Might prune or disable by default if it conflicts with higher priority interrupts in area
 local specWarnSlipperySuds				= mod:NewSpecialWarningInterrupt(274507, "HasInterrupt", nil, nil, 1, 2) --Скользкая пена
-local specWarnBestialWrath				= mod:NewSpecialWarningDispel(257476, "RemoveEnrage", nil, 2, 1, 2)
-local specWarnBlindRage					= mod:NewSpecialWarningDispel(257739, "RemoveEnrage", nil, 2, 1, 2) --Слепая ярость
+local specWarnBestialWrath				= mod:NewSpecialWarningDispel(257476, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnBlindRage					= mod:NewSpecialWarningDispel(257739, "RemoveEnrage", nil, nil, 1, 2) --Слепая ярость
 local specWarnInfectedWound				= mod:NewSpecialWarningDispel(258323, "RemoveDisease", nil, nil, 1, 2)
 local specWarnPlagueStep				= mod:NewSpecialWarningDispel(257775, "RemoveDisease", nil, nil, 1, 2)
-local specWarnOiledBlade				= mod:NewSpecialWarningDispel(257908, "RemoveMagic", nil, 2, 3, 2) --Смазанный нефтью клинок
+local specWarnOiledBlade				= mod:NewSpecialWarningDispel(257908, "RemoveMagic", nil, nil, 3, 2) --Смазанный нефтью клинок
 local specWarnHealingBalmDispel			= mod:NewSpecialWarningDispel(257397, "MagicDispeller", nil, nil, 1, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
@@ -83,6 +83,7 @@ local timerThunderingSquallCD			= mod:NewCDNPTimer(20.6, 257736, nil, nil, nil, 
 local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Смазанный нефтью клинок
 local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяной удар
 
+local yellOiledBlade					= mod:NewShortYell(257908, nil, nil, nil, "YELL") --Смазанный нефтью клинок
 local yellBlindRagePlayer				= mod:NewShortYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
 local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
 local yellRicochetingThrow				= mod:NewShortYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
@@ -259,8 +260,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellBlindRagePlayer:Yell()
 			yellBlindRagePlayer2:Countdown(spellId)
 		end
-	elseif spellId == 257908 and args:IsDestTypePlayer() then
-		if self:IsSpellCaster() and self:AntiSpam(3, 3) then
+	elseif spellId == 257908 and args:IsDestTypePlayer() then --Смазанный нефтью клинок
+		if args:IsPlayer() then
+			yellOiledBlade:Yell()
+		elseif args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, "OiledBlade") then
 			specWarnOiledBlade:Show(args.destName)
 			specWarnOiledBlade:Play("helpdispel")
 		end

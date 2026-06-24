@@ -40,7 +40,8 @@ local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, ni
 local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, nil, 3, 4) --Хваткие лозы
 local specWarnGushingOoze						= mod:NewSpecialWarningInterrupt(381770, "HasInterrupt", nil, nil, 1, 2) --Хлещущая слизь
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(378054, nil, nil, nil, 1, 8) --Увядание!
-local specWarnVineWhip							= mod:NewSpecialWarningDefensive(377559, nil, nil, nil, 3, 4) --Хлещущая лоза
+local specWarnVineWhip							= mod:NewSpecialWarningDefensive(377559, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Хлещущая лоза
+local specWarnVineWhip2							= mod:NewSpecialWarningDodge(377559, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Хлещущая лоза
 
 local timerGraspingVinesCD						= mod:NewCDTimer(47.3, 376933, nil, nil, nil, 6) --Хваткие лозы
 local timerConsume								= mod:NewTargetTimer(10, 377222, nil, false, 2, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Поглощение
@@ -78,11 +79,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 381770 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnGushingOoze:Show(args.sourceName)
 		specWarnGushingOoze:Play("kickcast")
-	elseif spellId == 377559 then
+	elseif spellId == 377559 then --Хлещущая лоза
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnVineWhip:Show()
 			specWarnVineWhip:Play("defensive")
 			yellVineWhip:Yell()
+		else
+			specWarnVineWhip2:Show()
+			specWarnVineWhip2:Play("watchstep")
 		end
 		timerVineWhipCD:Start()--16-24 now thanks to worse spell queue than before
 	elseif spellId == 376934 then --Хваткие лозы

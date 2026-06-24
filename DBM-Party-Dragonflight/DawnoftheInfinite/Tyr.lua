@@ -40,8 +40,8 @@ local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1, nil, nil, 181503)
 
 local specWarnSiphonOath							= mod:NewSpecialWarningSwitch(400642, nil, 181503, nil, 1, 2) --Вытягивание энергии камня (Вытягивание энергии)
 local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, nil, nil, 3, 4) --Титанический удар
-local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, nil, 2, 2) --Бесконечная аннигиляция
-local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, nil, 2, 2) --Разделяющий удар (Делёжка)
+local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бесконечная аннигиляция
+local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Разделяющий удар (Делёжка)
 local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil, nil, 1, 2) --Искра Тира
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8) --Освященная земля
 

@@ -42,13 +42,14 @@ local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, ni
 local warnOblivionStack						= mod:NewCountAnnounce(401951, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401951)) --Забвение
 local warnMindFragment						= mod:NewAddsLeftAnnounce(403997, 1)--Not technically adds, but wording of option and alert text is ambigious that it doesn't matter, it fits
 local warnEmptynessBetweenStars				= mod:NewFadesAnnounce(401215, 1) --Межзвездная пустота
+local warnVoidEmpowerment					= mod:NewFadesAnnounce(403284, 1, nil, nil, 413106) --Межзвездная пустота 
 
 local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil, nil, 1, 4) --Забвение
 local specWarnEmptynessBetweenStars			= mod:NewSpecialWarningYou(401215, nil, nil, nil, 1, 5) --Межзвездная пустота
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(406989, nil, nil, nil, 1, 8)
 
 local timerPhaseCD							= mod:NewStageTimer(30)
-local timerEmptynessBetweenStars			= mod:NewBuffFadesTimer(15, 401215, nil, nil, nil, 3) --Межзвездная пустота
+local timerEmptynessBetweenStars			= mod:NewBuffFadesTimer(15, 401215, nil, nil, nil, 7) --Межзвездная пустота
 local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(401951, false)
@@ -60,7 +61,7 @@ local warnDazzled								= mod:NewTargetNoFilterAnnounce(401905, 4, nil, false) 
 local warnMassDisintegrate						= mod:NewTargetCountAnnounce(401680, 3, nil, nil, 405391, nil, nil, nil, true) --Массовая дезинтеграция (Дезинтеграция)
 local warnBurningClaws							= mod:NewStackAnnounce(401330, 2, nil, "Tank|Healer") --Обжигающие когти
 
-local specWarnGlitteringSurge					= mod:NewSpecialWarningDefensive(401810, nil, nil, nil, 2, 2) --Сияющий всплеск
+local specWarnGlitteringSurge					= mod:NewSpecialWarningDefensive(401810, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Сияющий всплеск
 local specWarnScorchingBomb						= mod:NewSpecialWarningCount(401500, nil, 167180, nil, 2, 2) --Опаляющая бомба (Бомбы)
 
 local specWarnMassDisintegrateYou				= mod:NewSpecialWarningYou(401680, nil, 405391, nil, 1, 2) --Массовая дезинтеграция (Дезинтеграция)
@@ -82,7 +83,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
-local specWarnVoidEmpowerment					= mod:NewSpecialWarningReflect(403284, nil, 413106, nil, 3, 2) --Наделение силой Бездны
+local specWarnVoidEmpowerment					= mod:NewSpecialWarningReflect(403284, nil, 413106, nil, 3, 2) --Наделение силой Бездны (Сила Бездны)
 local specWarnAstralFlareStack					= mod:NewSpecialWarningStack(407576, nil, 6, 122149, nil, 1, 2) --Астральный огонь (Ускорение)
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?
@@ -109,7 +110,7 @@ local timerDesolateBlossomCD					= mod:NewCDCountTimer(29.9, 404403, nil, nil, n
 local timerInfiniteDuressCD		 				= mod:NewCDCountTimer(29.9, 404288, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON..DBM_COMMON_L.MAGIC_ICON) --Бесконечное заключение
 local timerVoidClawsCD							= mod:NewCDTimer(29.9, 411241, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 3 or nil, 5) --Когти пустоты
 local timerVoidClaws							= mod:NewTargetTimer(18, 411241, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Когти пустоты AOE damage from expiring
-local timerEbonMight							= mod:NewCastCountTimer("d29.9", 404269, 299144, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Черная мощь (Невосприимчивость)
+local timerEbonMight							= mod:NewCastCountTimer("d29.9", 404269, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Черная мощь (Невосприимчивость)
 
 mod:AddSetIconOption("SetIconOnEmptyRecollection", 404505, true, 5, {8})
 mod:AddSetIconOption("SetIconOnNullGlimmer", 404507, true, 5, {7, 6, 5, 4, 3})
@@ -127,20 +128,21 @@ local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil,
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
 local specWarnScouringEternity					= mod:NewSpecialWarningMoveTo(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
-local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, nil, 3, 4) --Рассечение Бездны
+local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
 local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Космическое вознесение (Вознесение)
-local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 5) --Звездная формация (Астероид)
+local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 7, nil, nil, nil, 2, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerScouringEternity						= mod:NewCastTimer(6, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
-local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
+local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, DBM_COMMON_L.FRONTAL, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
-local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты
+local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты (Дебафф с 2 фазы)
+local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YELL") --Когти пустоты (Дебафф с 2 фазы) For Void Blast (411238) effect
 local yellVoidSlash								= mod:NewShortYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 --local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
@@ -152,7 +154,6 @@ local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YEL
 local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
 local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
-local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YELL") --Когти пустоты For Void Blast (411238) effect
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
 mod:AddSetIconOption("SetIconOnEmbraceofNothingness", 403520, true, 0, {8}) --Объятия пустоты (Черная дыра)
@@ -381,7 +382,6 @@ local function startPhase3RP(self) --Версия 1
 	timerDesolateBlossomCD:Stop()
 	timerInfiniteDuressCD:Stop()
 	timerVoidClawsCD:Stop()
-	timerEbonMight:Start(24.5, 1)
 	timerPhaseCD:Start(13.5)
 	-----------------------------
 	if self:IsMythic() then
@@ -392,6 +392,7 @@ local function startPhase3RP(self) --Версия 1
 		timerEmbraceofNothingnessCD:Start(36.8, 1)
 		timerVoidBombCD:Start(38)
 		timerScouringEternityCD:Start(66.6, 1) --46.2
+		timerEbonMight:Start(24.5, 1)
 	elseif self:IsHeroic() then
 		timerInfiniteDuressCD:Start(18.2, 1)
 		timerCosmicAscensionCD:Start(21, 1)
@@ -710,7 +711,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnCosmicAscension:Show(self.vb.breathCount)
 		specWarnCosmicAscension:Play("watchstep")
-		timerAstralFormation:Start(6.5)
+		timerAstralFormation:Start(6.2)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
 		if timer then
 			timerCosmicAscensionCD:Start(timer, self.vb.breathCount+1)
@@ -906,7 +907,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnVoidClawsOut:Schedule(12)
 				specWarnVoidClawsOut:ScheduleVoice(12, "runout")
 				yellVoidClawsFades:Cancel()
-				yellVoidClawsFades:Countdown(spellId)
+				yellVoidClawsFades:Countdown(18, 7)
 			end
 		end
 		timerVoidClaws:Start(18, args.destName)
@@ -928,7 +929,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnVoidSlashOut:Schedule(12)
 					specWarnVoidSlashOut:ScheduleVoice(12, "runout")
 					yellVoidClawsFades:Cancel()
-					yellVoidClawsFades:Countdown(spellId)
+					yellVoidClawsFades:Countdown(21, 7)
 				end
 			end
 		end
@@ -1135,6 +1136,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 	elseif spellId == 410654 then --Начало фазы 3 (Дебафф с босса спал)
+		warnVoidEmpowerment:Show()
+		warnVoidEmpowerment:Play("end")
 		self:SendSync("Phase 3 Start")
 	end
 end
@@ -1170,7 +1173,7 @@ function mod:UNIT_DIED(args)
 	if cid == 202971 then--Null Glimmer
 		castsPerGUID[args.destGUID] = nil
 		timerBlastingScreamCD:Stop(args.destGUID)
-	elseif cid == 202969 then--Empty Recollection
+	elseif cid == 202969 then --Пустое воспоминание
 		self.vb.bigAddKilled = self.vb.bigAddKilled + 1
 		castsPerGUID[args.destGUID] = nil
 		timerEmptyStrikeCD:Stop(args.destGUID)

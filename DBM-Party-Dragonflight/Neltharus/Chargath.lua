@@ -33,9 +33,10 @@ local warnGroundingSpear						= mod:NewTargetNoFilterAnnounce(373424, 4) --Сб�
 local warnFetterStack							= mod:NewStackAnnounce(374655, 2) --Кандалы
 local warnFetter								= mod:NewTargetNoFilterAnnounce(374655, 2) --Кандалы Boss Only
 
+local specWarnFetter							= mod:NewSpecialWarningSpell(374655, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Кандалы (Повышенный урон)
 local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(373733, nil, nil, nil, 3, 4) --Удар дракона
 local specWarnDragonStrike2						= mod:NewSpecialWarningTarget(373733, "Healer", nil, nil, 3, 4) --Удар дракона
-local specWarnMagmaWave							= mod:NewSpecialWarningDodge(373742, nil, nil, nil, 2, 2) --Магматическая волна
+local specWarnMagmaWave							= mod:NewSpecialWarningDodge(373742, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Магматическая волна
 local specWarnGroundingSpear					= mod:NewSpecialWarningYou(373424, nil, nil, nil, 1, 2) --Сбивающее копье
 local specWarnFieryFocus						= mod:NewSpecialWarningInterrupt(375056, nil, nil, nil, 1, 13) --Огненное преследование
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 8) --Взорванная земля
@@ -43,7 +44,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(374854, nil, nil, nil, 1, 
 local timerDragonStrikeCD						= mod:NewCDTimer(12.1, 373733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, nil, 2, 5) --Удар дракона
 local timerMagmaWaveCD							= mod:NewCDTimer(12.1, 373742, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Магматическая волна Actual CD still not known, since you'd never fully see it unhindered by blade lock or reset by fetter
 local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3) --Сбивающее копье
-local timerFetter								= mod:NewBuffActiveTimer(15, 374655, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы
+local timerFetter								= mod:NewBuffActiveTimer(15, 374655, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы (Повышенный урон)
 local timerFieryFocusCD							= mod:NewCDTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Огненное преследование
 
 local yellGroundingSpear						= mod:NewShortYell(373424, nil, nil, nil, "YELL") --Сбивающее копье
@@ -117,6 +118,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.magmawaveCount = 0
 			self.vb.bossFettered = true
 			warnFetter:Show(args.destName)
+			specWarnFetter:Show()
 			timerFetter:Start(args.destName)
 			--Stop timers, since they'll reset on fetter ending, most of the time anyways
 			timerGroundingSpearCD:Stop()

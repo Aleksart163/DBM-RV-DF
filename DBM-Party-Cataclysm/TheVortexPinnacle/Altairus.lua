@@ -34,7 +34,7 @@ local warnUpwind			= mod:NewSpellAnnounce(88282, 1) --Наветренная с�
 
 --local specWarnBreath		= mod:NewSpecialWarningYou(88308, "-Tank", nil, 2, 1, 2)
 local specWarnBreath		= mod:NewSpecialWarningDodge(88308, nil, 18357, nil, 2, 2) --Студеное дыхание (Дыхание)
-local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, nil, nil, 2, 14, 4) --Нисходящий порыв
+local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, nil, nil, 2, 4) --Нисходящий порыв
 local specWarnDownwind		= mod:NewSpecialWarningSpell(88286, nil, nil, nil, 1, 14) --Подветренная сторона Альтаирия
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(413275, nil, nil, nil, 1, 8) --Холодный фронт
 

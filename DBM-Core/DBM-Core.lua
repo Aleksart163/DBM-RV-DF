@@ -80,7 +80,7 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20260617000000")
+DBM.Revision = parseCurseDate("20260624000000")
 
 local fakeBWVersion, fakeBWHash = 471, "pr05h19p"
 local bwVersionResponseString = "V^%d^%s"
@@ -88,7 +88,7 @@ local PForceDisable
 -- The string that is shown as version
 DBM.DisplayVersion = "10.2.70"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2026, 6, 17) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2026, 6, 24) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -7165,7 +7165,11 @@ do
 		fireEvent("DBM_TestModStarted")
 		if not testMod then
 			testMod = self:NewMod("TestMod")
-			self:GetModLocalization("TestMod"):SetGeneralLocalization{name = "Test Mod"}
+			if (LOCALE_ruRU) then
+				self:GetModLocalization("TestMod"):SetGeneralLocalization{name = "Тест мод"}
+			else
+				self:GetModLocalization("TestMod"):SetGeneralLocalization{name = "Test Mod"}
+			end
 			testWarning1 = testMod:NewAnnounce("%s", 1, "136116")--Interface\\Icons\\Spell_Nature_WispSplode
 			testWarning2 = testMod:NewAnnounce("%s", 2, private.isRetail and "136194" or "136221")
 			testWarning3 = testMod:NewAnnounce("%s", 3, "135826")
@@ -7181,22 +7185,41 @@ do
 			testSpecialWarning2 = testMod:NewSpecialWarning(" %s ", nil, nil, nil, 2, 2)
 			testSpecialWarning3 = testMod:NewSpecialWarning("  %s  ", nil, nil, nil, 3, 2) -- hack: non auto-generated special warnings need distinct names (we could go ahead and give them proper names with proper localization entries, but this is much easier)
 		end
-		testTimer1:Stop("Test Bar")
-		testTimer2:Stop("Adds")
-		testTimer3:Stop("Evil Debuff")
-		testTimer4:Stop("Important Interrupt")
-		testTimer5:Stop("Boom!")
-		testTimer6:Stop("Handle your Role")
-		testTimer7:Stop("Next Stage")
-		testTimer8:Stop("Custom User Bar")
-		testTimer1:Start(10, "Test Bar")
-		testTimer2:Start(30, "Adds")
-		testTimer3:Start(43, "Evil Debuff")
-		testTimer4:Start(20, "Important Interrupt")
-		testTimer5:Start(60, "Boom!")
-		testTimer6:Start(35, "Handle your Role")
-		testTimer7:Start(50, "Next Stage")
-		testTimer8:Start(55, "Custom User Bar")
+		if (LOCALE_ruRU) then
+			testTimer1:Stop("Тест бар")
+			testTimer2:Stop("Адды")
+			testTimer3:Stop("Злой дебафф")
+			testTimer4:Stop("Прерывание спелла")
+			testTimer5:Stop("AoE урон")
+			testTimer6:Stop("Специально для роли")
+			testTimer7:Stop("Следующая фаза")
+			testTimer8:Stop("Важно к вниманию")
+			testTimer1:Start(10, "Тест бар")
+			testTimer2:Start(30, "Адды")
+			testTimer3:Start(43, "Злой дебафф")
+			testTimer4:Start(20, "Прерывание спелла")
+			testTimer5:Start(60, "AoE урон")
+			testTimer6:Start(35, "Специально для роли")
+			testTimer7:Start(50, "Следующая фаза")
+			testTimer8:Start(55, "Важно к вниманию")
+		else
+			testTimer1:Stop("Test Bar")
+			testTimer2:Stop("Adds")
+			testTimer3:Stop("Evil Debuff")
+			testTimer4:Stop("Important Interrupt")
+			testTimer5:Stop("Boom!")
+			testTimer6:Stop("Handle your Role")
+			testTimer7:Stop("Next Stage")
+			testTimer8:Stop("Custom User Bar")
+			testTimer1:Start(10, "Test Bar")
+			testTimer2:Start(30, "Adds")
+			testTimer3:Start(43, "Evil Debuff")
+			testTimer4:Start(20, "Important Interrupt")
+			testTimer5:Start(60, "Boom!")
+			testTimer6:Start(35, "Handle your Role")
+			testTimer7:Start(50, "Next Stage")
+			testTimer8:Start(55, "Important")
+		end
 		testWarning1:Cancel()
 		testWarning2:Cancel()
 		testWarning3:Cancel()
@@ -7206,19 +7229,35 @@ do
 		testSpecialWarning2:CancelVoice()
 		testSpecialWarning3:Cancel()
 		testSpecialWarning3:CancelVoice()
-		testWarning1:Show("Test-mode started...")
-		testWarning1:Schedule(62, "Test-mode finished!")
-		testWarning3:Schedule(50, "Boom in 10 sec!")
-		testWarning3:Schedule(20, "Pew Pew Laser Owl!")
-		testWarning2:Schedule(38, "Evil Spell in 5 sec!")
-		testWarning2:Schedule(43, "Evil Spell!")
-		testWarning1:Schedule(10, "Test bar expired!")
-		testSpecialWarning1:Schedule(20, "Pew Pew Laser Owl")
-		testSpecialWarning1:ScheduleVoice(20, "runaway")
-		testSpecialWarning2:Schedule(43, "Fear!")
-		testSpecialWarning2:ScheduleVoice(43, "fearsoon")
-		testSpecialWarning3:Schedule(60, "Boom!")
-		testSpecialWarning3:ScheduleVoice(60, "defensive")
+		if (LOCALE_ruRU) then
+			testWarning1:Show("Тест мод запущен...")
+			testWarning1:Schedule(62, "Тест мод закончен!")
+			testWarning3:Schedule(50, "Взрыв через 10 сек!")
+			testWarning3:Schedule(20, "Разрушительный лазер!")
+			testWarning2:Schedule(38, "Злые чары через 5 сек!")
+			testWarning2:Schedule(43, "Злые чары!")
+			testWarning1:Schedule(10, "Тест бар истёк!")
+			testSpecialWarning1:Schedule(20, "Разрушительный лазер")
+			testSpecialWarning1:ScheduleVoice(20, "runaway")
+			testSpecialWarning2:Schedule(43, "Страх!")
+			testSpecialWarning2:ScheduleVoice(43, "fearsoon")
+			testSpecialWarning3:Schedule(60, "AoE урон!")
+			testSpecialWarning3:ScheduleVoice(60, "defensive")
+		else
+			testWarning1:Show("Test-mode started...")
+			testWarning1:Schedule(62, "Test-mode finished!")
+			testWarning3:Schedule(50, "Boom in 10 sec!")
+			testWarning3:Schedule(20, "Pew Pew Laser Owl!")
+			testWarning2:Schedule(38, "Evil Spell in 5 sec!")
+			testWarning2:Schedule(43, "Evil Spell!")
+			testWarning1:Schedule(10, "Test bar expired!")
+			testSpecialWarning1:Schedule(20, "Pew Pew Laser Owl")
+			testSpecialWarning1:ScheduleVoice(20, "runaway")
+			testSpecialWarning2:Schedule(43, "Fear!")
+			testSpecialWarning2:ScheduleVoice(43, "fearsoon")
+			testSpecialWarning3:Schedule(60, "Boom!")
+			testSpecialWarning3:ScheduleVoice(60, "defensive")
+		end
 	end
 end
 

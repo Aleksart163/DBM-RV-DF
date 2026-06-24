@@ -20,7 +20,7 @@ mod:RegisterEvents(
 --]]
 local warnSubmerge						= mod:NewSpellAnnounce(183433, 3) --Погружение
 local warnWarDrums						= mod:NewSpellAnnounce(183526, 4) --Боевые барабаны
-local warnBurningHatred					= mod:NewTargetAnnounce(200154, 3)
+local warnBurningHatred					= mod:NewTargetNoFilterAnnounce(200154, 3, nil, nil, 62374) --Пламенная ненависть
 local warnMetamorphosis					= mod:NewTargetNoFilterAnnounce(193803, 3, nil, false)
 local warnPetrifed						= mod:NewTargetNoFilterAnnounce(186616, 4)
 local warnCallWorm						= mod:NewCastAnnounce(183548, 3)
@@ -32,11 +32,11 @@ local warnImpalingShard					= mod:NewCastAnnounce(193941, 3, nil, nil, "Tank|Hea
 local warnPetrifyingTotem				= mod:NewCastAnnounce(202108, 3) --Каменящий тотем
 local warnBound							= mod:NewCastAnnounce(193585, 3) --Скованность
 local warnStoneShatter					= mod:NewCastAnnounce(226347, 3) --Раздробление камня
-local warnBarbedTongue					= mod:NewCastAnnounce(183539, 3)
+local warnBarbedTongue					= mod:NewCastAnnounce(183539, 3) --Шипастый язык
 
-local specWarnPiercingShards			= mod:NewSpecialWarningDefensive(226296, nil, nil, nil, 3, 4) --Острые осколки
-local specWarnPiercingShards2			= mod:NewSpecialWarningTarget(226296, nil, nil, nil, 2, 4) --Острые осколки
-local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, nil, nil, 4, 2)
+local specWarnPiercingShards			= mod:NewSpecialWarningDefensive(226296, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Острые осколки
+local specWarnPiercingShards2			= mod:NewSpecialWarningTarget(226296, nil, nil, DBM_COMMON_L.FRONTAL, 2, 4) --Острые осколки
+local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть
 local specWarnCrush						= mod:NewSpecialWarningRun(226287, "Melee", nil, nil, 1, 2) --Сокрушение
 local specWarnAvalanche					= mod:NewSpecialWarningDodge(183088, nil, nil, 3, 2, 2) --Лавина
 local specWarnPetrifyingTotem			= mod:NewSpecialWarningDodge(202108, nil, nil, nil, 2, 2) --Каменящий тотем
@@ -45,7 +45,7 @@ local specWarnFrenzy					= mod:NewSpecialWarningDispel(201983, "RemoveEnrage", n
 local specWarnStoneGaze					= mod:NewSpecialWarningInterrupt(202181, "HasInterrupt", nil, nil, 1, 2) --Каменный взгляд
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(186576, nil, nil, nil, 1, 8)
 
-local timerPiercingShardsCD				= mod:NewCDNPTimer(14.9, 226296, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Острые осколки
+local timerPiercingShardsCD				= mod:NewCDNPTimer(14.9, 226296, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Острые осколки
 local timerSubmergeCD					= mod:NewCDNPTimer(22.7, 183433, nil, nil, nil, 5) --Погружение
 local timerStoneShatterCD				= mod:NewCDNPTimer(12.1, 226347, nil, nil, nil, 3) --Раздробление камня
 local timerImpalingShardCD				= mod:NewCDNPTimer(15.7, 193941, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пронзающий осколок

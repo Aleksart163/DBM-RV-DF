@@ -38,14 +38,15 @@ local warnMoltenGold							= mod:NewTargetNoFilterAnnounce(377018, 2, nil, "Heal
 local warnHardenedGold							= mod:NewYouAnnounce(377022, 2) --Отвердевшее золото So inconsiquential it doesn't even deserve a special announcement
 local warnBurningPursuit						= mod:NewTargetNoFilterAnnounce(377522, 3, nil, nil, 96306) --Огненное преследование (Преследование)
 
+local specWarnBackdraft							= mod:NewSpecialWarningSpell(377014, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Обратный поток (Повышенный урон)
 local specWarnTakeTreasure						= mod:NewSpecialWarningSpell(119664, nil, nil, nil, 3, 4) --Хватай сокровище!
 local specWarnMagmaShield						= mod:NewSpecialWarningSpell(376780, nil, nil, nil, 1, 2) --Щит магмы
-local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, nil, 2, 2) --Драконий горн
+local specWarnDragonsKiln						= mod:NewSpecialWarningDodge(377204, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Драконий горн
 local specWarnBurningEmber						= mod:NewSpecialWarningDodge(377477, nil, nil, nil, 2, 2) --Раскаленный уголь
 local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, 96306, nil, 4, 2) --Огненное преследование (Преследование)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377542, nil, nil, nil, 1, 8)
 
-local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток
+local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток (Повышенный урон)
 local timerMagmaShieldCD						= mod:NewCDTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
 local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3) --Расплавленное золото
 local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Драконий горн
@@ -159,6 +160,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnBurningPursuit:Show(args.destName)
 		end
 	elseif spellId == 377014 then --Обратный поток (Повышенный урон)
+		specWarnBackdraft:Show()
 		timerBackdraft:Start(args.destName)
 		self:Schedule(1, pointlessDelay, self)
 	end

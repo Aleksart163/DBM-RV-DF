@@ -29,7 +29,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnEnsnaringTrap							= mod:NewTargetNoFilterAnnounce(384148, 3) --Оплетающая ловушка
-local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3) --Пахнет мясом (Преследование)
+local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3, nil, nil, 62374) --Пахнет мясом (Преследование)
 local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2) --Призыв гиен
 
 local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2) --Оплетающая ловушка

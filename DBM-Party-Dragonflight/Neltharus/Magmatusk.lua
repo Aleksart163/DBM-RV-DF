@@ -30,16 +30,16 @@ local warnMagmaLob								= mod:NewSpellAnnounce(375068, 3) --Бросок ма�
 local warnVolatileMutation						= mod:NewCountAnnounce(374365, 3, nil, nil, 184894) --Неустойчивая мутация
 local warnLavaSpray								= mod:NewTargetNoFilterAnnounce(375251, 3) --Поток лавы
 
-local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", 184894, nil, 2, 2) --Неустойчивая мутация (Мутация)
+local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Неустойчивая мутация (Мутация)
 local specWarnMagmaLob							= mod:NewSpecialWarningDodge(375068, false, nil, 2, 2, 2) --Бросок магмы
 local specWarnLavaSpray2						= mod:NewSpecialWarningDefensive(375251, nil, nil, nil, 3, 4) --Поток лавы
-local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, 181886, nil, 2, 4) --Пылающий рывок
+local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, 181886, nil, 2, 4) --Пылающий рывок (Рывок)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(375204, nil, nil, nil, 1, 8) --Жидкая магма
 
 local timerRP									= mod:NewRPTimer(30)
 --local timerMagmaLobCD							= mod:NewCDTimer(6.5, 375068, nil, nil, nil, 3)--8 unless delayed by other casts
 local timerLavaSrayCD							= mod:NewCDCountTimer(90, 375251, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Поток лавы
-local timerBlazingChargeCD						= mod:NewCDCountTimer(90, 375436, 181886, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пылающий рывок
+local timerBlazingChargeCD						= mod:NewCDCountTimer(90, 375436, 181886, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пылающий рывок (Рывок)
 local timerVolatileMutationCD					= mod:NewCDCountTimer(90, 374365, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 2, 5) --Неустойчивая мутация (Мутация)
 
 local yellLavaSpray								= mod:NewYell(375251, nil, nil, nil, "YELL") --Поток лавы

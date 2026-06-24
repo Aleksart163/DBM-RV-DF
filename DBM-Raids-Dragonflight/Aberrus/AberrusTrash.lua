@@ -28,13 +28,13 @@ local warnSlimeInjection					= mod:NewTargetNoFilterAnnounce(411808, 2) --Раз
 
 local specWarnDreamBurst					= mod:NewSpecialWarningMoveAway(406282, nil, nil, nil, 4, 2) --Усыпляющий взрыв
 local specWarnLavaPurge						= mod:NewSpecialWarningDodge(409473, nil, nil, nil, 2, 2) --Лавовое истребление
-local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, nil, 2, 2) --Истребление
+local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Истребление (Фронталка)
 local specWarnUmbralTorrent					= mod:NewSpecialWarningDodge(409612, nil, nil, nil, 2, 2) --Теневой поток
 local specWarnSlimeInjection				= mod:NewSpecialWarningMoveAway(411808, nil, nil, nil, 1, 2) --Разбрызгивание слизи
 local specWarnDarkBindings					= mod:NewSpecialWarningMoveAway(413785, nil, nil, nil, 1, 2) --Темные путы
 local specWarnBrutalCauterization			= mod:NewSpecialWarningInterrupt(406911, "HasInterrupt", nil, nil, 1, 2) --Жестокое прижигание
 
-local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребление
+local timerEradicateCD						= mod:NewCDNPTimer(13, 411755, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Истребление (Фронталка)
 local timerRP								= mod:NewRPTimer(30)
 
 local yellDreamBurst						= mod:NewShortYell(406282, nil, nil, nil, "YELL") --Усыпляющий взрыв

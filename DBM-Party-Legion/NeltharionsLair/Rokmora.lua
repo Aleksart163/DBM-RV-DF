@@ -18,12 +18,12 @@ mod:RegisterEventsInCombat(
 --TODO, is razorshards 29 seconds now?
 local warnShatter					= mod:NewCountAnnounce(188114, 2) --Дробление
 
-local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, nil, 2, 4) --Дробление
-local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, nil, 2, 2) --Бритвенно-острые осколки
+local specWarnShatter				= mod:NewSpecialWarningDefensive(188114, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Дробление
+local specWarnRazorShards			= mod:NewSpecialWarningDodge(188169, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бритвенно-острые осколки
 local specWarnGas					= mod:NewSpecialWarningGTFO(192800, nil, nil, nil, 1, 8) --Удушающая пыль
 
-local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Дробление
-local timerRazorShardsCD			= mod:NewCDTimer(26.1, 188169, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Бритвенно-острые осколки
+local timerShatterCD				= mod:NewCDCountTimer(24.9, 188114, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Дробление
+local timerRazorShardsCD			= mod:NewCDTimer(26.1, 188169, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Бритвенно-острые осколки
 
 mod.vb.shatterCount = 0
 

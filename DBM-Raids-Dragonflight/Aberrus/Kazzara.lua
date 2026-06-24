@@ -23,22 +23,22 @@ mod:RegisterEventsInCombat(
 (ability.id = 401316 or ability.id = 401318 or ability.id = 401319 or ability.id = 406516 or ability.id = 407198 or ability.id = 407199 or ability.id = 407200 or ability.id = 407069 or ability.id = 400430 or ability.id = 403326 or ability.id = 404744) and type = "begincast"
 --]]
 local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3) --Ужасные разломы
-local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4)
+local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4) --Лучи жестокой боли
 local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Tank|Healer") --Ужасные когти
 
 local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, nil, 2, 2)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
 local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, nil, nil, 4, 4) --Луч жестокой боли
-local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2)
-local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, nil, 2, 13)
+local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)
+local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Истребляющие крылья (Отталкивание)
 local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404743, nil, nil, nil, 1, 2) --Ужасные когти
 local specWarnTerrorClawsTaunt						= mod:NewSpecialWarningTaunt(404743, nil, nil, nil, 1, 2) --Ужасные когти
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(406530, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(406530, nil, nil, nil, 1, 8) --Огонь разлома
 --
 local timerDreadRiftsCD								= mod:NewCDCountTimer(34, 407196, nil, nil, nil, 3) --Ужасные разломы
-local timerRaysofAnguishCD							= mod:NewCDCountTimer(34, 407069, nil, nil, nil, 3)
-local timerHellbeamCD								= mod:NewCDCountTimer(35.5, 400430, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
-local timerWingsofExtinctionCD						= mod:NewCDCountTimer(34, 403326, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerRaysofAnguishCD							= mod:NewCDCountTimer(34, 407069, nil, nil, nil, 3) --Лучи жестокой боли
+local timerHellbeamCD								= mod:NewCDCountTimer(35.5, 400430, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненный луч (Дыхание)
+local timerWingsofExtinctionCD						= mod:NewCDCountTimer(34, 403326, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Истребляющие крылья (Отталкивание)
 local timerTerrorClawsCD							= mod:NewCDTimer(15.6, 404743, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ужасные когти
 --local berserkTimer								= mod:NewBerserkTimer(600)
 

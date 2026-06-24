@@ -32,7 +32,7 @@ local warnDecayigStrength						= mod:NewCastAnnounce(373960, 4) --Угасающ
 
 local specWarnDecayigStrength					= mod:NewSpecialWarningMoveAway(373960, nil, nil, 2, 1, 2) --Угасающие силы
 local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", nil, 2, 1, 2) --Тотем взрывной гнили
-local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, nil, 2, 2, 4) --Удушающее облако гнили
+local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, DBM_COMMON_L.FRONTAL, 2, 4) --Удушающее облако гнили
 local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 3, 2) --Удар разложения
 
 local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Угасающие силы

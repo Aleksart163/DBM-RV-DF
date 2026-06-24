@@ -31,7 +31,7 @@ local warnTempestsFury							= mod:NewCountAnnounce(388424, 4) --Неистов�
 
 local specWarnInfusedGlobule					= mod:NewSpecialWarningDodge(387474, nil, nil, nil, 1, 2) --Заряженная капля
 local specWarnSquallBuffet						= mod:NewSpecialWarningDefensive(387504, nil, nil, nil, 3, 4) --Шквальный толчок
-local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, nil, 2, 4) --Неистовство бури
+local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Неистовство бури
 
 local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Шквальный толчок Squall Buffet/Focused Deluge tank combo
 local timerInfusedGlobuleCD						= mod:NewCDTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
@@ -44,7 +44,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
 
-local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, nil, nil) --Погружение
+local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
 
 mod.vb.GlobCount = 0
 mod.vb.tempestCount = 0

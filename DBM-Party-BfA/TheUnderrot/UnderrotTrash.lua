@@ -40,10 +40,10 @@ local specWarnWickedEmbrace			= mod:NewSpecialWarningYou(266265, nil, nil, nil, 
 local specWarnWickedEmbrace2		= mod:NewSpecialWarningDispel(266265, "RemoveMagic", nil, nil, 3, 4) --Злые объятия
 local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2) --Сводящий с ума взор
 local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2) --Яростное рассечение
-local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, nil, 2, 2) --Гнилая желчь
+local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Гнилая желчь
 local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2) --Хватка Бездны
 local specWarnDarkOmen				= mod:NewSpecialWarningMoveAway(265568, nil, nil, nil, 4, 2) --Темное знамение
-local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 96306, nil, 4, 4) --Кровожадность (Преследование)
+local specWarnThirstforBlood		= mod:NewSpecialWarningRun(266107, nil, 62374, nil, 4, 4) --Кровожадность (Преследование)
 local specWarnSonicScreech			= mod:NewSpecialWarningInterrupt(266106, "HasInterrupt", nil, nil, 1, 2) --Ультразвуковой визг
 local specWarnDarkReconstituion		= mod:NewSpecialWarningInterrupt(265089, "HasInterrupt", nil, nil, 1, 2) --Темное восстановление
 local specWarnGiftofGhuun			= mod:NewSpecialWarningInterrupt(265091, "HasInterrupt", nil, nil, 1, 2) --Дар Г'ууна
@@ -53,7 +53,7 @@ local specWarnRaiseDead				= mod:NewSpecialWarningInterrupt(272183, "HasInterrup
 local specWarnDecayingMind			= mod:NewSpecialWarningInterrupt(278961, "HasInterrupt", nil, nil, 1, 2) --Гниющий разум
 local specWarnHarrowingDespair		= mod:NewSpecialWarningInterrupt(278755, "HasInterrupt", nil, nil, 1, 2) --Мучительное отчаяние
 local specWarnVoidSpit				= mod:NewSpecialWarningInterrupt(272180, "HasInterrupt", nil, nil, 1, 2) --Плево Бездны
-local specWarnDarkEchoes			= mod:NewSpecialWarningInterrupt(413044, "HasInterrupt", nil, nil, 1, 2) --Темное эхо
+local specWarnDarkEchoes			= mod:NewSpecialWarningInterrupt(413044, "HasInterrupt", nil, DBM_COMMON_L.AOEDAMAGE, 1, 2) --Темное эхо
 local specWarnWickedFrenzy			= mod:NewSpecialWarningInterrupt(266209, "HasInterrupt", nil, nil, 1, 2) --Жуткое бешенство
 local specWarnWickedFrenzyDispel	= mod:NewSpecialWarningDispel(266209, "RemoveEnrage", nil, nil, 1, 2) --Жуткое бешенство
 local specWarnDecayingMindDispel	= mod:NewSpecialWarningDispel(278961, "RemoveDisease", nil, nil, 1, 2) --Гниющий разум
@@ -63,13 +63,13 @@ local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil,
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
 local timerBloodHarvestCD			= mod:NewCDNPTimer(11.4, 265016, nil, nil, nil, 3) --Кровавая жатва
-local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
+local timerRottenBileCD				= mod:NewCDNPTimer(10.7, 265540, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гнилая желчь
 local timerWaveofDecayCD			= mod:NewCDNPTimer(10.7, 265668, nil, false, nil, 3) --Волна разложения Off by default to reduce clutter, but optional for those that want it
 local timerWarcryCD					= mod:NewCDNPTimer(25.2, 265081, nil, nil, nil, 2) --Боевой клич
 local timerDecayingMindCD			= mod:NewCDNPTimer(25, 278961, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Гниющий разум
 --local timerSonicScreechCD			= mod:NewCDNPTimer(25.4, 266106, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ультразвуковой визг
 --local timerVoidSpitCD				= mod:NewCDNPTimer(9.7, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное эхо
+local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, DBM_COMMON_L.AOEDAMAGE, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное эхо
 local timerBoneShieldCD				= mod:NewCDNPTimer(25, 266201, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Костяной щит
 local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Злые объятия
 local timerWickedFrenzyCD			= mod:NewCDNPTimer(6.4, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON) --Жуткое бешенство
@@ -78,10 +78,11 @@ local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
 local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
+local yellDecayingMind				= mod:NewYell(278961, nil, nil, nil, "YELL") --Гниющий разум
 local yellWickedEmbrace				= mod:NewYell(266265, nil, nil, nil, "YELL") --Злые объятия
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
-local yellThirstforBlood			= mod:NewShortYell(266107, 96306, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood			= mod:NewShortYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 local yellThirstforBlood2			= mod:NewShortFadesYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
@@ -255,8 +256,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 278789 and args:IsPlayer() and self:AntiSpam(3, 8) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 278961 and args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
-		if not args:IsPlayer() and self:IsSpellCaster() then
+	elseif spellId == 278961 then --Гниющий разум
+		if args:IsPlayer() then
+			yellDecayingMind:Yell()
+		elseif args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, "Bladestorm") then
 			specWarnDecayingMindDispel:Show(args.destName)
 			specWarnDecayingMindDispel:Play("helpdispel")
 		end

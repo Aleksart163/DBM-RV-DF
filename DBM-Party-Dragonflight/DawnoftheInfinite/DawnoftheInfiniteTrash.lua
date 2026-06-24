@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20240207091809")
 --mod:SetModelID(47785)
 mod:SetZone(2579)
+mod:SetMinSyncRevision(20260624000000)
 
 mod.isTrashMod = true
 
@@ -47,18 +48,17 @@ local warnHealingWave						= mod:NewCastAnnounce(407891, 4)--High Prio Off Inter
 local warnEnervate							= mod:NewTargetAnnounce(415437, 3)
 local warnChronoburst						= mod:NewTargetNoFilterAnnounce(415769, 3, nil, nil, 167180) --Темпоральный взрыв (Бомбы)
 
-local specWarnInfiniteFury					= mod:NewSpecialWarningSpell(413622, nil, nil, nil, 2, 2) --Бесконечная ярость
+local specWarnInfiniteFury					= mod:NewSpecialWarningSpell(413622, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Бесконечная ярость
 local specWarnAncientRadiance				= mod:NewSpecialWarningSpell(413023, nil, nil, nil, 2, 2)
 local specWarnTemporalStrike				= mod:NewSpecialWarningDodge(412136, nil, nil, nil, 2, 2)
 local specWarnTimerip						= mod:NewSpecialWarningDodge(412063, nil, nil, nil, 2, 2)
-local specWarnUntwist						= mod:NewSpecialWarningDefensive(413529, nil, nil, nil, 3, 4) --Распутывание (Фронталка)
-local specWarnUntwist2						= mod:NewSpecialWarningDodge(413529, nil, nil, nil, 2, 2) --Распутывание (Фронталка)
-local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, nil, 2, 2) --Вневременное проклятие
+local specWarnUntwist						= mod:NewSpecialWarningDefensive(413529, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Распутывание (Фронталка)
+local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Вневременное проклятие (Бомбардировка)
 local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil, 2, 2)
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2)--High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
 local specWarnVolatileMortar				= mod:NewSpecialWarningDodge(407205, nil, nil, nil, 2, 2)
-local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, nil, 2, 2) --Бронзовый выдох High Prio
+local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бронзовый выдох (Фронталка) High Prio
 local specWarnShroudingSandstorm			= mod:NewSpecialWarningDodge(412215, nil, nil, nil, 2, 2)--High Prio
 local specWarnBombingRun					= mod:NewSpecialWarningDodge(412156, nil, nil, nil, 2, 2)
 local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2)
@@ -92,7 +92,7 @@ local timerTaintedSandsCD					= mod:NewCDNPTimer(13.3, 415436, nil, nil, nil, 3)
 local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBloomCD							= mod:NewCDNPTimer(16.7, 413544, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Цветение
 local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Распутывание (Фронталка)
-local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие
+local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие (Бомбардировка)
 local timerInfiniteFuryCD					= mod:NewCDNPTimer(19, 413622, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Бесконечная ярость (19 сек у Караульного из рода Бесконечности и Диверсанта)
 local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
 local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)

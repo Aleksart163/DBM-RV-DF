@@ -24,7 +24,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCESS 418054 408227 419602 419609"--418062 410496
+	"SPELL_CAST_SUCCESS 418054 408227 419602 419609 418062 410496"
 )
 
 mod:RegisterEventsInCombat(
@@ -78,7 +78,7 @@ local timerRP										= mod:NewRPTimer(8)
 local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3) --Вихрь клинков
 local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные удары, Обезглавливание
 local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Ударная волна 2 варианта
-local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, nil, nil, nil, 5) --ЗА АЛЬЯНС!, ЗА ОРДУ!
+local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_L.ADDS, nil, nil, 1) --ЗА АЛЬЯНС!, ЗА ОРДУ!
 local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Боевой крик 2 варианта
 
 local yellBladestorm								= mod:NewShortYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
@@ -232,7 +232,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--Timer now started here now that it's being used as an update timer method earlier
 		timerShockwaveCD:Start(nil, self.vb.shockwaveSet+1)
 		updateAllTimers(self, 10.2, false)
---	elseif spellId == 418062 or spellId == 410496 then--Battle Cry, War Cry
+	elseif spellId == 418062 or spellId == 410496 then--Battle Cry, War Cry
+		DBM:Debug("Murchal proshlyap (Случился каст Крика)", 2)
 --		self.vb.cryCount = self.vb.cryCount + 1
 --		warnCry:Show(self.vb.cryCount)
 --		timerCryCD:Start(nil, self.vb.cryCount+1)
@@ -257,6 +258,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 		self.vb.cryCount = self.vb.cryCount + 1
 		warnCry:Show(self.vb.cryCount)
 		timerCryCD:Start(nil, self.vb.cryCount+1)
+		DBM:Debug("Murchal proshlyap (Получен урон от Крика)", 2)
 --	elseif spellId == 386201 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 --		specWarnGTFO:Show(spellName)
 --		specWarnGTFO:Play("watchfeet")

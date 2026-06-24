@@ -33,7 +33,7 @@ local warnChronoShear						= mod:NewFadesAnnounce(413013, 1, nil, "Healer|Tank")
 local specWarnShearedLifespan				= mod:NewSpecialWarningDispel(413041, "Healer", nil, nil, 3, 4) --Иссеченная жизнь
 local specWarnEonShatter					= mod:NewSpecialWarningDodgeCount(413142, nil, 47482, nil, 2, 2) --Раскол эонов (Прыжок) Warn on initial casts
 local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil, nil, 3, 2) --Темпоральное иссечение
-local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, nil, 2, 2) --Песчаный топот
+local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Песчаный топот
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
 
 local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок) "Leap" shorttext

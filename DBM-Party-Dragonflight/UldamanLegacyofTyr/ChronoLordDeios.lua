@@ -33,16 +33,16 @@ local warnRewindTimeflow						= mod:NewCountAnnounce(376208, 1) --Перемот
 local warnTimeSink								= mod:NewTargetAnnounce(377405, 1) --Пожиратель времени
 local warnSandBreath							= mod:NewTargetNoFilterAnnounce(375727, 4) --Дыхание песка
 
-local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, nil, 2, 2) --Взмах крыльями
+local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Взмах крыльями
 local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2) --Пожиратель времени
-local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, nil, 3, 4) --Дыхание песка
-local specWarnSandBreath2						= mod:NewSpecialWarningDodge(375727, "-Tank", nil, nil, 2, 4) --Дыхание песка
+local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Дыхание песка
+local specWarnSandBreath2						= mod:NewSpecialWarningDodge(375727, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 4) --Дыхание песка
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 8) --Зона вечности
 
 local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3) --Вечная сфера 3-9
 local timerRewindTimeflowCD						= mod:NewCDTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
 local timerRewindTimeflow						= mod:NewCastTimer(14, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени 12+2sec cast
-local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, nil, nil, nil, 2) --Взмах крыльями 
+local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Взмах крыльями 
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Пожиратель времени
 local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 

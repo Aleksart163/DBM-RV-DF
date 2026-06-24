@@ -41,8 +41,8 @@ local warnAddsLeft									= mod:NewAddsLeftAnnounce(-27151, 2, 416152) --При
 
 local specWarnChronalBurn							= mod:NewSpecialWarningDispel(412027, "RemoveMagic", nil, nil, 1, 2) --Темпоральный ожог
 local specWarnInfiniteBlast							= mod:NewSpecialWarningInterrupt(411763, "HasInterrupt", nil, nil, 1, 2) --Взрыв Бесконечности
-local specWarnTemporalbreath						= mod:NewSpecialWarningDefensive(416139, nil, nil, nil, 3, 4) --Темпоральное дыхание
-local specWarnTemporalbreath2						= mod:NewSpecialWarningDodge(416139, "-Tank", nil, nil, 2, 4) --Темпоральное дыхание
+local specWarnTemporalbreath						= mod:NewSpecialWarningDefensive(416139, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Темпоральное дыхание
+local specWarnTemporalbreath2						= mod:NewSpecialWarningDodge(416139, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 4) --Темпоральное дыхание
 
 local timerSummonInfiniteKeeperCD					= mod:NewCDCountTimer(24.2, 416152, DBM_COMMON_L.ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв хранителя из рода Бесконечности
 local timerInfinityOrbCD							= mod:NewCDCountTimer(14.5, 410904, nil, nil, nil, 7) --Сфера бесконечности
@@ -51,7 +51,7 @@ local timerChronalBurnCD							= mod:NewCDNPTimer(13.3, 412027, nil, nil, nil, 5
 
 --Stage 2: Lord of the Infinite
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26757))
-local specWarnInfiniteCorruption					= mod:NewSpecialWarningDodgeCount(416264, nil, nil, nil, 2, 2) --Порча Бесконечности
+local specWarnInfiniteCorruption					= mod:NewSpecialWarningDodgeCount(416264, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Порча Бесконечности
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(417413, nil, nil, nil, 1, 8) --Темпоральный след
 
 local timerInfiniteCorruptionCD						= mod:NewCDCountTimer(24.2, 416264, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Порча Бесконечности

@@ -47,9 +47,9 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26001))
 
 local warnRendingCharge								= mod:NewIncomingCountAnnounce(406358, 3) --Раздирающий рывок
 
-local specWarnMassiveSlam							= mod:NewSpecialWarningDodgeCount(404472, nil, nil, nil, 2, 2) --Обширный удар
-local specWarnBellowingRoar							= mod:NewSpecialWarningCount(404713, nil, nil, nil, 2, 2) --Раскатистый рев
-local specWarnBellowingRoar2						= mod:NewSpecialWarningRunCount(404713, "Melee", nil, nil, 4, 4) --Раскатистый рев
+local specWarnMassiveSlam							= mod:NewSpecialWarningDodgeCount(404472, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Обширный удар
+local specWarnBellowingRoar							= mod:NewSpecialWarningCount(404713, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Раскатистый рев
+local specWarnBellowingRoar2						= mod:NewSpecialWarningRunCount(404713, "Melee", nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Раскатистый рев
 
 local timerRendingChargeCD							= mod:NewCDCountTimer(34.2, 406358, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON) --Раздирающий рывок
 local timerMassiveSlamCD							= mod:NewCDCountTimer(39, 404472, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Обширный удар
@@ -62,8 +62,8 @@ local warnUnstableEssence							= mod:NewCastAnnounce(407327, 3) --Нестаб�
 local warnUnstableEssenceTargets					= mod:NewTargetAnnounce(407327, 2) --Нестабильная сущность
 
 local specWarnUnstableEssence						= mod:NewSpecialWarningYou(407327, nil, nil, nil, 1, 2) --Нестабильная сущность
-local specWarnVolatileSpew							= mod:NewSpecialWarningDodgeCount(405492, nil, nil, nil, 2, 2) --Нестабильный плевок
-local specWarnViolentEruption						= mod:NewSpecialWarningCount(405375, nil, nil, nil, 2, 2) --Яростное извержение
+local specWarnVolatileSpew							= mod:NewSpecialWarningDodgeCount(405492, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Нестабильный плевок
+local specWarnViolentEruption						= mod:NewSpecialWarningCount(405375, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Яростное извержение
 
 local timerUnstableEssenceCD						= mod:NewCDCountTimer(29.2, 407327, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Нестабильная сущность
 local timerVolatileSpewCD							= mod:NewCDCountTimer(26, 405492, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Нестабильный плевок
@@ -76,10 +76,10 @@ local warnTemporalAnomaly							= mod:NewCastAnnounce(407552, 3) --Времен�
 local warnTemporalAnomalyAbsorbed					= mod:NewTargetNoFilterAnnounce(407552, 2) --Временная аномалия
 local warnDisintegrate								= mod:NewTargetAnnounce(405392, 2) --Дезинтеграция
 
-local specWarnDeepBreath							= mod:NewSpecialWarningDodgeCount(406227, nil, 18357, nil, 2, 2)
+local specWarnDeepBreath							= mod:NewSpecialWarningDodgeCount(406227, nil, 18357, nil, 2, 2) --Глубокий вдох (Дыхание)
 local specWarnDisintegrate							= mod:NewSpecialWarningMoveAway(405392, nil, nil, nil, 1, 2) --Дезинтеграция
 
-local timerDeepBreathCD								= mod:NewCDCountTimer(42.7, 406227, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
+local timerDeepBreathCD								= mod:NewCDCountTimer(42.7, 406227, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Глубокий вдох (Дыхание)
 local timerTemporalAnomalyCD						= mod:NewCDCountTimer(43.7, 407552, nil, nil, nil, 5) --Временная аномалия
 local timerDisintegrateCD							= mod:NewCDCountTimer(43.7, 405392, nil, nil, nil, 3) --Дезинтеграция
 

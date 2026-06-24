@@ -29,14 +29,14 @@ mod:RegisterEventsInCombat(
 --]]
 --Rira Hackclaw
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24732))
-local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4) --Дикий рывок
+local warnSavageCharge							= mod:NewTargetNoFilterAnnounce(381461, 4, nil, nil, 260292) --Дикий рывок
 local warnBladestorm							= mod:NewTargetNoFilterAnnounce(377827, 3) --Вихрь клинков
 
-local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, nil, nil, 1, 2) --Дикий рывок
-local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, nil, nil, 3, 2) --Дикий рывок
+local specWarnSavageCharge						= mod:NewSpecialWarningYou(381461, nil, 260292, nil, 1, 2) --Дикий рывок
+local specWarnSavageChargeTarget				= mod:NewSpecialWarningTarget(381461, nil, 260292, nil, 3, 2) --Дикий рывок
 local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 3, 2) --Вихрь клинков
 
-local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок
+local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, 260292, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок
 local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Вихрь клинков
 --Gashtooth
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24733))
@@ -62,7 +62,7 @@ local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, nil, ni
 
 local yellBladestorm							= mod:NewYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
 local yellBladestormFades						= mod:NewShortFadesYell(377827, nil, nil, nil, "YELL") --Вихрь клинков
-local yellSavageCharge							= mod:NewYell(381461, nil, nil, nil, "YELL") --Дикий рывок
+local yellSavageCharge							= mod:NewYell(381461, 260292, nil, nil, "YELL") --Дикий рывок
 
 mod.vb.healingRapidsCount = 0
 mod.vb.frenzyCount = 0

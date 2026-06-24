@@ -39,7 +39,7 @@ local warnMoltenBarrier						= mod:NewTargetNoFilterAnnounce(382791, 4)
 local warnBurningChain						= mod:NewTargetNoFilterAnnounce(374451, 1)
 
 local specWarnTempest						= mod:NewSpecialWarningSpell(381663, nil, nil, nil, 2, 13) --Раскаленная буря
-local specWarnVolcanicGuard					= mod:NewSpecialWarningDodge(382708, nil, nil, nil, 1, 2) --Вулканическая защита
+local specWarnVolcanicGuard					= mod:NewSpecialWarningDodge(382708, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Вулканическая защита
 local specWarnEruptiveCrush					= mod:NewSpecialWarningDodge(376186, nil, nil, nil, 2, 2) --Разбивающее сокрушение
 local specWarnMagmaFist						= mod:NewSpecialWarningDodge(372311, nil, nil, nil, 2, 2) --Магмовый кулак
 local specWarnExplosiveConcoction			= mod:NewSpecialWarningDodge(378827, nil, nil, nil, 2, 2) --Взрывчатая смесь
@@ -63,7 +63,7 @@ local specWarnMoltenArmy					= mod:NewSpecialWarningInterrupt(383651, "HasInterr
 
 local timerMagmaFistCD						= mod:NewCDNPTimer(24.6, 372311, nil, nil, nil, 3) --Магмовый кулак
 local timerBrutalStrikeCD					= mod:NewCDNPTimer(15.7, 378847, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Жестокий удар
-local timerVolcanicGuardCD					= mod:NewCDNPTimer(24.1, 382708, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вулканическая защита
+local timerVolcanicGuardCD					= mod:NewCDNPTimer(24.1, 382708, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вулканическая защита
 local timerExplosiveConcoctionCD			= mod:NewCDNPTimer(16.1, 378827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывчатая смесь
 local timerBindingSpearCD					= mod:NewCDNPTimer(24.5, 372561, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Приковывающее копье
 local timerMendingClayCD					= mod:NewCDNPTimer(24.3, 372223, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Исцеляющая глина

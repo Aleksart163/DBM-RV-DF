@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
 local warnBlazinAegis							= mod:NewTargetNoFilterAnnounce(374842, 3) --Пылающая эгида
 local warnHeatedSwings							= mod:NewTargetNoFilterAnnounce(374534, 4) --Разгоряченные удары
 
-local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, nil, 2, 2) --Сила кузни
+local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Сила кузни
 local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2) --Пылающая эгида
 local specWarnHeatedSwings						= mod:NewSpecialWarningDefensive(374534, nil, nil, nil, 3, 2) --Разгоряченные удары
 local specWarnHeatedSwings2						= mod:NewSpecialWarningRun(374534, nil, 47482, nil, 4, 4) --Разгоряченные удары (Прыжок)

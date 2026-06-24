@@ -35,15 +35,15 @@ mod:RegisterEventsInCombat(
 --TODO, detect when your add breaks free from trap and warn you it's lose again?
 --TODO Familiar Faces timers
 local warnMoreProblems								= mod:NewCastAnnounce(403891, 3) --Новые проблемы!
-local warnDragonBreath								= mod:NewCastAnnounce(404364, 4) --Дыхание дракона
+local warnDragonBreath								= mod:NewCastAnnounce(404364, 4, nil, nil, nil, 18357) --Дыхание дракона (Дыхание)
 local warnFamiliarFaces								= mod:NewCountAnnounce(405279, 3) --Знакомые лица
 local warnFixate									= mod:NewYouAnnounce(401200, 4) --Сосредоточение внимания
 local warnTimeStasis								= mod:NewTargetNoFilterAnnounce(401667, 4) --Временной стазис
 
-local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil, nil, 2, 2) --Песчаный вихрь (Фронталка)
+local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
+local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
 local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, nil, nil, 3, 4) --Новые проблемы!
-local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, nil, 2, 2) --Песчаный вихрь (Фронталка)
-local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, nil, 4, 4) --Дыхание дракона
+local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, 18357, nil, 4, 4) --Дыхание дракона (Дыхание)
 local specWarnTimeTraps								= mod:NewSpecialWarningDodgeCount(406481, nil, nil, nil, 2, 2) --Временные ловушки
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8) --Безвременное разложение
 
@@ -51,7 +51,7 @@ local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, DBM_COMMON_L.F
 local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Новые проблемы!
 local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, nil, nil, 2, 3) --Знакомые лица
 local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil, 3) --Временные ловушки
-local timerDragonBreath								= mod:NewCastTimer(8, 404364, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона
+local timerDragonBreath								= mod:NewCastTimer(8, 404364, 18357, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Дыхание)
 
 local yellTimeStasis								= mod:NewShortYell(401667, nil, nil, nil, "YELL") --Временной стазис
 local yellSandBlast									= mod:NewShortYell(404916, nil, nil, nil, "YELL") --Песчаный вихрь

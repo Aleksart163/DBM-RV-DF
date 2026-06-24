@@ -60,14 +60,14 @@ mod:AddRangeFrameOption(5, 267522)
 --Raoul
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17023))
 local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1) --Бочонок с краником
-local warnBlackoutBarrel			= mod:NewTargetNoFilterAnnounce(258338, 3) --Бочка черной пелены
+local warnBlackoutBarrel			= mod:NewTargetNoFilterAnnounce(258338, 4) --Бочка черной пелены
 
 local specWarnBarrelSmashCast		= mod:NewSpecialWarningDodge(256589, nil, nil, nil, 2, 2) --Удар бочкой
-local specWarnBlackoutBarrel		= mod:NewSpecialWarningTarget(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
+--local specWarnBlackoutBarrel		= mod:NewSpecialWarningTarget(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
 local specWarnBlackoutBarrel2		= mod:NewSpecialWarningRun(258338, nil, nil, nil, 4, 4) --Бочка черной пелены
 
 ----Hostile
-local timerBarrelSmashCD			= mod:NewNextTimer(22.9, 256589, nil, "Melee", nil, 2) --Удар бочкой 22.9-24.5
+local timerBarrelSmashCD			= mod:NewNextTimer(22.9, 256589, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар бочкой 22.9-24.5
 local timerBlackoutBarrelCD			= mod:NewCDTimer(47.3, 258338, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Бочка черной пелены
 ----Friendly
 local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5) --Бочонок с краником
@@ -80,7 +80,7 @@ local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3
 local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2) --Пороховой выстрел
 
 ----Hostile
-local timerGrapeShotCD				= mod:NewCDTimer(30.2, 258381, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
+local timerGrapeShotCD				= mod:NewCDTimer(30.2, 258381, DBM_COMMON_L.FRONTAL, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
 ----Friendly
 local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --Выстрел цепью
 

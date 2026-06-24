@@ -660,7 +660,7 @@ end
 ---@param icon number|string? Use number for spellId, -number for journalID, number as string for textureID
 ---@param spellID string|number? Used to define a spellID used for GroupSpells and WeakAura key
 ---@param waCustomName any? Used to show custom name/text for Spell header (usually used when a made up SpellID is used)
-function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty, icon, spellID, waCustomName)
+--[[function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty, icon, spellID, waCustomName) --Старая версия
 	if not text then
 		error("NewSpecialWarning: you must provide special warning text", 2)
 	end
@@ -787,6 +787,126 @@ local function newSpecialWarning(self, announceType, spellId, stacks, optionDefa
 			end
 		end
 		self:AddSpecialWarningOption(obj.option, optionDefault, runSound, catType, spellId, announceType)
+	end
+	obj.voiceOptionId = hasVoice and "Voice" .. spellId or nil
+	tinsert(self.specwarns, obj)
+	return obj
+end]]
+
+function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty, icon, spellID, waCustomName) --Новая версия 1
+	if not text then
+		error("NewSpecialWarning: you must provide special warning text", 2)
+	end
+	if type(text) == "string" and text:match("OptionVersion") then
+		error("NewSpecialWarning: you must provide remove optionversion hack for " .. optionDefault)
+	end
+	runSound = runSound or 1
+	if hasVoice == true then--if not a number, set it to 2, old mods that don't use new numbered system
+		hasVoice = 2
+	end
+	icon = DBM:ParseSpellIcon(icon)
+	---@class SpecialWarning
+	local obj = setmetatable(
+		{
+			objClass = "SpecialWarning",
+			text = self.localization.warnings[text],
+			combinedtext = {},
+			combinedcount = 0,
+			mod = self,
+			sound = runSound > 0,
+			flash = runSound,--Set flash color to hard coded runsound (even if user sets custom sounds)
+			hasVoice = hasVoice,
+			difficulty = difficulty,
+			spellId = spellID,--For WeakAuras / other callbacks
+			icon = icon,
+		},
+		mt
+	)
+	test:Trace(self, "NewSpecialWarning", obj, "untyped")
+	local optionId = optionName or optionName ~= false and text
+	if optionId then
+		obj.voiceOptionId = hasVoice and "Voice" .. optionId or nil
+		obj.option = optionId .. (optionVersion or "")
+		self:AddSpecialWarningOption(obj.option, optionDefault, runSound, "announce", spellID, nil, waCustomName)
+	end
+	tinsert(self.specwarns, obj)
+	return obj
+end
+
+local function newSpecialWarning(self, announceType, spellId, stacks, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty) --Новая версия 2
+	if not spellId then
+		error("newSpecialWarning: you must provide spellId", 2)
+	end
+	if runSound == true then
+		runSound = 2
+	elseif not runSound then
+		runSound = 1
+	end
+	if hasVoice == true then--if not a number, set it to 2, old mods that don't use new numbered system
+		hasVoice = 2
+	end
+	local alternateSpellId, alternateName
+	if type(optionName) == "number" then
+		if DBM.Options.SpecialWarningShortText then
+			alternateSpellId = optionName
+		end
+		optionName = nil
+	end
+	if type(optionVersion) == "string" then
+		if DBM.Options.SpecialWarningShortText then
+			alternateName = optionVersion
+		end
+		optionVersion = nil
+	end
+	local text, spellName = setText(announceType, spellId, stacks, alternateName, alternateSpellId)
+	local icon = DBM:ParseSpellIcon(spellId)
+	---@class SpecialWarning
+	local obj = setmetatable( -- todo: fix duplicate code
+		{
+			objClass = "SpecialWarning",
+			text = text,
+			combinedtext = {},
+			combinedcount = 0,
+			announceType = announceType,
+			mod = self,
+			sound = runSound > 0,
+			flash = runSound,--Set flash color to hard coded runsound (even if user sets custom sounds)
+			hasVoice = hasVoice,
+			difficulty = difficulty,
+			type = announceType,
+			spellId = spellId,
+			spellName = spellName,
+			stacks = stacks,
+			icon = icon,
+		},
+		mt
+	)
+	test:Trace(self, "NewSpecialWarning", obj, announceType)
+	if optionName then
+		obj.option = optionName
+	elseif optionName ~= false then
+		local difficultyIcon = ""
+		if difficulty then
+			--1 LFR, 2 Normal, 3 Heroic, 4 Mythic
+			--Likely 1 and 2 will never be used, but being prototyped just in case
+			local path = private.isRetail and "EncounterJournal" or "AddOns\\DBM-Core\\textures"
+			if difficulty == 3 then
+				difficultyIcon = "|TInterface\\" .. path .. "\\UI-EJ-Icons.blp:18:18:0:0:255:66:102:118:7:27|t"
+			elseif difficulty == 4 then
+				difficultyIcon = "|TInterface\\" .. path .. "\\UI-EJ-Icons.blp:18:18:0:0:255:66:133:153:40:58|t"
+			end
+		end
+		obj.option = "SpecWarn" .. spellId .. announceType .. (optionVersion or "")
+		if announceType == "stack" then
+			self.localization.options[obj.option] = difficultyIcon .. L.AUTO_SPEC_WARN_OPTIONS[announceType]:format(stacks or 3, spellId)
+		elseif announceType == "prewarn" then
+			self.localization.options[obj.option] = difficultyIcon .. L.AUTO_SPEC_WARN_OPTIONS[announceType]:format(tostring(stacks or 5), spellId)
+		else
+			self.localization.options[obj.option] = difficultyIcon .. L.AUTO_SPEC_WARN_OPTIONS[announceType]:format(spellId)
+		end
+	end
+	if obj.option then
+		self:AddSpecialWarningOption(obj.option, optionDefault, runSound, "announce", spellId, announceType)
 	end
 	obj.voiceOptionId = hasVoice and "Voice" .. spellId or nil
 	tinsert(self.specwarns, obj)

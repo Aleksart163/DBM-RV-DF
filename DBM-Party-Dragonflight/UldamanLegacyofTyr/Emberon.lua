@@ -38,7 +38,7 @@ local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false) --Ищ�
 local specWarnPurgingFlames						= mod:NewSpecialWarningSwitch(368990, nil, 405812, nil, 1, 2) --Очищающее пламя (Оживление големов)
 local specWarnPurgingFlames2					= mod:NewSpecialWarningDodge(368990, nil, nil, nil, 2, 2) --Очищающее пламя
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
-local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 3, 2) --Обжигающий хлопок
+local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Обжигающий хлопок
 
 local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя Maybe swap for activate keepers instead
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли

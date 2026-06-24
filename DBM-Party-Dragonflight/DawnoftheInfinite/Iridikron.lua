@@ -37,7 +37,7 @@ local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Ката
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 3, 4) --Истребляющий взрыв
 local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2) --Камнекрушащий шквал
-local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, nil, 2, 2) --Дробящий выдох
+local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
 local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв

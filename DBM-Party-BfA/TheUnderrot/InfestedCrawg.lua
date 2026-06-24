@@ -27,11 +27,13 @@ ability.id = 260333 and type = "cast"
  or (ability.id = 260793 or ability.id = 260292) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local specWarnIndigestion			= mod:NewSpecialWarningDefensive(260793, "Tank", nil, nil, 3, 4) --Несварение
+
+local specWarnIndigestion			= mod:NewSpecialWarningDefensive(260793, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Несварение (Фронталка)
+local specWarnIndigestion2			= mod:NewSpecialWarningDodge(260793, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Несварение (Фронталка)
 local specWarnCharge				= mod:NewSpecialWarningDodge(260292, nil, nil, nil, 3, 2) --Рывок
 local specWarnTantrum				= mod:NewSpecialWarningCount(260333, nil, nil, nil, 2, 2) --Припадок
 
-local timerIndigestionCD			= mod:NewCDTimer(30, 260793, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение
+local timerIndigestionCD			= mod:NewCDTimer(30, 260793, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение (Фронталка)
 local timerChargeCD					= mod:NewCDTimer(30, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
 local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, nil, nil, nil, 7) --Припадок
 
@@ -119,8 +121,13 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 260793 then --Несварение
 		self.vb.indigestionCount = self.vb.indigestionCount + 1
-		specWarnIndigestion:Show()
-		specWarnIndigestion:Play("breathsoon")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnIndigestion:Show()
+			specWarnIndigestion:Play("breathsoon")
+		else
+			specWarnIndigestion2:Show()
+			specWarnIndigestion2:Play("watchstep")
+		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, self.vb.murchalOchkenProshlyapCount, spellId, self.vb.indigestionCount+1)
 		if timer then
 			timerIndigestionCD:Start(timer, self.vb.indigestionCount+1)

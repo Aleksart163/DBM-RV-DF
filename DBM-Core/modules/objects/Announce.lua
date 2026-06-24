@@ -7,6 +7,7 @@ local CL = DBM_COMMON_L
 local DBMScheduler = private:GetModule("DBMScheduler")
 local stringUtils = private:GetPrototype("StringUtils")
 local checkEntry = private:GetPrototype("TableUtils").checkEntry
+local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS
 
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
@@ -579,7 +580,7 @@ function bossModPrototype:NewAnnounce(text, color, icon, optionDefault, optionNa
 end
 
 -- new constructor (partially auto-localized warnings and options, yay!)
-local function newAnnounce(self, announceType, spellId, color, icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter)
+--[[local function newAnnounce(self, announceType, spellId, color, icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter) --Старая версия
 	if not spellId then
 		error("newAnnounce: you must provide spellId", 2)
 	end
@@ -634,6 +635,72 @@ local function newAnnounce(self, announceType, spellId, color, icon, optionDefau
 	elseif optionName ~= false then
 		obj.option = catType .. spellId .. announceType .. (optionVersion or "")
 		self:AddBoolOption(obj.option, optionDefault, catType, nil, nil, nil, spellId, announceType)
+		if noFilter and announceType == "target" then
+			self.localization.options[obj.option] = L.AUTO_ANNOUNCE_OPTIONS["targetNF"]:format(spellId)
+		else
+			self.localization.options[obj.option] = L.AUTO_ANNOUNCE_OPTIONS[announceType]:format(spellId)
+		end
+	end
+	tinsert(self.announces, obj)
+	return obj
+end]]
+
+local function newAnnounce(self, announceType, spellId, color, icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter) --Новая версия
+	if not spellId then
+		error("newAnnounce: you must provide spellId", 2)
+	end
+	local optionVersion, alternateSpellId, alternateSpellName
+	if type(optionName) == "number" then
+		if optionName > 10 then--Being used as spell name shortening
+			if DBM.Options.WarningShortText then
+				alternateSpellId = optionName
+			end
+		else--Being used as option version
+			optionVersion = optionName
+		end
+		optionName = nil
+	end
+	--Ugly that only saves having to use 3 extra nils for Custom Name
+	--Eventually all these hacks will go away if these objects ever get rewritten
+	if type(preWarnTime) == "string" then
+		if DBM.Options.WarningShortText then
+			alternateSpellName = preWarnTime
+		end
+		preWarnTime = nil
+	end
+	if soundOption and type(soundOption) == "boolean" then
+		soundOption = 0--No Sound
+	end
+	local text, spellName = setText(announceType, spellId, castTime, preWarnTime, alternateSpellName, alternateSpellId)
+	icon = DBM:ParseSpellIcon(icon or spellId)
+	---@class Announce
+	local obj = setmetatable( -- todo: fix duplicate code
+		{
+			objClass = "Announce",
+			text = text,
+			combinedtext = {},
+			combinedcount = 0,
+			announceType = announceType,
+			color = DBM.Options.WarningColors[color or 1] or DBM.Options.WarningColors[1],
+			mod = self,
+			icon = icon,
+			sound = soundOption or 1,
+			type = announceType,
+			spellId = spellId,
+			spellName = spellName,
+			noFilter = noFilter,
+			castTime = castTime,
+			preWarnTime = preWarnTime,
+		},
+		mt
+	)
+	test:Trace(self, "NewAnnounce", obj, announceType)
+	if optionName then
+		obj.option = optionName
+		self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellId, announceType)
+	elseif optionName ~= false then
+		obj.option = "announce" .. spellId .. announceType .. (optionVersion or "")
+		self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellId, announceType)
 		if noFilter and announceType == "target" then
 			self.localization.options[obj.option] = L.AUTO_ANNOUNCE_OPTIONS["targetNF"]:format(spellId)
 		else

@@ -22,7 +22,7 @@ mod:RegisterEvents(
  or (ability.id = 377738 or ability.id = 369465 or ability.id = 369328) and type = "cast"
 --]]
 local warnBlessingofTyr						= mod:NewCastAnnounce(382578, 4, nil, nil, "Tank|Healer")
-local warnChainLightning					= mod:NewCastAnnounce(369675, 3) --Цепная молния
+local warnChainLightning					= mod:NewCastAnnounce(369675, 4) --Цепная молния
 local warnChomp								= mod:NewStackAnnounce(369828, 2, nil, "Tank|Healer")
 local warnAncientPower						= mod:NewStackAnnounce(377738, 2, nil, "Tank|Healer") --Древнее могущество
 local warnVenomousFangs						= mod:NewStackAnnounce(369419, 2, nil, "Tank|Healer|RemovePoison")
@@ -32,7 +32,7 @@ local warnJaggedBite						= mod:NewCastAnnounce(377732, 3, nil, nil, "Tank|Heale
 local warnHailofStone						= mod:NewCastAnnounce(369465, 4, nil, nil, nil, nil, nil, 3) --Град камней
 local warnEarthenWard						= mod:NewCastAnnounce(369400, 3)
 local warnPounce							= mod:NewCastAnnounce(369423, 3) --Наскок
-local warnSonicBurst						= mod:NewCastAnnounce(369411, 4)
+local warnSonicBurst						= mod:NewCastAnnounce(369411, 4) --Звуковой взрыв
 local warnThunderousClap					= mod:NewCastAnnounce(381593, 3) --Грохочущий удар
 local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer") --Удар бастиона
 local warnHasten							= mod:NewCastAnnounce(377500, 3) --Ускорение
@@ -41,7 +41,7 @@ local warnCurseofStone						= mod:NewCastAnnounce(369365, 4) --Прокляти�
 local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, "Melee", nil, nil, 4, 2) --Изуверский удар
 local specWarnBrutalSlam2					= mod:NewSpecialWarningDodge(369811, "Ranged", nil, nil, 2, 2) --Изуверский удар
 local specWarnFissuringSlam					= mod:NewSpecialWarningDodge(369335, nil, nil, nil, 2, 2) --Раскалывающий удар
-local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, nil, 2, 2) --Землетрясение
+local specWarnEarthquake					= mod:NewSpecialWarningSpell(369328, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Землетрясение
 --local specWarnChainLitYou					= mod:NewSpecialWarningMoveAway(369675, nil, nil, nil, 1, 2)
 local specWarnCurseofStone					= mod:NewSpecialWarningDispel(369365, "RemoveCurse", nil, nil, 3, 2) --Проклятие камня
 local specWarnTrappedinStone				= mod:NewSpecialWarningDispel(369366, "RemoveCurse", nil, nil, 3, 2) --В каменном плену
@@ -54,7 +54,7 @@ local specWarnStoneSpike					= mod:NewSpecialWarningInterrupt(369674, "HasInterr
 local specWarnSpikedCarapace				= mod:NewSpecialWarningInterrupt(369823, "HasInterrupt", nil, nil, 1, 2) --Шипастый панцирь
 local specWarnStoneBolt						= mod:NewSpecialWarningInterrupt(369399, "HasInterrupt", nil, nil, 1, 2) --Каменная стрела
 local specWarnCurseofStoneKick				= mod:NewSpecialWarningInterrupt(369365, "HasInterrupt", nil, nil, 1, 2) --Проклятие камня
-local specWarnSonicBurst					= mod:NewSpecialWarningInterrupt(369411, "HasInterrupt", nil, nil, 1, 2)
+local specWarnSonicBurst					= mod:NewSpecialWarningInterrupt(369411, "HasInterrupt", nil, nil, 1, 2) --Звуковой взрыв
 local specWarnHasten						= mod:NewSpecialWarningInterrupt(377500, "HasInterrupt", nil, nil, 1, 2) --Ускорение
 
 local timerBrutalSlamCD						= mod:NewCDNPTimer(20.1, 369811, nil, nil, nil, 3) --Изуверский удар
@@ -65,7 +65,7 @@ local timerJaggedBiteCD						= mod:NewCDNPTimer(11.8, 377732, nil, nil, nil, 5, 
 local timerAncientPowerCD					= mod:NewCDNPTimer(6, 377738, nil, nil, nil, 5) --Древнее могущество
 local timerHailofStoneCD					= mod:NewCDNPTimer(21, 369465, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Град камней
 local timerStoneBoltCD						= mod:NewCDNPTimer(7.2, 369399, nil, false, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменная стрела 7-11, off by default to giev prio to Hail of stone
-local timerEarthquakeCD						= mod:NewCDNPTimer(23.2, 369328, nil, nil, nil, 2) --Землетрясение
+local timerEarthquakeCD						= mod:NewCDNPTimer(23.2, 369328, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Землетрясение
 local timerFissuringSlamCD					= mod:NewCDNPTimer(9.6, 369335, nil, nil, nil, 2) --Раскалывающий удар 9.7-15
 local timerCleaveCD							= mod:NewCDNPTimer(15, 369409, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Рассекающий удар
 local timerPounceCD							= mod:NewCDNPTimer(15, 369423, nil, nil, nil, 3) --Наскок
