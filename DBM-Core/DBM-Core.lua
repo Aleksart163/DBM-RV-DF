@@ -990,6 +990,27 @@ function DBM:ParseSpellName(spellId, objectType)
 	return spellName
 end
 
+do
+	local customSpellNamesByspellId = {}
+	---Function for Registering Spell Renames/ShortText to original spellIDs
+	---@param spellId number Original spellID of spell and not alternate ID
+	---@param AltName string Custom name used for the spell and not alternateID
+	function DBM:RegisterAltSpellName(spellId, AltName)
+		--Protection against internal and external misuse
+		--Also filters spellIds 0-5 which are typically not real spellids such as phase announces or spell-less timer objects
+		if spellId and type(spellId) == "number" and spellId > 5 and AltName and type(AltName) == "string" then
+			if not customSpellNamesByspellId[spellId] then
+				customSpellNamesByspellId[spellId] = AltName
+			end
+		end
+	end
+	---Function for providing Plater and other addons access to Spell Renames/ShortText
+	---@param spellId number
+	function DBM:GetAltSpellName(spellId)
+		return customSpellNamesByspellId[spellId]
+	end
+end
+
 --------------
 --  Events  --
 --------------

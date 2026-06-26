@@ -241,7 +241,7 @@ local specInstructionalRemapTable = {
 	["reflect"] = "target",
 }
 
-local function setText(announceType, spellId, stacks, customName)
+--[[local function setText(announceType, spellId, stacks, customName) --Старая версия
 	local text, spellName
 	if customName then
 		spellName = customName
@@ -266,6 +266,39 @@ local function setText(announceType, spellId, stacks, customName)
 		else
 			text = L.AUTO_SPEC_WARN_TEXTS[announceType]:format(spellName)
 		end
+	end
+	return text, spellName
+end]]
+
+local function setText(announceType, spellId, stacks, customName, alternateSpellId) --Новая версия
+	local text, spellName
+	if customName then
+		spellName = customName
+	else
+		spellName = DBM:ParseSpellName(alternateSpellId or spellId, announceType) or CL.UNKNOWN
+	end
+	if announceType == "prewarn" then
+		if type(stacks) == "string" then
+			text = L.AUTO_SPEC_WARN_TEXTS[announceType]:format(spellName, stacks)
+		else
+			text = L.AUTO_SPEC_WARN_TEXTS[announceType]:format(spellName, L.SEC_FMT:format(tostring(stacks or 5)))
+		end
+	else
+		if DBM.Options.SpamSpecInformationalOnly then
+			local remapType = specInstructionalRemapTable[announceType]
+			if remapType then
+				local newType = remapType
+				text = L.AUTO_SPEC_WARN_TEXTS[newType]:format(spellName)
+			else
+				text = L.AUTO_SPEC_WARN_TEXTS[announceType]:format(spellName)
+			end
+		else
+			text = L.AUTO_SPEC_WARN_TEXTS[announceType]:format(spellName)
+		end
+	end
+	--Automatically register alternate spellnames when detecting their use here
+	if spellId and (customName or alternateSpellId) then
+		DBM:RegisterAltSpellName(spellId, customName or spellName)
 	end
 	return text, spellName
 end

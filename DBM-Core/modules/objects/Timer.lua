@@ -854,7 +854,7 @@ end
 -- note that the function might look unclear because it needs to handle different timer types, especially achievement timers need special treatment
 -- If a new countdown is added to an existing timer that didn't have one before, use optionName (number) to force timer to reset defaults by assigning it a new variable
 ---@param timerType string
-local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, keep, countdown, countdownMax, r, g, b, requiresCombat)
+--[[local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, keep, countdown, countdownMax, r, g, b, requiresCombat) --Старая версия
 	if type(timer) == "string" and timer:match("OptionVersion") then
 		error("OptionVersion hack deprecated, remove it from: " .. spellId)
 	end
@@ -904,6 +904,125 @@ local function newTimer(self, timerType, timer, spellId, timerText, optionDefaul
 			--Interpret it literal with no restrictions, first checking mod local table, then just taking timerText directly
 			else
 				timerTextValue = self.localization.timers[timerText]--Check timers table first, otherwise accept it as literal timer text
+			end
+		else--Short text is off, we want to be more aggressive in NOT setting short text if we can help it
+			--Short text is off, and spellId does exist, only accept timerText if it's in mods localization tables, cause then it's not short text, it's hard localization
+			if spellId and type(spellId) == "number" then
+				--Only use timerText if it's full localized, cause that's not shorttext
+				timerTextValue = rawget(self.localization.timers, timerText)
+			else--If no spellID, then we allow hard setting timerText because it's only translation timer object has
+				timerTextValue = self.localization.timers[timerText]
+			end
+		end
+	end
+	local id = "Timer" .. (spellId or 0) .. timerType .. (optionVersion or "")
+	local simpType = timerTypeSimplification[timerType] or timerType
+	local waSpecialKey = waKeyOverrides[timerType]
+	---@class Timer
+	local obj = setmetatable(
+		{
+			objClass = "Timer",
+			text = timerTextValue,
+			type = timerType,
+			simpType = simpType,
+			waSpecialKey = waSpecialKey,--Not same as simpType, this overrides option key
+			spellId = spellId,
+			name = spellName,--If name gets stored as nil, it'll be corrected later in Timer start, if spell name returns in a later attempt
+			timer = timer,
+			id = id,
+			icon = icon,
+			colorType = colorType,
+			inlineIcon = inlineIcon,
+			keep = keep,
+			countdown = countdown,
+			countdownMax = countdownMax,
+			r = r,
+			g = g,
+			b = b,
+			requiresCombat = requiresCombat,
+			allowdouble = allowdouble,
+			startedTimers = {},
+			mod = self,
+		},
+		mt
+	)
+	test:Trace(self, "NewTimer", obj, obj.type)
+	obj:AddOption(optionDefault, optionName, colorType, countdown, spellId, timerType)
+	tinsert(self.timers, obj)
+	-- todo: move the string creation to the GUI with SetFormattedString...
+	if not self.localization.options[id] or self.localization.options[id] == id then
+		if timerType == "achievement" then
+			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format((GetAchievementLink(spellId) or ""):gsub("%[(.+)%]", "%1"))
+		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "intermission" or timerType == "intermissioncount" or timerType == "roleplay" then--Timers without spellid, generic (do not add stagecontext here, it has spellname parsing)
+			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]--Using more than 1 stage timer or more than 1 special timer will break this, fortunately you should NEVER use more than 1 of either in a mod
+		else
+			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(unparsedId)
+		end
+	end
+	return obj
+end]]
+
+local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, keep, countdown, countdownMax, r, g, b, requiresCombat) --Новая версия
+	if type(timer) == "string" and timer:match("OptionVersion") then
+		error("OptionVersion hack deprecated, remove it from: " .. spellId)
+	end
+	if type(colorType) == "number" and colorType > 8 then
+		DBM:AddMsg("|cffff0000texture is in the colorType arg for: |r" .. spellId)
+	end
+	--Use option optionName for optionVersion as well, no reason to split.
+	--This ensures that remaining arg positions match for auto generated and regular NewTimer
+	local optionVersion
+	if type(optionName) == "number" then
+		optionVersion = optionName
+		optionName = nil
+	end
+	local allowdouble
+	if type(timer) == "string" and timer:match("d%d+") then
+		allowdouble = true
+		timer = tonumber(string.sub(timer, 2))
+	end
+	local spellName, icon
+	spellName = DBM:ParseSpellName(spellId, timerType)
+	local unparsedId = spellId
+	if timerType == "achievement" then
+		icon = DBM:ParseSpellIcon(texture or spellId, timerType)
+	elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "stagecontext" or timerType == "stagecontextcount" or timerType == "intermission" or timerType == "intermissioncount" then
+		icon = DBM:ParseSpellIcon(texture or spellId, timerType)
+		if timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "stagecontext" or timerType == "stagecontextcount" or timerType == "intermission" or timerType == "intermissioncount" then
+			colorType = 6
+		end
+	elseif timerType == "roleplay" then
+		icon = DBM:ParseSpellIcon(texture or spellId, timerType, private.isRetail and 237538 or 136106)
+		colorType = 6
+	elseif timerType == "adds" or timerType == "addscustom" then
+		icon = DBM:ParseSpellIcon(texture or spellId, timerType, 136116)
+		colorType = 1
+	else
+		icon = DBM:ParseSpellIcon(texture or spellId, timerType)
+		colorType = colorType or 0
+	end
+	local timerTextValue
+	if timerText then
+		--First check if it's shorttext
+		if DBM.Options.ShortTimerText then
+			--If timertext is a number, accept it as a secondary auto translate spellid
+			if type(timerText) == "number" then
+				timerTextValue = timerText
+				spellName = DBM:GetSpellName(timerText or 0)--Override Cached spell Name
+				--Automatically register alternate spellnames when detecting their use here
+				if spellId and spellName and type(spellName) == "string" then
+					DBM:RegisterAltSpellName(spellId, spellName)
+				end
+			--Interpret it literal with no restrictions, first checking mod local table, then just taking timerText directly
+			else
+				timerTextValue = self.localization.timers[timerText]--Check timers table first, otherwise accept it as literal timer text
+				--Automatically register alternate spellnames when detecting their use here
+				if spellId and not rawget(self.localization.timers, timerText) and type(timerText) == "string" then
+					--if timerText exists in self.localization.timers table, it's not custom shorttext spell name
+					--It's also not short text if it's hacky paul stuff, but that should be filtered by the spellID check in RegisterAltSpellName which ignores when he uses spellid of 0
+					local trimmedText = timerText:gsub("%s*%(%%s%)", "")
+					DBM:RegisterAltSpellName(spellId, trimmedText)
+				end
 			end
 		else--Short text is off, we want to be more aggressive in NOT setting short text if we can help it
 			--Short text is off, and spellId does exist, only accept timerText if it's in mods localization tables, cause then it's not short text, it's hard localization

@@ -272,7 +272,7 @@ local textureExp = " |T(%S+......%S+):12:12|t "--Fix texture file including blan
 -- TODO: is there a good reason that this is a weak table?
 local cachedColorFunctions = setmetatable({}, {__mode = "kv"})
 
-local function setText(announceType, spellId, castTime, preWarnTime, customName, originalSpellID)
+--[[local function setText(announceType, spellId, castTime, preWarnTime, customName, originalSpellID) --Старая версия
 	local spellName
 	if customName then
 		spellName = customName
@@ -296,6 +296,38 @@ local function setText(announceType, spellId, castTime, preWarnTime, customName,
 		text = L.AUTO_ANNOUNCE_TEXTS.spell
 	else
 		text = L.AUTO_ANNOUNCE_TEXTS[announceType]:format(spellName)
+	end
+	return text, spellName
+end]]
+
+local function setText(announceType, spellId, castTime, preWarnTime, customName, alternateSpellId) --Новая версия
+	local spellName
+	if customName then
+		spellName = customName
+	else
+		spellName = DBM:ParseSpellName(alternateSpellId or spellId, announceType) or CL.UNKNOWN
+	end
+	local text
+	if announceType == "cast" then
+		local spellHaste = select(4, DBM:GetSpellInfo(10059)) / 10000 -- 10059 = Stormwind Portal, should have 10000 ms cast time
+		local timer = (select(4, DBM:GetSpellInfo(spellId)) or 1000) / spellHaste
+		text = L.AUTO_ANNOUNCE_TEXTS[announceType]:format(spellName, castTime or (timer / 1000))
+	elseif announceType == "prewarn" then
+		if type(preWarnTime) == "string" then
+			error("preWarnTime is string. Notify DBM Authors")
+		else
+			text = L.AUTO_ANNOUNCE_TEXTS[announceType]:format(spellName, L.SEC_FMT:format(tostring(preWarnTime or 5)))
+		end
+	elseif announceType == "stage" or announceType == "prestage" then
+		text = L.AUTO_ANNOUNCE_TEXTS[announceType]:format(tostring(spellId))
+	elseif announceType == "stagechange" then
+		text = L.AUTO_ANNOUNCE_TEXTS.spell
+	else
+		text = L.AUTO_ANNOUNCE_TEXTS[announceType]:format(spellName)
+	end
+	--Automatically register alternate spellnames when detecting their use here
+	if spellId and (customName or alternateSpellId) then
+		DBM:RegisterAltSpellName(spellId, customName or spellName)
 	end
 	return text, spellName
 end
