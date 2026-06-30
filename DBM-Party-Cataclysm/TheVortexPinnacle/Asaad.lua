@@ -37,17 +37,17 @@ local warnChainLightning		= mod:NewTargetNoFilterAnnounce(87622, 3) --Цепна
 local warnNova					= mod:NewCountAnnounce(413263, 3, nil, nil, 411016) --Кольцо падающих звезд (Упавшая звезда)
 
 local specWarnStaticCling		= mod:NewSpecialWarningJump(87618, nil, nil, nil, 1, 2) --Мертвая хватка
-local specWarnNova				= mod:NewSpecialWarningSwitch(413263, "-Healer", 411016, nil, 1, 2) --Упавшая звезда
+local specWarnNova				= mod:NewSpecialWarningSwitch(413263, "-Healer", nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Упавшая звезда
 local specWarnStorm				= mod:NewSpecialWarningMoveTo(86930, nil, nil, nil, 4, 4) --Великая сила бури
 local specWarnStorm2			= mod:NewSpecialWarningSpell(86930, nil, nil, nil, 1, 6) --Великая сила бури
-local specWarnChainLit			= mod:NewSpecialWarningMoveAway(87622, nil, nil, nil, 1, 2) --Цепная молния
+local specWarnChainLit			= mod:NewSpecialWarningMoveAway(87622, nil, nil, nil, 3, 2) --Цепная молния
 
 local timerChainLightningCD		= mod:NewCDTimer(13.4, 87622, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Цепная молния
 local timerStaticClingCD		= mod:NewCDCountTimer(15.8, 87618, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.MAGIC_ICON, nil, 2, 3) --Мертвая хватка
 local timerStaticCling			= mod:NewCastTimer(3, 87618, nil, nil, nil, 7) --Мертвая хватка
 local timerStorm				= mod:NewCastTimer(10, 86930, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Великая сила бури
 local timerGroundingFieldCD		= mod:NewCDTimer(45.7, 86911, 87474, nil, nil, 7, nil, nil, nil, 1, 5) --Нестабильное заземляющее поле (Заземляющее поле)
-local timerNovaCD				= mod:NewCDTimer(12.1, 413263, 411016, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Кольцо падающих звезд (Упавшая звезда)
+local timerNovaCD				= mod:NewCDTimer(12.1, 413263, DBM_COMMON_L.BIG_ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Кольцо падающих звезд (Упавшая звезда)
 
 local yellChainLit				= mod:NewShortYell(87622, nil, nil, nil, "YELL") --Цепная молния
 

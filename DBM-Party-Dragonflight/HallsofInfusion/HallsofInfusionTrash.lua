@@ -27,7 +27,7 @@ local warnBlastingGust						= mod:NewCastAnnounce(374080, 4)
 local warnContainmentBeam					= mod:NewCastAnnounce(374020, 2, nil, nil, false)--Can be spammy, it's kind of sort of a passive constant cast of these mobs, so opt in
 local warnExpulse							= mod:NewCastAnnounce(374045, 4) --Выброс (сломано разрабами)
 local warnDemoralizingShout					= mod:NewCastAnnounce(374339, 2) --Деморализующий крик
-local warnElementalFocus					= mod:NewCastAnnounce(395694, 4)
+local warnElementalFocus					= mod:NewCastAnnounce(395694, 4) --Средоточие стихий
 local warnCauterize							= mod:NewCastAnnounce(374699, 3)--20.6?
 local warnWhirlingFury						= mod:NewCastAnnounce(375079, 3) --Кружащее неистовство
 local warnZephyrsCall						= mod:NewCastAnnounce(374823, 2) --Зов ветра
@@ -39,7 +39,7 @@ local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Ра
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
 local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, nil, 4, 4) --Затопление
-local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 8, nil, nil, 1, 6)
+local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
 local specWarnTectonicBreath				= mod:NewSpecialWarningDodge(375327, nil, 18357, nil, 2, 2) --Тектоническое дыхание
@@ -58,7 +58,7 @@ local specWarnBlastingGust					= mod:NewSpecialWarningInterrupt(374080, "HasInte
 local specWarnExpulse						= mod:NewSpecialWarningInterrupt(374045, "HasInterrupt", nil, nil, 1, 2) --Выброс
 local specWarnDemoShout						= mod:NewSpecialWarningInterrupt(374339, "HasInterrupt", nil, nil, 1, 2) --Деморализующий крик
 local specWarnEarthShield					= mod:NewSpecialWarningInterrupt(374066, "HasInterrupt", nil, nil, 1, 2)
-local specWarnElementalFocus				= mod:NewSpecialWarningInterrupt(395694, "HasInterrupt", nil, nil, 1, 2)
+local specWarnElementalFocus				= mod:NewSpecialWarningInterrupt(395694, "HasInterrupt", nil, nil, 1, 2) --Средоточие стихий
 local specWarnCauterize						= mod:NewSpecialWarningInterrupt(374699, "HasInterrupt", nil, nil, 1, 2)
 local specWarnPyreticBurst					= mod:NewSpecialWarningInterrupt(374706, "HasInterrupt", nil, nil, 1, 2) --Воспламеняющий взрыв
 local specWarnTidalDivergence				= mod:NewSpecialWarningInterrupt(377341, "HasInterrupt", nil, nil, 1, 2)
@@ -236,9 +236,9 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 374389 and args:IsPlayer()then
+	if spellId == 374389 and args:IsPlayer()then --Токсин рогоплава
 		local amount = args.amount or 1
-		if amount >= 8 and self:AntiSpam(3, 5) then
+		if amount >= 4 and amount % 2 == 0 then
 			specWarnGulpSwogToxin:Show(amount)
 			specWarnGulpSwogToxin:Play("stackhigh")
 		end

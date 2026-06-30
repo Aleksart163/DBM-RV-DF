@@ -40,7 +40,7 @@ local warnSabrousBite					= mod:NewStackAnnounce(274555, 2, nil, "Tank|Healer")
 
 local specWarnOiledBladeSelf			= mod:NewSpecialWarningDefensive(257908, nil, nil, nil, 3, 2) --Смазанный нефтью клинок
 local specWarnVileBombardment			= mod:NewSpecialWarningDodge(257272, nil, nil, nil, 2, 2) --Гнусная бомбардировка
-local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, nil, 2, 2) --Крепкая оплеуха
+local specWarnBrutalBackhand			= mod:NewSpecialWarningDodge(257426, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Крепкая оплеуха
 local specWarnAzeriteGrenade			= mod:NewSpecialWarningDodge(258672, nil, nil, nil, 2, 2) --Азеритовая граната
 local specWarnDuelistDash				= mod:NewSpecialWarningDodge(274400, nil, nil, nil, 2, 2) --Рывок дуэлянта
 local specWarnSeaSpout					= mod:NewSpecialWarningDodge(258777, nil, nil, nil, 2, 2) --Струя морской воды
@@ -68,7 +68,7 @@ local specWarnGTFO						= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
 local timerVileBombardmentCD			= mod:NewCDTimer(16, 257272, nil, nil, nil, 3) --Гнусная бомбардировка
 local timerShatteringBellowCD			= mod:NewCDNPTimer(27.5, 257732, nil, nil, nil, 2) --Сотрясающий рев
-local timerBrutalBackhandCD				= mod:NewCDNPTimer(18, 257426, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Крепкая оплеуха
+local timerBrutalBackhandCD				= mod:NewCDNPTimer(18, 257426, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Крепкая оплеуха
 local timerSeaSpoutCD					= mod:NewCDNPTimer(17, 258777, nil, nil, nil, 3) --Струя морской воды
 local timerRatTrapsCD					= mod:NewCDNPTimer(20, 274383, nil, nil, nil, 3) --Мышеловки
 local timerRicochetingThrowCD			= mod:NewCDNPTimer(8.1, 272402, nil, nil, nil, 3) --Рикошетящий бросок

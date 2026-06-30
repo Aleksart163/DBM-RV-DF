@@ -36,18 +36,18 @@ local warnConsume								= mod:NewTargetNoFilterAnnounce(377222, 4) --Погло
 local warnDecaySpray							= mod:NewSpellAnnounce(376811, 2) --Разлагающие брызги
 --local warnInfectiousSpit						= mod:NewStackAnnounce(377864, 2, nil, "Healer|RemoveDisease")
 
-local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, nil, 4, 4) --Хваткие лозы
-local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, nil, 3, 4) --Хваткие лозы
+local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 4) --Хваткие лозы
+local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, DBM_COMMON_L.ATTRACTION, 3, 4) --Хваткие лозы
 local specWarnGushingOoze						= mod:NewSpecialWarningInterrupt(381770, "HasInterrupt", nil, nil, 1, 2) --Хлещущая слизь
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(378054, nil, nil, nil, 1, 8) --Увядание!
 local specWarnVineWhip							= mod:NewSpecialWarningDefensive(377559, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Хлещущая лоза
 local specWarnVineWhip2							= mod:NewSpecialWarningDodge(377559, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Хлещущая лоза
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(378054, nil, nil, nil, 1, 8) --Увядание!
 
-local timerGraspingVinesCD						= mod:NewCDTimer(47.3, 376933, nil, nil, nil, 6) --Хваткие лозы
+local timerGraspingVinesCD						= mod:NewCDTimer(47.3, 376933, DBM_COMMON_L.ATTRACTION, nil, nil, 6) --Хваткие лозы
 local timerConsume								= mod:NewTargetTimer(10, 377222, nil, false, 2, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Поглощение
-local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Разлагающие брызги
+local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, DBM_COMMON_L.ADDS, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Разлагающие брызги
 --local timerInfectiousSpitCD					= mod:NewCDTimer(20.1, 377864, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)
-local timerVineWhipCD							= mod:NewCDTimer(16.9, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза
+local timerVineWhipCD							= mod:NewCDTimer(16.9, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза (Фронталка)
 
 local yellVineWhip								= mod:NewShortYell(377559, nil, nil, nil, "YELL") --Хлещущая лоза
 --local yellInfusedStrikes						= mod:NewShortFadesYell(361966)

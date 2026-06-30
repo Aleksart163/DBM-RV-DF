@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 372600 or ability.id = 372652 and target.id = 184124
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnTitanicEmpowerment					= mod:NewSpellAnnounce(372719, 2) --Титаническое усиление
+local warnTitanicEmpowerment					= mod:NewSpellAnnounce(372719, 4) --Титаническое усиление
 local warnTitanicEmpowermentOver				= mod:NewFadesAnnounce(372719, 1) --Титаническое усиление
 local warnInexorable							= mod:NewSpellAnnounce(372600, 2) --Неумолимость
 local warnInexorableOver						= mod:NewFadesAnnounce(372600, 1) --Неумолимость
@@ -36,12 +36,12 @@ local warnEarthenShards							= mod:NewTargetNoFilterAnnounce(372718, 4) --Зе�
 
 local specWarnEarthenShards						= mod:NewSpecialWarningDefensive(372718, nil, nil, nil, 3, 4) --Земляные осколки
 local specWarnEarthenShards2					= mod:NewSpecialWarningTarget(372718, "Healer", nil, nil, 3, 4) --Земляные осколки
-local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, 123471, nil, 3, 4) --Титаническое усиление
-local specWarnTitanicEmpowerment2				= mod:NewSpecialWarningInterrupt(372719, "-Healer", 123471, nil, 3, 4) --Титаническое усиление
+local specWarnTitanicEmpowerment				= mod:NewSpecialWarningSpell(372719, nil, 123471, nil, 3, 4) --Титаническое усиление (Усиление)
+local specWarnTitanicEmpowerment2				= mod:NewSpecialWarningInterrupt(372719, "-Healer", 123471, nil, 3, 4) --Титаническое усиление (Усиление)
 local specWarnResonatingOrb						= mod:NewSpecialWarningYouPos(382071, nil, nil, nil, 1, 2) --Резонирующая сфера
 local specWarnCrushingStomp						= mod:NewSpecialWarningSpell(372701, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Сокрушительная поступь
 
-local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, 123471, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Титаническое усиление
+local timerTitanicEmpowermentCD					= mod:NewCDTimer(35, 372719, 123471, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Титаническое усиление (Усиление)
 local timerResonatingOrbCD						= mod:NewCDTimer(27, 382071, nil, nil, nil, 3, nil, nil, true) --Резонирующая сфера 25-30ish
 local timerCrushingStompCD						= mod:NewCDTimer(12.5, 372701, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, nil, true) --Сокрушительная поступь
 local timerEarthenShardsCD						= mod:NewCDTimer(16, 372718, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.BLEED_ICON, true) --Земляные осколки
@@ -149,7 +149,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerEarthenShardsCD:Start(8.2) --
 		timerCrushingStompCD:Start(12.9) --
 		if not self:IsNormal() then
-			timerTitanicEmpowermentCD:Start(70) --Примерный таймер
+			timerTitanicEmpowermentCD:Start(67)
 		end
 	elseif spellId == 372600 then --Неумолимость
 		if not Proshlyap then

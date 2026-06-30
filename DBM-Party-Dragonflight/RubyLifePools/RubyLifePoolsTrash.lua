@@ -19,49 +19,49 @@ mod:RegisterEvents(
 (ability.id = 372087 or ability.id = 391726 or ability.id = 391723 or ability.id = 373614 or ability.id = 372696 or ability.id = 372735 or ability.id = 392395 or ability.id = 392486 or ability.id = 392394 or ability.id = 392640 or ability.id = 392451 or ability.id = 372047) and type = "begincast"
  or ability.id = 391050 and (type = "applybuff" or type = "removebuff")
 --]]
-local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3)
-local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3)
-local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer")
+local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3) --Живая бомба
+local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3) --Громовые раскаты
+local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer") --Пылающая пасть
 local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Healer") --Ураган стали
-local warnFlashfire							= mod:NewCastAnnounce(392451, 4)
-local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3)
-local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3)
+local warnFlashfire							= mod:NewCastAnnounce(392451, 4) --Огненная вспышка
+local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3) --Танец огня
+local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3) --Тектонический разлом
 
+local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2) --Раскапывающий взрыв
 local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
-local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
-local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2)
-local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2)
-local specWarnLivingBomb					= mod:NewSpecialWarningMoveTo(373693, nil, nil, nil, 1, 2)
-local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, nil, nil, 2, 2)
-local specWarnStormBreath					= mod:NewSpecialWarningDodge(391726, nil, nil, nil, 2, 2)
-local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, nil, 2, 2)
-local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2)
+local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2) --Грозовой шторм
+local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2) --Пламя славы
+local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2) --Бушующий щит бури
+local specWarnLivingBomb					= mod:NewSpecialWarningMoveTo(373693, nil, nil, nil, 1, 2) --Живая бомба
+local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, nil, nil, 2, 2) --Пылающий натиск
+local specWarnStormBreath					= mod:NewSpecialWarningDodge(391726, nil, nil, nil, 2, 2) --Дыхание бури
+local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, nil, 2, 2) --Огненное дыхание
 local specWarnBurnout						= mod:NewSpecialWarningRun(373614, "Melee", nil, nil, 4, 2) --Выгорание
 local specWarnBurnout2						= mod:NewSpecialWarningDodge(373614, nil, nil, nil, 2, 2) --Выгорание
-local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, nil, 1, 2)
+local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, nil, 1, 2) --Громовая челюсть
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
-local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterrupt", nil, nil, 1, 2)
+local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterrupt", nil, nil, 1, 2) --Тлеющая стрела
+local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterrupt", nil, nil, 1, 2) --Огненная вспышка
 
 local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
-local timerExcavatingBlastCD				= mod:NewCDNPTimer(16.5, 372696, nil, nil, nil, 3)
+local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
 local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, nil, nil, nil, 3)
-local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, nil, nil, nil, 3)
-local timerRollingThunderCD					= mod:NewCDNPTimer(21.8, 392641, nil, nil, nil, 3)
-local timerThunderjawCD						= mod:NewCDNPTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5)--17-21
-local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, nil, nil, nil, 3) --Пылающий натиск
+local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, nil, nil, nil, 3) --Дыхание бури
+local timerRollingThunderCD					= mod:NewCDNPTimer(21.8, 392641, nil, nil, nil, 3) --Громовые раскаты
+local timerThunderjawCD						= mod:NewCDNPTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Громовая челюсть
+local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Грозовой шторм
+local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная вспышка
+local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Танец огня
+local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5) --Тектонический разлом 17-21
+local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Бушующий щит бури
 local timerIcyShieldCD						= mod:NewCDNPTimer(21.9, 372743, nil, nil, nil, 5)--17-21
 
 local yellSteelBarrage						= mod:NewShortYell(372047, nil, nil, nil, "YELL") --Ураган стали
-local yellLivingBomb						= mod:NewShortYell(373693, nil, nil, nil, "YELL")
-local yellLivingBombFades					= mod:NewShortFadesYell(373693, nil, nil, nil, "YELL")
-local yellStormBreath						= mod:NewShortYell(391726, nil, nil, nil, "YELL")
-local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL")
+local yellLivingBomb						= mod:NewShortYell(373693, nil, nil, nil, "YELL") --Живая бомба
+local yellLivingBombFades					= mod:NewShortFadesYell(373693, nil, nil, nil, "YELL") --Живая бомба
+local yellStormBreath						= mod:NewShortYell(391726, nil, nil, nil, "YELL") --Дыхание бури
+local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL") --Огненное дыхание
 
 --local playerName = UnitName("player")
 
@@ -122,7 +122,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerBurnout:Start()
 	elseif spellId == 372696 then
-		timerExcavatingBlastCD:Start(17, args.sourceGUID)
+		timerExcavatingBlastCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
 			specWarnExcavatingBlast:Show()
 			specWarnExcavatingBlast:Play("watchstep")

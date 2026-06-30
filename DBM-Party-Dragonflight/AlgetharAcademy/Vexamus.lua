@@ -34,24 +34,24 @@ mod:RegisterEvents(
  or ability.id = 386088 and not type = "damage"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnArcaneOrbs							= mod:NewCountAnnounce(385974, 3)
-local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386173, 3)
-local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4) --Волна тайной магии
+local warnArcaneOrbs							= mod:NewCountAnnounce(385974, 3) --Чародейские сферы
+local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386181, 3, nil, nil, 167180) --Мана-бомбы (Бомбы)
+local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4) --Волна тайной магии (Фронталка)
 
-local specWarnArcaneFissure						= mod:NewSpecialWarningDodgeCount(388537, nil, nil, nil, 3, 2) --Магический разлом
-local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, nil, nil, 1, 2)
-local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, nil, 3, 4) --Волна тайной магии
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
+local specWarnArcaneFissure						= mod:NewSpecialWarningDefensive(388537, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Магический разлом (АоЕ)
+local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, 49685, nil, 1, 2) --Мана-бомбы (Бомба)
+local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Волна тайной магии (Фронталка)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8) --Оскверненная мана
 
 local timerRP									= mod:NewRPTimer(19.8)
-local timerArcaneOrbsCD							= mod:NewCDCountTimer(16.8, 385974, nil, nil, nil, 5)
-local timerArcaneFissureCD						= mod:NewCDCountTimer(40.7, 388537, nil, nil, nil, 3)
-local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386173, nil, nil, nil, 3)
-local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerArcaneOrbsCD							= mod:NewCDCountTimer(16.8, 385974, nil, nil, nil, 5) --Чародейские сферы
+local timerArcaneFissureCD						= mod:NewCDCountTimer(40.7, 388537, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магический разлом (АоЕ)
+local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386181, 167180, nil, nil, 3) --Мана-бомбы (Бомбы)
+local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Волна тайной магии (Фронталка)
 
-local yellArcaneExpulsion						= mod:NewShortYell(385958, nil, nil, nil, "YELL") --Волна тайной магии
-local yellManaBomb								= mod:NewYell(386181, nil, nil, nil, "YELL")
-local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL")
+local yellArcaneExpulsion						= mod:NewShortYell(385958, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Волна тайной магии (Фронталка)
+local yellManaBomb								= mod:NewYell(386181, 49685, nil, nil, "YELL") --Мана-бомбы
+local yellManaBombFades							= mod:NewShortFadesYell(386181, 49685, nil, nil, "YELL") --Мана-бомбы
 
 mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8}) --Волна тайной магии
 mod:AddInfoFrameOption(391977, true)
@@ -100,7 +100,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 388537 then
 		self.vb.fissureCount = self.vb.fissureCount + 1
-		specWarnArcaneFissure:Show(self.vb.fissureCount)
+		specWarnArcaneFissure:Show()
 		specWarnArcaneFissure:Play("aesoon")
 		specWarnArcaneFissure:ScheduleVoice(1.5, "watchstep")
 		--Add 3.5 to existing manabomb and expulsion timers (Working Theory, need longer logs/larger sample)

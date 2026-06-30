@@ -54,7 +54,7 @@ local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil,
 local timerDragonBreath								= mod:NewCastTimer(8, 404364, 18357, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Дыхание)
 
 local yellTimeStasis								= mod:NewShortYell(401667, nil, nil, nil, "YELL") --Временной стазис
-local yellSandBlast									= mod:NewShortYell(404916, nil, nil, nil, "YELL") --Песчаный вихрь
+local yellSandBlast									= mod:NewShortYell(404916, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Песчаный вихрь (Фронталка)
 
 --mod:AddInfoFrameOption(391977, true)
 mod:AddSetIconOption("SetIconOnImages", 403891, true, 5, {1, 2, 3, 4, 5, 6})

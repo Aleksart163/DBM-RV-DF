@@ -34,14 +34,14 @@ local warnChainLightning						= mod:NewCastAnnounce(369675, 4) --Цепная м
 local warnCalloftheDeep							= mod:NewSpellAnnounce(369605, 3) --Зов глубин
 local warnBloodlust								= mod:NewSpellAnnounce(369754, 3) --Жажда крови
 
-local specWarnTremor							= mod:NewSpecialWarningSpell(369660, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 2) --Дрожь (Повышенный урон)
+local specWarnTremor							= mod:NewSpecialWarningSpell(369660, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Дрожь (Повышенный урон)
 local specWarnQuakingTotem						= mod:NewSpecialWarningSwitch(369700, "-Healer", nil, nil, 3, 2) --Сотрясающий тотем
 local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
 local specWarnThunderingSlam					= mod:NewSpecialWarningDodge(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
 local timerTremor								= mod:NewCastTimer(10, 369660, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 1, 5) --Дрожь (Повышенный урон)
 local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
-local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Сотрясающий тотем
+local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, DBM_COMMON_L.BIG_ADD, nil, nil, 7, nil, nil, nil, 1, 5) --Сотрясающий тотем
 local timerBloodlustCD							= mod:NewCDCountTimer(30, 369754, nil, nil, nil, 2, nil, DBM_COMMON_L.ENRAGE_ICON) --Жажда крови
 local timerThunderingSlamCD						= mod:NewCDCountTimer(18.2, 369703, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар 18-23
 
@@ -66,17 +66,13 @@ function mod:OnCombatStart(delay)
 	timerThunderingSlamCD:Start(15.9-delay, 1) --
 	timerQuakingTotemCD:Start(19.9-delay, 1)
 	timerBloodlustCD:Start(32.9-delay, 1)
-	--Зов глубин 5.9, 32, 40
-	--Оглушающий удар 15.9, 32, 19, 28
-	--Сотрясающий тотем 19.9, 40, 40
-	--Жажда крови 32.9, 40, 40
 end
 
 local allProshlyapationsOfMurchal = {
 	--Зов глубин
 	[369605] = {5.9, 32, 40},
 	--Оглушающий удар
-	[369703] = {15.9, 32, 19, 28},
+	[369703] = {15.9, 30.6, 19, 28},
 	--Сотрясающий тотем
 	[382303] = {19.9, 40, 40},
 	--Жажда крови
@@ -277,6 +273,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.thunderingCount = 0
 			self.vb.totemCount = 0
 			self.vb.bloodlustCount = 0
+			specWarnTremor:Show()
 			timerThunderingSlamCD:Stop()
 			timerCalloftheDeepCD:Stop()
 			timerQuakingTotemCD:Stop()

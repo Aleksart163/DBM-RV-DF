@@ -36,7 +36,7 @@ local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4) --Гнев Дж�
 
 local specWarnShadowflameFissures					= mod:NewSpecialWarningDodge(404431, nil, 205181, nil, 2, 2) --Разломы пламени Тьмы (Пламя тьмы)
 local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 2, 4) --Сломанный проводник
-local specWarnAncientFury							= mod:NewSpecialWarningDefensive(405316, nil, nil, nil, 3, 4) --Древняя ярость
+local specWarnAncientFury							= mod:NewSpecialWarningDefensive(405316, nil, 26662, nil, 3, 4) --Древняя ярость
 local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, 47482, nil, 4, 4) --Обжигающий удар
 local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Взрыв темной лавы

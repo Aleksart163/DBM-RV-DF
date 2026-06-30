@@ -48,13 +48,14 @@ local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil
 local specWarnEmptynessBetweenStars			= mod:NewSpecialWarningYou(401215, nil, nil, nil, 1, 5) --Межзвездная пустота
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(406989, nil, nil, nil, 1, 8)
 
-local timerPhaseCD							= mod:NewStageTimer(30)
+local timerPhaseCD							= mod:NewStageTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
+local timerIntermission						= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 local timerEmptynessBetweenStars			= mod:NewBuffFadesTimer(15, 401215, nil, nil, nil, 7) --Межзвездная пустота
 local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(401951, false)
 mod:AddDropdownOption("InfoFrameBehaviorTwo", {"OblivionOnly", "HowlOnly", "Hybrid"}, "OblivionOnly", "misc", nil, 401951)
---Фаза 1: The Legacy of the Dracthyr
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26140))
 local warnOppressingHowl						= mod:NewSpellAnnounce(401383, 3, nil, nil, nil, nil, nil, 2) --Подавляющий вой
 local warnDazzled								= mod:NewTargetNoFilterAnnounce(401905, 4, nil, false) --Ослепление Not entirely much you can do about it's a lot but if it's a couple, a healer might want to see this to TRY and save them
@@ -78,7 +79,7 @@ local timerBurningClawsCD						= mod:NewCDTimer(29.9, 401330, nil, "Tank|Healer"
 local timerBurningClaws							= mod:NewTargetTimer(27, 401330, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Обжигающие когти
 
 mod:AddSetIconOption("SetIconOnMassDisintegrate", 401680, true, 0, {1, 2, 3, 4}) --Массовая дезинтеграция (Дезинтеграция)
---Фаза 2: A Touch of the Forbidden
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
@@ -117,7 +118,7 @@ mod:AddSetIconOption("SetIconOnNullGlimmer", 404507, true, 5, {7, 6, 5, 4, 3})
 mod:AddSetIconOption("SetIconOnInfiniteDuress", 404288, true, 0, {1})
 mod:AddNamePlateOption("NPAuraOnRescind", 404705)
 mod:AddNamePlateOption("NPAuraOnMight", 404269)
---Фаза 3: The Seas of Infinity
+--Фаза 3
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26145))
 local warnEmbraceofNothingness					= mod:NewTargetNoFilterAnnounce(403520, 3, nil, nil, 229042) --Объятия пустоты (Черная дыра)
 local warnVoidSlash								= mod:NewStackAnnounce(408429, 2, nil, "Tank|Healer") --Рассечение Бездны
@@ -136,7 +137,7 @@ local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil
 local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 7, nil, nil, nil, 2, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
-local timerScouringEternity						= mod:NewCastTimer(6, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
+local timerScouringEternity						= mod:NewCastTimer(7, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
 local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, DBM_COMMON_L.FRONTAL, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
@@ -382,7 +383,7 @@ local function startPhase3RP(self) --Версия 1
 	timerDesolateBlossomCD:Stop()
 	timerInfiniteDuressCD:Stop()
 	timerVoidClawsCD:Stop()
-	timerPhaseCD:Start(13.5)
+	timerIntermission:Start(13.5)
 	-----------------------------
 	if self:IsMythic() then
 		timerInfiniteDuressCD:Start(18, 1)
@@ -415,17 +416,6 @@ local function startPhase3RP(self) --Версия 1
 	end
 	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении дебаффа)", 2)
 end
-
---[[local function startPhase3RP(self) --Версия 2, если 1 не сработает
-	timerPhaseCD:Stop()
-	timerVoidBombCD:Stop()
-	timerAbyssalBreathCD:Stop()
-	timerDesolateBlossomCD:Stop()
-	timerInfiniteDuressCD:Stop()
-	timerVoidClawsCD:Stop()
-	timerPhaseCD:Start(13.5)
-	DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)
-end]]
 
 local function startPhase3(self) --Версия 2, если 1 не сработает
 	self:SetStage(3)
@@ -562,20 +552,23 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 401383 then
 		warnOppressingHowl:Show()
 		warnOppressingHowl:Play("carefly")
-	elseif spellId == 401810 then
+	elseif spellId == 401810 then --Сияющий всплеск (2 раза за 1 фазу)
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		specWarnGlitteringSurge:Show()
 		specWarnGlitteringSurge:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
 		if timer then
 			timerGlitteringSurgeCD:Start(timer, self.vb.surgeCount+1)
-		else--Early push, abort timers even earlier
+		end
+		if self.vb.surgeCount == 2 then
+			timerPhaseCD:Stop()
 			timerOppressingHowlCD:Stop()
 			timerGlitteringSurgeCD:Stop()
 			timerScorchingBombCD:Stop()
 			timerMassDisintegrateCD:Stop()
 			timerSearingBreathCD:Stop()
 			timerBurningClawsCD:Stop()
+			timerIntermission:Start(19.6) --норм под героик)
 		end
 	elseif spellId == 401500 then
 		self.vb.bombCount = self.vb.bombCount + 1
@@ -1006,7 +999,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMassDisintegrateCD:Stop()
 		timerSearingBreathCD:Stop()
 		timerBurningClawsCD:Stop()
-		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 	elseif spellId == 410654 then --Начало эвента фазы 3 (Дебафф на боссе)
 		specWarnVoidEmpowerment:Show(args.destName)
 		specWarnVoidEmpowerment:Play("stopattack")

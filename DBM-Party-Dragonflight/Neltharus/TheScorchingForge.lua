@@ -31,13 +31,13 @@ local specWarnMightoftheForge					= mod:NewSpecialWarningCount(374635, nil, nil,
 local specWarnBlazinAegis						= mod:NewSpecialWarningMoveAway(374842, nil, nil, nil, 1, 2) --Пылающая эгида
 local specWarnHeatedSwings						= mod:NewSpecialWarningDefensive(374534, nil, nil, nil, 3, 2) --Разгоряченные удары
 local specWarnHeatedSwings2						= mod:NewSpecialWarningRun(374534, nil, 47482, nil, 4, 4) --Разгоряченные удары (Прыжок)
-local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, nil, 2, 2) --Огонь кузни
+local specWarnForgestorm						= mod:NewSpecialWarningDodgeCount(374969, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Огонь кузни
 
 --All timers are 30-31 ish
 local timerMightoftheForgeCD					= mod:NewNextCountTimer(30, 374635, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 5) --Сила кузни Technically Blazing Hammer is healer icon, but it's passive of this stage
 local timerBlazinAegisCD						= mod:NewNextCountTimer(30, 374842, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Пылающая эгида
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
-local timerForgestormCD							= mod:NewNextCountTimer(28, 374969, nil, nil, nil, 2) --Огонь кузни
+local timerForgestormCD							= mod:NewNextCountTimer(28, 374969, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Огонь кузни
 
 local yellBlazinAegis							= mod:NewShortYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
 local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
@@ -47,12 +47,14 @@ local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, 
 mod.vb.setCount = 0
 mod.vb.heatedSwingsCount = 0
 
+local askShown = false
 local allTimers = {
 	--Разгоряченные удары
-	[374534] = {19.9, 40.9, 20, 42.4, 60, 60, 60, 60},
+	[374534] = {19.9, 40.9, 20, 42.4},
 }
 
 function mod:OnCombatStart(delay)
+	askShown = false
 	self.vb.setCount = 1--All timers are 30, so only need one variable that'll increment after each set of all 4 casts
 	self.vb.heatedSwingsCount = 0
 	timerMightoftheForgeCD:Start(3.4-delay, 1) --
@@ -109,6 +111,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.heatedSwingsCount+1)
 		if timer then
 			timerHeatedSwingsCD:Start(timer, self.vb.heatedSwingsCount+1)
+		else
+			if not askShown then
+				askShown = true
+				DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+			end
 		end
 	end
 end

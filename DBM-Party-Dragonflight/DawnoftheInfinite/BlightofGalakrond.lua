@@ -45,20 +45,20 @@ local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil
 local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 1, 2) --Коррозия
 local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 1, 2) --Коррозия
 local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, nil, 2, 2) --Возвращение гнили
-local specWarnNecroticWinds					= mod:NewSpecialWarningDodgeCount(407978, nil, nil, DBM_COMMON_L.PUSHBACK, 1, 2) --Некротические ветра
-local specWarnNecrofrost					= mod:NewSpecialWarningSwitchCount(408029, "Dps", nil, nil, 1, 2) --Некрохлад
-local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodgeCount(408141, nil, 18357, nil, 1, 2) --Испепеляющее гнилостное дыхание (Дыхание)
+local specWarnNecroticWinds					= mod:NewSpecialWarningDodge(407978, nil, nil, DBM_COMMON_L.PUSHBACK, 1, 2) --Некротические ветра (Отталкивание)
+local specWarnNecrofrost					= mod:NewSpecialWarningSwitch(408029, "Dps", nil, DBM_COMMON_L.ADD, 1, 2) --Некрохлад
+local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodge(408141, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Испепеляющее гнилостное дыхание (Фронталка)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8) --Просачивающаяся гниль
 
 local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, 407406, nil, nil, 3) --Разъедающее насыщение (Коррозия)
 local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Возвращение гнили
-local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Некротические ветра (Откидывание)
-local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад
-local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, 18357, nil, nil, 3) --Испепеляющее гнилостное дыхание (Дыхание)
+local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Некротические ветра (Отталкивание)
+local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, DBM_COMMON_L.ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад
+local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Испепеляющее гнилостное дыхание (Фронталка)
 
 local yellCorrosion							= mod:NewYell(407406, nil, nil, nil, "YELL") --Коррозия
 local yellCorrosionFades					= mod:NewShortFadesYell(407406, nil, nil, nil, "YELL") --Коррозия WHen countdown shows, it needs to be passed, so it's a share yell not an avoid one, IE red text
-local yellNecrofrost						= mod:NewYell(408029, nil, nil, nil, "YELL") --Некрохлад
+local yellNecrofrost						= mod:NewYell(408029, DBM_COMMON_L.ADD, nil, nil, "YELL") --Некрохлад
 
 mod.vb.corrosiveCount = 0
 mod.vb.reclaimCount = 0
@@ -152,7 +152,7 @@ function mod:SPELL_CAST_START(args)
 		timerNecrofrostCD:Start(19.4, self.vb.windsCount+1)
 	elseif spellId == 408141 then
 		self.vb.fireBreathCount = self.vb.fireBreathCount + 1
-		specWarnIncinBlightBreath:Show(self.vb.fireBreathCount)
+		specWarnIncinBlightBreath:Show()
 		specWarnIncinBlightBreath:Play("breathsoon")
 		--The timers that are delayed will be auto corrected by Corrosive cast
 		timerIncineratingBlightbreathCD:Start(15.8, self.vb.fireBreathCount+1)
@@ -165,12 +165,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if args:IsPlayer() then
 			yellNecrofrost:Yell()
 		else
-			specWarnNecrofrost:Show(self.vb.windsCount)
+			specWarnNecrofrost:Show()
 			specWarnNecrofrost:Play("targetchange")
 		end
 	elseif spellId == 407978 then
 		self.vb.windsCount = self.vb.windsCount + 1
-		specWarnNecroticWinds:Show(self.vb.windsCount)
+		specWarnNecroticWinds:Show()
 		specWarnNecroticWinds:Play("aesoon")
 		specWarnNecroticWinds:ScheduleVoice(1.5, "watchstep")
 		timerNecroticWindsCD:Start(31.5, self.vb.windsCount+1)

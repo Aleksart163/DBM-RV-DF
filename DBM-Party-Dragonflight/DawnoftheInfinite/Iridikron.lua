@@ -16,7 +16,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 414535 409456 409635 414184 414652",
-	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456",
+	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456 414178",
 	"SPELL_AURA_REMOVED 409456 414177 410719"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
@@ -34,14 +34,15 @@ local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной 
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
 local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Катастрофическое истребление
 
+local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, nil, 1, 4) --Трансцендентность временной линии (Повышенный урон)
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 3, 4) --Истребляющий взрыв
-local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoakCount(414535, nil, nil, nil, 2, 2) --Камнекрушащий шквал
-local specWarnPulvBreath						= mod:NewSpecialWarningDodgeCount(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох
+local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoak(414535, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Камнекрушащий шквал
+local specWarnPulvBreath						= mod:NewSpecialWarningDodge(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
 local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв
-local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
+local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
@@ -65,13 +66,13 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 414535 then
-		specWarnStonecrackerBarrage:Show(self.vb.surgeCount+1)
+		specWarnStonecrackerBarrage:Show()
 		specWarnStonecrackerBarrage:Play("helpsoak")
 	elseif spellId == 409456 then
 		self.vb.surgeCount = self.vb.surgeCount + 1
 		warnEarthsurge:Show(self.vb.surgeCount)
 	elseif spellId == 409635 then
-		specWarnPulvBreath:Show(self.vb.surgeCount)
+		specWarnPulvBreath:Show()
 		specWarnPulvBreath:Play("breathsoon")
 		if self:IsMythic() then
 			specWarnPulvBreath:ScheduleVoice(2, "scatter")
@@ -107,17 +108,25 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 414293 then --Трансцендентность временной линии
 		specWarnCataclysmicObliteration:Show(args.destName)
 		specWarnCataclysmicObliteration:Play("findshelter")
-	elseif spellId == 410719 then --Земляной импульс (аура щитов)
+	elseif spellId == 409456 then --Земляной импульс
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
 		end
-		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
-	elseif spellId == 409456 then --Земляной импульс
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 2 на боссе)", 2)
+	elseif spellId == 410719 then --Земляной импульс (аура щитов)
+	--	if self.Options.InfoFrame then
+	--		DBM.InfoFrame:SetHeader(args.spellName)
+	--		DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
+	--	end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
+	elseif spellId == 414178 then --Трансцендентность временной линии (Повышенный урон)
+		if args:IsPlayer() then
+			specWarnTimelineTranscendence:Show()
+		end
 	end
 end
-	
+
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 409456 then --Земляной импульс
@@ -133,9 +142,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 414177 then --Катастрофическое истребление (сбитие спелла)
 		timerCataclysmicObliteration:Stop()
 	elseif spellId == 410719 then --Земляной импульс (аура щитов)
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:Hide()
-		end
+	--	if self.Options.InfoFrame then
+	--		DBM.InfoFrame:Hide()
+	--	end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
 	end
 end

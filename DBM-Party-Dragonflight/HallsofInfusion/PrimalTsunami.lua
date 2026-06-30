@@ -82,13 +82,13 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.tempestCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
 			timerTempestsFuryCD:Start(31, self.vb.tempestCount+1)
 		end
-	elseif spellId == 387559 then
+	elseif spellId == 387559 then --Заряженные капли
 		self.vb.GlobCount = self.vb.GlobCount + 1
 		warnInfusedGlobule:Show(self.vb.GlobCount)
 		specWarnInfusedGlobule:Show()
 		specWarnInfusedGlobule:Play("watchstep")
 		if self.vb.GlobCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
-			timerInfusedGlobuleCD:Start(17.5)
+			timerInfusedGlobuleCD:Start(8.7)
 		end
 	end
 end

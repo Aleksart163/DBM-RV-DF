@@ -29,22 +29,23 @@ mod:RegisterEvents(
  or ability.id = 388796 and type = "applybuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnHealingTouch							= mod:NewCastAnnounce(396640, 3)
-local warnLasherToxin							= mod:NewStackAnnounce(389033, 2, nil, "Tank|Healer|RemoveDisease")
+local warnHealingTouch							= mod:NewCastAnnounce(396640, 2, nil, nil, nil, 283628) --Целительное прикосновение (Исцеление)
+local warnLasherToxin							= mod:NewStackAnnounce(389033, 2, nil, "Tank|Healer|RemoveDisease") --Токсин плеточника
 
-local specWarnGerminate							= mod:NewSpecialWarningDodge(388796, nil, nil, nil, 2, 2)
-local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 12, nil, nil, 1, 6)
-local specWarnBurstForth						= mod:NewSpecialWarningSpell(388923, nil, nil, nil, 2, 2)
-local specWarnBranchOut							= mod:NewSpecialWarningDodge(388623, nil, nil, nil, 2, 2)
-local specWarnHealingTouch						= mod:NewSpecialWarningInterrupt(396640, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBarkbreaker						= mod:NewSpecialWarningDefensive(388544, nil, nil, nil, 1, 2)
+local specWarnAbundance							= mod:NewSpecialWarningSoak(396721, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Изобилие
+local specWarnGerminate							= mod:NewSpecialWarningDodge(388796, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Прорастание
+local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 12, nil, nil, 1, 6) --Токсин плеточника
+local specWarnBurstForth						= mod:NewSpecialWarningSpell(388923, nil, nil, nil, 2, 2) --Взрывной рост
+local specWarnBranchOut							= mod:NewSpecialWarningDodge(388623, nil, nil, nil, 2, 2) --Ответвление
+local specWarnBarkbreaker						= mod:NewSpecialWarningDefensive(388544, nil, nil, nil, 3, 4) --Пробивание коры
+local specWarnHealingTouch						= mod:NewSpecialWarningInterrupt(396640, "HasInterrupt", 283628, nil, 1, 2) --Целительное прикосновение (Исцеление)
 
 local timerRP									= mod:NewRPTimer(17)
-local timerGerminateCD							= mod:NewCDCountTimer(29.1, 388796, nil, nil, nil, 3)
-local timerBurstForthCD							= mod:NewCDTimer(58.2, 388923, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--Assumed it's on same cycle as branch out, CD not confirmed
-local timerBranchOutCD							= mod:NewCDTimer(58.2, 388623, nil, nil, nil, 3)
-local timerHealingTouchCD						= mod:NewCDTimer(12, 396640, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--First cast only, after that it's iffy
-local timerBarkbreakerCD						= mod:NewCDCountTimer(27.9, 388544, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+local timerGerminateCD							= mod:NewCDCountTimer(29.1, 388796, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Прорастание
+local timerBurstForthCD							= mod:NewCDTimer(58.2, 388923, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Взрывной рост Assumed it's on same cycle as branch out, CD not confirmed
+local timerBranchOutCD							= mod:NewCDTimer(58.2, 388623, DBM_COMMON_L.BIG_ADD, nil, nil, 1) --Ответвление (Большой моб)
+local timerHealingTouchCD						= mod:NewCDTimer(12, 396640, 283628, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Целительное прикосновение (Исцеление) First cast only, after that it's iffy
+local timerBarkbreakerCD						= mod:NewCDCountTimer(27.9, 388544, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Пробивание коры
 
 mod:AddInfoFrameOption(389033, "Tank|Healer|RemovePoison")
 
@@ -156,7 +157,9 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 196548 then--Ancient Branch
+	if cid == 196548 then --Ветвь древня
+		specWarnAbundance:Show()
+		specWarnAbundance:Play("helpsoak")
 		timerHealingTouchCD:Stop(args.destGUID)
 	end
 end

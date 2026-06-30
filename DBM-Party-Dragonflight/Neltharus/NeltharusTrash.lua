@@ -38,7 +38,7 @@ local warnBindingSpear						= mod:NewTargetNoFilterAnnounce(372561, 3) --При�
 local warnMoltenBarrier						= mod:NewTargetNoFilterAnnounce(382791, 4)
 local warnBurningChain						= mod:NewTargetNoFilterAnnounce(374451, 1)
 
-local specWarnTempest						= mod:NewSpecialWarningSpell(381663, nil, nil, nil, 2, 13) --Раскаленная буря
+local specWarnTempest						= mod:NewSpecialWarningSpell(381663, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Раскаленная буря
 local specWarnVolcanicGuard					= mod:NewSpecialWarningDodge(382708, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Вулканическая защита
 local specWarnEruptiveCrush					= mod:NewSpecialWarningDodge(376186, nil, nil, nil, 2, 2) --Разбивающее сокрушение
 local specWarnMagmaFist						= mod:NewSpecialWarningDodge(372311, nil, nil, nil, 2, 2) --Магмовый кулак
@@ -77,7 +77,7 @@ local timerPierceMarrowCD					= mod:NewCDNPTimer(10.9, 372262, nil, nil, nil, 3)
 local timerScorchingFusilladeCD				= mod:NewCDNPTimer(22.4, 372543, nil, nil, nil, 3) --Обжигающий обстрел
 local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Огненная батарея
 --local timerReverbSlamCD					= mod:NewCDNPTimer(17, 372971, nil, nil, nil, 3)--8-17? needs further review
-local timerCandescentTempestCD				= mod:NewCDNPTimer(27, 381663, nil, nil, nil, 2) --Раскаленная буря
+local timerCandescentTempestCD				= mod:NewCDNPTimer(27, 381663, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Раскаленная буря
 local timerForgestompCD						= mod:NewCDNPTimer(16.1, 384623, nil, nil, nil, 2) --Топот кузнеца
 
 local yellBindingSpear						= mod:NewShortYell(372561, nil, nil, nil, "YELL") --Приковывающее копье

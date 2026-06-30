@@ -55,7 +55,7 @@ local specWarnTimerip						= mod:NewSpecialWarningDodge(412063, nil, nil, nil, 2
 local specWarnUntwist						= mod:NewSpecialWarningDefensive(413529, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Распутывание (Фронталка)
 local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Вневременное проклятие (Бомбардировка)
 local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil, 2, 2)
-local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2)--High Prio
+local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2) --Сфера раздумий High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
 local specWarnVolatileMortar				= mod:NewSpecialWarningDodge(407205, nil, nil, nil, 2, 2)
 local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бронзовый выдох (Фронталка) High Prio
@@ -102,7 +102,7 @@ local timerCorrodingVolleyCD				= mod:NewCDNPTimer(15, 413607, nil, nil, nil, 4,
 local timerTemporalStrikeCD					= mod:NewCDNPTimer(11.2, 412136, nil, nil, nil, 2)--11.2-18
 local timerTitanticBulwarkCD				= mod:NewCDNPTimer(25.4, 413024, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerAncientRadianceCD				= mod:NewCDNPTimer(9.7, 413023, nil, nil, nil, 2)--9.7-15
-local timerOrbofContemplationCD				= mod:NewCDNPTimer(13.3, 412129, nil, nil, nil, 3)
+local timerOrbofContemplationCD				= mod:NewCDNPTimer(13.3, 412129, nil, nil, nil, 3) --Сфера раздумий
 local timerShroudingSandstormCD				= mod:NewCDNPTimer(23.1, 412215, nil, nil, nil, 2)--Updated Jan 23rd per hotfixes
 local timerBindingGraspCD					= mod:NewCDNPTimer(19.4, 412922, nil, nil, nil, 3)
 local timerDisplacedChronosequenceCD		= mod:NewCDNPTimer(14.4, 417481, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Перемещающая хронопоследовательность
@@ -121,11 +121,11 @@ local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 
 local timerRP								= mod:NewRPTimer(10)
 
 local yellChronalEruption					= mod:NewShortYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
-local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL")--targets off a player, but everyone needs to dodge the orb
+local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
 local yellEnervate							= mod:NewShortYell(415437, nil, nil, nil, "YELL")
 local yellChronoburst						= mod:NewShortYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв (Бомба)
-local yellChronoburstFades					= mod:NewShortFadesYell(415769, nil, nil, nil, "YELL") --Темпоральный взрыв
-local yellUntwist							= mod:NewShortYell(413529, nil, nil, nil, "YELL") --Распутывание (Фронталка)
+local yellChronoburstFades					= mod:NewShortFadesYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв
+local yellUntwist							= mod:NewShortYell(413529, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Распутывание (Фронталка)
 
 mod:AddBoolOption("AutoRift", true)
 
@@ -506,46 +506,46 @@ function mod:GOSSIP_SHOW()
 		end
 	end
 end
-
+--Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MurchalProshlyapRP1 or msg:find(L.MurchalProshlyapRP1)) then
-		self:SendSync("RP1")
+		self:SendSync("NewRP1")
 	elseif (msg == L.MurchalProshlyapRP2 or msg:find(L.MurchalProshlyapRP2)) then
-		self:SendSync("RP2")
+		self:SendSync("NewRP2")
 	elseif (msg == L.MurchalProshlyapRP3 or msg:find(L.MurchalProshlyapRP3)) then
-		self:SendSync("RP3")
+		self:SendSync("NewRP3")
 	elseif (msg == L.MurchalProshlyapRP4 or msg:find(L.MurchalProshlyapRP4)) or (msg == L.MurchalProshlyapRP5 or msg:find(L.MurchalProshlyapRP5)) then --Таймер пулла Гарроша возможно отличается
-		self:SendSync("RP4")
+		self:SendSync("NewRP4")
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if (msg == L.MurchalProshlyapRP0 or msg:find(L.MurchalProshlyapRP0)) then
-		self:SendSync("RP0")
+		self:SendSync("NewRP0")
 	elseif (msg == L.MurchalProshlyapRP6 or msg:find(L.MurchalProshlyapRP6)) then
-		self:SendSync("RP6")
+		self:SendSync("NewRP6")
 	elseif (msg == L.MurchalProshlyapRP7 or msg:find(L.MurchalProshlyapRP7)) then
-		self:SendSync("RP7")
+		self:SendSync("NewRP7")
 	end
 end
 
-function mod:OnSync(msg)
-	if msg == "RP0" and self:AntiSpam(10, 2) then --Таймер пула перед 1-ым боссом
+function mod:OnSync(msg, targetname)
+	if msg == "NewRP0" and self:AntiSpam(10, 2) then --Таймер пула перед 1-ым боссом
 		timerRP:Start(24)
 		timerTimelessCurseCD:Start(12)
 		specWarnTimelessCurse:Schedule(12)
 		specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
-	elseif msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
+	elseif msg == "NewRP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
 		timerRP:Start(73.5)
-	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
+	elseif msg == "NewRP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
 		timerRP:Start(29)
-	elseif msg == "RP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
+	elseif msg == "NewRP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
 		timerRP:Start(88)
-	elseif msg == "RP4" and self:AntiSpam(10, 2) then --Таймер пула Андуина или Гарроша
+	elseif msg == "NewRP4" and self:AntiSpam(10, 2) then --Таймер пула Андуина или Гарроша
 		timerRP:Start(15.5)
-	elseif msg == "RP6" and self:AntiSpam(10, 2) then --Таймер на Гнили--
+	elseif msg == "NewRP6" and self:AntiSpam(10, 2) then --Таймер на Гнили--
 		timerRP:Start(16.5)
-	elseif msg == "RP7" and self:AntiSpam(10, 2) then --Таймер на треш после Тира
+	elseif msg == "NewRP7" and self:AntiSpam(10, 2) then --Таймер на треш после Тира
 		timerRP:Start(15)
 	end
 end

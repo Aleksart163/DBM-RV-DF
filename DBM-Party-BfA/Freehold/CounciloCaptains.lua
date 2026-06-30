@@ -41,7 +41,7 @@ local specWarnBrewOnBoss			= mod:NewSpecialWarning("specWarnBrewOnBoss", "Tank",
 local timerTendingBarCD				= mod:NewNextTimer(8, 264605, nil, nil, nil, 3) --Обслуживание клиентов
 
 --mod:GroupSpells(264605, 265168)--Group good brew and bad brew with "tending Bar"
---Jolly
+--Джолли (Сломана и не участвует в бою)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17025))
 local warnLuckySevens				= mod:NewSpellAnnounce(257117, 1) --Счастливые семерки
 
@@ -57,7 +57,7 @@ local timerLuckySevensCD			= mod:NewNextTimer(29.1, 257117, nil, nil, nil, 5) --
 local timerTradeWindsVigorCD		= mod:NewNextTimer(29, 281329, nil, nil, nil, 5) --Сила попутного ветра
 
 mod:AddRangeFrameOption(5, 267522)
---Raoul
+--Рауль
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17023))
 local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1) --Бочонок с краником
 local warnBlackoutBarrel			= mod:NewTargetNoFilterAnnounce(258338, 4) --Бочка черной пелены
@@ -65,26 +65,25 @@ local warnBlackoutBarrel			= mod:NewTargetNoFilterAnnounce(258338, 4) --Бочк
 local specWarnBarrelSmashCast		= mod:NewSpecialWarningDodge(256589, nil, nil, nil, 2, 2) --Удар бочкой
 --local specWarnBlackoutBarrel		= mod:NewSpecialWarningTarget(258338, "-Healer", nil, 2, 1, 2) --Бочка черной пелены
 local specWarnBlackoutBarrel2		= mod:NewSpecialWarningRun(258338, nil, nil, nil, 4, 4) --Бочка черной пелены
-
 ----Hostile
 local timerBarrelSmashCD			= mod:NewNextTimer(22.9, 256589, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар бочкой 22.9-24.5
 local timerBlackoutBarrelCD			= mod:NewCDTimer(47.3, 258338, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Бочка черной пелены
+
+local yellBlackoutBarrel			= mod:NewShortYell(258338, nil, nil, nil, "YELL") --Бочка черной пелены
 ----Friendly
 local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5) --Бочонок с краником
---Eudora
+--Юдора
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17024))
 local warnChainShot					= mod:NewSpellAnnounce(272902, 1) --Выстрел цепью
 --local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3) --Пороховой выстрел
 
-local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, nil, 3, 4) --Картечный залп
+local specWarnGrapeShot				= mod:NewSpecialWarningDodge(258381, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Картечный залп
 local specWarnPowderShot			= mod:NewSpecialWarningYou(256979, nil, nil, nil, 1, 2) --Пороховой выстрел
 
 ----Hostile
 local timerGrapeShotCD				= mod:NewCDTimer(30.2, 258381, DBM_COMMON_L.FRONTAL, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Картечный залп
 ----Friendly
 local timerChainShotCD				= mod:NewNextTimer(15.3, 272902, nil, nil, nil, 5) --Выстрел цепью
-
-local yellBlackoutBarrel			= mod:NewShortYell(258338, nil, nil, nil, "YELL") --Бочка черной пелены
 
 mod:AddSetIconOption("SetIconOnBlackoutBarrel", 258338, true, 0, {8}) --Бочка черной пелены
 

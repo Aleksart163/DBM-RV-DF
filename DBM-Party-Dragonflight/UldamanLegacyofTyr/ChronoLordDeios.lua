@@ -29,10 +29,11 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnEternalOrb							= mod:NewCountAnnounce(376292, 3, nil, false) --Вечная сфера
-local warnRewindTimeflow						= mod:NewCountAnnounce(376208, 1) --Перемотка времени
+local warnRewindTimeflow						= mod:NewCastAnnounce(376208, 1) --Перемотка времени
 local warnTimeSink								= mod:NewTargetAnnounce(377405, 1) --Пожиратель времени
 local warnSandBreath							= mod:NewTargetNoFilterAnnounce(375727, 4) --Дыхание песка
 
+local specWarnRewindTimeflow					= mod:NewSpecialWarningMoveTo(376208, nil, nil, nil, 4, 2) --Перемотка времени
 local specWarnWingBuffet						= mod:NewSpecialWarningCount(376049, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Взмах крыльями
 local specWarnTimeSink							= mod:NewSpecialWarningMoveAway(377405, nil, nil, nil, 1, 2) --Пожиратель времени
 local specWarnSandBreath						= mod:NewSpecialWarningDefensive(375727, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Дыхание песка
@@ -42,15 +43,16 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(376325, nil, nil, nil, 1, 
 local timerEternalOrbCD							= mod:NewCDCountTimer(6.8, 376292, nil, false, 2, 3) --Вечная сфера 3-9
 local timerRewindTimeflowCD						= mod:NewCDTimer(42.3, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени
 local timerRewindTimeflow						= mod:NewCastTimer(14, 376208, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Перемотка времени 12+2sec cast
-local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Взмах крыльями 
+local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Взмах крыльями 
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Пожиратель времени
 local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 
-local yellSandBreath							= mod:NewShortYell(375727, nil, nil, nil, "YELL") --Дыхание песка
+local yellSandBreath							= mod:NewShortYell(375727, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Дыхание песка
 local yellTimeSink								= mod:NewShortYell(377405, nil, nil, nil, "YELL") --Пожиратель времени
 
 mod:AddRangeFrameOption(5, 377405)
 mod:AddSetIconOption("SetIconOnSandBreath", 375727, true, 0, {8}) --Дыхание песка
+
 
 mod.vb.orbSet = 0
 mod.vb.rewindCount = 0
@@ -58,6 +60,7 @@ mod.vb.breathCount = 0
 mod.vb.buffetCount = 0
 --mod.vb.sinkCount = 0--It's only once per rotation, no reason to count that
 local Proshlyap = false
+local EternityZone = DBM:GetSpellName(376325) --Зона вечности
 
 function mod:SandBreathTarget(targetname, uId)
 	if not targetname then return end
@@ -117,7 +120,9 @@ function mod:SPELL_CAST_START(args)
 		if not Proshlyap then
 			Proshlyap = true
 		end
-		warnRewindTimeflow:Show(self.vb.rewindCount)
+		warnRewindTimeflow:Show()
+		specWarnRewindTimeflow:Show(EternityZone)
+		specWarnRewindTimeflow:Play("helpsoak")
 		--Reboot Timers
 		timerSandBreathCD:Start(14.5, 1)
 		timerWingBuffetCD:Start(18.1, 1)

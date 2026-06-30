@@ -20,6 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 407327 406313",
 	"UNIT_DIED",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
+	"CHAT_MSG_MONSTER_SAY",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
@@ -30,6 +31,7 @@ mod:RegisterEventsInCombat(
 --TODO, what do you actually do with Temporal Anomaly, soak it?
 --NOTE, Rending Charge is a private aura
 --General
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnInfusedStrikes							= mod:NewStackAnnounce(406311, 2, nil, "Tank|Healer") --Усиленные удары
 local warnInfusedExplosion							= mod:NewCountAnnounce(407302, 4, nil, "Tank|Healer")
 
@@ -42,7 +44,7 @@ local timerInfusedExplosion							= mod:NewBuffFadesTimer(20, 407302, nil, nil, 
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(406311, "Tank")
---Neldris
+--Нелдрис (1 босс)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26001))
 
 local warnRendingCharge								= mod:NewIncomingCountAnnounce(406358, 3) --Раздирающий рывок
@@ -53,10 +55,10 @@ local specWarnBellowingRoar2						= mod:NewSpecialWarningRunCount(404713, "Melee
 
 local timerRendingChargeCD							= mod:NewCDCountTimer(34.2, 406358, nil, nil, nil, 3, nil, DBM_COMMON_L.BLEED_ICON) --Раздирающий рывок
 local timerMassiveSlamCD							= mod:NewCDCountTimer(39, 404472, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Обширный удар
-local timerBellowingRoarCD							= mod:NewCDCountTimer(23.1, 404713, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Раскатистый рев
+local timerBellowingRoarCD							= mod:NewCDCountTimer(23.1, 404713, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Раскатистый рев
 
-mod:AddPrivateAuraSoundOption(406317, true, 406358, 1) --Раздирающий рывок
---Thadrion
+mod:AddPrivateAuraSoundOption(406317, true, 406358, 3) --Раздирающий рывок
+--Тадрион (2 босс)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26322))
 local warnUnstableEssence							= mod:NewCastAnnounce(407327, 3) --Нестабильная сущность
 local warnUnstableEssenceTargets					= mod:NewTargetAnnounce(407327, 2) --Нестабильная сущность
@@ -70,7 +72,7 @@ local timerVolatileSpewCD							= mod:NewCDCountTimer(26, 405492, DBM_COMMON_L.B
 local timerViolentEruptionCD						= mod:NewCDCountTimer(68.3, 405375, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Яростное извержение
 
 mod:AddSetIconOption("SetIconOnEssence", 407327, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
---Rionthus
+--Рионтий (3 босс)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26329))
 local warnTemporalAnomaly							= mod:NewCastAnnounce(407552, 3) --Временная аномалия
 local warnTemporalAnomalyAbsorbed					= mod:NewTargetNoFilterAnnounce(407552, 2) --Временная аномалия
@@ -82,6 +84,7 @@ local specWarnDisintegrate							= mod:NewSpecialWarningMoveAway(405392, nil, ni
 local timerDeepBreathCD								= mod:NewCDCountTimer(42.7, 406227, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Глубокий вдох (Дыхание)
 local timerTemporalAnomalyCD						= mod:NewCDCountTimer(43.7, 407552, nil, nil, nil, 5) --Временная аномалия
 local timerDisintegrateCD							= mod:NewCDCountTimer(43.7, 405392, nil, nil, nil, 3) --Дезинтеграция
+local timerPhaseCD									= mod:NewStageTimer(30)
 
 local yellUnstableEssence							= mod:NewShortYell(407327, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, nil, nil, "YELL") --Нестабильная сущность
 local yellDisintegrate								= mod:NewShortYell(405392, nil, nil, nil, "YELL") --Дезинтеграция
@@ -100,9 +103,11 @@ local tankStacks = {}
 local essenceMarks = {}
 local bossActive = {}
 local allTimers = {
-	--Volatile Spew
+	--Нестабильный плевок
+	--обычка + гер
 	[405492] = {5.6, 21.8, 36.4, 30.3, 30, 30.4, 33.2, 31.1, 35.2, 30.4},--Confirmed up to 5th cast
-	--Unstable Essence
+	--Нестабильная сущность
+	--обычка + гер
 	[405042] = {16.5, 37.6, 27.5, 35.2, 27.9, 38, 27.5, 38.9, 28},
 }
 
@@ -184,11 +189,11 @@ function mod:SPELL_CAST_START(args)
 		warnRendingCharge:Show(self.vb.rendingCount)
 		local timer
 		if self:IsMythic() then
-			--14, 37, 18, 37, 18
+			--14, 21, 36.9, 21, 36.9
 			if self.vb.rendingCount % 2 == 0 then
-				timer = 18
+				timer = 36.9 --3, 5, 7 (а на офе было 18)  
 			else
-				timer = 37
+				timer = 21 --2, 4, 6 (а на офе было 37) 
 			end
 		else
 			timer = self.vb.rendingCount == 1 and 33.7 or 38.2
@@ -203,10 +208,11 @@ function mod:SPELL_CAST_START(args)
 			--Mythic only uses 407733 and instead is simple alternation
 			--24, 17.9, 37, 18, 36.9
 			--Doesn't need energy calculation, it's always same rotation since it's engage boss
+			--24, 36.9, 17.9
 			if self.vb.massiveSlamCount % 2 == 0 then
-				timer = 36.9
+				timer = 17.9 --3, 5, 7 (а на офе было 36.9)  
 			else
-				timer = 17.9
+				timer = 36.9 --2, 4, 6 (а на офе было 17.9) 
 			end
 		else
 			--Every slam is two slams, where first one is 404472 or 412117 and secondary slam 9.7 seconds later is 407733
@@ -226,16 +232,17 @@ function mod:SPELL_CAST_START(args)
 		local timer
 		if self:IsMythic() then
 			--Doesn't need energy calculation, it's always same rotation since it's engage boss
-			if self.vb.roarCount % 2 == 0 then
-				timer = 25
+			--6, 25, 32.4, 25
+			if self.vb.roarCount % 2 == 0 then 
+				timer = 32.4 --3, 5, 7
 			else
-				timer = 30
+				timer = 25 --2, 4, 6
 			end
 		else
 			timer = self.vb.roarCount == 1 and 57.1 or 38.9
 		end
 		timerBellowingRoarCD:Start(timer, self.vb.roarCount+1)
-	elseif spellId == 405042 then
+	elseif spellId == 405042 then --Нестабильная сущность
 		self.vb.essenceCount = self.vb.essenceCount + 1
 		warnUnstableEssence:Show(self.vb.essenceCount)
 		local timer
@@ -244,13 +251,13 @@ function mod:SPELL_CAST_START(args)
 			if UnitPower(unit) < 30 then--It's 7 energy cast
 				timer = 20.9
 			else--It's 55 Energy cast, so next one will be after full rotationof ultimate
-				timer = 33.9
+				timer = 33.5
 			end
 		else
 			timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.essenceCount+1) or 27.5
 		end
 		timerUnstableEssenceCD:Start(timer, self.vb.essenceCount+1)
-	elseif spellId == 405492 then
+	elseif spellId == 405492 then --Нестабильный плевок (Бомбардировка)
 		self.vb.volatileSpewCount = self.vb.volatileSpewCount + 1
 		specWarnVolatileSpew:Show(self.vb.volatileSpewCount)
 		specWarnVolatileSpew:Play("watchstep")
@@ -266,11 +273,11 @@ function mod:SPELL_CAST_START(args)
 			timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.volatileSpewCount+1) or 30.3
 		end
 		timerVolatileSpewCD:Start(timer, self.vb.volatileSpewCount+1)
-	elseif spellId == 405375 or spellId == 407775 then
+	elseif spellId == 405375 or spellId == 407775 then --Яростное извержение
 		self.vb.eruptionCount = self.vb.eruptionCount + 1
 		specWarnViolentEruption:Show(self.vb.eruptionCount)
 		specWarnViolentEruption:Play("aesoon")
-		timerViolentEruptionCD:Start(self:IsMythic() and 54.9 or 66, self.vb.eruptionCount+1)
+		timerViolentEruptionCD:Start(self:IsMythic() and 55 or 66, self.vb.eruptionCount+1)
 	elseif spellId == 406227 and self:AntiSpam(5, 2) then
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnDeepBreath:Show(self.vb.breathCount)
@@ -403,8 +410,10 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		if GUID and not bossActive[GUID] then
 			bossActive[GUID] = true
 			local cid = self:GetCIDFromGUID(GUID)
-			if cid == 200918 then--Rionthus
+			if cid == 200918 then --Рионтий
 				self:SetStage(3)--Rare exception of stage not matching journal but it should have
+				warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+				warnPhase:Play("pthree")
 				if self:IsMythic() then
 					--Boss gains 2 energy per second, but +5 seconds after hitting 100 before restarting
 					--Temporal Anomaly is cast at 17 mythic
@@ -449,8 +458,10 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					timerTemporalAnomalyCD:Start(16.8, 1)
 					timerDeepBreathCD:Start(30.4, 1)
 				end
-			elseif cid == 200913 then--Thadrion
+			elseif cid == 200913 then --Тадрион
 				self:SetStage(2)--Rare exception of stage not matching journal but it should have
+				warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+				warnPhase:Play("ptwo")
 				if self:IsMythic() then
 					--Boss gains 2 energy per second, but +5 seconds after hitting 100 before restarting
 					--Volatile Spew is cast at 30 and 75 Energy on mythic
@@ -529,5 +540,23 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		specWarnDeepBreath:Show(self.vb.breathCount)
 		specWarnDeepBreath:Play("breathsoon")
 		timerDeepBreathCD:Start(self:IsMythic() and 55 or 43.1, self.vb.breathCount+1)
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.MurchalProshlyap1 or msg:find(L.MurchalProshlyap1)) then
+		self:SendSync("RP1")
+		DBM:Debug("Check Murchal proshlyap 1 (Выход 2 босса)", 2)
+	elseif (msg == L.MurchalProshlyap2 or msg:find(L.MurchalProshlyap2)) then
+		self:SendSync("RP2")
+		DBM:Debug("Check Murchal proshlyap 2 (Выход 3 босса)", 2)
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула 2-го босса
+		timerPhaseCD:Start(10)
+	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула 3-го босса
+		timerPhaseCD:Start(10)
 	end
 end

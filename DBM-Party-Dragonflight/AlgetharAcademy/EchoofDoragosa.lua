@@ -30,22 +30,22 @@ mod:RegisterEventsInCombat(
  or ability.id = 374343 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnOverwhelmingPoweer					= mod:NewCountAnnounce(389011, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(389011))--Typical stack warnings have amount and playername, but since used as personal, using count object to just display amount then injecting option text for stack
-local warnEnergyBomb							= mod:NewTargetAnnounce(374352, 3)
+local warnOverwhelmingPoweer					= mod:NewCountAnnounce(389011, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(389011)) --Переполняющая энергия Typical stack warnings have amount and playername, but since used as personal, using count object to just display amount then injecting option text for stack
+local warnEnergyBomb							= mod:NewTargetNoFilterAnnounce(374352, 3, nil, nil, 167180) --Энергетическая бомба (Бомбы)
 
-local specWarnAstralBreath						= mod:NewSpecialWarningDodge(374361, nil, nil, nil, 2, 2)
-local specWarnPowerVacuum						= mod:NewSpecialWarningRun(388822, nil, nil, nil, 4, 2)
-local specWarnEnergyBomb						= mod:NewSpecialWarningMoveAway(374352, nil, nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(389007, nil, nil, nil, 1, 8)
+local specWarnAstralBreath						= mod:NewSpecialWarningDodge(374361, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Звездное дыхание (Фронталка)
+local specWarnPowerVacuum						= mod:NewSpecialWarningRun(388822, 185824, nil, nil, 4, 2) --Энергетический вакуум
+local specWarnEnergyBomb						= mod:NewSpecialWarningMoveAway(374352, nil, 49685, nil, 1, 2) --Энергетическая бомба (Бомба)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(389007, nil, nil, nil, 1, 8) --Дикая энергия
 
-local timerAstralBreathCD						= mod:NewCDTimer(26.3, 374361, nil, nil, nil, 3)--26-32
-local timerPowerVacuumCD						= mod:NewCDTimer(21, 388822, nil, nil, nil, 2)--22-29
-local timerEnergyBombCD							= mod:NewCDTimer(14.1, 374352, nil, nil, nil, 3)--14.1-20
+local timerAstralBreathCD						= mod:NewCDTimer(26.3, 374361, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Звездное дыхание (Фронталка) 26-32
+local timerPowerVacuumCD						= mod:NewCDTimer(21, 388822, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Энергетический вакуум 22-29
+local timerEnergyBombCD							= mod:NewCDTimer(14.1, 374352, 167180, nil, nil, 3) --Энергетическая бомба (Бомбы) 14.1-20
 
-local yellEnergyBomb							= mod:NewYell(374352, nil, nil, nil, "YELL")
-local yellEnergyBombFades						= mod:NewShortFadesYell(374352, nil, nil, nil, "YELL")
+local yellEnergyBomb							= mod:NewYell(374352, 49685, nil, nil, "YELL")
+local yellEnergyBombFades						= mod:NewShortFadesYell(374352, 49685, nil, nil, "YELL")
 
-mod:AddInfoFrameOption(389011, true)
+mod:AddInfoFrameOption(389011, true) --Переполняющая энергия
 
 local playerDebuffCount = 0
 

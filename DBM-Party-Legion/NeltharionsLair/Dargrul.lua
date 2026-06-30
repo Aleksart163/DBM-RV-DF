@@ -26,7 +26,7 @@ local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 
 local specWarnCrystalSpikes			= mod:NewSpecialWarningDodge(200551, "-Tank", nil, nil, 2, 2) --Кристальные шипы
 local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 4) --Магматический удар
 local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil, 1, 2) --Оползень
-local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitchCount(200637, "Dps", nil, nil, 1, 2) --Ваятель магмы
+local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitch(200637, "Dps", nil, DBM_COMMON_L.BIG_ADD, 3, 2) --Ваятель магмы
 local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Магматическая волна
 local specWarnMagmaWave2			= mod:NewSpecialWarningDefensive(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
 local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть (Преследование)
@@ -34,9 +34,9 @@ local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 62374, nil
 local timerMoltenCrashCD			= mod:NewCDTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23
 local timerLandSlideCD				= mod:NewCDTimer(16, 200700, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оползень 16.5-27
 local timerCrystalSpikesCD			= mod:NewCDTimer(21.4, 200551, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристальные шипы
-local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, DBM_COMMON_L.ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 2 or nil, 5) --Ваятель магмы Everyone?
-local timerMagmaWaveCD				= mod:NewCDTimer(90, 200404, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна
-local timerMagmaWave				= mod:NewCastTimer(2.5, 200404, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна
+local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, DBM_COMMON_L.BIG_ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsDps() and 2 or nil, 5) --Ваятель магмы Everyone?
+local timerMagmaWaveCD				= mod:NewCDTimer(90, 200404, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна (АоЕ)
+local timerMagmaWave				= mod:NewCastTimer(2.5, 200404, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна (АоЕ)
 
 local yellBurningHatred				= mod:NewShortYell(200154, 62374, nil, nil, "YELL") --Пламенная ненависть (Преследование)
 
@@ -99,7 +99,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 200637 then --Ваятель магмы
 		self.vb.addCount = self.vb.addCount + 1
-		specWarnMagmaSculptor:Show(self.vb.addCount)
+		specWarnMagmaSculptor:Show()
 		specWarnMagmaSculptor:Play("killbigmob")
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.addCount+1) 
 		if timer then

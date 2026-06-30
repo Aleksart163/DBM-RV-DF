@@ -45,7 +45,7 @@ mod.vb.lightCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Очищающий свет
-	[269310] = {18, 24.8, 23.7, 26, 23.7, 26, 23.7, 26, 23.7, 26},
+	[269310] = {18, 24.5, 23.7, 26, 23.7, 23.7, 23.7, 26, 23.7, 26},
 }
 
 function mod:OnCombatStart(delay)
@@ -87,11 +87,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 269301 then --Порченая кровь
 		local amount = args.amount or 1
-		if args:IsPlayer() then
-			if amount >= 4 then
-				specWarnPutridBlood:Show(amount)
-				specWarnPutridBlood:Play("stackhigh")
-			end
+		if args:IsPlayer() and amount >= 4 then
+			specWarnPutridBlood:Show(amount)
+			specWarnPutridBlood:Play("stackhigh")
 		end
 	end
 end

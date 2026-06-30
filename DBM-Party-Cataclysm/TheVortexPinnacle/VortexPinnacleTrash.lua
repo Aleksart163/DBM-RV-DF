@@ -50,10 +50,10 @@ local warnLethalCurrent							= mod:NewCastAnnounce(411001, 4) --Смертон�
 local warnCloudburst							= mod:NewCastAnnounce(88170, 4) --Грозовая сфера
 
 local specWarnCyclone2							= mod:NewSpecialWarningYou(88010, nil, nil, nil, 1, 2) --Смерч
-local specWarnIcyBuffet							= mod:NewSpecialWarningSpell(88194, nil, nil, nil, 2, 2) --Ледяные крылья
+local specWarnIcyBuffet							= mod:NewSpecialWarningSpell(88194, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Ледяные крылья
 local specWarnLethalCurrent						= mod:NewSpecialWarningYou(411001, nil, nil, nil, 3, 4) --Смертоносный поток
-local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, nil, 2, 2) --Турбулентность
-local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, 18357, nil, 2, 2) --Студеное дыхание (Дыхание)
+local specWarnTurbulence						= mod:NewSpecialWarningSpell(411002, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Турбулентность
+local specWarnChillingBreath					= mod:NewSpecialWarningDodge(411012, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Студеное дыхание (Дыхание)
 local specWarnStormSurge						= mod:NewSpecialWarningRun(88055, nil, nil, nil, 4, 2) --Область шторма Mob is immune to displacements and interrupts, this is an 8 yard range run out
 local specWarnOverloadGroundingField			= mod:NewSpecialWarningRun(413385, nil, nil, nil, 4, 4) --Перегрузка заземляющего поля
 local specWarnLightningLash						= mod:NewSpecialWarningMoveTo(87762, nil, nil, nil, 4, 4) --Искрящаяся плеть
@@ -69,13 +69,13 @@ local timerStormSurgeCD							= mod:NewCDNPTimer(16.1, 88055, nil, nil, nil, 2) 
 local timerGaleStrikeCD							= mod:NewCDNPTimer(17, 88061, nil, "Tank|Healer|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Ураганный удар
 local timerRallyCD								= mod:NewCDNPTimer(26.7, 87761, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Поддержка в бою
 local timerShockwaveCD							= mod:NewCDNPTimer(20.2, 87759, nil, "Tank|Healer", nil, 3) --Ударная волна
-local timerChillingBreathCD						= mod:NewCDNPTimer(18, 411012, 18357, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание)
-local timerIcyBuffetCD							= mod:NewCDNPTimer(28, 88194, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
+local timerChillingBreathCD						= mod:NewCDNPTimer(18, 411012, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание)
+local timerIcyBuffetCD							= mod:NewCDNPTimer(28, 88194, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяные крылья
 local timerWindBlastCD							= mod:NewCDNPTimer(10.1, 87923, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Порыв ветра
 local timerCloudGuardCD							= mod:NewCDNPTimer(19.1, 411000, nil, nil, nil, 5) --Облачная защита
 local timerPressurizedBlastCD					= mod:NewCDNPTimer(21.8, 410999, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Порыв сжатого воздуха
 local timerBombCycloneCD						= mod:NewCDNPTimer(15.5, 411005, nil, nil, nil, 3) --Взрывной циклон 15.9-17.1
-local timerTurbulenceCD							= mod:NewCDNPTimer(32, 411002, nil, nil, nil, 2) --Турбулентность
+local timerTurbulenceCD							= mod:NewCDNPTimer(32, 411002, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Турбулентность
 local timerWindFlurryCD							= mod:NewCDNPTimer(10.1, 410998, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Шквал ветра
 local timerLightningLashCD						= mod:NewCDNPTimer(19, 87762, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Искрящаяся плеть
 local timerOverloadGroundingFieldCD				= mod:NewCDNPTimer(20.5, 413385, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перегрузка заземляющего поля
@@ -248,9 +248,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 88171 and args:IsPlayer() and self:AntiSpam(2, 7) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 88186 and self:AntiSpam(4, 5) then
-		specWarnVaporForm:Show(args.destName)
-		specWarnVaporForm:Play("helpdispel")
+	elseif spellId == 88186 and self:AntiSpam(2, "VaporForm") then
+		if not args:IsDestTypePlayer() then
+			specWarnVaporForm:Show(args.destName)
+			specWarnVaporForm:Play("helpdispel")
+		end
 	elseif spellId == 87726 and args:IsPlayer() then
 		playerGrounded = true
 	end

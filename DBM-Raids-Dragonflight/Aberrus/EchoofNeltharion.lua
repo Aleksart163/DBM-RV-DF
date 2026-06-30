@@ -36,7 +36,7 @@ mod:RegisterEventsInCombat(
 --TODO, delete redundant/incorrect events when real events known
 --TODO, Add shatter? https://www.wowhead.com/ptr/spell=401825/shatter
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
---Stage One: The Earth Warder
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26192))
 local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2) --Искаженная земля
 --local warnVolcanicHeart						= mod:NewTargetCountAnnounce(410953, 2, nil, nil, nil, nil, nil, nil, true)
@@ -47,7 +47,7 @@ local warnCalamitousStrike						= mod:NewTargetNoFilterAnnounce(401998, 4, nil, 
 
 local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2) --Искаженная земля Twisted earth spawn+Dodge for Volcanic Blast
 local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2) --Звенящий разлом (Разлом)
-local specWarnVolcanicHeart						= mod:NewSpecialWarningMoveAway(410953, nil, nil, nil, 4, 8) --Вулканическое сердце
+local specWarnVolcanicHeart						= mod:NewSpecialWarningMoveAway(410953, nil, 49685, nil, 4, 8) --Вулканическое сердце
 --local specWarnRushingDarkness					= mod:NewSpecialWarningMoveAway(407221, nil, nil, nil, 4, 2) --Стремительная тьма
 local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 3, 4) --Гибельный удар
 local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2) --Гибельный удар
@@ -61,7 +61,7 @@ local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, n
 local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Гибельный удар
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
---Stage Two: Corruption Takes Hold
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26421))
 ----Voice From Beyond
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(26456))
@@ -70,18 +70,18 @@ local warnCorruption							= mod:NewTargetNoFilterAnnounce(401010, 2) --Порч
 local warnShadowShadowStrike					= mod:NewCastAnnounce(407796, 2, nil, nil, "Tank|Healer")
 local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many are still hidden, but also kinda acts as a "one has also become unhidden" alert
 
-local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
+local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2) --Разрушение земли
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2) --Порча
 local specWarnUmbralAnnihilation				= mod:NewSpecialWarningDefensive(405433, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Темное уничтожение (Аннигиляция)
-local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
-local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
-local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
+local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2) --Стремительные тени
+local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 4) --Отсечение тени
+local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2) --Отсечение тени
 
 local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5) --Порча
 local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темное уничтожение (Аннигиляция)
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
---Stage Three: Reality Fractures
+--Фаза 3
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26422))
 local warnSunderReality							= mod:NewCastAnnounce(407936, 2, nil, nil, nil, 109401)
 local warnEbonDestruction						= mod:NewCountAnnounce(407917, 4, nil, nil, 64584) --Черное разрушение (Большой взрыв)
@@ -91,6 +91,7 @@ local specWarnEbonDestructionMove				= mod:NewSpecialWarningMoveTo(407917, nil, 
 local timerSunderRealityCD						= mod:NewCDCountTimer(29.2, 407936, 109401, nil, nil, 5) --Раскол реальности (Порталы)
 local timerEbonDestructionCD					= mod:NewCDCountTimer(35.2, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Черное разрушение (Большой взрыв)
 local timerEbonDestruction						= mod:NewCastTimer(12, 407917, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
+local timerIntermission							= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 --local yellVolcanicHeart							= mod:NewShortYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
 --local yellVolcanicHeartFades					= mod:NewShortFadesYell(410953, nil, nil, nil, "YELL") --Вулканическая пульсация
@@ -267,7 +268,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			warnRushingDarkness:Show(self.vb.RushingDarknessCount)
 		end
-	elseif spellId == 409313 then--Intermission 1.5
+	elseif spellId == 409313 then --Разрушение земли (Переходка с 1 фазы на 2)
 		specWarnRazetheEarth:Show()
 		specWarnRazetheEarth:Play("watchstep")
 		timerTwistedEarthCD:Stop()
@@ -275,6 +276,7 @@ function mod:SPELL_CAST_START(args)
 		timerRushingDarknessCD:Stop()
 		timerCalamitousStrikeCD:Stop()
 		timerVolcanicHeartCD:Stop()
+		timerIntermission:Start(7)
 	elseif spellId == 403057 then --Подчинение порче (Начало фазы 2)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))

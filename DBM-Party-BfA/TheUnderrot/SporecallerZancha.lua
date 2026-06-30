@@ -38,6 +38,7 @@ local timerFungistormCD				= mod:NewCDTimer(21.5, 330422, nil, nil, nil, 7, nil,
 local timerShockwaveCD				= mod:NewCDTimer(60, 272457, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна (Фронталка)
 local timerUpheavalCD				= mod:NewCDTimer(60, 259718, nil, nil, nil, 3, nil) --Дрожь земли
 
+local yellShockwave					= mod:NewShortYell(272457, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Ударная волна (Фронталка)
 local yellUpheaval					= mod:NewShortYell(259718, nil, nil, nil, "YELL") --Дрожь земли
 local yellUpheavalFades				= mod:NewShortFadesYell(259718, nil, nil, nil, "YELL") --Дрожь земли
 
@@ -46,7 +47,7 @@ mod.vb.shockwaveCount = 0
 mod.vb.upheavalCount = 0
 mod.vb.murchalOchkenProshlyapationCount = 0
 
-local Spores = DBM:GetSpellName(80564)
+local Spores = DBM:GetSpellName(80564) --Споры грибов
 local MurchalOchkenProshlyapationTimers = {21.5, 30, 30, 32, 30, 30, 30, 30, 31.5, 30}
 
 local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
@@ -99,6 +100,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnShockwave:Show()
 			specWarnShockwave:Play("shockwave")
+			yellShockwave:Yell()
 		else
 			specWarnShockwave2:Show()
 			specWarnShockwave2:Play("watchstep")

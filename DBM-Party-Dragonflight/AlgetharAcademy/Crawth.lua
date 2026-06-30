@@ -26,21 +26,22 @@ mod:RegisterEventsInCombat(
  or ability.id = 181089
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnPlayBall								= mod:NewSpellAnnounce(377182, 2, nil, nil, nil, nil, nil, 2)
+local warnPlayBall								= mod:NewSpellAnnounce(377182, 2, nil, nil, nil, nil, nil, 2) --Забить мяч!
 
 local specWarnFirestorm							= mod:NewSpecialWarningDodge(376448, nil, nil, nil, 2, 2) --Огненная буря
-local specWarnOverpoweringGust					= mod:NewSpecialWarningDodge(377034, nil, nil, nil, 2, 2)
-local specWarnDeafeningScreech					= mod:NewSpecialWarningMoveAwayCount(377004, "-SpellCaster", nil, nil, 2, 2) --Оглушительный визг
+local specWarnFirestorm2						= mod:NewSpecialWarningSpell(376448, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Огненная буря (Повышенный урон)
+local specWarnOverpoweringGust					= mod:NewSpecialWarningDodge(377034, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Подавляющий порыв
+local specWarnDeafeningScreech					= mod:NewSpecialWarningMoveAway(377004, "-SpellCaster", nil, nil, 2, 2) --Оглушительный визг
 local specWarnDeafeningScreech2					= mod:NewSpecialWarningCast(377004, "SpellCaster", nil, nil, 2, 2) --Оглушительный визг
-local specWarnSavagePeck						= mod:NewSpecialWarningDefensive(376997, nil, nil, nil, 1, 2)
+local specWarnSavagePeck						= mod:NewSpecialWarningDefensive(376997, nil, nil, nil, 3, 4) --Свирепый клевок
 
-local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Огненная буря
-local timerOverpoweringGustCD					= mod:NewCDTimer(28.2, 377034, nil, nil, nil, 3)
+local timerFirestorm							= mod:NewBuffActiveTimer(12, 376448, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 1, 5) --Огненная буря
+local timerOverpoweringGustCD					= mod:NewCDTimer(28.2, 377034, DBM_COMMON_L.FRONTAL, nil, nil, 3)
 local timerDeafeningScreech						= mod:NewCastTimer(2.5, 377004, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 2.5) --Оглушительный визг
 local timerDeafeningScreechCD					= mod:NewCDCountTimer(22.7, 377004, nil, nil, nil, 2)
-local timerSavagePeckCD							= mod:NewCDTimer(13.6, 376997, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Spell queued intoo oblivion often
+local timerSavagePeckCD							= mod:NewCDTimer(13.6, 376997, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Свирепый клевок
 
-local yellOverpoweringGust						= mod:NewYell(377034, nil, nil, nil, "YELL")
+local yellOverpoweringGust						= mod:NewYell(377034, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Подавляющий порыв
 
 mod:AddRangeFrameOption(4, 377004)
 
@@ -79,7 +80,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnDeafeningScreech2:Show()
 			specWarnDeafeningScreech2:Play("stopcast")
 		else
-			specWarnDeafeningScreech:Show(self.vb.ScreechCount)
+			specWarnDeafeningScreech:Show()
 			specWarnDeafeningScreech:Play("scatter")
 		end
 		timerDeafeningScreechCD:Start(nil, self.vb.ScreechCount+1)
@@ -105,13 +106,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 376781 then
 		specWarnFirestorm:Show()
 		specWarnFirestorm:Play("watchstep")
+		specWarnFirestorm2:Schedule(1)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 376781 then
-		timerFirestorm:Start()
+		timerFirestorm:Start(args.destName)
 		--Regardless of time remaining, crawth will cast these coming out of stun
 		--Season 4 seems to have swapped these? or spell queue is now happening and either can be cast at 12?
 		timerDeafeningScreechCD:Start(12, 1)
@@ -136,6 +138,6 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 376781 then
-		timerFirestorm:Stop()
+		timerFirestorm:Stop(args.destName)
 	end
 end

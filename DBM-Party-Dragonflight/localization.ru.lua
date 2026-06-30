@@ -378,7 +378,7 @@ L:SetOptionLocalization({
 	AutoRift 			= "Автоматически выбирать диалог для активации портала"
 })
 
-L:SetMiscLocalization({
+L:SetMiscLocalization({ 
 	MurchalProshlyapRP0 = "О, не волнуйся. Мы придумаем, как их остановить!",
 	MurchalProshlyapRP1 = "Ноздорму! Алекстраза! И остальные! Драконы Бесконечности здесь, их надо остановить.",
 	MurchalProshlyapRP2 = "Слуги титанов пришли сразиться со мной.",

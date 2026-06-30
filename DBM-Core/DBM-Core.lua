@@ -80,15 +80,15 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20260624000000")
+DBM.Revision = parseCurseDate("20260701000000")
 
 local fakeBWVersion, fakeBWHash = 471, "pr05h19p"
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
-DBM.DisplayVersion = "10.2.70"--Core version
+DBM.DisplayVersion = "10.2.71"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2026, 6, 24) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2026, 7, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 

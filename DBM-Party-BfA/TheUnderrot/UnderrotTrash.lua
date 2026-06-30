@@ -38,7 +38,7 @@ local warnWickedEmbrace				= mod:NewTargetNoFilterAnnounce(266265, 4) --Злые
 
 local specWarnWickedEmbrace			= mod:NewSpecialWarningYou(266265, nil, nil, nil, 3, 2) --Злые объятия
 local specWarnWickedEmbrace2		= mod:NewSpecialWarningDispel(266265, "RemoveMagic", nil, nil, 3, 4) --Злые объятия
-local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, 2, 3, 2) --Сводящий с ума взор
+local specWarnMaddeningGaze			= mod:NewSpecialWarningDodge(272609, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Сводящий с ума взор
 local specWarnSavageCleave			= mod:NewSpecialWarningDodge(265019, nil, nil, nil, 2, 2) --Яростное рассечение
 local specWarnRottenBile			= mod:NewSpecialWarningDodge(265540, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Гнилая желчь
 local specWarnAbyssalReach			= mod:NewSpecialWarningDodge(272592, nil, nil, nil, 2, 2) --Хватка Бездны
@@ -59,7 +59,7 @@ local specWarnWickedFrenzyDispel	= mod:NewSpecialWarningDispel(266209, "RemoveEn
 local specWarnDecayingMindDispel	= mod:NewSpecialWarningDispel(278961, "RemoveDisease", nil, nil, 1, 2) --Гниющий разум
 local specWarnGiftofGhuunDispel		= mod:NewSpecialWarningDispel(265091, "MagicDispeller", nil, nil, 1, 2) --Дар Г'ууна
 local specWarnBoneShieldDispel		= mod:NewSpecialWarningDispel(266201, "MagicDispeller", nil, nil, 1, 2) --Костяной щит Unlike BFA version, 10.1 version now instant cast, no interrupt just dispel
-local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, nil, nil, 2, 2) --Призыв тотема поглощения духа
+local specWarnSpiritDrainTotemOut	= mod:NewSpecialWarningDodge(265523, nil, 116174, nil, 2, 2) --Призыв тотема поглощения духа (Призыв тотема духов)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(278789, nil, nil, nil, 1, 8) --Волна разложения
 
 local timerBloodHarvestCD			= mod:NewCDNPTimer(11.4, 265016, nil, nil, nil, 3) --Кровавая жатва
@@ -72,18 +72,18 @@ local timerDecayingMindCD			= mod:NewCDNPTimer(25, 278961, nil, nil, nil, 4, nil
 local timerDarkEchoesCD				= mod:NewCDNPTimer(18.2, 413044, DBM_COMMON_L.AOEDAMAGE, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темное эхо
 local timerBoneShieldCD				= mod:NewCDNPTimer(25, 266201, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Костяной щит
 local timerWickedEmbraceCD			= mod:NewCDNPTimer(8.5, 266265, nil, "RemoveMagic", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Злые объятия
-local timerWickedFrenzyCD			= mod:NewCDNPTimer(6.4, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON) --Жуткое бешенство
+local timerWickedFrenzyCD			= mod:NewCDNPTimer(6.1, 266209, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON) --Жуткое бешенство
 local timerWitheringCurseCD			= mod:NewCDNPTimer(25.4, 272180, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Плево Бездны
 local timerShadowBoltVolleyCD		= mod:NewCDNPTimer(25.4, 265487, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел Тьмы 25.4-27.7
 local timerAbyssalReachCD			= mod:NewCDNPTimer(16.1, 272592, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Хватка Бездны
-local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
+local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON, nil, mod:IsTank() and 2 or nil, 3) --Сводящий с ума взор 15.7-17
 
 local yellDecayingMind				= mod:NewYell(278961, nil, nil, nil, "YELL") --Гниющий разум
 local yellWickedEmbrace				= mod:NewYell(266265, nil, nil, nil, "YELL") --Злые объятия
 local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
 local yellThirstforBlood			= mod:NewShortYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
-local yellThirstforBlood2			= mod:NewShortFadesYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 
 function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then

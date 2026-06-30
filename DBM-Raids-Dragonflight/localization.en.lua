@@ -139,6 +139,11 @@ L:SetMiscLocalization({
 	SafeClear		= "Safe Clear"
 })
 
+L:SetMiscLocalization({
+	MurchalProshlyap1		= "Obviously our first prototype lacked the desired strength. The next iteration was imbued with excessive arcane power.",
+	MurchalProshlyap2		= "Sadly a creature with unstable arcane surges was useless, so we refined the infusion process."
+})
+
 ---------------------------
 --  Assault of the Zaqali --
 ---------------------------

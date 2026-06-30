@@ -98,14 +98,15 @@ local specWarnBlazingSpear							= mod:NewSpecialWarningMoveAway(401401, nil, ni
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26683))
 local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer") --Горящая дубина
 
-local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, nil, 3, 3) --Катастрофический удар
+local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 3) --Катастрофический удар
 local specWarnFlamingCudgel							= mod:NewSpecialWarningDefensive(410351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Горящая дубина Count because it's hybrid warning
 local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6) --Горящая дубина
 local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2) --Горящая дубина
 
 --local timerIgnarasFuryCD							= mod:NewAITimer(29.9, 406585, nil, nil, nil, 2)
-local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Катастрофический удар
+local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Катастрофический удар
 local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
+local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
 local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL")
@@ -117,6 +118,7 @@ local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil,
 --mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
 --mod:GroupSpells(390715, 396094)
 
+local FlamingCudgelTimers = {18.7, 15, 18.6, 23, 15, 18.6, 23}
 local Proshlyap = false
 local castsPerGUID = {}
 mod.vb.cudgelCount = 0
@@ -291,6 +293,9 @@ function mod:SPELL_CAST_START(args)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
+		timerIntermission:Start(15.5)
+		--21 51 37 252 начало каста
+		--21 51 52 807
 	end
 end
 
@@ -333,20 +338,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerHeavyCudgelCD:Start(timer - 3, self.vb.cudgelCount+1)--Timer minus cast time
 	elseif spellId == 410351 then --Горящая дубина
 		self.vb.cudgelCount = self.vb.cudgelCount + 1
-		--18, 23, 19, 11.9,
-		--18, 23, 19, 12
-		--18, 23, 19, 12, 23, 19
-		local timer
-		if self.vb.cudgelCount % 3 == 2 then
-			timer = 19
-		elseif self.vb.cudgelCount % 3 == 0 then
-			timer = 12
-		elseif self.vb.cudgelCount % 3 == 1 then
-			timer = 23
+		local timer = FlamingCudgelTimers[self.vb.cudgelCount+1]
+		if timer then
+			timerFlamingCudgelCD:Start(timer, self.vb.cudgelCount+1)
 		end
-		timerFlamingCudgelCD:Start(timer - 3, self.vb.cudgelCount+1)--Timer minus cast time
-		--По старой инфе с начала фазы 2 от каста до каста
-		--18.6, 15, 23
 	end
 end
 

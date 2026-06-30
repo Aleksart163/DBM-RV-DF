@@ -29,26 +29,26 @@ mod:RegisterEventsInCombat(
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25745))
 local warnPowerLoverload						= mod:NewTargetAnnounce(389179, 3) --Перегрузка
 
-local specWarnPowerOverload						= mod:NewSpecialWarningMoveAway(389179, nil, nil, nil, 1, 2) --Перегрузка
-local specWarnSparkVolley						= mod:NewSpecialWarningDodge(384351, nil, nil, nil, 4, 2) --Череда разрядов
+local specWarnPowerOverload						= mod:NewSpecialWarningMoveAway(389179, nil, nil, nil, 4, 2) --Перегрузка
+local specWarnSparkVolley						= mod:NewSpecialWarningDodge(384351, nil, nil, DBM_COMMON_L.BOMBING, 4, 2) --Череда разрядов
 local specWarnStaticSurge						= mod:NewSpecialWarningDefensive(384014, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Статический выброс
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(389181, nil, nil, nil, 1, 8) --Статическое поле
-local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Кулак титана
+local specWarnTitanticFist						= mod:NewSpecialWarningDodge(384524, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Кулак титана (Фронталка)
 --Perephase: Ochken of Murchal
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(25744))
 local warnAblativeBarrierOver					= mod:NewEndAnnounce(383840, 1) --Абляционный барьер
 local warnNullifyingPulse						= mod:NewCastAnnounce(389446, 4) --Нейтрализующая пульсация
 local warnPurifyingBlast						= mod:NewTargetNoFilterAnnounce(389443, 3, nil, false) --Очищающая вспышка
 
-local specWarnAblativeBarrier					= mod:NewSpecialWarningSwitch(383840, nil, nil, nil, 1, 2) --Абляционный барьер
+local specWarnAblativeBarrier					= mod:NewSpecialWarningSwitch(383840, "-Healer", nil, nil, 1, 2) --Абляционный барьер
 local specWarnNullifyingPulse					= mod:NewSpecialWarningRun(389446, "Melee", nil, nil, 4, 2) --Нейтрализующая пульсация
 
 local timerPowerOverloadCD						= mod:NewCDTimer(28, 389179, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Перегрузка
-local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
+local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Череда разрядов
 local timerStaticSurgeCD						= mod:NewCDCountTimer(28, 384014, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Статический выброс
-local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана
+local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана (Фронталка)
 
-local yellTitanicFist							= mod:NewShortYell(384524, nil, nil, nil, "YELL") --Кулак титана
+local yellTitanicFist							= mod:NewShortYell(384524, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Кулак титана (Фронталка)
 local yellPowerOverload							= mod:NewShortYell(389179, nil, nil, nil, "YELL") --Перегрузка
 local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL") --Перегрузка
 
@@ -63,16 +63,12 @@ local allProshlyapationsOfMurchal = {
 		[384524] = {6, 18, 22.1, 18.1, 19.4, 18.5, 18, 19.4, 21},
 		--Череда разрядов
 		[384351] = {29.9, 31, 31, 31, 36},
-		--Статический выброс
-	--	[384014] = {10.9, 28, 28, 28, 28.9, 60},
 	},
 	[2] = {
 		--Кулак титана
 		[384524] = {8.1, 18, 22.1, 18, 18, 19.9, 18, 18, 21.3},
 		--Череда разрядов
 		[384351] = {31.6, 31, 31, 31, 36},
-		--Статический выброс
-	--	[384014] = {13, 28, 28, 28, 28.6, 60},
 	},
 }
 

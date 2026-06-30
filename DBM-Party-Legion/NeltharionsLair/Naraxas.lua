@@ -23,21 +23,21 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnFixate					= mod:NewTargetNoFilterAnnounce(209906, 2, nil, false) --Самопожертвование фанатика Could be spammy, optional
-local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1) --Шипастый язык
+local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1, nil, nil, 142649) --Шипастый язык (Пожирание)
 local warnFrenzy					= mod:NewTargetNoFilterAnnounce(199775, 4) --Бешенство
 
 local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, DBM_COMMON_L.ADDS, 2, 2) --Призыв прислужников
 local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) --Самопожертвование фанатика
-local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 4) --Шипастый язык
+local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, 142649, nil, 4, 4) --Шипастый язык (Пожирание)
 local specWarnRancidMaw				= mod:NewSpecialWarningGTFO(188494, nil, nil, nil, 1, 8) --Зловонная пасть
 
-local timerSpikedTongueCD			= mod:NewCDTimer(60, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык
-local timerSpikedTongue				= mod:NewCastTimer(16, 199176, nil, "Tank|Healer", nil, 7, nil, nil, nil, 1, 5) --Шипастый язык
+local timerSpikedTongueCD			= mod:NewCDTimer(60, 199176, 142649, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шипастый язык (Пожирание)
+local timerSpikedTongue				= mod:NewCastTimer(16, 199176, 142649, "Tank|Healer", nil, 7, nil, nil, nil, 1, 5) --Шипастый язык (Пожирание)
 local timerAddsCD					= mod:NewCDTimer(120, 199817, DBM_COMMON_L.ADDS, nil, nil, 1, 226361, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Призыв прислужников
 local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
 local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
-local yellSpikedTongue				= mod:NewShortYell(199176, nil, nil, nil, "YELL") --Шипастый язык
+local yellSpikedTongue				= mod:NewShortYell(199176, 142649, nil, nil, "YELL") --Шипастый язык
 
 mod.vb.retchCount = 0
 mod.vb.addsCount = 0

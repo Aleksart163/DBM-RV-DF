@@ -40,11 +40,11 @@ local specWarnPurgingFlames2					= mod:NewSpecialWarningDodge(368990, nil, nil, 
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Обжигающий хлопок
 
-local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя Maybe swap for activate keepers instead
+local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, 405812, nil, nil, 6, nil, nil, nil, 1, 5) --Очищающее пламя (Оживление големов)
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
 local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий хлопок
 
-local yellSearingClap							= mod:NewShortYell(369061, nil, nil, nil, "YELL") --Обжигающий хлопок
+local yellSearingClap							= mod:NewShortYell(369061, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обжигающий хлопок
 local yellUnstableEmbers						= mod:NewShortYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
 local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
 
@@ -105,11 +105,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 369049 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		warnSeekingFlame:Show()
-	elseif spellId == 369033 then --Активация хранителей Activate Keepers, more accurate for starting timers after purging flames since it subtracks travel time
+	elseif spellId == 369033 then --Активация хранителей (конец каста, когда все они пали)
 		--As of Aug 10th hotfix, these are now same as pull, + travel time (so 0-2 sec variation)
 		--These also now replace pull timers since no point in not combining code together
 	--	timerSearingClapCD:Start(4.4, self.vb.tankCount+1)--Non resetting, for healer/tank CDs
-		timerUnstableEmbersCD:Start(11.9, 1)
+		timerUnstableEmbersCD:Start(11.5, 1)
 		timerPurgingFlamesCD:Start(39, self.vb.purgingCount+1)--40-42, due to travel time back to center of room
 	end
 end

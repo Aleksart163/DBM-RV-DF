@@ -28,7 +28,7 @@ local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Ta
 
 local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, nil, 2, 2)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
-local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, nil, nil, 4, 4) --Луч жестокой боли
+local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, 286503, nil, 4, 4) --Луч жестокой боли
 local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)
 local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Истребляющие крылья (Отталкивание)
 local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404743, nil, nil, nil, 1, 2) --Ужасные когти
@@ -45,7 +45,7 @@ local timerTerrorClawsCD							= mod:NewCDTimer(15.6, 404743, nil, "Tank|Healer"
 local yellTerrorClaws								= mod:NewShortYell(404743, nil, nil, nil, "YELL") --Ужасные когти
 local yellDreadRift									= mod:NewShortPosYell(407196, nil, nil, nil, "YELL") --Ужасные разломы
 local yellDreadRiftFades							= mod:NewIconFadesYell(407196, nil, nil, nil, "YELL") --Ужасные разломы
-local yellRayofAnguish								= mod:NewShortYell(402253, nil, nil, nil, "YELL") --Луч жестокой боли
+local yellRayofAnguish								= mod:NewShortYell(402253, 286503, nil, nil, "YELL") --Луч жестокой боли
 
 mod:AddSetIconOption("SetIconOnDreadRifts", 407196, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})--Default to off, players need to get used to this not existing
 mod:GroupSpells(407196, 406525)--Group Dread Rifts with Dread Rift

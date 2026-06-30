@@ -34,7 +34,7 @@ local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2) --Призыв ги
 
 local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2) --Оплетающая ловушка
 local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2) --Бешеный аппетит Buff on mob
-local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, 96306, nil, 4, 2) --Бешеный аппетит Debuff on player
+local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, 96306, nil, 4, 2) --Бешеный аппетит (Преследование) Debuff on player
 local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInterrupt", nil, nil, 1, 2) --Приказ хозяина
 local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 3, 2) --Выстрел в живот
 
@@ -43,9 +43,9 @@ local timerEnsnaringTrapCD						= mod:NewCDTimer(17, 384148, nil, nil, nil, 3) -
 local timerMeatTossCD							= mod:NewCDTimer(21.8, 384416, nil, nil, nil, 3) --Бросок мяса
 local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв гиен
 --local timerMastersCallCD						= mod:NewCDTimer(35, 384638, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Doesn't seem to have an actual CD?
-local timerGutShotCD							= mod:NewCDTimer(18.2, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Выстрел в живот
+local timerGutShotCD							= mod:NewCDTimer(16.7, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Выстрел в живот
 
-local yellEnsnaringTrap							= mod:NewYell(384148, nil, false, nil, "YELL") --Оплетающая ловушка
+local yellEnsnaringTrap							= mod:NewShortYell(384148, nil, nil, nil, "YELL") --Оплетающая ловушка
 
 mod:AddRangeFrameOption(4, 384558)
 mod:AddNamePlateOption("NPAuraOnFixate", 384725)

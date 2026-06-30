@@ -32,13 +32,13 @@ local warnVilebombardment			= mod:NewSpellAnnounce(256005, 2, nil, false) --Гн
 local warnPowderShot				= mod:NewSpellAnnounce(256106, 2) --Выстрел азеритовым порохом
 
 local specWarnCharge				= mod:NewSpecialWarningDodge(255952, nil, nil, nil, 2, 2) --Р-р-рывок!
-local specWarnDiveBomb				= mod:NewSpecialWarningDodge(272046, nil, nil, nil, 2, 2) --Бреющий полет
+local specWarnDiveBomb				= mod:NewSpecialWarningDodge(272046, 260292, nil, nil, 2, 2) --Бреющий полет (Рывок)
 --local specWarnPowderShot			= mod:NewSpecialWarningSpell(256106, nil, nil, nil, 2, 2)--Dodge?
 local specWarnBrew					= mod:NewSpecialWarningInterrupt(256060, "HasInterrupt", nil, nil, 1, 2) --Бодрящее пойло
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(256016, nil, nil, nil, 1, 8) --Гнусная субстанция
 
 local timerChargeCD					= mod:NewCDTimer(8.4, 255952, nil, nil, nil, 3) --Р-р-рывок! 8.4-11
-local timerDiveBombCD				= mod:NewCDTimer(13.1, 272046, nil, nil, nil, 3) --Бреющий полет
+local timerDiveBombCD				= mod:NewCDTimer(13.1, 272046, 260292, nil, nil, 3) --Бреющий полет (Рывок)
 local timerPowderShotCD				= mod:NewCDTimer(9.5, 256106, nil, nil, nil, 3) --Выстрел азеритовым порохом
 local timerVilebombardmentCD		= mod:NewCDTimer(5.9, 256005, nil, nil, nil, 3) --Гнусная бомбардировка
 local timerBrewCD					= mod:NewCDTimer(20.6, 256060, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Бодрящее пойло

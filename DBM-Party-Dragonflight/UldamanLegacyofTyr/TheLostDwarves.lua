@@ -28,7 +28,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 369602
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
---Baelog
+--Бейлог
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24740))
 local warnHeavyArrow							= mod:NewTargetNoFilterAnnounce(369573, 3)
 local warnWildCleave							= mod:NewSpellAnnounce(369563, 3, nil, "Tank")
@@ -38,27 +38,27 @@ local specWarnHeavyArrow						= mod:NewSpecialWarningDodge(369573, nil, nil, nil
 local timerHeavyArrowCD							= mod:NewCDTimer(20.6, 369573, nil, nil, nil, 3)
 local timerWildCleaveCD							= mod:NewCDTimer(17, 369563, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Council fights can be messy, on for everyone for now
 
---Eric "The Swift"
+--Эрик "Быстрый"
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24781))
-local specWarnSkullcracker						= mod:NewSpecialWarningDodge(369791, nil, nil, nil, 2, 2)
+local specWarnSkullcracker						= mod:NewSpecialWarningDodge(369791, nil, 260292, nil, 2, 2) --Крушитель черепов (Рывок)
 
-local timerSkullcrackerCD						= mod:NewCDTimer(25.5, 369791, nil, nil, nil, 3)
---Olaf
+local timerSkullcrackerCD						= mod:NewCDTimer(25.5, 369791, 260292, nil, nil, 3) --Крушитель черепов (Рывок)
+--Олаф
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24782))
 local warnRicochetingShield						= mod:NewTargetNoFilterAnnounce(369677, 3)
 
-local specWarnRicochetingShield					= mod:NewSpecialWarningYou(369677, nil, nil, nil, 1, 2)
-local specWarnDefensiveBulwark					= mod:NewSpecialWarningInterrupt(369602, "HasInterrupt", nil, nil, 1, 2)
+local specWarnRicochetingShield					= mod:NewSpecialWarningMoveAway(369677, nil, nil, nil, 1, 2) --Рикошетящий щит
+local specWarnDefensiveBulwark					= mod:NewSpecialWarningInterrupt(369602, "HasInterrupt", nil, nil, 1, 2) --Защитная преграда
 
-local timerRicochetingShieldCD					= mod:NewCDTimer(16.9, 369677, nil, nil, nil, 3)
-local timerDefensiveBulwarkCD					= mod:NewCDTimer(32.4, 369602, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
---Longboat Raid!
+local timerRicochetingShieldCD					= mod:NewCDTimer(16.9, 369677, nil, nil, nil, 3) --Рикошетящий щит
+local timerDefensiveBulwarkCD					= mod:NewCDTimer(32.4, 369602, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Защитная преграда
+--Рейд на драккаре!
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24783))
 local timerLongboatRaidCD						= mod:NewCDTimer(27.4, 375924, nil, nil, nil, 6)
 
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377825, nil, nil, nil, 1, 8)
 
-local yellRicochetingShield						= mod:NewYell(369677, nil, nil, nil, "YELL")
+local yellRicochetingShield						= mod:NewYell(369677, nil, nil, nil, "YELL") --Рикошетящий щит
 
 mod:AddRangeFrameOption(5, 369677)
 
@@ -66,7 +66,7 @@ function mod:ShieldTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnRicochetingShield:Show()
-		specWarnRicochetingShield:Play("targetyou")
+		specWarnRicochetingShield:Play("runout")
 		yellRicochetingShield:Yell()
 	else
 		warnRicochetingShield:Show(targetname)

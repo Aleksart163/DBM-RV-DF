@@ -36,6 +36,7 @@ mod:RegisterEvents(
 local warnChronoFaded								= mod:NewTargetNoFilterAnnounce(405696, 3) --Временное затухание
 
 local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Обращение вспять (Фронталка)
+local specWarnUnwind2								= mod:NewSpecialWarningDodge(414303, "-Tank", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Обращение вспять (Фронталка)
 local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2) --Временное затухание
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2) --Фрагменты времени
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
@@ -45,7 +46,7 @@ local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, 
 local timerUnwindCD									= mod:NewCDTimer(30, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil) --Обращение вспять (Фронталка)
 local timerRP										= mod:NewRPTimer(22)
 
-local yellUnwind									= mod:NewShortYell(414303, nil, nil, nil, "YELL") --Обращение вспять (Фронталка)
+local yellUnwind									= mod:NewShortYell(414303, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обращение вспять (Фронталка)
 local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL") --Временное затухание
 local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL") --Временное затухание
 
@@ -83,6 +84,9 @@ function mod:SPELL_CAST_START(args)
 			specWarnUnwind:Show()
 			specWarnUnwind:Play("defensive")
 			yellUnwind:Yell()
+		else
+			specWarnUnwind2:Show()
+			specWarnUnwind2:Play("watchstep")
 		end
 		timerUnwindCD:Start()
 	end

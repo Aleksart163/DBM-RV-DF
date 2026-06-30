@@ -30,17 +30,17 @@ ability.id = 88308 and type = "begincast"
 --]]
 
 local warnCalltheWind		= mod:NewSpellAnnounce(88276, 2) --Призыв ветра
-local warnUpwind			= mod:NewSpellAnnounce(88282, 1) --Наветренная сторона
+local warnUpwind			= mod:NewSpellAnnounce(88282, 1, nil, nil, 270001) --Наветренная сторона (Попутный ветер)
 
 --local specWarnBreath		= mod:NewSpecialWarningYou(88308, "-Tank", nil, 2, 1, 2)
-local specWarnBreath		= mod:NewSpecialWarningDodge(88308, nil, 18357, nil, 2, 2) --Студеное дыхание (Дыхание)
-local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, nil, nil, 2, 4) --Нисходящий порыв
-local specWarnDownwind		= mod:NewSpecialWarningSpell(88286, nil, nil, nil, 1, 14) --Подветренная сторона Альтаирия
+local specWarnBreath		= mod:NewSpecialWarningDodge(88308, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Студеное дыхание (Дыхание)
+local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, 251940, nil, 2, 4) --Нисходящий порыв (Кольцо мороза)
+local specWarnDownwind		= mod:NewSpecialWarningSpell(88286, nil, 84645, nil, 1, 14) --Подветренная сторона Альтаирия (Холодный ветер)
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(413275, nil, nil, nil, 1, 8) --Холодный фронт
 
 local timerCalltheWindCD	= mod:NewCDTimer(20.6, 88276, nil, nil, nil, 6) --Призыв ветра
-local timerBreathCD			= mod:NewCDTimer(13.4, 88308, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание) May be 10.5 pre nerf for cata classic
-local timerDownburstCD		= mod:NewCDTimer(35.1, 413295, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий порыв 35.1-44
+local timerBreathCD			= mod:NewCDTimer(13.4, 88308, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Студеное дыхание (Дыхание)
+local timerDownburstCD		= mod:NewCDTimer(35.1, 413295, 251940, nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий порыв (Кольцо мороза)
 
 mod.vb.activeWind = "none"
 mod.vb.windCount = 0
@@ -84,7 +84,7 @@ function mod:OnCombatStart(delay)
 	self.vb.burstCount = 0
 	self.vb.breathCount = 0
 	if self:IsMythic() then
-		timerCalltheWindCD:Start(4.9-delay) --
+		timerCalltheWindCD:Start(5.9-delay) --новый таймер?
 		timerBreathCD:Start(12.5-delay) --
 		timerDownburstCD:Start(20.4-delay) --
 	else
@@ -131,7 +131,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if not self:IsMythic() then
 			self.vb.windCount = self.vb.windCount + 1
 			warnCalltheWind:Show(self.vb.windCount)
-			timerCalltheWindCD:Start(self:IsMythic() and 15.4 or 20.6, self.vb.windCount+1)
+			timerCalltheWindCD:Start(20.6, self.vb.windCount+1)
 		end
 	end
 end
@@ -152,7 +152,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
-	if spellId == 88276 and self:AntiSpam(2, "CalltheWind") then
+	if spellId == 88276 and self:AntiSpam(2, "CalltheWind") then --Призыв ветра
 		if self:IsMythic() then
 			self.vb.windCount = self.vb.windCount + 1
 			warnCalltheWind:Schedule(1)

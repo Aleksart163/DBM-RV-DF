@@ -21,7 +21,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 404955",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --[[
@@ -31,15 +32,15 @@ mod:RegisterEventsInCombat(
 --TODO, icon method for golems will likely be changed to broodkeeper method since that's what BW is likely to use, but for testing purposes a basic incremental apply per set is probably fine
 --TODO, GTFO for standing in fire traps
 local warnSoakedShrapnal						= mod:NewAddsLeftAnnounce(406725, 2) --Шрапнельная бомба
-local warnScatterTraps							= mod:NewCountAnnounce(406725, 2) --Шрапнельная бомба
+local warnScatterTraps							= mod:NewCountAnnounce(406725, 2, nil, nil, 167180) --Шрапнельная бомба (Бомбы)
 local warnSalvageParts							= mod:NewTargetNoFilterAnnounce(405592, 1) --Сбор запчастей
 local warnSearingClaws							= mod:NewStackAnnounce(404942, 2, nil, "Tank|Healer") --Обжигающие когти
 
 local specWarnTacticalDestruction				= mod:NewSpecialWarningDodgeCount(406678, nil, 309852, nil, 4, 2) --Тактическое разрушение (Разрушение)
-local specWarnDragonDeezTraps					= mod:NewSpecialWarningDodgeCount(405736, nil, nil, nil, 1, 2) --Ловушки драконьего огня
-local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil, nil, nil, 1, 2) --Оживление големов
-local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, nil, 1, 2) --Активация ловушки драконьего огня
-local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Взрывная волна (149213 Отпор)
+local specWarnDragonDeezTraps					= mod:NewSpecialWarningDodgeCount(405736, nil, nil, DBM_COMMON_L.TRAPS, 1, 2) --Ловушки драконьего огня
+local specWarnAnimateGolems						= mod:NewSpecialWarningSwitchCount(405812, nil, nil, DBM_COMMON_L.ADDS, 1, 2) --Оживление големов
+local specWarnActivateTrap						= mod:NewSpecialWarningInterruptCount(405919, "HasInterrupt", nil, DBM_COMMON_L.TRAPS, 1, 2) --Активация ловушки драконьего огня
+local specWarnBlastWave							= mod:NewSpecialWarningCount(403978, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Взрывная волна (Бывший Отпор)
 local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(404010, nil, nil, nil, 1, 2) --Нестабильные угли
 local specWarnSearingClaws						= mod:NewSpecialWarningStack(404942, nil, 9, nil, nil, 1, 4) --Обжигающие когти
 local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, nil, nil, 1, 4) --Обжигающие когти
@@ -47,22 +48,20 @@ local specWarnSearingClawsTaunt					= mod:NewSpecialWarningTaunt(404942, nil, ni
 
 local timerTacticalDestructionCD				= mod:NewCDCountTimer(61.5, 406678, 309852, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Тактическое разрушение (Разрушение)
 local timerShrapnalBombCD						= mod:NewCDCountTimer(42.5, 406725, 167180, nil, nil, 3) --Шрапнельная бомба (Бомбы)
-local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2) --Шрапнельная бомба (Взрыв)
-local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, nil, nil, nil, 1) --Оживление големов
+local timerShrapnalBomb							= mod:NewCastTimer(30, 406725, 185824, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Шрапнельная бомба (Взрыв)
+local timerAnimateGolemsCD						= mod:NewCDCountTimer(60.2, 405812, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --Оживление големов
 local timerBlastWaveCD							= mod:NewCDCountTimer(34, 403978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Взрывная волна (Отталкивание)
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(20.7, 404010, 264364, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Нестабильные угли (Угли)
 local timerEliminationProtocol					= mod:NewCastTimer(10, 409942, 207544, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Протокол устранения (Лучи)
 local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, DBM_COMMON_L.TRAPS.." (%s)", nil, nil, 3) --Ловушки драконьего огня
 local berserkTimer								= mod:NewBerserkTimer(600)
 
-local yellUnstableEmbers						= mod:NewShortYell(404010, nil, nil, nil, "YELL")
+local yellUnstableEmbers						= mod:NewShortYell(404010, 264364, nil, nil, "YELL") --Нестабильные угли (Угли)
 
 mod:AddInfoFrameOption(404942, "Tank|Healer")
 mod:AddSetIconOption("SetIconOnGolems", 405812, true, 5, {8, 7, 6, 5})
 mod:AddSetIconOption("SetIconOnEmbers", 404010, false, 0, {1, 2, 3, 4})
 
-local murchalProshlyapStacks = {}
-local castsPerGUID = {}
 mod.vb.destructionCount = 0
 mod.vb.shrapnalSoakCount = 0
 mod.vb.trapCastCount = 0
@@ -72,6 +71,29 @@ mod.vb.embersCount = 0
 mod.vb.dragonCount = 0
 mod.vb.expectedBombs = 3
 mod.vb.addIcon = 8
+mod.vb.proshlyapBombCount = 0
+
+local murchalProshlyapStacks = {}
+local castsPerGUID = {}
+local proshlyaptionMythicTimers = {34, 31, 34, 31, 31, 31, 31, 31, 31, 31} --На проверке
+local proshlyaptionHeroicTimers = {34, 31, 34, 31, 31, 31, 31, 31, 31, 31}
+local proshlyaptionNormalTimers = {46, 31, 34, 31, 31, 31, 31, 31, 31, 31}
+
+local function checkBombProshlyap(self)
+	self.vb.proshlyapBombCount = self.vb.proshlyapBombCount + 1
+	local timer
+	if self:IsMythic() then
+		timer = 45.3
+	elseif self:IsHeroic() then
+		timer = proshlyaptionHeroicTimers[self.vb.proshlyapBombCount+1]
+	elseif self:IsNormal() then
+		timer = proshlyaptionNormalTimers[self.vb.proshlyapBombCount+1]
+	end
+	warnScatterTraps:Show(self.vb.proshlyapBombCount)
+	timerShrapnalBombCD:Start(timer, self.vb.proshlyapBombCount+1)
+	self:Schedule(timer, checkBombProshlyap, self)
+	DBM:Debug("Murchal Proshlyap (Проверка бомб)", 2)
+end
 
 function mod:OnCombatStart(delay)
 	table.wipe(murchalProshlyapStacks)
@@ -83,6 +105,7 @@ function mod:OnCombatStart(delay)
 	self.vb.blastWaveCount = 0
 	self.vb.embersCount = 0
 	self.vb.dragonCount = 0
+	self.vb.proshlyapBombCount = 0
 	timerBlastWaveCD:Start(10.7-delay, 1)--Same in All
 	if self:IsMythic() then--Recheck
 		self.vb.expectedBombs = 3
@@ -90,19 +113,22 @@ function mod:OnCombatStart(delay)
 		timerDragonDeezTrapsCD:Start(19.2-delay, 1)
 		timerAnimateGolemsCD:Start(26.2-delay, 1)
 		timerTacticalDestructionCD:Start(31-delay, 1)
-		timerShrapnalBombCD:Start(34-delay, 1)
+		timerShrapnalBombCD:Start(34-delay, 1) --Бомбы
+		self:Schedule(34-delay, checkBombProshlyap, self) --Проверка бомб
 	elseif self:IsHeroic() then--Validated
 		self.vb.expectedBombs = 3
 		timerUnstableEmbersCD:Start(7-delay, 1)
 		timerDragonDeezTrapsCD:Start(19.3-delay, 1)
-		timerShrapnalBombCD:Start(33.9-delay, 1)
+		timerShrapnalBombCD:Start(34-delay, 1) --Бомбы
+		self:Schedule(34-delay, checkBombProshlyap, self) --Проверка бомб
 		timerAnimateGolemsCD:Start(54.6-delay, 1)
 		timerTacticalDestructionCD:Start(60.7-delay, 1)
 	elseif self:IsNormal() then--Validated
 		self.vb.expectedBombs = 2
 		timerDragonDeezTrapsCD:Start(15.7-delay, 1)
 		timerAnimateGolemsCD:Start(35-delay, 1)
-		timerShrapnalBombCD:Start(45.1-delay, 1)
+		timerShrapnalBombCD:Start(46-delay, 1) --Бомбы
+		self:Schedule(46-delay, checkBombProshlyap, self) --Проверка бомб
 		timerTacticalDestructionCD:Start(70-delay, 1)
 	else--Validated
 		self.vb.expectedBombs = 2
@@ -119,6 +145,7 @@ end
 
 function mod:OnCombatEnd()
 	table.wipe(murchalProshlyapStacks)
+	self:Unschedule(checkBombProshlyap)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -171,7 +198,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsMythic() then
 			timerEliminationProtocol:Start()
 		end
-	elseif spellId == 406725 then --Шрапнельная бомба
+	elseif spellId == 406725 then --Шрапнельная бомба (Сломано на сервере)
 		self.vb.shrapnalSoakCount = 0
 		self.vb.trapCastCount = self.vb.trapCastCount + 1
 		warnScatterTraps:Show(self.vb.trapCastCount)
@@ -194,7 +221,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 405592 then
-		warnSalvageParts:CombinedShow(0.7, args.destName) --Сбор запчастей
+		warnSalvageParts:CombinedShow(1, args.destName) --Сбор запчастей
 	elseif spellId == 404010 then
 		if args:IsPlayer() then
 			specWarnUnstableEmbers:Show()
@@ -268,3 +295,9 @@ function mod:UNIT_DIED(args)
 		castsPerGUID[args.destGUID] = nil
 	end
 end
+
+--[[function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+	if spellId == 402746 then --Парящие угли
+		DBM:Debug("Check Murchal proshlyap 2", 2)
+	end
+end]]

@@ -31,16 +31,16 @@ mod:RegisterEventsInCombat(
 local warnDecayigStrength						= mod:NewCastAnnounce(373960, 4) --Угасающие силы
 
 local specWarnDecayigStrength					= mod:NewSpecialWarningMoveAway(373960, nil, nil, 2, 1, 2) --Угасающие силы
-local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", nil, 2, 1, 2) --Тотем взрывной гнили
+local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", 374057, 2, 1, 2) --Тотем взрывной гнили (Призыв тотема)
 local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, DBM_COMMON_L.FRONTAL, 2, 4) --Удушающее облако гнили
 local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 3, 2) --Удар разложения
 
 local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Угасающие силы
-local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 3) --Тотем взрывной гнили 18-21
+local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, 374057, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 3) --Тотем взрывной гнили (Призыв тотема) 18-21
 local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Удушающее облако гнили (Фронталка)
-local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар разложения
+local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар разложения
 
-local yellChokingRotcloud						= mod:NewShortYell(376170, nil, nil, nil, "YELL") --Удушающее облако гнили (Фронталка)
+local yellChokingRotcloud						= mod:NewShortYell(376170, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Удушающее облако гнили (Фронталка)
 
 mod:AddRangeFrameOption(5, 373941)
 mod:AddInfoFrameOption(373896, true)

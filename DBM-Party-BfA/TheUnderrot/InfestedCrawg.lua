@@ -31,11 +31,14 @@ ability.id = 260333 and type = "cast"
 local specWarnIndigestion			= mod:NewSpecialWarningDefensive(260793, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Несварение (Фронталка)
 local specWarnIndigestion2			= mod:NewSpecialWarningDodge(260793, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Несварение (Фронталка)
 local specWarnCharge				= mod:NewSpecialWarningDodge(260292, nil, nil, nil, 3, 2) --Рывок
-local specWarnTantrum				= mod:NewSpecialWarningCount(260333, nil, nil, nil, 2, 2) --Припадок
+local specWarnTantrum				= mod:NewSpecialWarningCount(260333, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Припадок (Аое)
+local specWarnTantrum2				= mod:NewSpecialWarningSwitch(260333, "-Healer", nil, DBM_COMMON_L.ADDS, 2, 2) --Припадок (Адды)
 
 local timerIndigestionCD			= mod:NewCDTimer(30, 260793, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Несварение (Фронталка)
 local timerChargeCD					= mod:NewCDTimer(30, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
-local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, nil, nil, nil, 7) --Припадок
+local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 7) --Припадок
+
+local yellIndigestion				= mod:NewShortYell(260793, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Несварение (Фронталка)
 
 mod:AddNamePlateOption("NPAuraMetamorphosis", 260416)
 
@@ -76,7 +79,7 @@ local allProshlyapationsOfMurchal = {
 		[260793] = {17.9},
 	},
 	--Припадок
-	[260333] = {45.5, 46.1, 57.7, 46.9, 48},
+	[260333] = {45.5, 45.5, 45.5, 46.9, 48},
 }
 
 function mod:OnCombatStart(delay)
@@ -124,6 +127,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnIndigestion:Show()
 			specWarnIndigestion:Play("breathsoon")
+			yellIndigestion:Yell()
 		else
 			specWarnIndigestion2:Show()
 			specWarnIndigestion2:Play("watchstep")
@@ -152,6 +156,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.tantrumCount = self.vb.tantrumCount + 1
 		specWarnTantrum:Show(self.vb.tantrumCount)
 		specWarnTantrum:Play("aesoon")
+		specWarnTantrum2:Schedule(3)
+		specWarnTantrum2:ScheduleVoice(3, "changetarget")
 		if self.vb.murchalOchkenProshlyapCount == 2 then
 			timerChargeCD:Start(29.9)
 			timerIndigestionCD:Start(17.9)

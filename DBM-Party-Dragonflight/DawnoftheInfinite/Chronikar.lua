@@ -38,9 +38,10 @@ local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, n
 
 local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок) "Leap" shorttext
 local timerEonResidue						= mod:NewCastCountTimer("d7.5", 403486, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Осадок эонов (Поглощение)
-local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Темпоральное иссечение
+local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Темпоральное иссечение
 local timerSandStompCD						= mod:NewCDCountTimer(19.4, 401421, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Песчаный топот (Лужи)
 
+local yellChronoShear						= mod:NewYell(413013, nil, nil, nil, "YELL") --Темпоральное иссечение
 local yellEonShatter						= mod:NewYell(413142, 47482, nil, nil, "YELL") --Раскол эонов (Прыжок)
 local yellEonShatterFades					= mod:NewShortFadesYell(413142, nil, nil, nil, "YELL") --Раскол эонов (Прыжок)
 
@@ -86,6 +87,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnChronoShear:Show()
 			specWarnChronoShear:Play("defensive")
+			yellChronoShear:Yell()
 		end
 		timerChronoShearCD:Start(47, self.vb.shearCount+1)
 		DBM:Debug("Murchal proshlyap (каст танковского удара)", 2)

@@ -83,12 +83,13 @@ CL.POOLS							= "Pools"
 CL.DEBUFFS							= "Debuffs"
 CL.DISPELS							= "Dispels"
 CL.PUSHBACK							= "Pushback"
+CL.ATTRACTION						= "Attraction"
 CL.FRONTAL							= "Frontal"
 CL.LASER							= "Laser"
 CL.LASERS							= "Lasers"
 CL.RIFT								= "Rift"--Often has auto localized alternatives, but still translated for BW aura matching when needed
 CL.RIFTS							= "Rifts"--Often has auto localized alternatives, but still translated for BW aura matching when needed
-CL.TRAPS							= "Traps"--Doesn't have a direct auto localize so has to be manually localized, unlike non plural version
+CL.TRAPS							= "Activating traps"--Doesn't have a direct auto localize so has to be manually localized, unlike non plural version
 CL.ROOTS							= "Roots"
 CL.MARK								= "Mark"--As in short text for all the encounter mechanics that start or end in "Mark"
 CL.MARKS							= "Marks"--Plural of above
@@ -97,6 +98,7 @@ CL.CURSES							= "Curses"
 CL.SWIRLS							= "Swirls"--Plural of Swirl
 CL.BOMBING							= "Bombing"
 CL.DAMAGEUP							= "Increased damage"
+CL.USEITEM							= "Use the item!"
 
 --NOTE, many common locals are auto localized:
 --Bomb (37859), Bombs (167180), Scream (31295), Breath (17088), Beam (173303), Beams (207544), Charge (100), Knockback (28405), Portal (161722), Portals (109400)

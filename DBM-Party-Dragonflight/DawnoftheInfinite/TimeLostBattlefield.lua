@@ -70,16 +70,16 @@ local warnCry										= mod:NewCountAnnounce(crySpellId, 2) --Боевой кр
 local warnShockwave									= mod:NewCountAnnounce(shockwaveSpellId, 3) --Ударная волна
 
 local specWarnBladestorm2							= mod:NewSpecialWarningRun(410235, nil, nil, nil, 4, 4) --Вихрь клинков
-local specWarnBladestorm							= mod:NewSpecialWarningDodgeCount(410235, "Melee", nil, nil, 2, 2) --Вихрь клинков
+local specWarnBladestorm							= mod:NewSpecialWarningDodge(410235, "Melee", nil, nil, 2, 2) --Вихрь клинков
 local specWarnTankBuster							= mod:NewSpecialWarningDefensive(tankSpellId, nil, nil, nil, 3, 2) --Смертельные удары, Обезглавливание
-local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, nil, nil, nil, 2, 2) --Ударная волна
+local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Ударная волна
 
 local timerRP										= mod:NewRPTimer(8)
 local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3) --Вихрь клинков
 local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные удары, Обезглавливание
-local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Ударная волна 2 варианта
-local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_L.ADDS, nil, nil, 1) --ЗА АЛЬЯНС!, ЗА ОРДУ!
-local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Боевой крик 2 варианта
+local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Ударная волна 2 варианта
+local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --ЗА АЛЬЯНС!, ЗА ОРДУ!
+local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Боевой крик 2 варианта
 
 local yellBladestorm								= mod:NewShortYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 
@@ -185,7 +185,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 410234 then --Вихрь клинков Same spell in both
 		self.vb.bladestormCount = self.vb.bladestormCount + 1
 		if self.Options.SpecWarn410234dodgecount then
-			specWarnBladestorm:Show(self.vb.bladestormCount)
+			specWarnBladestorm:Show()
 			specWarnBladestorm:Play("whirlwind")
 		else
 			warnBladestorm:Show(self.vb.bladestormCount)
