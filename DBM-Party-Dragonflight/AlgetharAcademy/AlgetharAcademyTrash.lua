@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 387910 377383 378003 388976 388863 377912 387843 388392 377389 396812 389054",
 	"SPELL_CAST_SUCCESS 390915 388984",
-	"SPELL_AURA_APPLIED 388984 387843",
+	"SPELL_AURA_APPLIED 388984 387843 389516 389501 389536 389521 389512",
 	"SPELL_AURA_REMOVED 387843",
 	"UNIT_DIED",
 	"GOSSIP_SHOW"
@@ -30,11 +30,16 @@ local warnAstralWhirlwind						= mod:NewCastAnnounce(387910, 3)
 local warnAstralBomb							= mod:NewCastAnnounce(387843, 3)
 local warnAstralBombTargets						= mod:NewTargetAnnounce(387843, 3)
 
+local specWarnBronzeDragonflight				= mod:NewSpecialWarning("BronzeDragonflight", nil, nil, nil, 1, 2) --Брошь союзника бронзовых драконов 389512 (Скорость усилена)
+local specWarnBlueDragonflight					= mod:NewSpecialWarning("BlueDragonflight", nil, nil, nil, 1, 2) --Брошь союзника синих драконов 389521 (Искусность усилена)
+local specWarnGreenDragonflight					= mod:NewSpecialWarning("GreenDragonflight", nil, nil, nil, 1, 2) --Брошь союзника зеленых драконов 389536 (Получаемый хил усилен на 10%)
+local specWarnRedDragonflight					= mod:NewSpecialWarning("RedDragonflight", nil, nil, nil, 1, 2) --Брошь союзника красных драконов 389501 (Верса усилена на 5%)
+local specWarnBlackDragonflight					= mod:NewSpecialWarning("BlackDragonflight", nil, nil, nil, 1, 2) --Брошь союзника черных драконов 389516 (Крит усилен на 5%)
 local specWarnExpelIntruders					= mod:NewSpecialWarningRun(377912, nil, nil, nil, 4, 2)
-local specWarnDetonateSeeds						= mod:NewSpecialWarningDodge(390915, nil, nil, nil, 2, 2)
-local specWarnDeadlyWinds						= mod:NewSpecialWarningDodge(378003, nil, nil, nil, 2, 2)
-local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, nil, 2, 2)
-local specWarnGust								= mod:NewSpecialWarningDodge(377383, nil, nil, nil, 2, 2)
+local specWarnDetonateSeeds						= mod:NewSpecialWarningDodge(390915, nil, nil, nil, 2, 2) --Детонирующие семена
+local specWarnDeadlyWinds						= mod:NewSpecialWarningDodge(378003, nil, nil, nil, 2, 2) --Смертоносный ветер
+local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, nil, 2, 2) --Дыхание разлома
+local specWarnGust								= mod:NewSpecialWarningDodge(377383, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Порыв
 local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, nil, 1, 2)--You warning not move away, because some strategies involve actually baiting charge into melee instead of out
 local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, nil, nil, 2, 2)
 local specWarnMonotonousLecture					= mod:NewSpecialWarningInterrupt(388392, "HasInterrupt", nil, nil, 1, 2)
@@ -44,7 +49,7 @@ local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasIn
 local timerMonotonousLectureCD					= mod:NewCDNPTimer(15.8, 388392, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerMysticBlastCD						= mod:NewCDNPTimer(17, 396812, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний взрыв
 local timerCalloftheFlockCD						= mod:NewCDNPTimer(20, 377389, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Призыв стаи
-local timerDeadlyWindsCD						= mod:NewCDNPTimer(10.9, 378003, nil, nil, nil, 3)
+local timerDeadlyWindsCD						= mod:NewCDNPTimer(10.9, 378003, nil, nil, nil, 3) --Смертоносный ветер
 local timerExpelIntruders						= mod:NewCastTimer(5.5, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3)
@@ -52,7 +57,7 @@ local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", 
 local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, nil, nil, nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
 local timerVicousLungeCD						= mod:NewCDNPTimer(11.4, 389054, nil, nil, nil, 3)
 
-local yellGust									= mod:NewYell(377383, nil, nil, nil, "YELL")
+local yellGust									= mod:NewYell(377383, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Порыв
 local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL")
 local yellAstralBomb							= mod:NewYell(387843, nil, nil, nil, "YELL")
 local yellAstralBombFades						= mod:NewShortFadesYell(387843, nil, nil, nil, "YELL")
@@ -167,6 +172,31 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnAstralBomb:Play("targetyou")
 			yellAstralBomb:Yell()
 			yellAstralBombFades:Countdown(spellId, 2)
+		end
+	elseif spellId == 389516 then --крит
+		if args:IsPlayer() then
+			specWarnBlackDragonflight:Show()
+			specWarnBlackDragonflight:Play("targetyou")
+		end
+	elseif spellId == 389501 then --верса
+		if args:IsPlayer() then
+			specWarnRedDragonflight:Show()
+			specWarnRedDragonflight:Play("targetyou")
+		end
+	elseif spellId == 389536 then --исцеление
+		if args:IsPlayer() then
+			specWarnGreenDragonflight:Show()
+			specWarnGreenDragonflight:Play("targetyou")
+		end
+	elseif spellId == 389521 then --искусность
+		if args:IsPlayer() then
+			specWarnBlueDragonflight:Show()
+			specWarnBlueDragonflight:Play("targetyou")
+		end
+	elseif spellId == 389512 then --скорость
+		if args:IsPlayer() then
+			specWarnBronzeDragonflight:Show()
+			specWarnBronzeDragonflight:Play("targetyou")
 		end
 	end
 end

@@ -28,25 +28,26 @@ mod:RegisterEventsInCombat(
  or ability.id = 401419 and (type = "applybuff" or type = "removebuff") or ability.id = 405825 or ability.id = 407641
 --]]
 --TODO, https://www.wowhead.com/ptr/spell=407706/molten-wrath seems passive, but still maybe have a 15 second timer with right script
-local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4, nil, nil, 47482) --Обжигающий удар
+local warnSearingSlam								= mod:NewTargetNoFilterAnnounce(405821, 4, nil, nil, 47482) --Обжигающий удар (Прыжок)
 local warnSiphonEnergyApplied						= mod:NewTargetNoFilterAnnounce(401419, 2) --Проводник старейшины
 local warnSiphonEnergyRemoved						= mod:NewFadesAnnounce(401419, 2) --Проводник старейшины
 local warnUnyieldingRage							= mod:NewFadesAnnounce(406165, 1) --Тлеющая ярость
 local warnWrathDjaruun								= mod:NewSpellAnnounce(407641, 4) --Гнев Джарууна
 
-local specWarnShadowflameFissures					= mod:NewSpecialWarningDodge(404431, nil, 205181, nil, 2, 2) --Разломы пламени Тьмы (Пламя тьмы)
+local specWarnShadowflameFissures					= mod:NewSpecialWarningDodge(404431, nil, nil, nil, 2, 2) --Разломы пламени Тьмы
 local specWarnShatteredConduit						= mod:NewSpecialWarningSpell(410690, nil, nil, nil, 2, 4) --Сломанный проводник
 local specWarnAncientFury							= mod:NewSpecialWarningDefensive(405316, nil, 26662, nil, 3, 4) --Древняя ярость
-local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, 47482, nil, 4, 4) --Обжигающий удар
+local specWarnSearingSlam							= mod:NewSpecialWarningRun(405821, nil, 47482, nil, 4, 4) --Обжигающий удар (Прыжок)
+local specWarnSearingSlam2							= mod:NewSpecialWarningMoveTo(405821, nil, 47482, nil, 4, 4) --Обжигающий удар (Прыжок)
 local specWarnDoomFlame								= mod:NewSpecialWarningSoakCount(406851, nil, nil, nil, 2, 2) --Огни рока
 local specWarnShadowlavaBlast						= mod:NewSpecialWarningDodge(406333, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Взрыв темной лавы
-local specWarnChargedSmash							= mod:NewSpecialWarningSoakCount(400777, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Заряженный удар
+local specWarnChargedSmash							= mod:NewSpecialWarningCount(400777, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Заряженный удар (Разделение урона)
 local specWarnFlamingSlash							= mod:NewSpecialWarningDefensive(407547, nil, nil, nil, 3, 2) --Огненный взмах
 local specWarnFlamingSlashTaunt						= mod:NewSpecialWarningTaunt(407547, "Tank", nil, nil, 3, 2) --Огненный взмах
 local specWarnEarthenCrush							= mod:NewSpecialWarningDefensive(407597, nil, nil, nil, 3, 2) --Земляное сокрушение
 local specWarnEarthenCrushTaunt						= mod:NewSpecialWarningTaunt(407597, "Tank", nil, nil, 3, 2) --Земляное сокрушение
 
-local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 98565, nil, 2, 2, 4) --Высвобождение пламени Тьмы(Горящие шары)
+local specWarnUnleashedShadowflame					= mod:NewSpecialWarningCount(410070, nil, 205181, nil, 2, 2, 4) --Высвобождение пламени Тьмы(Пламя Тьмы)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403543, nil, nil, nil, 1, 8)
 
 local timerUnyieldingRage							= mod:NewBuffActiveTimer(95.5, 406165, nil, nil, nil, 7, nil, nil, nil, 3, 5) --Тлеющая ярость
@@ -55,14 +56,14 @@ local timerAncientFury								= mod:NewCastTimer(10, 405316, 26662, nil, nil, 2,
 local timerSearingSlamCD							= mod:NewCDCountTimer(40, 405821, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Обжигающий удар (Прыжок)
 local timerDoomFlameCD								= mod:NewCDCountTimer(28.9, 406851, nil, nil, nil, 5) --Огни рока
 local timerShadowlavaBlastCD						= mod:NewCDTimer(28.9, 406333, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрыв темной лавы
-local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
-local timerChargedSmashCast							= mod:NewCastTimer(5, 400777, DBM_COMMON_L.GROUPSOAK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар
+local timerChargedSmashCD							= mod:NewCDCountTimer(40, 400777, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар (Разделение урона)
+local timerChargedSmashCast							= mod:NewCastTimer(5, 400777, DBM_COMMON_L.GROUPSOAK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженный удар (Разделение урона)
 local timerVolcanicComboCD							= mod:NewCDCountTimer(40, 407641, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Комбо
-local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 98565, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Горящие шары)
+local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 205181, nil, nil, 2, nil, DBM_COMMON_L.MYTHIC_ICON) --Высвобождение пламени Тьмы(Пламя Тьмы)
 --local berserkTimer									= mod:NewBerserkTimer(118)
 
-local yellSearingSlam								= mod:NewShortYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
-local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар
+local yellSearingSlam								= mod:NewShortYell(405821, 47482, nil, nil, "YELL") --Обжигающий удар (Прыжок)
+local yellSearingSlamFades							= mod:NewShortFadesYell(405821, 47482, nil, nil, "YELL") --Обжигающий удар (Прыжок)
 
 mod:AddInfoFrameOption(405827)
 mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {8}) --Обжигающий удар
@@ -82,6 +83,7 @@ mod.vb.proshlyapMurchalCount = 0
 mod.vb.murchalOchkenProshlyapationCount = 1
 
 local overchargedStacks = {}
+local Shadowflame = DBM:GetSpellName(205181)
 local normalFirstMurchalProshlyapTimers = {30.1, 13.8, 32.9}
 local normalSecondMurchalProshlyapTimers = {31.1, 14.9, 33.9}
 local normalThirdMurchalProshlyapTimers = {30.2, 15.9, 33}
@@ -210,7 +212,7 @@ function mod:OnCombatStart(delay)
 		self:Schedule(29.1, startProshlyapationOfMurchal, self)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM:GetSpellName(405827))
-			DBM.InfoFrame:Show(5, "table", overchargedStacks, 1)
+			DBM.InfoFrame:Show(7, "table", overchargedStacks, 1)
 		end
 		self:RegisterShortTermEvents(
 			"SPELL_ENERGIZE 405825"
@@ -346,11 +348,17 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 405819 then--405819 confirmed on all difficulties
+	if spellId == 405819 then --Обжигающий удар (Прыжок)
 		if args:IsPlayer() then
-			specWarnSearingSlam:Show()
-			specWarnSearingSlam:Play("targetyou")
-			specWarnSearingSlam:ScheduleVoice(1.5, "defensive")
+			if self:IsMythic() then
+				specWarnSearingSlam2:Show(Shadowflame)
+				specWarnSearingSlam2:Play("targetyou")
+				specWarnSearingSlam2:ScheduleVoice(1.5, "defensive")
+			else
+				specWarnSearingSlam:Show()
+				specWarnSearingSlam:Play("targetyou")
+				specWarnSearingSlam:ScheduleVoice(1.5, "defensive")
+			end
 			yellSearingSlam:Yell()
 			yellSearingSlamFades:Countdown(spellId)
 		else
@@ -435,19 +443,19 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.tankCombo = 0
 		self.vb.comboCount = 0
 		self.vb.shadowflameCount = 0
-		if self.vb.murchalOchkenProshlyapationCount == 2 then
+		if self.vb.murchalOchkenProshlyapationCount == 2 then --Проводник сломался 1 раз
 			timerVolcanicComboCD:Start(31.1, 1)
 			self:Schedule(31.1, startProshlyapationOfMurchal, self)
 			if self:IsMythic() then
-				timerUnleashedShadowflameCD:Start(6.2, 1)
+				timerUnleashedShadowflameCD:Start(6, 1)
 				timerSearingSlamCD:Start(11.1, 1)
 			elseif self:IsHeroic() then
 				timerSearingSlamCD:Start(11.1, 1) --
 			else
 				timerSearingSlamCD:Start(10.1, 1) --
 			end
-			DBM:Debug("Murchal proshlyap 2", 2)
-		elseif self.vb.murchalOchkenProshlyapationCount == 3 then --Сломался последний проводник в гере и мифе
+			DBM:Debug("Murchal proshlyap (Проводник сломался 1 раз)", 2)
+		elseif self.vb.murchalOchkenProshlyapationCount == 3 then --Проводник сломался 2 раз (последний в героике и мифике)
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 			if self:IsHard() then
@@ -464,19 +472,20 @@ function mod:SPELL_AURA_REMOVED(args)
 				timerUnleashedShadowflameCD:Start(6.2, 1) --пока неизвестно
 				timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
 			end
-			DBM:Debug("Murchal proshlyap 3", 2)
-		elseif self.vb.murchalOchkenProshlyapationCount == 4 then --Сломался последний проводник в обычке и лфр
+			DBM:Debug("Murchal proshlyap (Проводник сломался 2 раз", 2)
+		elseif self.vb.murchalOchkenProshlyapationCount == 4 then --Проводник сломался 3 раз (последний в обычке и лфр)
 			timerVolcanicComboCD:Start(30.2, 1)
 			self:Schedule(30.2, startProshlyapationOfMurchal, self)
 			specWarnShatteredConduit:Show()
 			specWarnShatteredConduit:Play("speedup")
 			timerUnleashedShadowflameCD:Start(6.2, 1) --пока неизвестно
 			timerSearingSlamCD:Start(10.1, 1) --пока неизвестно
+			DBM:Debug("Murchal proshlyap (Проводник сломался 3 раз", 2)
 		end
-		timerChargedSmashCD:Start(23.2, 1)
+		timerChargedSmashCD:Start(23, 1)
 		timerDoomFlameCD:Start(41.2, 1)
 		timerShadowlavaBlastCD:Start(96.8) --2 каст в героике точно
-		timerAncientFuryCD:Start(112)
+		timerAncientFuryCD:Start(115)
 		timerUnyieldingRage:Start()
 	elseif spellId == 405091 then
 		warnUnyieldingRage:Show()
@@ -509,7 +518,7 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 		local remaining = 100-bossPower
 		if remaining > 0 then
 			local elapsedTimer = 100-remaining
-			timerAncientFuryCD:Update(elapsedTimer, 112)
+			timerAncientFuryCD:Update(elapsedTimer, 115)
 		else
 			timerAncientFuryCD:Stop()
 		end

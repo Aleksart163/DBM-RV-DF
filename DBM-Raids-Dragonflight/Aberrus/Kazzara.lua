@@ -26,7 +26,7 @@ local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3) --Ужасн
 local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4) --Лучи жестокой боли
 local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Tank|Healer") --Ужасные когти
 
-local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, nil, 2, 2)
+local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Неистовство огнекованной стали (Бомбардировка)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
 local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, 286503, nil, 4, 4) --Луч жестокой боли
 local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)

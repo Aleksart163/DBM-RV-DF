@@ -195,7 +195,7 @@ function mod:OnCombatStart(delay)
 	timerGuardsandHuntsmanCD:Start(40-delay, 1 .. "-" .. DBM_COMMON_L.SOUTH)
 	timerDevastatingLeapCD:Start(95.9-delay, 1)
 	if self:IsMythic() then
-		timerVigorousGaleCD:Start(71.3, 1)--71-75
+		timerVigorousGaleCD:Start(67.7, 1)--71-75
 		timerPhoenixRushCD:Start(89.7, 1)--90-94
 	end
 end
@@ -294,8 +294,8 @@ function mod:SPELL_CAST_START(args)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		timerIntermission:Start(15.5)
-		--21 51 37 252 начало каста
-		--21 51 52 807
+		timerVigorousGaleCD:Stop()
+		timerMagmaMysticCD:Stop()
 	end
 end
 
@@ -308,10 +308,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerHeavyCudgelCD:Stop()
 		timerDevastatingLeapCD:Stop()
 		timerPhoenixRushCD:Stop()
-		timerVigorousGaleCD:Stop()
 		self:Unschedule(magmaLoop)
 		self:Unschedule(climberLoop)
-		timerMagmaMysticCD:Stop()
 		timerWallClimberCD:Stop()
 		timerGuardsandHuntsmanCD:Stop()
 		timerFlamingCudgelCD:Start(18.7, 1)

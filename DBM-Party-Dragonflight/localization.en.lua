@@ -187,6 +187,22 @@ L:SetGeneralLocalization({
 	name =	"Algeth'ar Academy Trash"
 })
 
+L:SetWarningLocalization({
+	BronzeDragonflight	= "The speed is enhanced",
+	BlueDragonflight	= "The mastery is enhanced",
+	GreenDragonflight	= "The healing received is enhanced",
+	RedDragonflight		= "Versatility is enhanced",
+	BlackDragonflight	= "The crit is enhanced"
+})
+
+L:SetOptionLocalization({
+	BronzeDragonflight	= "Show special warning when you have a buff from $spell:389512",
+	BlueDragonflight	= "Show special warning when you have a buff from $spell:389521",
+	GreenDragonflight	= "Show special warning when you have a buff from $spell:389536",
+	RedDragonflight		= "Show special warning when you have a buff from $spell:389501",
+	BlackDragonflight	= "Show special warning when you have a buff from $spell:389516"
+})
+
 L:SetOptionLocalization({
 	AGBuffs		= "Auto select gossip to activate buffs when interacting with dragonflight npcs"
 })

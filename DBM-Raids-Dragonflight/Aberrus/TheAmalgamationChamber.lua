@@ -59,7 +59,7 @@ local warnBlazingHeat							= mod:NewCountAnnounce(402617, 2, nil, nil, DBM_CORE
 local warnBlazingHeatFades						= mod:NewFadesAnnounce(402617, 1)
 
 local specWarnFlameSlash						= mod:NewSpecialWarningDefensive(403203, nil, nil, nil, 1, 3) --Пылающий взмах
-local specWarnFieryMeteor						= mod:NewSpecialWarningSoakCount(404732, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Огненный метеор (Метеор)
+local specWarnFieryMeteor						= mod:NewSpecialWarningCount(404732, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Огненный метеор (Метеор)
 local specWarnMoltenEruption					= mod:NewSpecialWarningSoakCount(403101, nil, nil, nil, 2, 2, 3) --Извержение лавы
 local specWarnSwirlingFlame						= mod:NewSpecialWarningDodgeCount(404896, nil, 86189, nil, 2, 2) --Завихряющееся пламя (воронки)
 
@@ -76,7 +76,7 @@ local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, ni
 local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3) --Взрыв пламени Тьмы
 
 local specWarnShadowandFlame					= mod:NewSpecialWarningMoveAway(409385, nil, nil, nil, 3, 2) --Тьма и пламя
-local specWarnGloomConflag						= mod:NewSpecialWarningSoakCount(405437, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Возгорание мрака (248815 Возгорание)
+local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Возгорание мрака (248815 Возгорание)
 local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2) --Обжигающий сумрак (Бомбы)
 local specWarnConvergentEruption				= mod:NewSpecialWarningSoakCount(408193, nil, nil, nil, 2, 2) --Объединенный взрыв
 local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, 160149, nil, 3, 2) --Иссушающая слабость
@@ -238,13 +238,13 @@ local allTimers = {
 		--Gloom Conflag
 		[405437] = {50.4, 47.5, 47.6, 47.5, 47.4, 47.4},
 		--Обжигающий сумрак (Бомбы)
-		[405641] = {21.4, 49.4, 46.6, 47.6, 47.5, 47.4}, --21.4, 51.3, 47.5, 47.6, 47.5, 47.4 по инфе с офы
+		[405641] = {21.4, 47.7, 46.6, 47.6, 47.5, 47.4}, --21.4, 51.3, 47.5, 47.6, 47.5, 47.4 по инфе с офы
 		--Объединенный взрыв (Heroic+)
 		[408193] = {33.6, 47.4, 47.4, 47.3, 47.5, 47.4}, --33.6, 51, 47.4, 47.3, 47.5, 47.4 по инфе с офы
 		--Иссушающая слабость (Слабость) 7 штук точные под гер
 		[405914] = {15.6, 26.8, 24.2, 24.1, 24.2, 22.1, 24.2, 24.2, 23.1, 24.3, 23.1, 24.3}, --16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3 по инфе с офы
 		--Взрыв пламени Тьмы (Фронталка) 9 штук точные под гер (2-ая под миф)
-		[406783] = {17.6, 26.8, 24.2, 23.1, 24.2, 23, 24.2, 24.3, 23, 24.3, 23.1, 24.3}, --{19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3}, по инфе с офы
+		[406783] = {17.6, 26.8, 24.2, 23.1, 22.7, 23, 24.2, 23.2, 23, 24.3, 23.1, 24.3}, --{19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3}, по инфе с офы
 	},
 	["easy"] = {
 		----Fire Duder

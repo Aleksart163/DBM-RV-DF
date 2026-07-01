@@ -187,6 +187,22 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Академия Алгет'ар"
 })
 
+L:SetWarningLocalization({
+	BronzeDragonflight	= "Скорость усилена",
+	BlueDragonflight	= "Искусность усилена",
+	GreenDragonflight	= "Получаемое исцеление усилено",
+	RedDragonflight		= "Универсальность усилена",
+	BlackDragonflight	= "Крит усилен"
+})
+
+L:SetOptionLocalization({
+	BronzeDragonflight	= "Спецпредупреждение, когда у вас бафф от $spell:389512",
+	BlueDragonflight	= "Спецпредупреждение, когда у вас бафф от $spell:389521",
+	GreenDragonflight	= "Спецпредупреждение, когда у вас бафф от $spell:389536",
+	RedDragonflight		= "Спецпредупреждение, когда у вас бафф от $spell:389501",
+	BlackDragonflight	= "Спецпредупреждение, когда у вас бафф от $spell:389516"
+})
+
 L:SetOptionLocalization({
 	AGBuffs		= "Автоматический выбор диалога для активации баффов при взаимодействии с драконьими NPC"
 })

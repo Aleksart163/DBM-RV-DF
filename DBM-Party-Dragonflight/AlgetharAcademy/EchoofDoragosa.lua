@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnOverwhelmingPoweer					= mod:NewCountAnnounce(389011, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(389011)) --Переполняющая энергия Typical stack warnings have amount and playername, but since used as personal, using count object to just display amount then injecting option text for stack
-local warnEnergyBomb							= mod:NewTargetNoFilterAnnounce(374352, 3, nil, nil, 167180) --Энергетическая бомба (Бомбы)
+local warnEnergyBomb							= mod:NewTargetNoFilterAnnounce(374352, 3, nil, nil, 49685) --Энергетическая бомба (Бомба)
 
 local specWarnAstralBreath						= mod:NewSpecialWarningDodge(374361, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Звездное дыхание (Фронталка)
 local specWarnPowerVacuum						= mod:NewSpecialWarningRun(388822, 185824, nil, nil, 4, 2) --Энергетический вакуум
