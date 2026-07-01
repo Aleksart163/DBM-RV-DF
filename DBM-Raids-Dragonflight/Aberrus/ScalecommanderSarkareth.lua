@@ -5,8 +5,8 @@ mod:SetRevision("20240714070000")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20240712070000)
---mod:SetMinSyncRevision(20221215000000)
+mod:SetHotfixNoticeRev(20260629000000)
+mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -137,7 +137,7 @@ local timerCosmicAscensionCD					= mod:NewCDCountTimer(29.9, 403741, 385541, nil
 local timerAstralFormation						= mod:NewCDTimer(30, 403497, 61984, nil, nil, 7, nil, nil, nil, 2, 5) --Звездная формация (Астероид)
 local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, nil, 3) --Опасный шквал
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
-local timerScouringEternity						= mod:NewCastTimer(7, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
+local timerScouringEternity						= mod:NewCastTimer(6.5, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
 local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, DBM_COMMON_L.FRONTAL, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
@@ -568,7 +568,7 @@ function mod:SPELL_CAST_START(args)
 			timerMassDisintegrateCD:Stop()
 			timerSearingBreathCD:Stop()
 			timerBurningClawsCD:Stop()
-			timerIntermission:Start(19.6) --норм под героик)
+			timerIntermission:Start(20) --норм под героик)
 		end
 	elseif spellId == 401500 then
 		self.vb.bombCount = self.vb.bombCount + 1
@@ -1094,11 +1094,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerInfiniteDuressCD:Start(27.8, 1)
 			timerPhaseCD:Start(103, 3)
 		elseif self:IsHeroic() then
-			timerAbyssalBreathCD:Start(3.5, 1)
-			timerDesolateBlossomCD:Start(10.6, 1)
+			timerAbyssalBreathCD:Start(2.9, 1) --
+			timerDesolateBlossomCD:Start(10, 1)
 			timerVoidBombCD:Start(15.3)
 			timerVoidClawsCD:Start(18.8)
-			timerInfiniteDuressCD:Start(29.4, 1)
+			timerInfiniteDuressCD:Start(28.8, 1)
 			timerPhaseCD:Start(110, 3)
 		elseif self:IsNormal() then
 			timerAbyssalBreathCD:Start(3.7, 1)
