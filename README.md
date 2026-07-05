@@ -13,7 +13,7 @@
 * Не забывайте хотя бы изредка обновлять настройки модулей аддона по умолчанию (обязательно при первой установке, если до этого стояла версия с Retail) Это делается очень легко и показывается на видео ниже.
 * Do not forget to update the default addon module settings at least occasionally (be sure to do so during the first installation if the Retail version was installed before) This is done very easily and is shown in the video below.
 
-[![Как сделать настройки по умолчанию](https://img.youtube.com/vi/aLvleUczSe4/0.jpg)](https://www.youtube.com/watch?v=aLvleUczSe4)
+[![Watch the video](https://img.youtube.com/vi/aLvleUczSe4/hqdefault.jpg)](https://www.youtube.com/watch?v=aLvleUczSe4)
 
 <a href="https://github.com/Aleksart163/DBM-RV-DF/archive/refs/heads/main.zip"><img src="https://www.freepngimg.com/thumb/download_now_button/25860-7-download-now-button-glossy-green.png"/></a>
 
