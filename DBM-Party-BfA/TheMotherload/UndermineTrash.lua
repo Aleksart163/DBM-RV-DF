@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("UndermineTrash", "DBM-Party-BfA", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230813054730")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 268709 268129 263275 267433 263103 263066 268865 268797 269090 262540 262554 262092 263202 267354",

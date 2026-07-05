@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("TolDagorTrash", "DBM-Party-BfA", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 259711 258128 258153 258317 258313 258634 258869 258917 258935",

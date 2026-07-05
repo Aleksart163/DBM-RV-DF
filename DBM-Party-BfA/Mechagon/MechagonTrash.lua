@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("MechagonTrash", "DBM-Party-BfA", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 300687 300764 300777 300650 300159 300177 300171 299588 300087 300188 300207 299475 300414 300514 300436 300424 301681 301667 301629 284219 301088 294064 294290 294324 294349 293854 293986 293729",
