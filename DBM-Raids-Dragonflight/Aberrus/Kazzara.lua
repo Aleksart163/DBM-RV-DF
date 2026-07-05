@@ -13,6 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 401316 401318 401319 406516 407198 407199 407200 407069 400430 403326 404744",
+	"SPELL_CAST_SUCCESS 401316 401318 401319",
 	"SPELL_AURA_APPLIED 406525 402253 404743",
 	"SPELL_AURA_REMOVED 406525",
 	"SPELL_PERIODIC_DAMAGE 406530 402207 402420",
@@ -22,11 +23,12 @@ mod:RegisterEventsInCombat(
 --[[
 (ability.id = 401316 or ability.id = 401318 or ability.id = 401319 or ability.id = 406516 or ability.id = 407198 or ability.id = 407199 or ability.id = 407200 or ability.id = 407069 or ability.id = 400430 or ability.id = 403326 or ability.id = 404744) and type = "begincast"
 --]]
+local warnHellsteelCarnage							= mod:NewCastAnnounce(401319, 2, nil, nil, nil, 257305) --Неистовство огнекованной стали (Обстрел)
 local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3) --Ужасные разломы
 local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4) --Лучи жестокой боли
 local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Tank|Healer") --Ужасные когти
 
-local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Неистовство огнекованной стали (Бомбардировка)
+local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Неистовство огнекованной стали (Обстрел)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
 local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, 286503, nil, 4, 4) --Луч жестокой боли
 local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)
@@ -85,10 +87,9 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if args:IsSpellID(401316, 401318, 401319) then
+	if args:IsSpellID(401316, 401318, 401319) then --Неистовство огнекованной стали (Обстрел)
 		self.vb.carnageCount = self.vb.carnageCount + 1
-		specWarnHellsteelCarnage:Show(self.vb.carnageCount)
-		specWarnHellsteelCarnage:Play("watchstep")
+		warnHellsteelCarnage:Show()
 		--Add 9 seconds to all timers. May be diff in other difficulties so needs review
 		timerDreadRiftsCD:AddTime(9, self.vb.riftsCount+1)
 		timerRaysofAnguishCD:AddTime(9, self.vb.rayCount+1)
@@ -117,6 +118,14 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if args:IsSpellID(401316, 401318, 401319) then --Неистовство огнекованной стали (Обстрел)
+		specWarnHellsteelCarnage:Show(self.vb.carnageCount)
+		specWarnHellsteelCarnage:Play("watchstep")
+	end
+end
+			
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 406525 then

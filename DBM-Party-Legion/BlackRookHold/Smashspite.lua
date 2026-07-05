@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1664, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428124541")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(98949)
 mod:SetEncounterID(1834)
 mod:SetUsedIcons(1)
-mod:SetHotfixNoticeRev(20231027000000)
-mod:SetMinSyncRevision(20231027000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
 --]]
 local warnHatefulGaze				= mod:NewTargetNoFilterAnnounce(198079, 4)
 
-local specWarnStomp					= mod:NewSpecialWarningSpell(198073, nil, nil, nil, 2, 2)
+local specWarnStomp					= mod:NewSpecialWarningCount(198073, nil, nil, nil, 2, 2)
 local specWarnHatefulGaze			= mod:NewSpecialWarningDefensive(198079, nil, nil, nil, 1, 2)
 local yellHatefulGaze				= mod:NewYell(198079)
 local specWarnBrutalHaymakerSoon	= mod:NewSpecialWarningSoon(198245, "Tank|Healer", nil, nil, 1, 2)--Face fuck soon

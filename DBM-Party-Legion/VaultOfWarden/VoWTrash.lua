@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("VoWTrash", "DBM-Party-Legion", 10)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221230022007")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 196799 193069 196799 196249",

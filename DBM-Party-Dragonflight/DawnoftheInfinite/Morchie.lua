@@ -15,7 +15,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 404916 403891 404364 405279 406481 407504",
+	"SPELL_CAST_START 404916 403891 404364 405279 407504",
+	"SPELL_CAST_SUCCESS 406481",
 	"SPELL_SUMMON 403902",
 	"SPELL_AURA_APPLIED 401200 401667",--412768
 	"SPELL_AURA_REMOVED 401200",
@@ -34,7 +35,6 @@ mod:RegisterEventsInCombat(
 --TODO, nameplate aura on trapped familar face? need to see how good visual is for it first
 --TODO, detect when your add breaks free from trap and warn you it's lose again?
 --TODO Familiar Faces timers
-local warnMoreProblems								= mod:NewCastAnnounce(403891, 3) --Новые проблемы!
 local warnDragonBreath								= mod:NewCastAnnounce(404364, 4, nil, nil, nil, 18357) --Дыхание дракона (Дыхание)
 local warnFamiliarFaces								= mod:NewCountAnnounce(405279, 3) --Знакомые лица
 local warnFixate									= mod:NewYouAnnounce(401200, 4) --Сосредоточение внимания
@@ -43,15 +43,15 @@ local warnTimeStasis								= mod:NewTargetNoFilterAnnounce(401667, 4) --Вре�
 local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
 local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
 local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, nil, nil, 3, 4) --Новые проблемы!
-local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, 18357, nil, 4, 4) --Дыхание дракона (Дыхание)
+local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, DBM_COMMON_L.FRONTAL, 4, 4) --Дыхание дракона (Дыхание)
 local specWarnTimeTraps								= mod:NewSpecialWarningDodgeCount(406481, nil, nil, nil, 2, 2) --Временные ловушки
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8) --Безвременное разложение
 
 local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Песчаный вихрь (Фронталка) 21.8-38.8
 local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Новые проблемы!
-local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, nil, nil, 2, 3) --Знакомые лица
+local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, nil, nil, 2, 5) --Знакомые лица
 local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil, 3) --Временные ловушки
-local timerDragonBreath								= mod:NewCastTimer(8, 404364, 18357, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Дыхание)
+local timerDragonBreath								= mod:NewCastTimer(8, 404364, DBM_COMMON_L.FRONTAL, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Дыхание)
 
 local yellTimeStasis								= mod:NewShortYell(401667, nil, nil, nil, "YELL") --Временной стазис
 local yellSandBlast									= mod:NewShortYell(404916, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Песчаный вихрь (Фронталка)
@@ -150,7 +150,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 403891 then --Новые проблемы!
 		self.vb.problemsCount = self.vb.problemsCount + 1
 		self.vb.problemIcons = 1
-		warnMoreProblems:Show()
 		specWarnMoreProblems:Show()
 		specWarnMoreProblems:Play("specialsoon")
 		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.problemsCount+1)
@@ -179,7 +178,12 @@ function mod:SPELL_CAST_START(args)
 				DBM:AddMsg("Timers not known beyond this point, please share your WCL with DBM authors if you can")
 			end
 		end
-	elseif spellId == 406481 then
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 406481 then
 		self.vb.trapsCount = self.vb.trapsCount + 1
 		specWarnTimeTraps:Show(self.vb.trapsCount)
 		specWarnTimeTraps:Play("watchstep")
@@ -194,7 +198,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	end
 end
-
+		
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 403902 then --Новые проблемы!

@@ -10,14 +10,14 @@ mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 415770 413487 415435 415437 413529 413621 413622 412806 411958 412505 400165 413607 412136 413024 413023 412922 417481 419327 412378 412262 412233 412200 413427 407205 407535 419351 413544 412215 418200 411300 407891 415769 415436 412156",
-	"SPELL_CAST_SUCCESS 411994 412012 418435",
+	"SPELL_CAST_SUCCESS 411994 412012 412129",
 	"SPELL_AURA_APPLIED 412063 415554 415437 413547 419517",
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"UNIT_DIED",
-	"CHAT_MSG_MONSTER_YELL",
+	"GOSSIP_SHOW",
 	"CHAT_MSG_MONSTER_SAY",
-	"GOSSIP_SHOW"
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 --[[
@@ -58,7 +58,8 @@ local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil,
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2) --Сфера раздумий High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
 local specWarnVolatileMortar				= mod:NewSpecialWarningDodge(407205, nil, nil, nil, 2, 2)
-local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бронзовый выдох (Фронталка) High Prio
+local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бронзовый выдох (Фронталка)
+local specWarnBronzeExhalation2				= mod:NewSpecialWarningDodge(419351, nil, nil, nil, 2, 2) --Бронзовый выдох (Фронталка)
 local specWarnShroudingSandstorm			= mod:NewSpecialWarningDodge(412215, nil, nil, nil, 2, 2)--High Prio
 local specWarnBombingRun					= mod:NewSpecialWarningDodge(412156, nil, nil, nil, 2, 2)
 local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2)
@@ -73,7 +74,7 @@ local specWarnEnervate						= mod:NewSpecialWarningInterrupt(415437, "HasInterru
 local specWarnStonebolt						= mod:NewSpecialWarningInterrupt(411958, "HasInterrupt", nil, nil, 1, 2)
 local specWarnCorrodingVolley				= mod:NewSpecialWarningInterrupt(413607, "HasInterrupt", nil, nil, 1, 2) --Разъедающий залп
 local specWarnEpochBolt						= mod:NewSpecialWarningInterrupt(400165, false, nil, 2, 1, 2)--Lower prio over Corroding Volley
-local specWarnBindingGrasp					= mod:NewSpecialWarningInterrupt(412922, "HasInterrupt", nil, nil, 1, 2)
+local specWarnBindingGrasp					= mod:NewSpecialWarningInterrupt(412922, "HasInterrupt", nil, nil, 1, 2) --Сковывающая хватка
 local specWarnDisplacedChronosequence		= mod:NewSpecialWarningInterrupt(417481, "HasInterrupt", nil, nil, 1, 2) --Перемещающая хронопоследовательность High Prio
 local specWarnDizzyingSands					= mod:NewSpecialWarningInterrupt(412378, "HasInterrupt", nil, nil, 1, 2)--High Prio
 local specWarnRocketBoltVolley				= mod:NewSpecialWarningInterrupt(412233, "HasInterrupt", nil, nil, 1, 2)--High Prio
@@ -104,7 +105,7 @@ local timerTitanticBulwarkCD				= mod:NewCDNPTimer(25.4, 413024, nil, nil, nil, 
 local timerAncientRadianceCD				= mod:NewCDNPTimer(9.7, 413023, nil, nil, nil, 2)--9.7-15
 local timerOrbofContemplationCD				= mod:NewCDNPTimer(13.3, 412129, nil, nil, nil, 3) --Сфера раздумий
 local timerShroudingSandstormCD				= mod:NewCDNPTimer(23.1, 412215, nil, nil, nil, 2)--Updated Jan 23rd per hotfixes
-local timerBindingGraspCD					= mod:NewCDNPTimer(19.4, 412922, nil, nil, nil, 3)
+local timerBindingGraspCD					= mod:NewCDNPTimer(23, 412922, nil, nil, nil, 3) --Сковывающая хватка
 local timerDisplacedChronosequenceCD		= mod:NewCDNPTimer(14.4, 417481, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Перемещающая хронопоследовательность
 local timerInfiniteSchismCD					= mod:NewCDNPTimer(26.7, 419327, nil, nil, nil, 5)
 local timerDizzyingSandsCD					= mod:NewCDNPTimer(16.1, 412378, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -118,7 +119,7 @@ local timerVolatileMortarCD					= mod:NewCDNPTimer(19.5, 407205, nil, nil, nil, 
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
 local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.8, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Бронзовый выдох (Фронталка)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerRP								= mod:NewRPTimer(10)
+local timerRP								= mod:NewRPTimer(22)
 
 local yellChronalEruption					= mod:NewShortYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
 local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
@@ -158,14 +159,17 @@ local function additionalIds(self, args)
 		end
 	elseif spellId == 419351 then
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		if cid == 208438 then--Shorter CD (Infinite Saboteur)
-			timerBronzeExhalationCD:Start(17, args.sourceGUID)
+		if cid == 208438 then --Shorter CD (Саботажник из рода Бесконечности)
+			timerBronzeExhalationCD:Start(15, args.sourceGUID)
 		else
 			timerBronzeExhalationCD:Start(nil, args.sourceGUID)--20.6
 		end
-		if self:AntiSpam(3, 2) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnBronzeExhalation:Show()
-			specWarnBronzeExhalation:Play("breathsoon")
+			specWarnBronzeExhalation:Play("defensive")
+		else
+			specWarnBronzeExhalation2:Show()
+			specWarnBronzeExhalation2:Play("breathsoon")
 		end
 	elseif spellId == 413544 then --Цветение
 		timerBloomCD:Start(nil, args.sourceGUID)
@@ -306,11 +310,11 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 413023 then
 		timerAncientRadianceCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 5) then
+		if self:AntiSpam(2, "AncientRadiance") then
 			specWarnAncientRadiance:Show()
 			specWarnAncientRadiance:Play("aesoon")
 		end
-	elseif spellId == 412922 then
+	elseif spellId == 412922 then --Сковывающая хватка
 		timerBindingGraspCD:Start(nil, args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnBindingGrasp:Show(args.sourceName)
@@ -370,9 +374,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnTemposlice:Show()
 			warnTemposlice:Play("crowdcontrol")
 		end
-	elseif spellId == 418435 then
+	elseif spellId == 412129 then
 		timerOrbofContemplationCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 2) then
+		if self:AntiSpam(2, "OrbofContemplation") then
 			specWarnOrbofContemplation:Show()
 			specWarnOrbofContemplation:Play("watchorb")
 		end
@@ -506,8 +510,8 @@ function mod:GOSSIP_SHOW()
 		end
 	end
 end
---Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
-function mod:CHAT_MSG_MONSTER_YELL(msg)
+
+--[[function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MurchalProshlyapRP1 or msg:find(L.MurchalProshlyapRP1)) then
 		self:SendSync("NewRP1")
 	elseif (msg == L.MurchalProshlyapRP2 or msg:find(L.MurchalProshlyapRP2)) then
@@ -529,7 +533,7 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 	end
 end
 
-function mod:OnSync(msg, targetname)
+function mod:OnSync(msg)
 	if msg == "NewRP0" and self:AntiSpam(10, 2) then --Таймер пула перед 1-ым боссом
 		timerRP:Start(24)
 		timerTimelessCurseCD:Start(12)
@@ -547,5 +551,38 @@ function mod:OnSync(msg, targetname)
 		timerRP:Start(16.5)
 	elseif msg == "NewRP7" and self:AntiSpam(10, 2) then --Таймер на треш после Тира
 		timerRP:Start(15)
+	end
+end]]
+
+--Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.MProshlyapPrePull8 or msg:find(L.MProshlyapPrePull8)) then
+		self:SendSync("MPPR8") --
+	elseif (msg == L.MProshlyapPrePull4 or msg:find(L.MProshlyapPrePull4)) or (msg == L.MProshlyapPrePull5 or msg:find(L.MProshlyapPrePull5)) then
+		self:SendSync("MPPR4") --
+	elseif (msg == L.MProshlyapPrePull3 or msg:find(L.MProshlyapPrePull3)) then
+		self:SendSync("MPPR3") --
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.MProshlyapPrePull7 or msg:find(L.MProshlyapPrePull7)) then
+		self:SendSync("MPPR7") --
+	elseif (msg == L.MProshlyapPrePull6 or msg:find(L.MProshlyapPrePull6)) then
+		self:SendSync("MPPR6") --
+	end
+end
+
+function mod:OnSync(event, arg)
+	if event == "MPPR8" and self:AntiSpam(10, "Morchie") then --Таймер пулла Морхи
+		timerRP:Start(25) --
+	elseif event == "MPPR7" and self:AntiSpam(10, "Trash1") then --Таймер пулла треша после Тира
+		timerRP:Start(15) --
+	elseif event == "MPPR6" and self:AntiSpam(10, "Trash2") then --Таймер пулла треша на Гнили
+		timerRP:Start(16.5) --
+	elseif event == "MPPR4" and self:AntiSpam(10, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
+		timerRP:Start(15.5) --
+	elseif event == "MPPR3" and self:AntiSpam(10, "Blight2") then --Таймер пула после Гнили 2
+		timerRP:Start(88) --
 	end
 end

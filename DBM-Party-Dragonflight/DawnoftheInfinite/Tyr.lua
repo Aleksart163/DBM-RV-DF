@@ -41,14 +41,14 @@ local warnSiphonOathOver							= mod:NewEndAnnounce(400642, 1, nil, nil, 181503)
 local specWarnSiphonOath							= mod:NewSpecialWarningSwitch(400642, nil, 181503, nil, 1, 2) --Вытягивание энергии камня (Вытягивание энергии)
 local specWarnTitanicBlow							= mod:NewSpecialWarningDefensive(401248, nil, nil, nil, 3, 4) --Титанический удар
 local specWarnInfiniteAnnihilation					= mod:NewSpecialWarningDodgeCount(401482, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бесконечная аннигиляция
-local specWarnDividingStrike						= mod:NewSpecialWarningSoakCount(400641, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Разделяющий удар (Делёжка)
+local specWarnDividingStrike						= mod:NewSpecialWarningCount(400641, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Разделяющий удар (Делёжка)
 local specWarnSparkofTyr							= mod:NewSpecialWarningMoveAway(400681, nil, nil, nil, 1, 2) --Искра Тира
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(403724, nil, nil, nil, 1, 8) --Освященная земля
 
 --These 3 are shared timers tied to Infinite Hand Technique
 local timerTitanicBlowCD							= mod:NewCDCountTimer(8, 401248, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Титанический удар
 local timerInfiniteAnnihilationCD					= mod:NewCDCountTimer(8, 401482, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Бесконечная аннигиляция
-local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2) --Разделяющий удар (Делёжка)
+local timerDividingStrikeCD							= mod:NewCDCountTimer(8, 400641, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Разделяющий удар (Делёжка)
 
 --Bosses other abilities
 local timerRP										= mod:NewRPTimer(8)

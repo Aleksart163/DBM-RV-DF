@@ -9,7 +9,7 @@ if (wowToc >= 100200) then
 	mod.sendMainBossGUID = true
 end
 
-mod:SetRevision("20231020095319")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.

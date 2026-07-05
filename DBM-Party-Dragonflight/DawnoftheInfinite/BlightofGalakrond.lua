@@ -41,17 +41,17 @@ local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, ni
 local warnCorrosion							= mod:NewTargetNoFilterAnnounce(407406, 3) --Коррозия
 local warnCorruptedMind						= mod:NewTargetNoFilterAnnounce(418346, 4, nil, nil, 362075) --Зараженный разум (подчинение)
 
-local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, 407406, nil, 1, 2) --Разъедающее насыщение (Коррозия)
-local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 1, 2) --Коррозия
-local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 1, 2) --Коррозия
-local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, nil, 2, 2) --Возвращение гнили
+local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Разъедающее насыщение (Обстрел)
+local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 3, 2) --Коррозия
+local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 4, 2) --Коррозия
+local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Возвращение гнили
 local specWarnNecroticWinds					= mod:NewSpecialWarningDodge(407978, nil, nil, DBM_COMMON_L.PUSHBACK, 1, 2) --Некротические ветра (Отталкивание)
 local specWarnNecrofrost					= mod:NewSpecialWarningSwitch(408029, "Dps", nil, DBM_COMMON_L.ADD, 1, 2) --Некрохлад
 local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodge(408141, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Испепеляющее гнилостное дыхание (Фронталка)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8) --Просачивающаяся гниль
 
-local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, 407406, nil, nil, 3) --Разъедающее насыщение (Коррозия)
-local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Возвращение гнили
+local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Разъедающее насыщение (Обстрел)
+local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Возвращение гнили
 local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Некротические ветра (Отталкивание)
 local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, DBM_COMMON_L.ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад
 local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Испепеляющее гнилостное дыхание (Фронталка)
@@ -201,8 +201,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCorrosiveInfusionCD:Stop()
 		timerBlightReclamationCD:Stop()
 		timerNecroticWindsCD:Stop()
-	elseif spellId == 407406 then
-		if args:IsPlayer() then
+	elseif spellId == 407406 then --Коррозия
+		if args:IsPlayer() and self:AntiSpam(2, 2) then
 			specWarnCorrosion:Show()
 			specWarnCorrosion:Play("targetyou")
 			yellCorrosion:Yell()
@@ -219,7 +219,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 407406 then
+	if spellId == 407406 then --Коррозия
 		if args:IsPlayer() then
 			yellCorrosionFades:Cancel()
 			self:Unschedule(checkDebuffPass)

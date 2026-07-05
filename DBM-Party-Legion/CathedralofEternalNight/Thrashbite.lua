@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1906, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240714045506")
 mod:SetCreatureID(117194)
 mod:SetEncounterID(2057)
 
@@ -19,7 +19,7 @@ local warnScornfulGaze				= mod:NewTargetAnnounce(237726, 4, nil, nil, 2)
 local warnHeaveCrud					= mod:NewSpellAnnounce(243124, 2)
 
 local specWarnPulvCrudgel			= mod:NewSpecialWarningRun(237276, "Melee", nil, nil, 4, 2)
-local specWarnMindControl			= mod:NewSpecialWarningSwitchCount(238484, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(238484), nil, 1, 2)
+local specWarnMindControl			= mod:NewSpecialWarningSwitch(238484, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(238484), nil, 1, 2)
 local specWarnScornfulGaze			= mod:NewSpecialWarningMoveTo(237726, nil, nil, nil, 3, 2)
 local yellScornfulGaze				= mod:NewYell(237726)
 
@@ -42,7 +42,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 238484 then
-		specWarnMindControl:Show(args.destName)
+		specWarnMindControl:Show()
 		if args:IsPlayer() then
 			--Add a yell?
 			specWarnMindControl:Play("targetyou")

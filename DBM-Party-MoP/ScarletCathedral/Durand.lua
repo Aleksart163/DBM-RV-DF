@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(674, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231024034207")
+mod:SetRevision("20240605152247")
 mod:SetCreatureID(60040, 99999)--3977 is High Inquisitor Whitemane and 60040 is Commander Durand, we don't really need to add her ID, because we don't ever engage her, and he true death is at same time as her.
 mod:SetEncounterID(1425)
 mod:SetZone(1004)
@@ -59,7 +59,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self:SetStage(3)
 		warnDeepSleep:Show()
 		timerDeepSleep:Start()
-		timerMassResCD:Start(18)--Limited Sample size
+		timerMassResCD:Start(9.7)
 		if self:IsDifficulty("challenge5") then
 			timerMCCD:Start(19)--Pretty much immediately after first mas res, unless mass res isn't interrupted then it'll delay MC
 		end

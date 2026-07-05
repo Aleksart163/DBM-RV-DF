@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(127, "DBM-Party-Cataclysm", 4, 70)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20240714045506")
 mod:SetCreatureID(39587)
 mod:SetEncounterID(1077)
 
@@ -39,7 +39,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 74136 then
-		specWarnSupernova:Show()
+		specWarnSupernova:Show(args.sourceName)
 		specWarnSupernova:Play("turnaway")
 		timerSupernova:Start()
 	end

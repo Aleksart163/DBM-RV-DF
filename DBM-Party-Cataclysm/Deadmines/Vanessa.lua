@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(95, "DBM-Party-Cataclysm", 2, 63)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240714045506")
 mod:SetCreatureID(49541)
 mod:SetEncounterID(1081)
 
@@ -33,7 +33,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 92614 then
 		timerDeflection:Start()
 		if self.Options.SpecWarn92614reflect then
-			specWarnDeflection:Show()
+			specWarnDeflection:Show(args.destName)
 			specWarnDeflection:Play("stopattack")
 		else
 			warnDeflection:Show()

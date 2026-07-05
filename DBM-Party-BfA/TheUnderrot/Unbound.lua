@@ -43,17 +43,13 @@ mod:AddInfoFrameOption(269301, "Healer")
 mod.vb.remainingAdds = 6
 mod.vb.lightCount = 0
 
-local allProshlyapationsOfMurchal = {
-	--Очищающий свет
-	[269310] = {18, 24.5, 23.7, 26, 23.7, 23.7, 23.7, 26, 23.7, 26},
-}
+local ProshlyapationsOfMurchalTimers = {18, 24.5, 23.7, 26, 23.7, 23.7, 23.7, 26, 23.7, 26} --Очищающий свет
 
 function mod:OnCombatStart(delay)
 	self.vb.lightCount = 0
 	self.vb.remainingAdds = 6
 	timerVileExpulsionCD:Start(8.2-delay)
 	timerCleansingLightCD:Start(18-delay, 1)
---	timerBloodVisageCD:Start(22.3-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(269301))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 269301, 1)
@@ -76,7 +72,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.lightCount = self.vb.lightCount + 1
 		specWarnCleansingLight:Show(DBM_COMMON_L.ALLY)
 		specWarnCleansingLight:Play("gathershare")
-		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.lightCount+1)
+		local timer = ProshlyapationsOfMurchalTimers[self.vb.lightCount+1]
 		if timer then
 			timerCleansingLightCD:Start(timer, self.vb.lightCount+1)
 		end
@@ -111,17 +107,18 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
+--[[function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId) --Не работает
 	if spellId == 272663 and self:AntiSpam(2, 1) then--Blood Clone Cosmetic
 		specWarnBloodVisage:Show()
 		specWarnBloodVisage:Play("killmob")
 		timerBloodVisageCD:Start(31.5)
 	end
-end
+end]]
 
 function mod:UNIT_POWER_UPDATE()
 	local bossPower = UnitPower("boss1")
-	if bossPower == 100 then
-		DBM:Debug("Murchal proshlyap (У босса 100 энергии)", 2)
+	if bossPower == 100 and self:AntiSpam(3, 1) then
+		specWarnBloodVisage:Schedule(2)
+		specWarnBloodVisage:ScheduleVoice(2, "killmob")
 	end
 end

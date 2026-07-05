@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2128, "DBM-Party-BfA", 10, 1021)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240417180519")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(131527, 131545)
 mod:SetMainBossID(131545)
 mod:SetEncounterID(2116)
-mod:SetHotfixNoticeRev(20231025000000)
-mod:SetMinSyncRevision(20231025000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
 local warnVirulentPathogen			= mod:NewTargetAnnounce(261440, 2)
 local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2)
 
-local specWarnDiscordantCadenza		= mod:NewSpecialWarningDodge(268306, nil, nil, nil, 2, 2)
+local specWarnDiscordantCadenza		= mod:NewSpecialWarningDodgeCount(268306, nil, nil, nil, 2, 2)
 local specWarnVirulentPathogen		= mod:NewSpecialWarningMoveAway(261440, nil, nil, nil, 1, 2)
 local yellVirulentPathogen			= mod:NewShortYell(261440)
 local yellVirulentPathogenFades		= mod:NewShortFadesYell(261440)

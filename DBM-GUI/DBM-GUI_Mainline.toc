@@ -27,8 +27,8 @@
 ## LoadOnDemand: 1
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 10.2.69
-## X-DBM-Mod-MinCoreRevision: 20260427070000
+## Version: 10.2.71
+## X-DBM-Mod-MinCoreRevision: 20260630070000
 ## X-Website: https://github.com/Aleksart163/DBM-RV-DF
 
 localization.en.lua

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("SkyreachTrash", "DBM-Party-WoD", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 160303 160288",

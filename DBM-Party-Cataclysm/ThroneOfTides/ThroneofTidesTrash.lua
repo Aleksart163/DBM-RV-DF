@@ -2,11 +2,12 @@ if (DBM:GetTOC() < 100200) then return end--DO NOT DELETE DO NOT DELETE DO NOT D
 local mod	= DBM:NewMod("ThroneofTidesTrash", "DBM-Party-Cataclysm", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240106072507")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(643)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 76813 76815 76820 426741 426684 426645 428926 76590 429021 426783 428542 429176 426905",

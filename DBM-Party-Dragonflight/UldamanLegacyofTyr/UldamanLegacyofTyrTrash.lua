@@ -9,7 +9,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 369811 382578 369674 369823 369675 369806 377732 369399 369335 369400 369365 369423 369411 381593 382696 377500 369409",
 	"SPELL_CAST_SUCCESS 377738 369465 369328 377732 382696 369811",
 	"SPELL_AURA_APPLIED 369365 369828 369823 369818 369400 369366 377500",
-	"SPELL_AURA_APPLIED_DOSE 369828 377738 369419",
+	"SPELL_AURA_APPLIED_DOSE 369828 377738 369419 369365",
 --	"SPELL_AURA_REMOVED 339525",
 	"UNIT_DIED"
 )
@@ -36,7 +36,7 @@ local warnSonicBurst						= mod:NewCastAnnounce(369411, 4) --Звуковой в
 local warnThunderousClap					= mod:NewCastAnnounce(381593, 3) --Грохочущий удар
 local warnBulwarkSlam						= mod:NewCastAnnounce(382696, 4, nil, nil, "Tank|Healer") --Удар бастиона
 local warnHasten							= mod:NewCastAnnounce(377500, 3) --Ускорение
-local warnCurseofStone						= mod:NewCastAnnounce(369365, 4) --Проклятие камня
+local warnCurseofStone						= mod:NewCastAnnounce(369365, 2) --Проклятие камня
 
 local specWarnBrutalSlam					= mod:NewSpecialWarningRun(369811, "Melee", nil, nil, 4, 2) --Изуверский удар
 local specWarnBrutalSlam2					= mod:NewSpecialWarningDodge(369811, "Ranged", nil, nil, 2, 2) --Изуверский удар
@@ -73,6 +73,7 @@ local timerThunderousClapCD					= mod:NewCDNPTimer(18, 381593, nil, nil, nil, 2)
 local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар бастиона
 local timerHastenCD							= mod:NewCDNPTimer(21.1, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ускорение
 
+local yellCurseofStone						= mod:NewShortYell(369365, nil, nil, nil, "YELL") --Проклятие камня
 local yellTrappedInStone					= mod:NewShortYell(369366, nil, nil, nil, "YELL") --В каменном плену
 
 --local playerName = UnitName("player")
@@ -160,7 +161,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.SpecWarn369365interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnCurseofStoneKick:Show(args.sourceName)
 			specWarnCurseofStoneKick:Play("kickcast")
-		elseif self:AntiSpam(2, "CurseofStone") then
+		elseif self:AntiSpam(1, 2) then
 			warnCurseofStone:Show()
 			warnCurseofStone:Play("crowdcontrol")
 		end
@@ -220,10 +221,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") then
-		specWarnCurseofStone:CombinedShow(0.5, args.destName)
-		specWarnCurseofStone:Play("helpdispel")
-	elseif spellId == 369828 then
+	if spellId == 369828 then
 		local amount = args.amount or 1
 		if self:AntiSpam(3, 5) then
 			warnChomp:Show(args.destName, amount)
@@ -244,8 +242,16 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 369400 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnEarthenWard:Show(args.destName)
 		specWarnEarthenWard:Play("helpdispel")
-	elseif spellId == 369366 and args:IsDestTypePlayer() then
-		if self:CheckDispelFilter("curse") and self:AntiSpam(3, 3) then
+	elseif spellId == 369365 and args:IsDestTypePlayer() then --Проклятие камня
+		if self:CheckDispelFilter("curse") and self:AntiSpam(3, "CurseofStone") then
+			specWarnCurseofStone:Show(args.destName)
+			specWarnCurseofStone:Play("helpdispel")
+		end
+		if args:IsPlayer() then
+			yellCurseofStone:Yell()
+		end
+	elseif spellId == 369366 and args:IsDestTypePlayer() then --В каменном плену
+		if self:CheckDispelFilter("curse") and self:AntiSpam(2, "TrappedinStone") then
 			specWarnTrappedinStone:Show(args.destName)
 			specWarnTrappedinStone:Play("helpdispel")
 		end

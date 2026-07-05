@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("SpiresofAscensionTrash", "DBM-Party-Shadowlands", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 317936 317963 327413 328295 328137 328331 317985",

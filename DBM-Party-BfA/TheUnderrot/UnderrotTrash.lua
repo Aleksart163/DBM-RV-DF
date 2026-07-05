@@ -85,11 +85,11 @@ local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Те�
 local yellThirstforBlood			= mod:NewShortYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 
-function mod:OnInitialize()
+--[[function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then
         self.Options.Timer272609cdCVoice = self:IsTank() and 2
     end
-end
+end]]
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt
 
@@ -259,7 +259,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 278961 then --Гниющий разум
 		if args:IsPlayer() then
 			yellDecayingMind:Yell()
-		elseif args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, "Bladestorm") then
+		elseif args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, "DecayingMind") then
 			specWarnDecayingMindDispel:Show(args.destName)
 			specWarnDecayingMindDispel:Play("helpdispel")
 		end
@@ -268,10 +268,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnWickedEmbrace:Show()
 			specWarnWickedEmbrace:Play("targetyou")
 			yellWickedEmbrace:Yell()
-		else
-			warnWickedEmbrace:Show(args.destName)
+		elseif self:CheckDispelFilter("magic") then
 			specWarnWickedEmbrace2:Show(args.destName)
 			specWarnWickedEmbrace2:Play("helpdispel")
+		else
+			warnWickedEmbrace:Show(args.destName)
 		end
 	end
 end

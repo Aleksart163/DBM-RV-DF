@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("PlaguefallTrash", "DBM-Party-Shadowlands", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231020041658")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 328016 328177 327584 327581 330403 327233 328986 318949 319070 328338 328475",

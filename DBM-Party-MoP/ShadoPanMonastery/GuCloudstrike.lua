@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20240603224808")
 mod:SetCreatureID(56747)--56747 (Gu Cloudstrike), 56754 (Azure Serpent)
 mod:SetEncounterID(1303)
 
@@ -77,8 +77,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnChargingSoul:Show()
 		warnInvokeLightning:Cancel()
 		timerStaticFieldCD:Cancel()
-		timerLightningBreathCD:Start()
-		timerMagneticShroudCD:Start(20)
+		timerLightningBreathCD:Start(1.6)--1.6 now, cause remix likes to fuck with boss timers, used to be 6.8
+		timerMagneticShroudCD:Start(17)--Used to be 20
 	elseif args.spellId == 110852 then
 		warnOverchargedSoul:Show()
 	end

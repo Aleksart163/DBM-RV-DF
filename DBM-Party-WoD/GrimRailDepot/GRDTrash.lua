@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("GRDTrash", "DBM-Party-WoD", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230907220903")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 166675 176032",

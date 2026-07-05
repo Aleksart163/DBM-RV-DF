@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("BlackrockCavernsTrash", "DBM-Party-Cataclysm", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230308061346")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 mod:SetZone(645)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 --	"SPELL_CAST_START",

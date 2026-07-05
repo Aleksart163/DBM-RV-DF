@@ -212,7 +212,7 @@ function mod:OnCombatStart(delay)
 		self:Schedule(29.1, startProshlyapationOfMurchal, self)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM:GetSpellName(405827))
-			DBM.InfoFrame:Show(7, "table", overchargedStacks, 1)
+			DBM.InfoFrame:Show(10, "table", overchargedStacks, 1)
 		end
 		self:RegisterShortTermEvents(
 			"SPELL_ENERGIZE 405825"

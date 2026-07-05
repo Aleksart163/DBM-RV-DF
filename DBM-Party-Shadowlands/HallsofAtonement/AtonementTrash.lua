@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("AtonementTrash", "DBM-Party-Shadowlands", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221030212932")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 326409 326450 325523 325700 325701 326607 326441",

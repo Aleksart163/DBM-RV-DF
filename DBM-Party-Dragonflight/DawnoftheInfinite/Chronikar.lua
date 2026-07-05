@@ -36,10 +36,11 @@ local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil,
 local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Песчаный топот
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
 
-local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок) "Leap" shorttext
+local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок)
 local timerEonResidue						= mod:NewCastCountTimer("d7.5", 403486, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Осадок эонов (Поглощение)
 local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Темпоральное иссечение
 local timerSandStompCD						= mod:NewCDCountTimer(19.4, 401421, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Песчаный топот (Лужи)
+local timerSandStompCast					= mod:NewCastTimer(4, 401421, DBM_COMMON_L.POOLS, nil, nil, 3) --Песчаный топот (Лужи)
 
 local yellChronoShear						= mod:NewYell(413013, nil, nil, nil, "YELL") --Темпоральное иссечение
 local yellEonShatter						= mod:NewYell(413142, 47482, nil, nil, "YELL") --Раскол эонов (Прыжок)
@@ -57,7 +58,7 @@ function mod:OnCombatStart(delay)
 	self.vb.stompCount = 0
 	timerSandStompCD:Start(7.2-delay, 1) --7.2
 	timerEonShatterCD:Start(18-delay) --19.5
-	timerChronoShearCD:Start(43.4, 1)
+	timerChronoShearCD:Start(49, 1) --Было отличное кд
 end
 
 function mod:SPELL_CAST_START(args)
@@ -67,7 +68,7 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(15, 1) then
 			self.vb.shatterSet = self.vb.shatterSet + 1
 			self.vb.shatterCount = 0
-			timerEonShatterCD:Start(51.5, self.vb.shatterSet+1)
+			timerEonShatterCD:Start(52, self.vb.shatterSet+1)
 		end
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		if self:IsMythic() then
@@ -101,6 +102,7 @@ function mod:SPELL_CAST_START(args)
 		else--Eon Shatter causes delay
 			timerSandStompCD:Start(36.5, self.vb.stompCount+1) --(2,4,6)
 		end
+		timerSandStompCast:Start()
 	end
 end
 

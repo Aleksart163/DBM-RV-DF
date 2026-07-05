@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,mythic,challenge"
 
-mod:SetRevision("20240428124541")
+mod:SetRevision("20240511090309")
 mod:SetCreatureID(98205)
 mod:SetEncounterID(1825)
 mod:SetUsedIcons(1)
@@ -45,7 +45,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnSupression:Show()
 			specWarnSupression:Play("runout")
-			specWarnSupression:ScheduleVoice(1, "keeprun")
+			specWarnSupression:ScheduleVoice(1, "keepmove")
 			yellSupression:Yell()
 		end
 	elseif spellId == 195804 then

@@ -8,11 +8,11 @@ if (wowToc >= 100200) then
 	mod.upgradedMPlus = true
 end
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(82682)
 mod:SetEncounterID(1751)
-mod:SetHotfixNoticeRev(20231020000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260630000000)
+--mod:SetMinSyncRevision(20260630000000)
 
 mod:RegisterCombat("combat")
 
@@ -95,7 +95,8 @@ if (wowToc >= 100200) then
 
 	function mod:OnCombatEnd(wipe, secondRun)
 		if not wipe and not secondRun then
-			DBM:GetModByName("EverBloomTrash"):PortalRP()
+			local EverBloomTrash = DBM:GetModByName("EverBloomTrash")
+			EverBloomTrash:PortalRP()
 		end
 	end
 

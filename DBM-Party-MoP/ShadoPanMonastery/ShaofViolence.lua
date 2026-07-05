@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220217050005")
+mod:SetRevision("20240603224808")
 mod:SetCreatureID(56719)
 mod:SetEncounterID(1305)
 
@@ -24,7 +24,7 @@ local specWarnShaSpike			= mod:NewSpecialWarningMoveAway(106877, nil, nil, nil, 
 local specWarnShaSpikeNear		= mod:NewSpecialWarningClose(106877, nil, nil, nil, 1, 2)
 
 local timerDisorientingSmashCD	= mod:NewCDTimer(13, 106872, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON)
-local timerShaSpikeCD			= mod:NewNextTimer(9, 106877, nil, nil, nil, 3)
+local timerShaSpikeCD			= mod:NewNextTimer(8.5, 106877, nil, nil, nil, 3)
 
 function mod:ShaSpikeTarget(targetname, uId)
 	if not targetname then return end

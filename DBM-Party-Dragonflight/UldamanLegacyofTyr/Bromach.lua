@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 369675 369754 369703 382303",
 	"SPELL_CAST_SUCCESS 369605 369703",
-	"SPELL_AURA_APPLIED 369725 369660"
+	"SPELL_AURA_APPLIED 369725 369660 369754"
 )
 
 --TODO, warn trogg Ambush casts?
@@ -39,10 +39,11 @@ local specWarnQuakingTotem						= mod:NewSpecialWarningSwitch(369700, "-Healer",
 local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasInterrupt", nil, nil, 1, 2) --Цепная молния
 local specWarnThunderingSlam					= mod:NewSpecialWarningDodge(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
-local timerTremor								= mod:NewCastTimer(10, 369660, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 1, 5) --Дрожь (Повышенный урон)
+local timerTremor								= mod:NewBuffActiveTimer(10, 369660, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 1, 5) --Дрожь (Повышенный урон)
 local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
-local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, DBM_COMMON_L.BIG_ADD, nil, nil, 7, nil, nil, nil, 1, 5) --Сотрясающий тотем
+local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Сотрясающий тотем
 local timerBloodlustCD							= mod:NewCDCountTimer(30, 369754, nil, nil, nil, 2, nil, DBM_COMMON_L.ENRAGE_ICON) --Жажда крови
+local timerBloodlust							= mod:NewBuffActiveTimer(20, 369754, nil, nil, nil, 3, nil, DBM_COMMON_L.ENRAGE_ICON) --Жажда крови
 local timerThunderingSlamCD						= mod:NewCDCountTimer(18.2, 369703, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Оглушающий удар 18-23
 
 mod.vb.callCount = 0
@@ -278,12 +279,17 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerCalloftheDeepCD:Stop()
 			timerQuakingTotemCD:Stop()
 			timerBloodlustCD:Stop()
-			timerTremor:Start() --
+			timerTremor:Start(args.destName) --
 			timerThunderingSlamCD:Start(10, 1) --
 			timerCalloftheDeepCD:Start(12.4, 1) --
 			timerQuakingTotemCD:Start(28.9, 1) --
 			timerBloodlustCD:Start(36.9, 1) --
 			DBM:Debug("Сломался тотем 2", 2)
+		end
+	elseif spellId == 369754 then --Жажда крови
+		local cid = self:GetCIDFromGUID(args.destGUID)
+		if cid == 184018 then
+			timerBloodlust:Start(args.destName)
 		end
 	end
 end

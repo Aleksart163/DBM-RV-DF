@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod(1518, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231226121810")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(98542)
 mod:SetEncounterID(1832)
-mod:SetHotfixNoticeRev(20231027000000)
+mod:SetHotfixNoticeRev(20260630000000)
 mod:SetMinSyncRevision(20231027000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
@@ -29,7 +29,7 @@ local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
 local warnCallSouls					= mod:NewSpellAnnounce(196078, 2)--Change to important warning if it becomes more relevant.
 local warnSoulgorge					= mod:NewStackAnnounce(196930, 4)
 
-local specWarnReapSoul				= mod:NewSpecialWarningDodge(194956, "Tank", nil, nil, 3, 2)
+local specWarnReapSoul				= mod:NewSpecialWarningDodgeCount(194956, "Tank", nil, nil, 3, 2)
 local specWarnSoulEchos				= mod:NewSpecialWarningRun(194966, nil, nil, nil, 1, 2)
 local specWarnSwirlingScythe		= mod:NewSpecialWarningDodge(195254, nil, nil, nil, 1, 2)
 local yellSwirlingScythe			= mod:NewYell(195254)
@@ -86,7 +86,8 @@ end
 
 function mod:OnCombatEnd(wipe, secondRun)
 	if not wipe and not secondRun then
-		DBM:GetModByName("BRHTrash"):StartFirstRP()
+		local BRHTrash = DBM:GetModByName("BRHTrash")
+		BRHTrash:StartFirstRP()
 	end
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
@@ -127,8 +128,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--self.vb.scytheCount = 0
 		--self.vb.echoesCount = 0
 		--self.vb.reapCount = 0
+		timerSwirlingScytheCD:Stop()
 		timerSwirlingScytheCD:Start(9.2, self.vb.scytheCount+1)
+		timerSoulEchoesCD:Stop()
 		timerSoulEchoesCD:Start(16.5, self.vb.echoesCount+1)
+		timerReapSoulCD:Stop()
 		timerReapSoulCD:Start(21.3, self.vb.reapCount+1)
 	elseif spellId == 194956 then
 		self.vb.reapCount = self.vb.reapCount + 1

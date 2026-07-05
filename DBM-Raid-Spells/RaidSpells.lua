@@ -359,7 +359,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 80353 then --Искажение времени
 		if args:IsPlayerSource() and self:AntiSpam(10, "bloodlust1") then
 			yellTimeWarp:Yell(SpellLinks(spellId))
-		elseif self:AntiSpam(5, "bloodlust2") then
+		elseif self:AntiSpam(30, "bloodlust2") then
 			warnTimeWarp:Show(sourceName, spellName)
 		end
 	--[[	if self:AntiSpam(5, "bloodlust") then

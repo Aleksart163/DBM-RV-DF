@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 376811 381770 377559 376934",
 	"SPELL_CAST_SUCCESS 376811",
 	"SPELL_SUMMON 376797",
-	"SPELL_AURA_APPLIED 377222 378022",--377864
+	"SPELL_AURA_APPLIED 377222 378022 390968 383875",--377864
 	"SPELL_AURA_REMOVED 377222 378022",
 	"SPELL_PERIODIC_DAMAGE 378054",
 	"SPELL_PERIODIC_MISSED 378054"
@@ -31,25 +31,29 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or ability.id = 381770 and type = "begincast"
 --]]
-local warnGraspingVines							= mod:NewCastAnnounce(376933, 4) --Хваткие лозы
 local warnConsume								= mod:NewTargetNoFilterAnnounce(377222, 4) --Поглощение
 local warnDecaySpray							= mod:NewSpellAnnounce(376811, 2) --Разлагающие брызги
 --local warnInfectiousSpit						= mod:NewStackAnnounce(377864, 2, nil, "Healer|RemoveDisease")
 
-local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 4) --Хваткие лозы
-local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, DBM_COMMON_L.ATTRACTION, 3, 4) --Хваткие лозы
+local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, nil, nil, 1, 8) --Частичное переваривание
+local specWarnStarvingFrenzy					= mod:NewSpecialWarningSpell(390968, nil, 156861, nil, 3, 4) --Иссушающее бешенство (Бешенство)
+local specWarnDecaySpray						= mod:NewSpecialWarningDodge(376811, nil, nil, nil, 2, 2) --Разлагающие брызги
+local specWarnDecaySpray2						= mod:NewSpecialWarningSwitch(376811, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 4) --Разлагающие брызги (Адды)
+local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 4) --Хваткие лозы (Притягивание)
+local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, DBM_COMMON_L.ATTRACTION, 3, 4) --Хваткие лозы (Притягивание)
 local specWarnGushingOoze						= mod:NewSpecialWarningInterrupt(381770, "HasInterrupt", nil, nil, 1, 2) --Хлещущая слизь
 local specWarnVineWhip							= mod:NewSpecialWarningDefensive(377559, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Хлещущая лоза
 local specWarnVineWhip2							= mod:NewSpecialWarningDodge(377559, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Хлещущая лоза
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(378054, nil, nil, nil, 1, 8) --Увядание!
 
-local timerGraspingVinesCD						= mod:NewCDTimer(47.3, 376933, DBM_COMMON_L.ATTRACTION, nil, nil, 6) --Хваткие лозы
-local timerConsume								= mod:NewTargetTimer(10, 377222, nil, false, 2, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Поглощение
+local timerGraspingVinesCD						= mod:NewCDTimer(54, 376933, DBM_COMMON_L.ATTRACTION, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Хваткие лозы (Притягивание)
+local timerGraspingVinesCast					= mod:NewCastTimer(9, 376933, DBM_COMMON_L.ATTRACTION, nil, nil, 7, nil, nil, nil, 1, 5)
+local timerConsume								= mod:NewTargetTimer(10, 377222, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Поглощение
 local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, DBM_COMMON_L.ADDS, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Разлагающие брызги
 --local timerInfectiousSpitCD					= mod:NewCDTimer(20.1, 377864, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)
-local timerVineWhipCD							= mod:NewCDTimer(16.9, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза (Фронталка)
+local timerVineWhipCD							= mod:NewCDTimer(16, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза (Фронталка)
 
-local yellVineWhip								= mod:NewShortYell(377559, nil, nil, nil, "YELL") --Хлещущая лоза
+local yellVineWhip								= mod:NewShortYell(377559, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Хлещущая лоза
 --local yellInfusedStrikes						= mod:NewShortFadesYell(361966)
 
 mod:AddInfoFrameOption(378022, true)
@@ -58,11 +62,13 @@ mod:AddSetIconOption("SetIconOnDecaySpray", 376811, true, 5, {8, 7, 6, 5})
 --mod:GroupSpells(377222, 378022)--Consume with Consuming
 
 mod.vb.addIcon = 8
+mod.vb.graspingVinesCount = 0
 
 function mod:OnCombatStart(delay)
-	timerVineWhipCD:Start(5.1-delay)
-	timerDecaySprayCD:Start(12.5-delay)
-	timerGraspingVinesCD:Start(22.8-delay)
+	self.vb.graspingVinesCount = 0
+	timerVineWhipCD:Start(6-delay) --
+	timerDecaySprayCD:Start(12-delay) --
+	timerGraspingVinesCD:Start(23.5-delay) --
 --	timerInfectiousSpitCD:Start(25.9-delay)--Restarted by vines anyways
 end
 
@@ -74,12 +80,16 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 376811 then
+	if spellId == 376811 then --Разлагающие брызги
 		self.vb.addIcon = 8
+		specWarnDecaySpray:Show()
+		specWarnDecaySpray:Play("watchstep")
+		timerDecaySprayCD:Start(22.5) --
 	elseif spellId == 381770 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnGushingOoze:Show(args.sourceName)
 		specWarnGushingOoze:Play("kickcast")
-	elseif spellId == 377559 then --Хлещущая лоза
+	elseif spellId == 377559 then --Хлещущая лоза (Фронталка)
+		self.vb.graspingVinesCount = self.vb.graspingVinesCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnVineWhip:Show()
 			specWarnVineWhip:Play("defensive")
@@ -88,9 +98,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnVineWhip2:Show()
 			specWarnVineWhip2:Play("watchstep")
 		end
-		timerVineWhipCD:Start()--16-24 now thanks to worse spell queue than before
-	elseif spellId == 376934 then --Хваткие лозы
-		warnGraspingVines:Show()
+		if self.vb.graspingVinesCount <= 2 then
+			timerVineWhipCD:Start()--16-24 now thanks to worse spell queue than before
+		else
+			timerVineWhipCD:Start(21.9)
+		end
+	elseif spellId == 376934 then --Хваткие лозы (Притягивание)
+		self.vb.graspingVinesCount = 0
 		if self:IsMythic() then
 			if self:IsTank() then
 				specWarnGraspingVines2:Show(DBM_COMMON_L.BOSS)
@@ -106,21 +120,27 @@ function mod:SPELL_CAST_START(args)
 	--[[	if DBM:UnitDebuff("player", 383875) then--Partially Digested
 			specWarnGraspingVines:Show()
 			specWarnGraspingVines:Play("justrun")
-		else
-			warnGraspingVines:Show()
 		end]]
-		timerGraspingVinesCD:Start(54.6)
+		timerVineWhipCD:Stop()
+		timerDecaySprayCD:Stop()
+		timerGraspingVinesCD:Start()
+		timerGraspingVinesCast:Start() --Точно под миф
 		--Timer restarts
 --		timerInfectiousSpitCD:Start(10.2)--No longer exists at all?
-		timerVineWhipCD:Start(9)--9 second timer is started here, but will queue up if consume happens and be used near immediately when consume fades
 --		timerDecaySprayCD:Start(33.2)--No longer restarts here
+	elseif spellId == 383875 then --Частичное переваривание
+		if args:IsPlayer() then
+			specWarnPartiallyDigested:Show()
+			specWarnPartiallyDigested:Play("targetyou")
+		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 376811 then
-		timerDecaySprayCD:Start()--40-44
+		specWarnDecaySpray2:Schedule(2)
+		specWarnDecaySpray2:ScheduleVoice(2, "changetarget")
 	end
 end
 
@@ -144,6 +164,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
 		end
+	elseif spellId == 390968 then --Иссушающее бешенство
+		specWarnStarvingFrenzy:Show()
+		specWarnStarvingFrenzy:Play("enrage")
 --	elseif spellId == 377864 then
 --		local amount = args.amount or 1
 --		if amount % 2 == 0 then
@@ -156,6 +179,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 377222 then
 		timerConsume:Stop(args.destName)
+		timerDecaySprayCD:Start(7.5)
 	elseif spellId == 378022 then--On Boss
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()

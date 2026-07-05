@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("AtalDazarTrash", "DBM-Party-BfA", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(1763)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 255824 253562 255041 253544 253517 256849 252781 256138 253239 254959 252923 256882 255567 256846 252687",

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("CoENTrash", "DBM-Party-Legion", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 239232 237391 238543 236737 242724 242760 239320 239266",

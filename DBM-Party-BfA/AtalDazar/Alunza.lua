@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2082, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(122967)
 mod:SetEncounterID(2084)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20231023000000)
---mod:SetMinSyncRevision(20231021000000)
+mod:SetHotfixNoticeRev(20260630000000)
+--mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -79,6 +79,7 @@ function mod:SPELL_CAST_START(args)
 			warnTransfusion:Show(self.vb.transCount)
 		end
 		--Handle timer resets
+		timerMoltenGoldCD:Stop()
 		timerMoltenGoldCD:Start(25.5, self.vb.goldCount+1)
 	end
 end

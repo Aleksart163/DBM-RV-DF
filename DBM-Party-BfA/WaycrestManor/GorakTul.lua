@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2129, "DBM-Party-BfA", 10, 1021)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240417180519")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(131864)
 mod:SetEncounterID(2117)
-mod:SetHotfixNoticeRev(20231025000000)
-mod:SetMinSyncRevision(20231025000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -24,17 +24,20 @@ mod:RegisterEventsInCombat(
  or ability.id = 268202 and type = "begincast"
 --]]
 --NOTE, death lens is cast 5.2-5.7 seconds after add spawns, but sadly grabbing add GUID to attach a nameplate Id isn't very easy
-local warnDeathlens					= mod:NewCastAnnounce(268202, 2)
-local warnDeathlensTarget			= mod:NewTargetNoFilterAnnounce(268202, 4)
-local warnFire						= mod:NewSpellAnnounce(266198, 1)
+local warnDeathlens					= mod:NewCastAnnounce(268202, 2) --Линза смерти
+local warnDeathlensTarget			= mod:NewTargetNoFilterAnnounce(268202, 4) --Линза смерти
+local warnFire						= mod:NewSpellAnnounce(266198, 1) --Алхимический огонь
 
-local specWarnSummonSlaver			= mod:NewSpecialWarningSwitchCount(266266, "-Healer", nil, nil, 1, 2)
-local specWarnDreadEssence			= mod:NewSpecialWarningCount(266181, nil, nil, nil, 2, 2)
-local specWarnDarkenedLightning		= mod:NewSpecialWarningInterruptCount(266225, "HasInterrupt", nil, nil, 1, 2)
+local specWarnDeathlens				= mod:NewSpecialWarningYou(268202, nil, nil, nil, 1, 2) --Линза смерти
+local specWarnSummonSlaver			= mod:NewSpecialWarningSwitchCount(266266, "-Healer", nil, DBM_COMMON_L.ADD, 1, 2) --Призыв меченного смертью поработителя (Адд)
+local specWarnDreadEssence			= mod:NewSpecialWarningCount(266181, nil, nil, nil, 2, 2) --Сущность ужаса
+local specWarnDarkenedLightning		= mod:NewSpecialWarningInterruptCount(266225, "HasInterrupt", nil, nil, 1, 2) --Темная молния
 
-local timerDarkenedLightningCD		= mod:NewCDCountTimer(14.1, 266225, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--14-20
-local timerSummonSlaverCD			= mod:NewCDCountTimer(16, 266266, nil, nil, nil, 1)--16-22
-local timerDreadEssenceCD			= mod:NewCDCountTimer(27.5, 266181, nil, nil, nil, 2)
+local timerDarkenedLightningCD		= mod:NewCDCountTimer(14.1, 266225, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Темная молния 14-20
+local timerSummonSlaverCD			= mod:NewCDCountTimer(16, 266266, DBM_COMMON_L.ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв меченного смертью поработителя (Адд) 16-22
+local timerDreadEssenceCD			= mod:NewCDCountTimer(27.5, 266181, nil, nil, nil, 2, nil, nil, nil, 1, 5) --Сущность ужаса
+
+local yellDeathlens					= mod:NewShortYell(268202, nil, nil, nil, "YELL") --Линза смерти
 
 mod:AddRangeFrameOption(6, 266225)--Range guessed, can't find spell data for it
 
@@ -69,12 +72,12 @@ function mod:SPELL_CAST_START(args)
 			specWarnDarkenedLightning:Show(args.sourceName, self.vb.darkenCount)
 			specWarnDarkenedLightning:Play("kickcast")
 		end
-	elseif spellId == 266181 then
+	elseif spellId == 266181 then --Сущность ужаса
 		self.vb.dreadCount = self.vb.dreadCount + 1
 		specWarnDreadEssence:Show(self.vb.dreadCount)
 		specWarnDreadEssence:Play("aesoon")
 		timerDreadEssenceCD:Start(nil, self.vb.dreadCount+1)
-	elseif spellId == 268202 then
+	elseif spellId == 268202 then --Линза смерти
 		warnDeathlens:Show()
 	end
 end
@@ -93,8 +96,14 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 268202 then
-		warnDeathlensTarget:CombinedShow(0.3, args.destName)
+	if spellId == 268202 then --Линза смерти
+		if args:IsPlayer() then
+            specWarnDeathlens:Show()
+            specWarnDeathlens:Play("targetyou")
+            yellDeathlens:Yell()
+        else
+            warnDeathlensTarget:CombinedShow(0.3, args.destName)
+        end
 	end
 end
 

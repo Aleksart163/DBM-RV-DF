@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1653, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240127063852")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(98696)
 mod:SetEncounterID(1833)
 mod:SetUsedIcons(3, 2, 1)
-mod:SetHotfixNoticeRev(20231027000000)
-mod:SetMinSyncRevision(20231027000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -56,7 +56,7 @@ mod:AddSetIconOption("SetIconOnDarkRush", 197478, true, 6, {1, 2, 3})
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12281))
 local warnEyeBeam					= mod:NewTargetNoFilterAnnounce(197696, 2)
 
-local specWarnEyeBeam				= mod:NewSpecialWarningRun(197696, nil, nil, nil, 4, 2)
+local specWarnEyeBeam				= mod:NewSpecialWarningRunCount(197696, nil, nil, nil, 4, 2)
 local yellEyeBeam					= mod:NewYell(197696)
 local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(197974, "Tank", nil, nil, 1, 2)
 local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(197797, "HasInterrupt", nil, nil, 1, 2)
@@ -108,7 +108,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 197418 then
 		self.vb.shearCount = self.vb.shearCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnVengefulShear:Show(self.vb.shearCount)
+			specWarnVengefulShear:Show()
 			specWarnVengefulShear:Play("defensive")
 		end
 		timerVengefulShearCD:Start(nil, self.vb.shearCount+1)

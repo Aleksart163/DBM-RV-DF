@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1654, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240122020117")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(96512)
 mod:SetEncounterID(1836)
 mod:SetUsedIcons(8, 7)
-mod:SetHotfixNoticeRev(20231029000000)
-mod:SetMinSyncRevision(20231029000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -31,7 +31,7 @@ ability.id = 198379 and type = "begincast"
 --NOTE: Leap will be broken until 10.2 but that's fine. in TW or while leveling dungeon is easy
 --TODO, min timers could still possibly need tweaking/lowering. Same with min ICD of each ability
 local warnLeap					= mod:NewCountAnnounce(196354, 2)
-local warnNightFall				= mod:NewSpellAnnounce(212464, 2)
+local warnNightFall				= mod:NewCountAnnounce(212464, 2)
 
 local specWarnNightfall			= mod:NewSpecialWarningMove(212464, nil, nil, nil, 1, 2)
 --local specWarnLeap			= mod:NewSpecialWarningDodge(196354, nil, nil, nil, 1)
@@ -102,7 +102,8 @@ function mod:OnCombatEnd(wipe, secondRun)
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 	if not wipe and not secondRun then
-		DBM:GetModByName("DHTTrash"):ResetSecondBossRP()
+		local DHTTrash = DBM:GetModByName("DHTTrash")
+		DHTTrash:ResetSecondBossRP()
 	end
 end
 
@@ -111,7 +112,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 198379 then
 		self.vb.rampageCount = self.vb.rampageCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnRampage:Show(self.vb.rampageCount)
+			specWarnRampage:Show()
 			specWarnRampage:Play("defensive")
 		end
 		timerRampageCD:Start(nil, self.vb.rampageCount+1)

@@ -59,7 +59,7 @@ mod.vb.cosmicCount = 0
 mod.vb.soulCount = 0
 mod.vb.realityCount = 0
 
-local deathGate = DBM:GetSpellName(324698)
+local DeathGate = DBM:GetSpellName(324698)
 
 function mod:OnCombatStart(delay)
 	self.vb.cosmicCount = 0
@@ -97,7 +97,7 @@ function mod:SPELL_CAST_START(args)
 		timerShatterReality:Start()
 		specWarnShatterReality2:Show()
 		specWarnShatterReality2:Play("specialsoon")
-		specWarnShatterReality:Schedule(4, deathGate)
+		specWarnShatterReality:Schedule(4, DeathGate)
 		specWarnShatterReality:ScheduleVoice(4, "findshelter")
 	end
 end

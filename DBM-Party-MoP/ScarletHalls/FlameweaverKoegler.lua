@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(656, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231024034207")
+mod:SetRevision("20240603224808")
 mod:SetCreatureID(59150)
 mod:SetEncounterID(1420)
 mod:SetZone(1001)
@@ -32,7 +32,7 @@ local timerDragonsBreath		= mod:NewBuffActiveTimer(10, 113641, nil, nil, nil, 6)
 local timerDragonsBreathCD		= mod:NewNextTimer(50, 113641, nil, nil, nil, 2)
 
 function mod:OnCombatStart(delay)
-	timerPyroblastCD:Start(5-delay)
+	timerPyroblastCD:Start(2.1-delay)
 --	timerQuickenedMindCD:Start(9-delay)
 --	timerFireballVolleyCD:Start(15.5-delay)
 	timerBookBurnerCD:Start(20.5-delay)

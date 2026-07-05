@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(1672, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(98965, 98970)
 mod:SetEncounterID(1835)
-mod:SetHotfixNoticeRev(20231027000000)
-mod:SetMinSyncRevision(20231027000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 29
 mod:SetBossHPInfoToHighest()
 

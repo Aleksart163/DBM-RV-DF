@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(1655, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(103344)
 mod:SetEncounterID(1837)
-mod:SetHotfixNoticeRev(20240329000000)
-mod:SetMinSyncRevision(20231029000000)
+mod:SetHotfixNoticeRev(20260630000000)
+mod:SetMinSyncRevision(20260630000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -22,13 +22,13 @@ mod:RegisterEventsInCombat(
 --]]
 --NOTE: this boss has some serious spell queuing issues that causes wild variation in timers and ability orders
 --As such, it will use aggressive on the fly timer correction that may feel jarring to users that don't recognize it's happening til they realize it is and why
-local warnShatteredEarth			= mod:NewSpellAnnounce(204666, 2)
+local warnShatteredEarth			= mod:NewCountAnnounce(204666, 2)
 local warnThrowTarget				= mod:NewTargetNoFilterAnnounce(204658, 2)--This is target the tank is THROWN at.
-local warnUproot					= mod:NewSpellAnnounce(212786, 2)
+local warnUproot					= mod:NewCountAnnounce(212786, 2)
 
-local specWarnRoots					= mod:NewSpecialWarningDodge(204574, nil, nil, nil, 2, 2)
+local specWarnRoots					= mod:NewSpecialWarningDodgeCount(204574, nil, nil, nil, 2, 2)
 local yellThrow						= mod:NewYell(204658, 2764)--yell so others can avoid splash damage. I don't think target can avoid
-local specWarnBreath				= mod:NewSpecialWarningDodge(204667, nil, nil, nil, 2, 2)
+local specWarnBreath				= mod:NewSpecialWarningDodgeCount(204667, nil, nil, nil, 2, 2)
 
 local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, nil, nil, nil, 2)--34-60 (basically same as OG)
 local timerCrushingGripCD			= mod:NewCDCountTimer(27.9, 204611, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 4)--27.9-36 (basically same as OG)

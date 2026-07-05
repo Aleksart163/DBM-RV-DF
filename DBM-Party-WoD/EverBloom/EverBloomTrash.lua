@@ -2,11 +2,12 @@ if (DBM:GetTOC() < 100200) then return end--DO NOT DELETE DO NOT DELETE DO NOT D
 local mod	= DBM:NewMod("EverBloomTrash", "DBM-Party-WoD", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(1279)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 164965 165213 169657 169445 164887 169494 169839 426845 169840 426974",

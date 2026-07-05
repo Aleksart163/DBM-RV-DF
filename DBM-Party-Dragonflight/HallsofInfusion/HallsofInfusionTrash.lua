@@ -38,7 +38,7 @@ local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подл�
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
-local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, nil, 4, 4) --Затопление
+local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
@@ -65,7 +65,7 @@ local specWarnTidalDivergence				= mod:NewSpecialWarningInterrupt(377341, "HasIn
 local specWarnAqueousBarrier				= mod:NewSpecialWarningInterrupt(377402, "HasInterrupt", nil, nil, 1, 2) --Водяная преграда
 local specWarnRefreshingTides				= mod:NewSpecialWarningInterrupt(376171, "HasInterrupt", nil, nil, 1, 2) --Освежающие волны
 
-local timerInundateCD 						= mod:NewCDNPTimer(10.5, 388882, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Затопление
+local timerInundateCD 						= mod:NewCDNPTimer(10.5, 388882, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Затопление
 local timerDemoShoutCD						= mod:NewCDNPTimer(30, 374339, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Деморализующий крик
 local timerDazzleCD							= mod:NewCDNPTimer(15, 374563, nil, nil, nil, 3) --Блеск
 local timerZephyrsCallCD					= mod:NewCDNPTimer(5.5, 374823, nil, nil, nil, 1) --Зов ветра (23.1)

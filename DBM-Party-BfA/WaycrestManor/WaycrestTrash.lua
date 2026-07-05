@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("WaycrestTrash", "DBM-Party-BfA", 10)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(1862)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 263959 265881 265876 265368 266036 278551 265759 264038 263905 265407 263961 267824 265372 265371 426541 264390 260699 264050 265352 264150 265760 278444 263943 271174 265346 264407",

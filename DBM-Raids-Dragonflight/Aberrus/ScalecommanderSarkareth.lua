@@ -5,7 +5,7 @@ mod:SetRevision("20240714070000")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20260629000000)
+mod:SetHotfixNoticeRev(20260630000000)
 mod:SetMinSyncRevision(20260630000000)
 mod.respawnTime = 30
 
@@ -414,49 +414,7 @@ local function startPhase3RP(self) --Версия 1
 		timerVoidSlashCD:Start(34.5)
 		timerScouringEternityCD:Start(59.6, 1)
 	end
-	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении дебаффа)", 2)
-end
-
-local function startPhase3(self) --Версия 2, если 1 не сработает
-	self:SetStage(3)
-	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
-	warnPhase:Play("pthree")
-	self.vb.bombCount = 0
-	self.vb.breathCount = 0
-	self.vb.surgeCount = 0
-	self.vb.blossomCount = 0
-	self.vb.disintegrateCount = 0
-	self.vb.tankCount = 0
-	timerEbonMight:Start(11, 1)
-	if self:IsMythic() then
-		timerInfiniteDuressCD:Start(4.5, 1)
-		timerCosmicAscensionCD:Start(6.8, 1)
-		timerHurtlingBarrageCD:Start(18.6, 1)
-		timerVoidSlashCD:Start(19.8)
-		timerEmbraceofNothingnessCD:Start(23.3, 1)
-		timerVoidBombCD:Start(24.5)
-		timerScouringEternityCD:Start(53.1, 1) --46.2
-	elseif self:IsHeroic() then
-		timerInfiniteDuressCD:Start(4.7, 1)
-		timerCosmicAscensionCD:Start(7.5, 1)
-		timerHurtlingBarrageCD:Start(19.7, 1)
-		timerVoidSlashCD:Start(21)
-		timerEmbraceofNothingnessCD:Start(24.7, 1)
-		timerVoidBombCD:Start(28.5)
-		timerScouringEternityCD:Start(50.8, 1) --46.2
-	elseif self:IsNormal() then
-		timerCosmicAscensionCD:Start(7.7, 1)
-		timerHurtlingBarrageCD:Start(21, 1)
-		timerVoidSlashCD:Start(22.3)
-		timerEmbraceofNothingnessCD:Start(26.3, 1)
-		timerVoidBombCD:Start(30.3)
-		timerScouringEternityCD:Start(53.1, 1) --48.6
-	else--LFR
-		timerCosmicAscensionCD:Start(7.2, 1)
-		timerVoidSlashCD:Start(21)
-		timerScouringEternityCD:Start(46.1, 1)
-	end
-	DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)
+	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении баффа)", 2)
 end
 
 function mod:OnCombatStart(delay)
@@ -999,7 +957,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMassDisintegrateCD:Stop()
 		timerSearingBreathCD:Stop()
 		timerBurningClawsCD:Stop()
-	elseif spellId == 410654 then --Начало эвента фазы 3 (Дебафф на боссе)
+	elseif spellId == 410654 then --Начало эвента фазы 3 (Бафф наложился на босса)
 		specWarnVoidEmpowerment:Show(args.destName)
 		specWarnVoidEmpowerment:Play("stopattack")
 		self:SendSync("Phase 3 RP")

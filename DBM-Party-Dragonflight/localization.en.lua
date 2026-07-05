@@ -398,9 +398,10 @@ L:SetMiscLocalization({
 	MurchalProshlyapRP0 = "Oh. don't you worry. We'll find a way to stop them!",
 	MurchalProshlyapRP1 = "The infinites are here and we have to stop them. They want to... oh, oh there's no time to explain!",
 	MurchalProshlyapRP2 = "So the titans' puppets have come to face me.",
-	MurchalProshlyapRP3 = "Come on! The Aspects are just ahead. Uh, wait, uh, the Proto-Aspects I mean.",
-	MurchalProshlyapRP4 = "We need reinforcements!",
-	MurchalProshlyapRP5 = "I need fighters!",
-	MurchalProshlyapRP6 = "We don't have time for this! Oh... where's that relic I picked up?",
-	MurchalProshlyapRP7 = "Okay, let's fix this. We just need to--uh oh."
+	MProshlyapPrePull3	= "Come on! The Aspects are just ahead. Uh, wait, uh, the Proto-Aspects I mean.",
+	MProshlyapPrePull4	= "We need reinforcements!",
+	MProshlyapPrePull5	= "I need fighters!",
+	MProshlyapPrePull6	= "We don't have time for this! Oh... where's that relic I picked up?",
+	MProshlyapPrePull7	= "Okay, let's fix this. We just need to--uh oh.",
+	MProshlyapPrePull8	= "Oh no, it's Morchie! What is she doing here?"
 })

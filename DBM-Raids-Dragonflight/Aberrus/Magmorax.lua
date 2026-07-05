@@ -30,14 +30,14 @@ mod:RegisterEventsInCombat(
 --However, doing timers the way they are done is most accurate if people don't do fight wrong., so may just tell users "do fight correctly 5head" that complain instead of using complicated updateAllTimers methods just to work around player mistakes
 --TODO, fine tune personal stack alerts
 local warnHeatStacks								= mod:NewCountAnnounce(408839, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(408839)) --Опаляющий жар
-local warnMoltenSpittle								= mod:NewTargetCountAnnounce(402994, 2, nil, nil, 307031)
+local warnMoltenSpittle								= mod:NewTargetCountAnnounce(402994, 2, nil, nil, 307031) --Раскаленный плевок (Лужи лавы)
 local warnIncineratingMaws							= mod:NewStackAnnounce(404846, 2, nil, "Tank|Healer")
 
 local specWarnCatastrophicEruption					= mod:NewSpecialWarningSpell(408358, nil, nil, nil, 3, 4) --Катастрофический всплеск
 local specWarnHeatStacks							= mod:NewSpecialWarningStack(408839, nil, 35, nil, nil, 1, 6) --Опаляющий жар
 local specWarnBlazingTantrum						= mod:NewSpecialWarningMove(407879, "Tank", nil, nil, 1, 2) --Огненный гнев
 local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, 316853, nil, 2, 2) --Поджигающий рев (Рев)
-local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, 149213, nil, 2, 2) --Сокрушающий топот (Отталкивание)
+local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Сокрушающий топот (Отталкивание)
 local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402994, nil, 80801, nil, 1, 2) --Раскаленный плевок (Лужи лавы)
 local specWarnBlazingBreath							= mod:NewSpecialWarningDodge(409093, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Пылающее дыхание (Фронталка)
 local specWarnIncineratingMaws						= mod:NewSpecialWarningDefensive(404846, nil, nil, nil, 3, 4) --Обжигающие пасти

@@ -92,7 +92,7 @@ mod:AddSetIconOption("SetIconOnLightningLash", 87762, true, 0, {8}) --Искря
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 GTFO
 
-local groundingName = DBM:GetSpellName(87726)
+local grounding = DBM:GetSpellName(87726)
 local playerGrounded = false
 
 --[[
@@ -111,7 +111,7 @@ end]]
 function mod:LitTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		specWarnLightningLash:Show(groundingName)
+		specWarnLightningLash:Show(grounding)
 		specWarnLightningLash:Play("findshelter")
 		yellLightningLash:Yell()
 	else

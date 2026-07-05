@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("TheaterofPainTrash", "DBM-Party-Shadowlands", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20240808043723")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 341902 341969 330614 342139 333861 330562 333294 331237 333231 317605 342135",

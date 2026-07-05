@@ -3,9 +3,10 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20240622200108")
 mod:SetCreatureID(61634)
 mod:SetEncounterID(1502)
+mod:SetZone(1011)
 
 mod:RegisterCombat("combat")
 
@@ -18,6 +19,10 @@ mod:RegisterEvents(
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 120759",
 	"SPELL_CAST_START 120789"
+)
+
+mod:RegisterEvents(
+	"GOSSIP_SHOW"
 )
 
 local warnCausticTar			= mod:NewSpellAnnounce(-6278, 2)--Announce a tar is ready to be used. (may be spammy and turned off by default if it is)
@@ -81,5 +86,14 @@ function mod:RAID_BOSS_EMOTE(msg)
 		warnBombard:Show()
 		timerBombard:Start()
 		timerBombardCD:Start()
+	end
+end
+
+function mod:GOSSIP_SHOW()
+	local gossipOptionID = self:GetGossipID()
+	if gossipOptionID then
+		if self.Options.AutoGossipEncounter and gossipOptionID == 61620 then
+			self:SelectGossip(gossipOptionID, true)
+		end
 	end
 end

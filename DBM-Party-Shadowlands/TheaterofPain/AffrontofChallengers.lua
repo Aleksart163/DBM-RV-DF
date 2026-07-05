@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2397, "DBM-Party-Shadowlands", 6, 1187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240203193824")
+mod:SetRevision("20240808043723")
 mod:SetCreatureID(164451, 164463, 164461)--Dessia, Paceran, Sathel
 mod:SetEncounterID(2391)
 mod:SetHotfixNoticeRev(20220416000000)
@@ -75,17 +75,6 @@ function mod:OnCombatStart(delay)
 	timerSpectralTransferenceCD:Start(10.5-delay)--SUCCESS 10-13
 	if self:IsMythic() then
 		timerOpportunityStrikesCD:Start(40-delay)
-	end
-	local trashMod = DBM:GetModByName("TheaterofPainTrash")
-	if trashMod then
-		trashMod.isTrashModBossFightAllowed = true
-	end
-end
-
-function mod:OnCombatEnd()
-	local trashMod = DBM:GetModByName("TheaterofPainTrash")
-	if trashMod then
-		trashMod.isTrashModBossFightAllowed = false
 	end
 end
 
