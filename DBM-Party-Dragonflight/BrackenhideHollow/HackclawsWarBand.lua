@@ -38,7 +38,7 @@ local specWarnSavageChargeTarget				= mod:NewSpecialWarningSoak(381461, "Tank", 
 local specWarnBladestorm						= mod:NewSpecialWarningYou(377827, nil, nil, nil, 3, 2) --Вихрь клинков
 
 local timerSavageChargeCD						= mod:NewCDTimer(59.4, 381461, 260292, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дикий рывок (Рывок)
-local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Вихрь клинков
+local timerBladestormCD							= mod:NewCDTimer(59.4, 377827, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вихрь клинков
 --Рви-зуб
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24733))
 local warnMarkedforButchery						= mod:NewTargetNoFilterAnnounce(378229, 4) --Метка свежевателя
@@ -92,7 +92,7 @@ local function scanBosses(self, delay)
 					timerMarkedforButcheryCD:Start(12.5-delay, 1, bossGUID)
 				end
 			else --Лови-тотем
-				timerGreaterHealingRapidsCD:Start(11.9-delay, 1, bossGUID) --
+				timerGreaterHealingRapidsCD:Start(12-delay, 1, bossGUID) --
 				timerHexrickTotemCD:Start(44.8-delay, bossGUID)
 			end
 		end
@@ -117,6 +117,12 @@ function mod:OnCombatStart(delay)
 	self.vb.frenzyCount = 0
 	self.vb.markedCount = 0
 	self:Schedule(1, scanBosses, self, delay)--1 second delay to give IEEU time to populate boss guids
+end
+
+function mod:OnCombatEnd()
+	if Tank then
+		Tank = nil
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -196,7 +202,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not Tank then
 			Tank = args.destName
 		end
-		DBM:Debug("Murchal proshlyap (На игроке Ослепление)", 2)
 --	elseif spellId == 378229 then
 --		if args:IsPlayer() then
 --			specWarnMarkedforButchery:Show()
@@ -212,7 +217,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnHextrick:Show(args.destName)
 		end
-		DBM:Debug("Murchal proshlyap (На игроке Хитрый сглаз)", 2)
 	end
 end
 
@@ -223,13 +227,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			specWarnSavageChargeTarget:Show()
 			specWarnSavageChargeTarget:Play("helpsoak")
 		end
-		DBM:Debug("Murchal proshlyap (Ослепление закончилось)", 2)
 	elseif spellId == 381466 then --Хитрый сглаз
 		if args:IsPlayer() then
 			specWarnDecayedSenses:Show(Tank)
 			specWarnDecayedSenses:Play("helpdispel")
 		end
-		DBM:Debug("Murchal proshlyap (Хитрый сглаз закончился)" .. tostring(Tank), 2)
 	end
 end
 

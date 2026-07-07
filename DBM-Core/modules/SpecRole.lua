@@ -408,7 +408,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["RangedDps"] = true,
 				["ManaUser"] = true,
 				["SpellCaster"] = true,
-				["HasInterrupt"] = IsSpellKnown(351338),--Quell
+				["HasInterrupt"] = true,
 				["RemovePoison"] = IsSpellKnown(365585),--Expunge. Must be specced
 				["RemoveCurse"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveDisease"] = IsSpellKnown(374251),--Cauterizing Flame
@@ -421,7 +421,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["SpellCaster"] = true,
 				["RemoveMagic"] = true,
 				["RemovePoison"] = true,--Auto known
-				["HasInterrupt"] = IsSpellKnown(351338),--Quell
+				["HasInterrupt"] = true,
 				["RemoveCurse"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveDisease"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveEnrage"] = IsSpellKnown(374346),--Overawe

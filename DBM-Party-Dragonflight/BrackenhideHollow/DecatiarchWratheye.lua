@@ -35,8 +35,8 @@ local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer"
 local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, DBM_COMMON_L.FRONTAL, 2, 4) --Удушающее облако гнили
 local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 3, 2) --Удар разложения
 
-local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Угасающие силы
-local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, 374057, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 3) --Тотем взрывной гнили (Призыв тотема) 18-21
+local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Угасающие силы
+local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, 374057, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Тотем взрывной гнили (Призыв тотема) 18-21
 local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Удушающее облако гнили (Фронталка)
 local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар разложения
 
@@ -106,7 +106,7 @@ end
 
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
-	if spellId == 373944 then
+	if spellId == 373944 then --Тотем взрывной гнили
 		specWarnRotburstTotem:Show()
 		specWarnRotburstTotem:Play("attacktotem")
 		timerRotburstTotemCD:Start()

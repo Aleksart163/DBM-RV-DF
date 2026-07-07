@@ -9,7 +9,7 @@ mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 263959 265881 265876 265368 266036 278551 265759 264038 263905 265407 263961 267824 265372 265371 426541 264390 260699 264050 265352 264150 265760 278444 263943 271174 265346 264407",
+	"SPELL_CAST_START 263959 265881 265876 265368 266036 278551 265759 264038 263905 265407 263961 267824 265372 265371 426541 264390 260699 264050 265352 264150 265760 278444 263943 271174 265346 264407 278504",
 	"SPELL_CAST_SUCCESS 264556 271175 264105 265880",--257260
 	"SPELL_AURA_APPLIED 265880 264105 265368 264390 257260 263943",
 	"SPELL_AURA_REMOVED 265880 264105",
@@ -22,72 +22,77 @@ mod:RegisterEvents(
 --]]
 --TODO, Ravaging Leap announce? not like target scan is doable since it's instant cast, anyways, and warning who already got hit isn't useful.
 --TODO, Dark Leap trash version?
-local warnSoulVolley				= mod:NewCastAnnounce(263959, 4)--Off Interrupt for HIgh prio
-local warnRuinousVolley				= mod:NewCastAnnounce(265876, 4)--Off Interrupt for HIgh prio
-local warnSpellbind					= mod:NewCastAnnounce(264390, 4)--Off Interrupt for HIgh prio
-local warnToadBlight				= mod:NewCastAnnounce(265352, 4)
-local warnInfest					= mod:NewCastAnnounce(278444, 4)--Off Interrupt for HIgh prio
-local warnRetch						= mod:NewCastAnnounce(271174, 4)--Off Interrupt for HIgh prio
-local warnPallidGlare				= mod:NewCastAnnounce(265346, 4)--Off Interrupt for HIgh prio
-local warnHorrificVisage			= mod:NewCastAnnounce(264407, 4)--Off Interrupt for HIgh prio
-local warnFocusedStrike				= mod:NewSpellAnnounce(265371, 3, nil, nil, "Tank")
-local warnTearingStrike				= mod:NewSpellAnnounce(264556, 3, nil, nil, "Tank")
-local warnEtch						= mod:NewTargetNoFilterAnnounce(263943, 3)
+local warnAscensionRitual			= mod:NewCastAnnounce(278504, 4) --Ритуал вознесения
+local warnSoulVolley				= mod:NewCastAnnounce(263959, 4) --Залп душ
+local warnRuinousVolley				= mod:NewCastAnnounce(265876, 4) --Губительный залп
+local warnSpellbind					= mod:NewCastAnnounce(264390, 4, nil, nil, nil, 329903) --Оковы чар (Немота)
+local warnToadBlight				= mod:NewCastAnnounce(265352, 4, nil, nil, nil, 185824) --Жабья чума
+local warnInfest					= mod:NewCastAnnounce(278444, 4) --Заражение
+local warnRetch						= mod:NewCastAnnounce(271174, 4) --Тошнота
+local warnPallidGlare				= mod:NewCastAnnounce(265346, 4, nil, nil, nil, 329903) --Мертвенный взгляд (Дезориентация)
+local warnHorrificVisage			= mod:NewCastAnnounce(264407, 4) --Ужасающий лик
+local warnDinnerBell				= mod:NewCastAnnounce(265407, 4) --Звонок к обеду
+local warnFocusedStrike				= mod:NewSpellAnnounce(265371, 3, nil, nil, "Tank") --Сосредоточенный удар
+local warnTearingStrike				= mod:NewSpellAnnounce(264556, 3, nil, nil, "Tank") --Разрывающий плоть удар
+local warnEtch						= mod:NewTargetNoFilterAnnounce(263943, 3) --Гравировка
 
-local specWarnShadowCleave			= mod:NewSpecialWarningDodge(265372, nil, nil, nil, 2, 2)
-local specWarnSplinterSpike			= mod:NewSpecialWarningDodge(265759, nil, nil, nil, 2, 2)
-local specWarnUproot				= mod:NewSpecialWarningDodge(264038, nil, nil, nil, 2, 2)
-local specWarnShatter				= mod:NewSpecialWarningDodge(264150, nil, nil, nil, 2, 2)
-local specWarnMarkingCleave			= mod:NewSpecialWarningDodge(263905, "Tank", nil, 2, 1, 2)
-local specWarnWardingCandle			= mod:NewSpecialWarningMove(263961, "Tank", nil, nil, 1, 2)
-local specWarnDreadMark				= mod:NewSpecialWarningMoveAway(265880, nil, nil, nil, 1, 2)
-local yellDreadMark					= mod:NewYell(265880)
-local yellDreadMarkFades			= mod:NewShortFadesYell(265880)
-local specWarnRunicMark				= mod:NewSpecialWarningMoveAway(264105, nil, nil, nil, 1, 2)
-local yellRunicMark					= mod:NewYell(264105)
-local yellRunicMarkFades			= mod:NewShortFadesYell(264105)
-local specWarnSoulVolley			= mod:NewSpecialWarningInterrupt(263959, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnRuinousVolley			= mod:NewSpecialWarningInterrupt(265876, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnSpiritedDefense		= mod:NewSpecialWarningInterrupt(265368, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDrainEssence			= mod:NewSpecialWarningInterrupt(266036, "HasInterrupt", nil, nil, 1, 2)
-local specWarnInfectedThorn			= mod:NewSpecialWarningInterrupt(264050, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSoulFetish			= mod:NewSpecialWarningInterrupt(278551, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDinnerBell			= mod:NewSpecialWarningInterrupt(265407, "HasInterrupt", nil, nil, 1, 2)
-local specWarnScarSoul				= mod:NewSpecialWarningInterrupt(267824, "HasInterrupt", nil, nil, 1, 2)
+local specWarnEtch					= mod:NewSpecialWarningYou(263943, nil, nil, nil, 1, 2) --Гравировка
+local specWarnShadowCleave			= mod:NewSpecialWarningDodge(265372, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Теневой рассекающий удар
+local specWarnSplinterSpike			= mod:NewSpecialWarningDodge(265759, nil, nil, nil, 2, 2) --Расколотые шипы
+local specWarnUproot				= mod:NewSpecialWarningDodge(264038, nil, nil, nil, 2, 2) --Прорастание
+local specWarnShatter				= mod:NewSpecialWarningDodge(264150, 185824, nil, nil, 2, 2) --Обледенение (Взрыв)
+local specWarnMarkingCleave			= mod:NewSpecialWarningDodge(263905, "Tank", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Отмечающий удар клинком (Фронталка)
+local specWarnWardingCandle			= mod:NewSpecialWarningMove(263961, "Tank", nil, nil, 1, 2) --Защитные свечи
+local specWarnDreadMark				= mod:NewSpecialWarningMoveAway(265880, 49685, nil, nil, 1, 2) --Жуткая метка (Бомба)
+local specWarnRunicMark				= mod:NewSpecialWarningMoveAway(264105, 49685, nil, nil, 1, 2) --Руническая метка (Бомба)
+local specWarnAscensionRitual		= mod:NewSpecialWarningInterrupt(278504, "HasInterrupt", nil, nil, 1, 2) --Ритуал вознесения
+local specWarnSoulVolley			= mod:NewSpecialWarningInterrupt(263959, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Залп душ
+local specWarnRuinousVolley			= mod:NewSpecialWarningInterrupt(265876, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Губительный залп
+local specWarnSpiritedDefense		= mod:NewSpecialWarningInterrupt(265368, "HasInterrupt", nil, nil, 1, 2) --Защита духов
+local specWarnDrainEssence			= mod:NewSpecialWarningInterrupt(266036, "HasInterrupt", nil, nil, 1, 2) --Вытягивание сущности
+local specWarnInfectedThorn			= mod:NewSpecialWarningInterrupt(264050, "HasInterrupt", nil, nil, 1, 2) --Зараженный шип
+local specWarnSoulFetish			= mod:NewSpecialWarningInterrupt(278551, "HasInterrupt", nil, nil, 1, 2) --Фетиш души
+local specWarnDinnerBell			= mod:NewSpecialWarningInterrupt(265407, "HasInterrupt", nil, nil, 1, 2) --Звонок к обеду
+local specWarnScarSoul				= mod:NewSpecialWarningInterrupt(267824, "HasInterrupt", nil, nil, 1, 2) --Оставить шрам на душе
 local specWarnRunicBolt				= mod:NewSpecialWarningInterrupt(426541, false, nil, nil, 1, 2)--Secondary, spellbind is prio
-local specWarnSpellbind				= mod:NewSpecialWarningInterrupt(264390, "HasInterrupt", nil, nil, 1, 2)--High Prio
+local specWarnSpellbind				= mod:NewSpecialWarningInterrupt(264390, "HasInterrupt", 329903, nil, 1, 2) --Оковы чар (Немота)
 local specWarnSoulBolt				= mod:NewSpecialWarningInterrupt(260699, false, nil, nil, 1, 2)--Secondary, Soul Volley is prio
-local specWarnInfest				= mod:NewSpecialWarningInterrupt(278444, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnRetch					= mod:NewSpecialWarningInterrupt(271174, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnPallidGlare			= mod:NewSpecialWarningInterrupt(265346, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnHorrificVisage		= mod:NewSpecialWarningInterrupt(264407, "HasInterrupt", nil, nil, 1, 2)--High Prio
+local specWarnInfest				= mod:NewSpecialWarningInterrupt(278444, "HasInterrupt", nil, nil, 1, 2) --Заражение
+local specWarnRetch					= mod:NewSpecialWarningInterrupt(271174, "HasInterrupt", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Тошнота
+local specWarnPallidGlare			= mod:NewSpecialWarningInterrupt(265346, "HasInterrupt", 242085, nil, 1, 2) --Мертвенный взгляд (Дезориентация)
+local specWarnHorrificVisage		= mod:NewSpecialWarningInterrupt(264407, "HasInterrupt", nil, nil, 1, 2) --Ужасающий лик
 local specWarnDecayingTouch			= mod:NewSpecialWarningDefensive(265881, nil, nil, nil, 1, 2)
 local specWarnThornedBarrage		= mod:NewSpecialWarningDefensive(265760, nil, nil, nil, 1, 2)
-local specWarnSpiritedDefenseDispel	= mod:NewSpecialWarningDispel(265368, "MagicDispeller", nil, nil, 1, 2)
-local specWarnRunicMarkDispel		= mod:NewSpecialWarningDispel(264105, "RemoveCurse", nil, nil, 1, 2)
+local specWarnSpiritedDefenseDispel	= mod:NewSpecialWarningDispel(265368, "MagicDispeller", nil, nil, 1, 2) --Защита духов
+local specWarnRunicMarkDispel		= mod:NewSpecialWarningDispel(264105, "RemoveCurse", 49685, nil, 1, 2) --Руническая метка (Бомба)
 local specWarnEnrage				= mod:NewSpecialWarningDispel(257260, "RemoveEnrage", nil, nil, 1, 2)
 
-local timerScarSoulCD				= mod:NewCDNPTimer(12.2, 267824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Needs more data
-local timerFocusedStrikeCD			= mod:NewCDNPTimer(8.4, 265371, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerShadowCleaveCD			= mod:NewCDNPTimer(12.1, 265372, nil, nil, nil, 3)
-local timerSpiritedDefenseCD		= mod:NewCDNPTimer(23, 265368, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerRunicMarkCD				= mod:NewCDNPTimer(12.1, 264105, nil, nil, nil, 3)
-local timerEtchCD					= mod:NewCDNPTimer(12.1, 263943, nil, nil, nil, 3)
-local timerInfectedThornsCD			= mod:NewCDNPTimer(8.5, 264050, nil, nil, nil, 3)
-local timerDrainEssenceCD			= mod:NewCDNPTimer(15.7, 266036, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerTearingStrikeCD			= mod:NewCDNPTimer(10.9, 264556, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerUprootCD					= mod:NewCDNPTimer(15.2, 264038, nil, nil, nil, 3)
-local timerSplinterSpikeCD			= mod:NewCDNPTimer(15.7, 265759, nil, nil, nil, 3)
+local timerScarSoulCD				= mod:NewCDNPTimer(12.2, 267824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оставить шрам на душе Needs more data
+local timerFocusedStrikeCD			= mod:NewCDNPTimer(8.4, 265371, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Сосредоточенный удар
+local timerTearingStrikeCD			= mod:NewCDNPTimer(10.9, 264556, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разрывающий плоть удар
+local timerShadowCleaveCD			= mod:NewCDNPTimer(12.1, 265372, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Теневой рассекающий удар (Фронталка)
+local timerSpiritedDefenseCD		= mod:NewCDNPTimer(23, 265368, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Защита духов
+local timerRunicMarkCD				= mod:NewCDNPTimer(12.1, 264105, 167180, nil, nil, 3) --Руническая метка (Бомбы)
+local timerEtchCD					= mod:NewCDNPTimer(12.1, 263943, nil, nil, nil, 3) --Гравировка
+local timerInfectedThornsCD			= mod:NewCDNPTimer(8.5, 264050, nil, nil, nil, 3) --Зараженный шип
+local timerDrainEssenceCD			= mod:NewCDNPTimer(15.7, 266036, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Вытягивание сущности
+local timerUprootCD					= mod:NewCDNPTimer(15.2, 264038, nil, nil, nil, 3) --Прорастание
+local timerSplinterSpikeCD			= mod:NewCDNPTimer(15.7, 265759, nil, nil, nil, 3) --Расколотые шипы
 local timerThornedBarrageCD			= mod:NewCDNPTimer(11.7, 265760, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerRavagingLeapCD			= mod:NewCDNPTimer(8.5, 271175, nil, nil, nil, 3)
-local timerRetchCD					= mod:NewCDNPTimer(20.2, 271174, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDinnerBellCD				= mod:NewCDNPTimer(16.6, 265407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSpellbindCD				= mod:NewCDNPTimer(19.2, 264390, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSoulVolleyCD				= mod:NewCDNPTimer(17.7, 263959, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerWardingCandleCD			= mod:NewCDNPTimer(18.2, 263961, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerRuinousoVolleyCD			= mod:NewCDNPTimer(17, 263959, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerDreadMarkCD				= mod:NewCDNPTimer(18.2, 265880, nil, nil, nil, 3)
-local timerHorrificVisageCD			= mod:NewCDNPTimer(24, 264407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerRetchCD					= mod:NewCDNPTimer(20.2, 271174, DBM_COMMON_L.FRONTAL, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Тошнота
+local timerDinnerBellCD				= mod:NewCDNPTimer(16.6, 265407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Звонок к обеду
+local timerSpellbindCD				= mod:NewCDNPTimer(19.2, 264390, 329903, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оковы чар (Немота)
+local timerSoulVolleyCD				= mod:NewCDNPTimer(17.7, 263959, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerWardingCandleCD			= mod:NewCDNPTimer(18.2, 263961, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Защитные свечи
+local timerRuinousoVolleyCD			= mod:NewCDNPTimer(17, 265876, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerDreadMarkCD				= mod:NewCDNPTimer(18.2, 265880, 167180, nil, nil, 3) --Жуткая метка (Бомбы)
+local timerHorrificVisageCD			= mod:NewCDNPTimer(24, 264407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ужасающий лик
+
+local yellDreadMark					= mod:NewYell(265880, 49685, nil, nil, "YELL") --Жуткая метка (Бомба)
+local yellDreadMarkFades			= mod:NewShortFadesYell(265880, 49685, nil, nil, "YELL") --Жуткая метка (Бомба)
+local yellRunicMark					= mod:NewYell(264105, 49685, nil, nil, "YELL") --Руническая метка (Бомба)
+local yellRunicMarkFades			= mod:NewShortFadesYell(264105, 49685, nil, nil, "YELL") --Руническая метка (Бомба)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
 
@@ -95,7 +100,7 @@ function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	local spellId = args.spellId
-	if spellId == 263959 then
+	if spellId == 263959 then --Залп душ
 		timerSoulVolleyCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn263959interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnSoulVolley:Show(args.sourceName)
@@ -103,7 +108,7 @@ function mod:SPELL_CAST_START(args)
 		elseif self:AntiSpam(3, 7) then
 			warnSoulVolley:Show()
 		end
-	elseif spellId == 265876 then
+	elseif spellId == 265876 then --Губительный залп
 		timerRuinousoVolleyCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn265876interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnRuinousVolley:Show(args.sourceName)
@@ -181,6 +186,8 @@ function mod:SPELL_CAST_START(args)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDinnerBell:Show(args.sourceName)
 			specWarnDinnerBell:Play("kickcast")
+		elseif self:AntiSpam(2, "DinnerBell") then
+			warnDinnerBell:Show()
 		end
 	elseif spellId == 264050 then
 		if args:GetSrcCreatureID() == 135474 then--Thistle acolyte has 8.5 CD, coven thornshapder has MUCH shorter CD that we don't track
@@ -248,9 +255,15 @@ function mod:SPELL_CAST_START(args)
 		warnToadBlight:Show()
 	elseif spellId == 263943 then
 		timerEtchCD:Start(nil, args.sourceGUID)
+	elseif spellId == 278504 then --Ритуал вознесения
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnAscensionRitual:Show(args.sourceName)
+			specWarnAscensionRitual:Play("kickcast")
+		elseif self:AntiSpam(2, "AscensionRitual") then
+			warnAscensionRitual:Show()
+		end
 	end
 end
-
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -284,9 +297,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif args:IsPlayer() then
 			specWarnRunicMark:Show()
 			specWarnRunicMark:Play("runout")
-		end
-		--Always do yell though
-		if args:IsPlayer() then
 			yellRunicMark:Yell()
 			yellRunicMarkFades:Countdown(spellId)
 		end
@@ -296,8 +306,13 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 257260 and self:AntiSpam(4, 3) then
 		specWarnEnrage:Show(args.destName)
 		specWarnEnrage:Play("enrage")
-	elseif spellId == 263943 and args:IsPlayer() or self:IsHealer() then--Antispam if needed
-		warnEtch:Show(args.destName)
+	elseif spellId == 263943 then --Гравировка
+		if args:IsPlayer() then
+			specWarnEtch:Show()
+			specWarnEtch:Play("targetyou")
+		else
+			warnEtch:Show(args.destName)
+		end
 	end
 end
 

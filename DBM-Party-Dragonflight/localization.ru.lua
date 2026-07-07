@@ -395,9 +395,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({ 
-	MurchalProshlyapRP0 = "О, не волнуйся. Мы придумаем, как их остановить!",
-	MurchalProshlyapRP1 = "Ноздорму! Алекстраза! И остальные! Драконы Бесконечности здесь, их надо остановить.",
-	MurchalProshlyapRP2 = "Слуги титанов пришли сразиться со мной.",
+	MProshlyapPrePull0	= "О, не волнуйся. Мы придумаем, как их остановить!",
+	MProshlyapPrePull1	= "Ноздорму! Алекстраза! И остальные! Драконы Бесконечности здесь, их надо остановить.",
+	MProshlyapPrePull2	= "Слуги титанов пришли сразиться со мной.",
 	MProshlyapPrePull3	= "Пошли! Аспекты впереди. Ну, то есть... прото-аспекты.",
 	MProshlyapPrePull4	= "Нам нужно подкрепление!",
 	MProshlyapPrePull5	= "Мне нужны бойцы!",

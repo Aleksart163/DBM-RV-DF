@@ -53,7 +53,7 @@ local specWarnAncientRadiance				= mod:NewSpecialWarningSpell(413023, nil, nil, 
 local specWarnTemporalStrike				= mod:NewSpecialWarningDodge(412136, nil, nil, nil, 2, 2)
 local specWarnTimerip						= mod:NewSpecialWarningDodge(412063, nil, nil, nil, 2, 2)
 local specWarnUntwist						= mod:NewSpecialWarningDefensive(413529, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Распутывание (Фронталка)
-local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Вневременное проклятие (Бомбардировка)
+local specWarnTimelessCurse					= mod:NewSpecialWarningDodge(413621, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Вневременное проклятие (Обстрел)
 local specWarnBlightSpew					= mod:NewSpecialWarningDodge(412806, nil, nil, nil, 2, 2)
 local specWarnOrbofContemplation			= mod:NewSpecialWarningDodge(412129, nil, nil, nil, 2, 2) --Сфера раздумий High Prio
 --local specWarnElectroJuicedGigablast		= mod:NewSpecialWarningDodge(412200, nil, nil, nil, 2, 2)
@@ -93,7 +93,7 @@ local timerTaintedSandsCD					= mod:NewCDNPTimer(13.3, 415436, nil, nil, nil, 3)
 local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerBloomCD							= mod:NewCDNPTimer(16.7, 413544, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Цветение
 local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Распутывание (Фронталка)
-local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие (Бомбардировка)
+local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие (Обстрел)
 local timerInfiniteFuryCD					= mod:NewCDNPTimer(19, 413622, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Бесконечная ярость (19 сек у Караульного из рода Бесконечности и Диверсанта)
 local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
 local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -511,49 +511,6 @@ function mod:GOSSIP_SHOW()
 	end
 end
 
---[[function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.MurchalProshlyapRP1 or msg:find(L.MurchalProshlyapRP1)) then
-		self:SendSync("NewRP1")
-	elseif (msg == L.MurchalProshlyapRP2 or msg:find(L.MurchalProshlyapRP2)) then
-		self:SendSync("NewRP2")
-	elseif (msg == L.MurchalProshlyapRP3 or msg:find(L.MurchalProshlyapRP3)) then
-		self:SendSync("NewRP3")
-	elseif (msg == L.MurchalProshlyapRP4 or msg:find(L.MurchalProshlyapRP4)) or (msg == L.MurchalProshlyapRP5 or msg:find(L.MurchalProshlyapRP5)) then --Таймер пулла Гарроша возможно отличается
-		self:SendSync("NewRP4")
-	end
-end
-
-function mod:CHAT_MSG_MONSTER_SAY(msg)
-	if (msg == L.MurchalProshlyapRP0 or msg:find(L.MurchalProshlyapRP0)) then
-		self:SendSync("NewRP0")
-	elseif (msg == L.MurchalProshlyapRP6 or msg:find(L.MurchalProshlyapRP6)) then
-		self:SendSync("NewRP6")
-	elseif (msg == L.MurchalProshlyapRP7 or msg:find(L.MurchalProshlyapRP7)) then
-		self:SendSync("NewRP7")
-	end
-end
-
-function mod:OnSync(msg)
-	if msg == "NewRP0" and self:AntiSpam(10, 2) then --Таймер пула перед 1-ым боссом
-		timerRP:Start(24)
-		timerTimelessCurseCD:Start(12)
-		specWarnTimelessCurse:Schedule(12)
-		specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
-	elseif msg == "NewRP1" and self:AntiSpam(10, 2) then --Таймер пула после Гнили
-		timerRP:Start(73.5)
-	elseif msg == "NewRP2" and self:AntiSpam(10, 2) then --Таймер пула Иридикрона
-		timerRP:Start(29)
-	elseif msg == "NewRP3" and self:AntiSpam(10, 2) then --Таймер пула после Гнили 2
-		timerRP:Start(88)
-	elseif msg == "NewRP4" and self:AntiSpam(10, 2) then --Таймер пула Андуина или Гарроша
-		timerRP:Start(15.5)
-	elseif msg == "NewRP6" and self:AntiSpam(10, 2) then --Таймер на Гнили--
-		timerRP:Start(16.5)
-	elseif msg == "NewRP7" and self:AntiSpam(10, 2) then --Таймер на треш после Тира
-		timerRP:Start(15)
-	end
-end]]
-
 --Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MProshlyapPrePull8 or msg:find(L.MProshlyapPrePull8)) then
@@ -562,6 +519,10 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:SendSync("MPPR4") --
 	elseif (msg == L.MProshlyapPrePull3 or msg:find(L.MProshlyapPrePull3)) then
 		self:SendSync("MPPR3") --
+	elseif (msg == L.MProshlyapPrePull2 or msg:find(L.MProshlyapPrePull2)) then
+		self:SendSync("MPPR2") --
+	elseif (msg == L.MProshlyapPrePull1 or msg:find(L.MProshlyapPrePull1)) then
+		self:SendSync("MPPR1") --
 	end
 end
 
@@ -570,13 +531,15 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 		self:SendSync("MPPR7") --
 	elseif (msg == L.MProshlyapPrePull6 or msg:find(L.MProshlyapPrePull6)) then
 		self:SendSync("MPPR6") --
+	elseif (msg == L.MProshlyapPrePull0 or msg:find(L.MProshlyapPrePull0)) then
+		self:SendSync("MPPR0")
 	end
 end
 
 function mod:OnSync(event, arg)
 	if event == "MPPR8" and self:AntiSpam(10, "Morchie") then --Таймер пулла Морхи
 		timerRP:Start(25) --
-	elseif event == "MPPR7" and self:AntiSpam(10, "Trash1") then --Таймер пулла треша после Тира
+	elseif event == "MPPR7" and self:AntiSpam(10, "Trash3") then --Таймер пулла треша после Тира
 		timerRP:Start(15) --
 	elseif event == "MPPR6" and self:AntiSpam(10, "Trash2") then --Таймер пулла треша на Гнили
 		timerRP:Start(16.5) --
@@ -584,5 +547,14 @@ function mod:OnSync(event, arg)
 		timerRP:Start(15.5) --
 	elseif event == "MPPR3" and self:AntiSpam(10, "Blight2") then --Таймер пула после Гнили 2
 		timerRP:Start(88) --
+	elseif event == "MPPR2" and self:AntiSpam(10, "Iridikron") then --Таймер пула Иридикрона
+		timerRP:Start(29) --
+	elseif event == "MPPR1" and self:AntiSpam(10, "Blight1") then --Таймер пула после Гнили 1
+		timerRP:Start(73.5) --
+	elseif event == "MPPR0" and self:AntiSpam(10, "Trash1") then --Таймер пула перед 1-ым боссом
+		timerRP:Start(24) --
+		timerTimelessCurseCD:Start(12)
+		specWarnTimelessCurse:Schedule(12)
+		specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
 	end
 end

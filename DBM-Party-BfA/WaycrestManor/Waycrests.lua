@@ -27,22 +27,25 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or (target.id = 131527 or target.id = 131545) and type = "death"
 --]]
-local warnVirulentPathogen			= mod:NewTargetAnnounce(261440, 2)
-local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2)
+local warnVirulentPathogen			= mod:NewTargetAnnounce(261440, 2) --Смертоносный патоген
+local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2) --Передача жизненной силы
 
-local specWarnDiscordantCadenza		= mod:NewSpecialWarningDodgeCount(268306, nil, nil, nil, 2, 2)
-local specWarnVirulentPathogen		= mod:NewSpecialWarningMoveAway(261440, nil, nil, nil, 1, 2)
-local yellVirulentPathogen			= mod:NewShortYell(261440)
-local yellVirulentPathogenFades		= mod:NewShortFadesYell(261440)
+local specWarnWrackingChord			= mod:NewSpecialWarningInterruptCount(268278, "HasInterrupt", nil, nil, 1, 2) --Сокрушающий аккорд
+local specWarnDiscordantCadenza		= mod:NewSpecialWarningDodge(268306, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Нестройная каденция (Обстрел)
+local specWarnVirulentPathogen		= mod:NewSpecialWarningMoveAway(261440, nil, nil, nil, 4, 2) --Смертоносный патоген
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
-local timerWastingStrikeCD			= mod:NewCDCountTimer(16, 261438, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3)--16.5-17.1
-local timerVirulentPathogenCD		= mod:NewCDCountTimer(15.4, 261440, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)--15.4-17
-local timerDiscordantCadenzaCD		= mod:NewCDCountTimer(23.5, 268306, nil, nil, nil, 3)--Casting transfer can delay it further since that triggers a 3 second spell lockout+cast time
-local timerWrackingChordCD			= mod:NewCDCountTimer(7.3, 268278, nil, nil, nil, 4, nil, DBM_COMMON_L.DISEASE_ICON)
+local timerWastingStrikeCD			= mod:NewCDCountTimer(16, 261438, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3) --Изнуряющий удар 16.5-17.1
+local timerVirulentPathogenCD		= mod:NewCDCountTimer(15.4, 261440, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON) --Смертоносный патоген 15.4-17
+local timerDiscordantCadenzaCD		= mod:NewCDCountTimer(23.5, 268306, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестройная каденция (Обстрел) Casting transfer can delay it further since that triggers a 3 second spell lockout+cast time
+local timerWrackingChordCD			= mod:NewCDCountTimer(7.3, 268278, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Сокрушающий аккорд
+
+local yellVirulentPathogen			= mod:NewShortYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
+local yellVirulentPathogenFades		= mod:NewShortFadesYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
 
 mod:AddRangeFrameOption(6, 261440)
 
+mod.vb.interruptCount = 0
 mod.vb.wastingCount = 0
 mod.vb.virulentCount = 0
 mod.vb.discordCount = 0--Reused for wracking in stage 2
@@ -66,6 +69,7 @@ end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
+	self.vb.interruptCount = 0
 	self.vb.wastingCount = 0
 	self.vb.virulentCount = 0
 	self.vb.discordCount = 0
@@ -85,13 +89,27 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 268306 and self:AntiSpam(6, 1) then--Antispam in case she interrupts cast to cast transfer, then casts it a second time
-		specWarnDiscordantCadenza:Show(self.vb.discordCount+1)
+		specWarnDiscordantCadenza:Show()
 		specWarnDiscordantCadenza:Play("watchstep")
 	elseif spellId == 261440 then
 		self.vb.virulentCount = self.vb.virulentCount + 1
 		timerVirulentPathogenCD:Start(15.7, self.vb.virulentCount+1, args.sourceGUID)
-	elseif spellId == 268278 and self:GetStage(2) then
+	elseif spellId == 268278 and self:GetStage(2) then --Сокрушающий аккорд
+		self.vb.interruptCount = self.vb.interruptCount + 1
 		self.vb.discordCount = self.vb.discordCount + 1--Reused since not needed anymore otherwise
+		local kickCount = self.vb.interruptCount
+		specWarnWrackingChord:Show(args.sourceName, kickCount)
+		if kickCount == 1 then
+			specWarnWrackingChord:Play("kick1r")
+		elseif kickCount == 2 then
+			specWarnWrackingChord:Play("kick2r")
+		--пока на 2 каста, дальше глянем--
+	--	elseif kickCount == 3 then
+	--		specWarnSoulBolt:Play("kick3r")
+		end
+		if self.vb.interruptCount == 2 then
+			self.vb.interruptCount = 0
+		end
 		timerWrackingChordCD:Start(nil, self.vb.discordCount+1, args.sourceGUID)--8
 	end
 end

@@ -42,7 +42,7 @@ local warnPhase								= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, ni
 local warnOblivionStack						= mod:NewCountAnnounce(401951, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401951)) --Забвение
 local warnMindFragment						= mod:NewAddsLeftAnnounce(403997, 1)--Not technically adds, but wording of option and alert text is ambigious that it doesn't matter, it fits
 local warnEmptynessBetweenStars				= mod:NewFadesAnnounce(401215, 1) --Межзвездная пустота
-local warnVoidEmpowerment					= mod:NewFadesAnnounce(403284, 1, nil, nil, 413106) --Межзвездная пустота 
+local warnVoidEmpowerment					= mod:NewFadesAnnounce(403284, 1, nil, nil, 413106) --Наделение силой Бездны (Сила Бездны)
 
 local specWarnOblivionStack					= mod:NewSpecialWarningStack(401951, nil, 6, nil, nil, 1, 4) --Забвение
 local specWarnEmptynessBetweenStars			= mod:NewSpecialWarningYou(401215, nil, nil, nil, 1, 5) --Межзвездная пустота

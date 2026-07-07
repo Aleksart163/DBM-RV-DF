@@ -53,7 +53,7 @@ local specWarnSoulManipulation		= mod:NewSpecialWarningSwitch(260907, nil, nil, 
 local timerSoulManipulationCD		= mod:NewCDTimer(12.5, 260907, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Управление душой Always tank? if not, remove tank icon
 --Радужный кристалл
 mod:AddTimerLine(DBM:GetSpellName(260805))
-local warnActiveTriad				= mod:NewTargetNoFilterAnnounce(260805, 2, nil, nil, 178776) --Радужный кристалл (Руна мощи)
+local warnActiveTriad				= mod:NewTargetNoFilterAnnounce(260805, 2, nil, nil, 282914) --Радужный кристалл (Переполняющая мощь)
 
 local specWarnRitual				= mod:NewSpecialWarningDefensive(260773, nil, nil, nil, 3, 4) --Ужасный ритуал
 local specWarnRitual2				= mod:NewSpecialWarningSoon(260773, nil, nil, nil, 2, 4) --Ужасный ритуал

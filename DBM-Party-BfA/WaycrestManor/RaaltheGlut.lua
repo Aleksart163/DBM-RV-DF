@@ -23,17 +23,17 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, longer pulls to detect more variations in Rotten casts
-local warnTenderize					= mod:NewCountAnnounce(264923, 2)
-local warnConsumeAll				= mod:NewCastAnnounce(264734, 4)
+local warnTenderize					= mod:NewCountAnnounce(264923, 2) --Отбивка
+local warnConsumeAll				= mod:NewCastAnnounce(264734, 4) --Поглощение
 
-local specWarnServant				= mod:NewSpecialWarningSwitchCount(264931, nil, nil, nil, 1, 2)
-local specWarnTenderize				= mod:NewSpecialWarningDodge(264923, nil, nil, nil, 1, 2)
-local specWarnRottenExpulsion		= mod:NewSpecialWarningDodgeCount(264694, nil, nil, nil, 1, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(264712, nil, nil, nil, 1, 8)
+local specWarnServant				= mod:NewSpecialWarningSwitch(264931, "Dps", nil, DBM_COMMON_L.ADDS, 1, 2) --Призыв слуг
+local specWarnTenderize				= mod:NewSpecialWarningDodge(264923, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Отбивка (Фронталка)
+local specWarnRottenExpulsion		= mod:NewSpecialWarningDodge(264694, nil, nil, nil, 1, 2) --Волна гнили
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(264712, nil, nil, nil, 1, 8) --Волна гнили
 
-local timerServantCD				= mod:NewCDCountTimer(42.5, 264931, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerTenderizeCD				= mod:NewCDCountTimer(43.7, 264923, nil, nil, nil, 3)--Timer for first in each set of 3
-local timerRottenExpulsionCD		= mod:NewCDCountTimer(20.2, 264694, nil, nil, nil, 3)--14.6--26 (health based?)
+local timerServantCD				= mod:NewCDCountTimer(42.5, 264931, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв слуг
+local timerTenderizeCD				= mod:NewCDCountTimer(43.7, 264923, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Отбивка (Фронталка) Timer for first in each set of 3
+local timerRottenExpulsionCD		= mod:NewCDCountTimer(20.2, 264694, nil, nil, nil, 3) --Волна гнили 14.6--26 (health based?)
 
 mod.vb.tenderizeCount = 0
 mod.vb.rottenCount = 0
@@ -54,25 +54,24 @@ function mod:SPELL_CAST_START(args)
 		self.vb.servantCount = self.vb.servantCount + 1
 --		local bossHealth = self:GetBossHP(args.sourceGUID)
 --		if bossHealth and bossHealth >= 10 then--Only warn to switch to add if boss above 10%, else ignore them
-			specWarnServant:Show(self.vb.servantCount)
+			specWarnServant:Show()
 			specWarnServant:Play("killmob")
 --		end
 		timerServantCD:Start(nil, self.vb.servantCount+1)
 	elseif spellId == 264923 then
 		self.vb.tenderizeCount = self.vb.tenderizeCount + 1
+		warnTenderize:Show(self.vb.tenderizeCount)
 		if self.vb.tenderizeCount == 1 then
 			specWarnTenderize:Show()
 			specWarnTenderize:Play("shockwave")
 			timerTenderizeCD:Start(nil, self.vb.tenderizeCount+1)
-		else
-			warnTenderize:Show(self.vb.tenderizeCount)
 		end
 		if self.vb.tenderizeCount == 3 then
 			self.vb.tenderizeCount = 0
 		end
 	elseif spellId == 264694 then
 		self.vb.rottenCount = self.vb.rottenCount + 1
-		specWarnRottenExpulsion:Show(self.vb.rottenCount)
+		specWarnRottenExpulsion:Show()
 		specWarnRottenExpulsion:Play("watchstep")
 		--5, 29.2, 20.2, 23.1, 20.2
 		if self.vb.rottenCount == 1 then--2, 4, probably 6

@@ -395,9 +395,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	MurchalProshlyapRP0 = "Oh. don't you worry. We'll find a way to stop them!",
-	MurchalProshlyapRP1 = "The infinites are here and we have to stop them. They want to... oh, oh there's no time to explain!",
-	MurchalProshlyapRP2 = "So the titans' puppets have come to face me.",
+	MProshlyapPrePull0	= "Oh. don't you worry. We'll find a way to stop them!",
+	MProshlyapPrePull1	= "The infinites are here and we have to stop them. They want to... oh, oh there's no time to explain!",
+	MProshlyapPrePull2	= "So the titans' puppets have come to face me.",
 	MProshlyapPrePull3	= "Come on! The Aspects are just ahead. Uh, wait, uh, the Proto-Aspects I mean.",
 	MProshlyapPrePull4	= "We need reinforcements!",
 	MProshlyapPrePull5	= "I need fighters!",
