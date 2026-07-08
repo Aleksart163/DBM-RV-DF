@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DawnoftheInfiniteTrash", "DBM-Party-Dragonflight", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240207091809")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(2579)
 mod:SetMinSyncRevision(20260630000000)
@@ -532,7 +532,7 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 	elseif (msg == L.MProshlyapPrePull6 or msg:find(L.MProshlyapPrePull6)) then
 		self:SendSync("MPPR6") --
 	elseif (msg == L.MProshlyapPrePull0 or msg:find(L.MProshlyapPrePull0)) then
-		self:SendSync("MPPR0")
+		self:SendSync("MPPR0") --
 	end
 end
 
