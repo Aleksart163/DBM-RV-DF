@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2520, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714070000")
+mod:SetRevision("20260629000000")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -383,36 +383,36 @@ local function startPhase3RP(self) --Версия 1
 	timerDesolateBlossomCD:Stop()
 	timerInfiniteDuressCD:Stop()
 	timerVoidClawsCD:Stop()
-	timerIntermission:Start(13.5)
+	timerIntermission:Start(12.5)
 	-----------------------------
 	if self:IsMythic() then
-		timerInfiniteDuressCD:Start(18, 1)
-		timerCosmicAscensionCD:Start(20.3, 1)
-		timerHurtlingBarrageCD:Start(32, 1)
-		timerVoidSlashCD:Start(33.3)--
-		timerEmbraceofNothingnessCD:Start(36.8, 1)
-		timerVoidBombCD:Start(38)
-		timerScouringEternityCD:Start(66.6, 1) --46.2
-		timerEbonMight:Start(24.5, 1)
+		timerInfiniteDuressCD:Start(17, 1)
+		timerCosmicAscensionCD:Start(19.3, 1)
+		timerHurtlingBarrageCD:Start(31, 1)
+		timerVoidSlashCD:Start(32.3)--
+		timerEmbraceofNothingnessCD:Start(35.8, 1)
+		timerVoidBombCD:Start(37)
+		timerScouringEternityCD:Start(65.6, 1) --46.2
+		timerEbonMight:Start(23.5, 1)
 	elseif self:IsHeroic() then
-		timerInfiniteDuressCD:Start(18.2, 1)
-		timerCosmicAscensionCD:Start(21, 1)
-		timerHurtlingBarrageCD:Start(33.2, 1)
-		timerVoidSlashCD:Start(34.5)
-		timerEmbraceofNothingnessCD:Start(38.2, 1)
-		timerVoidBombCD:Start(42)
-		timerScouringEternityCD:Start(64, 1)
+		timerInfiniteDuressCD:Start(17.2, 1)
+		timerCosmicAscensionCD:Start(20, 1)
+		timerHurtlingBarrageCD:Start(32.2, 1)
+		timerVoidSlashCD:Start(33.5)
+		timerEmbraceofNothingnessCD:Start(37.2, 1)
+		timerVoidBombCD:Start(41)
+		timerScouringEternityCD:Start(63, 1)
 	elseif self:IsNormal() then
-		timerCosmicAscensionCD:Start(21.2, 1)
-		timerHurtlingBarrageCD:Start(34.5, 1)
-		timerVoidSlashCD:Start(35.8)
-		timerEmbraceofNothingnessCD:Start(39.8, 1)
-		timerVoidBombCD:Start(43.8)
-		timerScouringEternityCD:Start(66.6, 1) --48.6
+		timerCosmicAscensionCD:Start(20.2, 1)
+		timerHurtlingBarrageCD:Start(33.5, 1)
+		timerVoidSlashCD:Start(34.8)
+		timerEmbraceofNothingnessCD:Start(38.8, 1)
+		timerVoidBombCD:Start(42.8)
+		timerScouringEternityCD:Start(65.6, 1) --48.6
 	else--LFR
-		timerCosmicAscensionCD:Start(20.7, 1)
-		timerVoidSlashCD:Start(34.5)
-		timerScouringEternityCD:Start(59.6, 1)
+		timerCosmicAscensionCD:Start(19.7, 1)
+		timerVoidSlashCD:Start(33.5)
+		timerScouringEternityCD:Start(58.6, 1)
 	end
 	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении баффа)", 2)
 end
@@ -503,6 +503,8 @@ function mod:OnCombatEnd()
 	if self.Options.NPAuraOnRescind or self.Options.NPAuraOnMight then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
+	self:Unschedule(startProshlyapationOfMurchal)
+	self:Unschedule(startPhase3RP)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -960,7 +962,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 410654 then --Начало эвента фазы 3 (Бафф наложился на босса)
 		specWarnVoidEmpowerment:Show(args.destName)
 		specWarnVoidEmpowerment:Play("stopattack")
-		self:SendSync("Phase 3 RP")
+		self:SendSync("Phase3RP")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -1088,7 +1090,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 410654 then --Начало фазы 3 (Дебафф с босса спал)
 		warnVoidEmpowerment:Show()
 		warnVoidEmpowerment:Play("end")
-		self:SendSync("Phase 3 Start")
+		self:SendSync("Phase3Start")
 	end
 end
 
@@ -1139,8 +1141,8 @@ end
 end]]
 
 function mod:OnSync(msg)
-	if msg == "Phase 3 RP" then
-		self:Schedule(0.1, startPhase3RP, self)
+	if msg == "Phase3RP" then
+		self:Schedule(1, startPhase3RP, self)
 --[[		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
 		timerDesolateBlossomCD:Stop()
@@ -1149,7 +1151,7 @@ function mod:OnSync(msg)
 		timerPhaseCD:Stop()--Boss phases on a timer, or health percent
 		timerPhaseCD:Start(13.5)
 		DBM:Debug("Murchal proshlyap 2 (Эвент началы фазы 3)", 2)]]
-	elseif msg == "Phase 3 Start" then
+	elseif msg == "Phase3Start" then
 		DBM:Debug("Murchal proshlyap (Имунн с босса спал)", 2)
 --[[		self:SetStage(3)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
