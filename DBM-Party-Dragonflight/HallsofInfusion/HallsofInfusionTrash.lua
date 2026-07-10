@@ -123,20 +123,18 @@ function mod:SPELL_CAST_START(args)
 		elseif self:AntiSpam(3, 7) then
 			warnExpulse:Show()
 		end
-	elseif spellId == 374339 then
+	elseif spellId == 374339 then --Эвент сломан разрабами
 		timerDemoShoutCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn374339interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDemoShout:Show(args.sourceName)
 			specWarnDemoShout:Play("kickcast")
-		elseif self:AntiSpam(3, 7) then
+		elseif self:AntiSpam(2, 7) then
 			warnDemoralizingShout:Show()
 		end
 	elseif spellId == 374066 then
 		if self.Options.SpecWarn374066interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnEarthShield:Show(args.sourceName)
 			specWarnEarthShield:Play("kickcast")
---		elseif self:AntiSpam(3, 7) then
---			warnDemoralizingShout:Show()
 		end
 	elseif spellId == 395694 then
 		if self.Options.SpecWarn395694interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then

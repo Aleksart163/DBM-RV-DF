@@ -60,6 +60,8 @@ mod.vb.rayCount = 0
 mod.vb.hellCount = 0
 mod.vb.wingsCount = 0
 
+local dreadRiftsMythicTimers = {7, 34, 34, 33} --Первые 4 точно, дальше на проверке
+
 function mod:TerrorClawsTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -98,7 +100,13 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(406516, 407198, 407199, 407200) then--Each Id adds 1 additional rift, base Id starts at 2 or 3
 		self.vb.riftsCount = self.vb.riftsCount + 1
 		self.vb.riftIcon = 1
-		timerDreadRiftsCD:Start(nil, self.vb.riftsCount+1)
+		local timer
+		if self:IsMythic() then
+			timer = dreadRiftsMythicTimers[self.vb.riftsCount+1] or 34
+		else
+			timer = 34
+		end
+		timerDreadRiftsCD:Start(timer, self.vb.riftsCount+1)
 	elseif spellId == 407069 then
 		self.vb.rayCount = self.vb.rayCount + 1
 		timerRaysofAnguishCD:Start(nil, self.vb.rayCount+1)

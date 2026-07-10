@@ -7,8 +7,8 @@ mod:SetEncounterID(2113)
 mod:DisableESCombatDetection()--ES fires For entryway trash pull sometimes, for some reason.
 mod:SetUsedIcons(8)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20260630000000)
-mod:SetMinSyncRevision(20260630000000)
+mod:SetHotfixNoticeRev(20260715000000)
+mod:SetMinSyncRevision(20260715000000)
 
 mod:RegisterCombat("combat")
 

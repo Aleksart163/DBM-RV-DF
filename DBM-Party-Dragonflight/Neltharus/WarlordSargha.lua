@@ -47,7 +47,7 @@ local specWarnBurningPursuit					= mod:NewSpecialWarningYou(377522, nil, 96306, 
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(377542, nil, nil, nil, 1, 8) --Горящая земля
 
 local timerBackdraft							= mod:NewBuffActiveTimer(10, 377014, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Обратный поток (Повышенный урон)
-local timerMagmaShieldCD						= mod:NewCDTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
+local timerMagmaShieldCD						= mod:NewCDCountTimer(33.4, 376780, nil, nil, nil, 7, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Щит магмы
 local timerMoltenGoldCD							= mod:NewCDTimer(26.7, 377018, nil, nil, nil, 3) --Расплавленное золото
 local timerDragonsKilnCD						= mod:NewCDTimer(21, 377204, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Драконий горн (Фронталка)
 local timerBurningEmberCD						= mod:NewCDTimer(28.2, 377477, nil, nil, nil, 1) --Раскаленный уголь Timer extrapolated by reversing spell queues and pauses then vetting it multiple times as accurate within a less than ~1 deviation
@@ -85,7 +85,7 @@ function mod:OnCombatStart(delay)
 	timerDragonsKilnCD:Start(7-delay)
 	timerMoltenGoldCD:Start(14.3-delay)
 	timerBurningEmberCD:Start(21.6-delay)
-	timerMagmaShieldCD:Start(34.1-delay)
+	timerMagmaShieldCD:Start(34.1-delay, 1)
 end
 
 function mod:OnCombatEnd()
@@ -104,6 +104,7 @@ function mod:SPELL_CAST_START(args)
 		timerDragonsKilnCD:Pause()
 		timerMoltenGoldCD:Pause()
 		timerBurningEmberCD:Pause()
+		timerMagmaShieldCD:Stop()
 	elseif spellId == 377017 then
 		if goldStarted then--It's a bugged recast
 			timerMoltenGoldCD:Start()--Avoid false debug reporting
@@ -176,7 +177,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDragonsKilnCD:Resume()
 		timerMoltenGoldCD:Resume()
 		timerBurningEmberCD:Resume()
-		timerMagmaShieldCD:Start(45)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
+		if self.vb.shieldCount < 3 then
+			timerMagmaShieldCD:Start(43, self.vb.shieldCount+1)--30-34, not even boss energy is worth a shit on this boss. bad encounter scripting is bad
+		elseif self.vb.shieldCount >= 3 then
+			timerMagmaShieldCD:Start(45, self.vb.shieldCount+1)
+		end
 	end
 end
 

@@ -43,7 +43,7 @@ mod:AddInfoFrameOption(269301, "Healer")
 mod.vb.remainingAdds = 6
 mod.vb.lightCount = 0
 
-local ProshlyapationsOfMurchalTimers = {18, 24.5, 23.7, 26, 23.7, 23.7, 23.7, 26, 23.7, 26} --Очищающий свет
+local ProshlyapationsOfMurchalTimers = {18, 23.7, 23.7, 26, 23.7, 23.7, 23.7, 26, 23.7, 26} --Очищающий свет
 
 function mod:OnCombatStart(delay)
 	self.vb.lightCount = 0
@@ -118,7 +118,7 @@ end]]
 function mod:UNIT_POWER_UPDATE()
 	local bossPower = UnitPower("boss1")
 	if bossPower == 100 and self:AntiSpam(3, 1) then
-		specWarnBloodVisage:Schedule(2)
-		specWarnBloodVisage:ScheduleVoice(2, "killmob")
+		specWarnBloodVisage:Schedule(3)
+		specWarnBloodVisage:ScheduleVoice(3, "killmob")
 	end
 end

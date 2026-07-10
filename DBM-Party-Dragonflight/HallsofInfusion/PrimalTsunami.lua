@@ -23,7 +23,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 387585
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
---Stage One: Violent Swells
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25529))
 local warnFocusedDeluge							= mod:NewCastAnnounce(387571, 4) --Направленный потоп On for everyone, since there will likely be many slow tanks in pugs
 local warnInfusedGlobule						= mod:NewCountAnnounce(387474, 2) --Заряженная капля
@@ -39,7 +39,7 @@ local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, DBM_COMMON_L.AO
 
 local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
 
---Stage Two: Infused Waters
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
@@ -60,7 +60,6 @@ function mod:OnCombatStart(delay)
 	timerTempestsFuryCD:Start(4-delay, 1)--
 	timerInfusedGlobuleCD:Start(7.9-delay)--
 	timerSquallBuffetCD:Start(15.9-delay)--
---	timerSubmergedCD:Start(53-delay)-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
 --	self:Schedule(53, startProshlyapationOfMurchal, self)
 end
 
@@ -88,7 +87,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnInfusedGlobule:Show()
 		specWarnInfusedGlobule:Play("watchstep")
 		if self.vb.GlobCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
-			timerInfusedGlobuleCD:Start(8.7)
+			timerInfusedGlobuleCD:Start(24.2)
 		end
 	end
 end
@@ -112,8 +111,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.GlobCount = 0
 		self.vb.tempestCount = 0
 		warnSubmergedEnded:Show()
-		timerTempestsFuryCD:Start(7.5, 1)--
-		timerInfusedGlobuleCD:Start(11.4)--
+		timerTempestsFuryCD:Start(6.5, 1)--
+		timerInfusedGlobuleCD:Start(10.5)--
 		timerSquallBuffetCD:Start(19.4)--
 		timerSubmergedCD:Start(57)--
 	--	self:Schedule(57, startProshlyapationOfMurchal, self)

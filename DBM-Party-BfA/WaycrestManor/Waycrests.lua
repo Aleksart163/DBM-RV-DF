@@ -5,8 +5,8 @@ mod:SetRevision("20260630000000")
 mod:SetCreatureID(131527, 131545)
 mod:SetMainBossID(131545)
 mod:SetEncounterID(2116)
-mod:SetHotfixNoticeRev(20260630000000)
-mod:SetMinSyncRevision(20260630000000)
+mod:SetHotfixNoticeRev(20260715000000)
+mod:SetMinSyncRevision(20260715000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")

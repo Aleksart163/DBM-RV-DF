@@ -29,7 +29,7 @@ local specWarnLandSlide				= mod:NewSpecialWarningSpell(200700, "Tank", nil, nil
 local specWarnMagmaSculptor			= mod:NewSpecialWarningSwitch(200637, "Dps", nil, DBM_COMMON_L.BIG_ADD, 3, 2) --Ваятель магмы
 local specWarnMagmaWave				= mod:NewSpecialWarningMoveTo(200404, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Магматическая волна
 local specWarnMagmaWave2			= mod:NewSpecialWarningDefensive(200404, "Tank", nil, nil, 2, 2) --Магматическая волна
-local specWarnBurningHatred			= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть (Преследование)
+local specWarnBurningHatred			= mod:NewSpecialWarningMoveTo(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть (Преследование)
 
 local timerMoltenCrashCD			= mod:NewCDTimer(16.5, 200732, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 3) --Магматический удар 16.5-23
 local timerLandSlideCD				= mod:NewCDTimer(16, 200700, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оползень 16.5-27
@@ -42,7 +42,7 @@ local yellBurningHatred				= mod:NewShortYell(200154, 62374, nil, nil, "YELL") -
 
 mod:AddSetIconOption("SetIconOnBurningHatred", 200154, true, 0, {8}) --Пламенная ненависть (Преследование)
 
-local shelterName = DBM:GetSpellName(200551)
+local CrystalSpikes = DBM:GetSpellName(200551) --Кристальные шипы
 
 mod.vb.landSlideCount = 0
 mod.vb.crystalSpikesCount = 0
@@ -118,9 +118,9 @@ function mod:SPELL_CAST_START(args)
 		self.vb.waveCount = self.vb.waveCount + 1
 		if self:IsTank() then
 			specWarnMagmaWave2:Show()
-			specWarnMagmaWave2:Play("specialsoon")
+			specWarnMagmaWave2:Play("defensive")
 		else
-			specWarnMagmaWave:Show(shelterName)
+			specWarnMagmaWave:Show(CrystalSpikes)
 			specWarnMagmaWave:Play("findshelter")
 		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.waveCount+1) 
@@ -135,7 +135,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 200154 then
 		if args:IsPlayer() then
-			specWarnBurningHatred:Show()
+			specWarnBurningHatred:Show(CrystalSpikes)
 			specWarnBurningHatred:Play("targetyou")
 			yellBurningHatred:Yell()
 		else
@@ -165,7 +165,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			specWarnMagmaWave2:Show()
 			specWarnMagmaWave2:Play("specialsoon")
 		else
-			specWarnMagmaWave:Show(shelterName)
+			specWarnMagmaWave:Show(CrystalSpikes)
 			specWarnMagmaWave:Play("findshelter")
 		end
 	--	local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.waveCount+1) 

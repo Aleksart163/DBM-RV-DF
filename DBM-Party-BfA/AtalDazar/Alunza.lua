@@ -5,8 +5,8 @@ mod:SetRevision("20260630000000")
 mod:SetCreatureID(122967)
 mod:SetEncounterID(2084)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20260630000000)
---mod:SetMinSyncRevision(20260630000000)
+mod:SetHotfixNoticeRev(20260715000000)
+--mod:SetMinSyncRevision(20260715000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
