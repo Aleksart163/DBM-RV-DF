@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 255577",
 	"SPELL_CAST_SUCCESS 255579 255591",
 	"SPELL_SUMMON 259209",
-	"SPELL_AURA_APPLIED 255579"--277072
+	"SPELL_AURA_APPLIED 255579 255582"--277072
 )
 
 --[[
@@ -25,23 +25,28 @@ ability.id = 255577 and type = "begincast"
  or ability.id = 259209
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnTransfusion				= mod:NewCountAnnounce(255577, 1)
-local warnMoltenGold				= mod:NewCountAnnounce(255582, 3)
+local warnTransfusion				= mod:NewCastAnnounce(255577, 4) --Переливание
+local warnMoltenGold				= mod:NewTargetNoFilterAnnounce(255582, 3) --Расплавленное золото
+local warnSpiritofGold				= mod:NewSpellAnnounce(259205, 2, nil, "-Dps") --Дух золота
 
-local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(255577, nil, nil, nil, 3, 2)
-local specWarnClaws					= mod:NewSpecialWarningDefensive(255579, "Tank", nil, nil, 1, 2)
-local specWarnClawsDispel			= mod:NewSpecialWarningDispel(255579, "MagicDispeller", nil, nil, 1, 2)
-local specWarnSpiritofGold			= mod:NewSpecialWarningSwitchCount(259205, "Dps", nil, nil, 1, 2, 3)
+local specWarnMoltenGold			= mod:NewSpecialWarningYou(255582, nil, nil, nil, 2, 2) --Расплавленное золото
+local specWarnMoltenGold2			= mod:NewSpecialWarningDispel(255582, "RemoveMagic", nil, nil, 3, 2) --Расплавленное золото
+local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(255577, nil, nil, nil, 3, 2) --Переливание
+local specWarnClaws					= mod:NewSpecialWarningDefensive(255579, "Tank", nil, nil, 3, 2) --Золоченые когти
+local specWarnClawsDispel			= mod:NewSpecialWarningDispel(255579, "MagicDispeller", nil, nil, 3, 2) --Золоченые когти
+local specWarnSpiritofGold			= mod:NewSpecialWarningSwitch(259205, "Dps", nil, DBM_COMMON_L.BIG_ADD, 2, 3) --Дух золота
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(277072, nil, nil, nil, 1, 8)--Unclear, it seems from logs once you step in it, you don't lose debuff moving out of it
 
-local timerTransfusionCD			= mod:NewCDCountTimer(34, 255577, nil, nil, nil, 5)
-local timerGildedClawsCD			= mod:NewCDCountTimer(34, 255579, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerMoltenGoldCD				= mod:NewCDCountTimer(8.1, 255582, nil, nil, nil, 3)--8.1, but reset by transfusion 99% of time
-local timerSpiritofGoldCD			= mod:NewCDCountTimer(34, 259205, nil, nil, nil, 1, nil, DBM_COMMON_L.HEROIC_ICON)
+local timerTransfusionCD			= mod:NewCDCountTimer(34, 255577, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Переливание
+local timerGildedClawsCD			= mod:NewCDCountTimer(34, 255579, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Золоченые когти
+local timerMoltenGoldCD				= mod:NewCDCountTimer(8.1, 255582, nil, nil, nil, 3) --Расплавленное золото 8.1, but reset by transfusion 99% of time
+local timerSpiritofGoldCD			= mod:NewCDCountTimer(34, 259205, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Дух золота
 
-mod:AddSetIconOption("SetIconOnSpirit", 259205, true, 5, {8})
+local yellMoltenGold				= mod:NewShortYell(255582, nil, nil, nil, "YELL") --Расплавленное золото
 
-local taintedBlood = DBM:GetSpellName(255558)
+mod:AddSetIconOption("SetIconOnSpirit", 259205, true, 5, {8}) --Дух золота
+
+local taintedBlood = DBM:GetSpellName(255558) --Оскверненная кровь
 
 mod.vb.transCount = 0
 mod.vb.clawsCount = 0
@@ -76,7 +81,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnTransfusion:Show(taintedBlood)
 			specWarnTransfusion:Play("takedamage")
 		else--Already good to go, just a positive warning
-			warnTransfusion:Show(self.vb.transCount)
+			warnTransfusion:Show()
 		end
 		--Handle timer resets
 		timerMoltenGoldCD:Stop()
@@ -95,7 +100,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerGildedClawsCD:Start(nil, self.vb.clawsCount+1)
 	elseif spellId == 255591 then
 		self.vb.goldCount = self.vb.goldCount + 1
-		warnMoltenGold:Show(self.vb.goldCount)
 		timerMoltenGoldCD:Start(nil, self.vb.goldCount+1)
 	end
 end
@@ -104,7 +108,8 @@ function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 259209 then
 		self.vb.spiritCount = self.vb.spiritCount + 1
-		specWarnSpiritofGold:Show(self.vb.spiritCount)
+		warnSpiritofGold:Show()
+		specWarnSpiritofGold:Show()
 		specWarnSpiritofGold:Play("killmob")
 		timerSpiritofGoldCD:Start(nil, self.vb.spiritCount+1)
 		if self.Options.SetIconOnSpirit then
@@ -118,6 +123,17 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 255579 and not args:IsDestTypePlayer() then
 		specWarnClawsDispel:Show(args.destName)
 		specWarnClawsDispel:Play("dispelboss")
+	elseif spellId == 255582 then --Расплавленное золото
+		if args:IsPlayer() then
+			specWarnMoltenGold:Show()
+			specWarnMoltenGold:Play("targetyou")
+			yellMoltenGold:Yell()
+		elseif self:CheckDispelFilter("magic") then
+			specWarnMoltenGold2:Show(args.destName)
+			specWarnMoltenGold2:Play("helpdispel")
+		else
+			warnMoltenGold:Show(args.destName)
+		end
 --	elseif spellId == 277072 and args:IsPlayer() and self:AntiSpam(3, 1) then
 --		specWarnGTFO:Show(args.spellName)
 --		specWarnGTFO:Play("watchfeet")

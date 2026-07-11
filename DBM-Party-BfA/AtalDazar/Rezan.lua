@@ -28,17 +28,19 @@ mod:RegisterEventsInCombat(
 --]]
 --TODO, Bone Quake deleted in M+? It's in journal but never cast
 --TODO, no two pulls are same timer wise. pursuit kinda fucks timers to hell. makes it hard to learn ACTUAL cds since spells get delayed by ICDs and spell queues
-local warnPursuit				= mod:NewTargetAnnounce(257407, 2)
+local warnPursuit				= mod:NewTargetNoFilterAnnounce(257407, 4) --Преследование
 
-local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, nil, nil, nil, 1, 2)
-local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, nil, nil, 3, 13)
-local yellPursuit				= mod:NewYell(257407)
-local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 2)
-local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2)
+local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, nil, nil, nil, 3, 4) --Отточенные зубы
+local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, 358971, nil, 3, 13) --Ужасающий образ (Волна страха)
+local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 4) --Преследование
+local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2) --Встряска костей
 
-local timerTeethCD				= mod:NewCDCountTimer(25, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--actual minimum timer not known
-local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, nil, nil, nil, 2)--actual minimum timer not known
-local timerPursuitCD			= mod:NewCDCountTimer(35.1, 257407, nil, nil, nil, 3)--actual minimum timer not known
+local timerTeethCD				= mod:NewCDCountTimer(25, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Отточенные зубы actual minimum timer not known
+local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, 358971, nil, nil, 2) --Ужасающий образ (Волна страха) actual minimum timer not known
+local timerPursuitCD			= mod:NewCDCountTimer(35.1, 257407, nil, nil, nil, 3) --Преследование actual minimum timer not known
+
+local yellTeeth					= mod:NewYell(255434, nil, nil, nil, "YELL") --Отточенные зубы
+local yellPursuit				= mod:NewYell(257407, nil, nil, nil, "YELL") --Преследование
 
 mod.vb.teethCount = 0--27.1, 49.7, 29.1, 47.5, 26.7 (some timer examples, min used, and timer correction used otherwise
 mod.vb.fearCount = 0
@@ -125,6 +127,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnTeeth:Show()
 			specWarnTeeth:Play("defensive")
+			yellTeeth:Yell()
 		end
 		timerTeethCD:Start(nil, self.vb.teethCount+1)
 		updateAllTimers(self, 3.5)

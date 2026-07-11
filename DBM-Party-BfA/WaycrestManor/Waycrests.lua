@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or (target.id = 131527 or target.id = 131545) and type = "death"
 --]]
-local warnVirulentPathogen			= mod:NewTargetAnnounce(261440, 2) --Смертоносный патоген
+local warnVirulentPathogen			= mod:NewTargetNoFilterAnnounce(261440, 2) --Смертоносный патоген
 local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2) --Передача жизненной силы
 
 local specWarnWrackingChord			= mod:NewSpecialWarningInterruptCount(268278, "HasInterrupt", nil, nil, 1, 2) --Сокрушающий аккорд

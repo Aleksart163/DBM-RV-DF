@@ -30,7 +30,7 @@ local warnMagmaLob								= mod:NewSpellAnnounce(375068, 3) --Бросок ма�
 local warnVolatileMutation						= mod:NewCountAnnounce(374365, 3, nil, nil, 184894) --Неустойчивая мутация
 local warnLavaSpray								= mod:NewTargetNoFilterAnnounce(375251, 3) --Поток лавы
 
-local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Неустойчивая мутация (Мутация)
+local specWarnVolatileMutation					= mod:NewSpecialWarningDefensive(374365, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Неустойчивая мутация (АоЕ)
 local specWarnMagmaLob							= mod:NewSpecialWarningDodge(375068, false, nil, 2, 2, 2) --Бросок магмы
 local specWarnLavaSpray2						= mod:NewSpecialWarningDefensive(375251, nil, nil, nil, 3, 4) --Поток лавы
 local specWarnBlazingCharge						= mod:NewSpecialWarningDodge(375436, nil, 181886, nil, 2, 4) --Пылающий рывок (Рывок)
@@ -40,22 +40,23 @@ local timerRP									= mod:NewRPTimer(30)
 --local timerMagmaLobCD							= mod:NewCDTimer(6.5, 375068, nil, nil, nil, 3)--8 unless delayed by other casts
 local timerLavaSrayCD							= mod:NewCDCountTimer(90, 375251, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Поток лавы
 local timerBlazingChargeCD						= mod:NewCDCountTimer(90, 375436, 181886, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пылающий рывок (Рывок)
-local timerVolatileMutationCD					= mod:NewCDCountTimer(90, 374365, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 2, 5) --Неустойчивая мутация (Мутация)
+local timerVolatileMutationCD					= mod:NewCDCountTimer(90, 374365, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.HEALER_ICON, nil, 2, 5) --Неустойчивая мутация (АоЕ)
 
 local yellLavaSpray								= mod:NewYell(375251, nil, nil, nil, "YELL") --Поток лавы
 local yellBlazingCharge							= mod:NewYell(375436, nil, nil, nil, "YELL") --Пылающий рывок
 
+local askShown = false
 mod.vb.mutationCount = 0
 mod.vb.lavaSrayCount = 0
 mod.vb.blazingChargeCount = 0
 
 local allProshlyapationsOfMurchal = {
 	--Поток лавы
-	[375251] = {7.2, 19.4, 58.4, 19.4, 19.4, 19.4, 79.6, 19.4, 38.9, 19.4},
-	--Пылающий рывок
-	[375436] = {19.3, 23, 69.2, 23, 69.1, 33, 46.3},
-	--Мутация
-	[374365] = {30.8, 30.6, 30.2, 30.2, 30.7, 31, 31, 30.9, 31.1, 33.2},
+	[375251] = {7.2, 19.4, 58.2, 19.4, 42.2, 19.4, 61, 19.4, 19.4},
+	--Пылающий рывок (Рывок)
+	[375436] = {19.3, 23, 92, 46, 23, 72},
+	--Неустойчивая мутация (АоЕ)
+	[374365] = {30.6, 30.6, 30.2, 30.2, 30.7, 31, 30.8, 32, 31.1},
 }
 
 function mod:LavaSprayTarget(targetname)
@@ -70,13 +71,14 @@ function mod:LavaSprayTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
+	askShown = false
 	self.vb.mutationCount = 0
 	self.vb.lavaSrayCount = 0
 	self.vb.blazingChargeCount = 0
 	timerLavaSrayCD:Start(7.2-delay, 1)--
 --	timerMagmaLobCD:Start(8-delay)
 	timerBlazingChargeCD:Start(19.3-delay, 1)--
-	timerVolatileMutationCD:Start(30.8-delay, 1)--
+	timerVolatileMutationCD:Start(30.6-delay, 1)--
 end
 
 function mod:SPELL_CAST_START(args)
@@ -89,6 +91,11 @@ function mod:SPELL_CAST_START(args)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.mutationCount+1)
 		if timer then
 			timerVolatileMutationCD:Start(timer, self.vb.mutationCount+1)
+		else
+			if not askShown then
+				askShown = true
+				DBM:AddMsg("Данный спелл Неустойчивая мутация (АоЕ урон) не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
+			end
 		end
 	--	timerVolatileMutationCD:Start(nil, self.vb.mutationCount+1)
 	elseif spellId == 375068 and self:AntiSpam(2, "MagmaLob") then --Бросок магмы
@@ -107,6 +114,11 @@ function mod:SPELL_CAST_START(args)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.lavaSrayCount+1)
 		if timer then
 			timerLavaSrayCD:Start(timer, self.vb.lavaSrayCount+1)
+		else
+			if not askShown then
+				askShown = true
+				DBM:AddMsg("Данный спелл Поток лавы не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
+			end
 		end
 	--	timerLavaSrayCD:Start(nil, self.vb.lavaSrayCount+1)
 	elseif spellId == 375439 then --Пылающий рывок
@@ -116,8 +128,12 @@ function mod:SPELL_CAST_START(args)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, 375436, self.vb.blazingChargeCount+1)
 		if timer then
 			timerBlazingChargeCD:Start(timer, self.vb.blazingChargeCount+1)
+		else
+			if not askShown then
+				askShown = true
+				DBM:AddMsg("Данный спелл Пылающий рывок (Рывок) не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
+			end
 		end
-	--	timerBlazingChargeCD:Start(nil, self.vb.blazingChargeCount+1)
 	end
 end
 

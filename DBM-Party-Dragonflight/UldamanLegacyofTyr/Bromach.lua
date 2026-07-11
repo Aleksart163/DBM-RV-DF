@@ -40,7 +40,7 @@ local specWarnChainLightning					= mod:NewSpecialWarningInterrupt(369675, "HasIn
 local specWarnThunderingSlam					= mod:NewSpecialWarningDodge(369703, nil, nil, nil, 2, 2) --Оглушающий удар
 
 local timerTremor								= mod:NewBuffActiveTimer(10, 369660, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, nil, nil, 1, 5) --Дрожь (Повышенный урон)
-local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин 28-30
+local timerCalloftheDeepCD						= mod:NewCDCountTimer(27.4, 369605, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Зов глубин (Адды) 28-30
 local timerQuakingTotemCD						= mod:NewCDCountTimer(30, 369700, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Сотрясающий тотем
 local timerBloodlustCD							= mod:NewCDCountTimer(30, 369754, nil, nil, nil, 2, nil, DBM_COMMON_L.ENRAGE_ICON) --Жажда крови
 local timerBloodlust							= mod:NewBuffActiveTimer(20, 369754, nil, nil, nil, 3, nil, DBM_COMMON_L.ENRAGE_ICON) --Жажда крови
@@ -152,7 +152,7 @@ function mod:SPELL_CAST_START(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Жажда крови не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		elseif Proshlyap then
@@ -162,7 +162,7 @@ function mod:SPELL_CAST_START(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Жажда крови не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		end
@@ -181,7 +181,7 @@ function mod:SPELL_CAST_START(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Сотрясающий тотем не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		elseif Proshlyap then
@@ -191,7 +191,7 @@ function mod:SPELL_CAST_START(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Сотрясающий тотем не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		end
@@ -211,7 +211,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Зов глубин (Адды) не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		elseif Proshlyap then
@@ -221,7 +221,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Зов глубин (Адды) не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		end
@@ -235,7 +235,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Оглушающий удар не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		elseif Proshlyap then
@@ -245,7 +245,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			else
 				if not askShown then
 					askShown = true
-					DBM:AddMsg("Данный спелл не имеет таймера, т.к. бой не предусматривался быть настолько долгим.")
+					DBM:AddMsg("Данный спелл Оглушающий удар не имел таймера, т.к. бой не предусматривался быть настолько долгим.")
 				end
 			end
 		end
