@@ -77,7 +77,7 @@ local timerSummonLashersCD					= mod:NewCDNPTimer(12.2, 383062, nil, nil, nil, 1
 local timerStinkBreathCD					= mod:NewCDNPTimer(17, 388060, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Вонючее дыхание
 local timerViolentWhirlwindCD				= mod:NewCDNPTimer(17, 388046, nil, nil, nil, 2) --Убийственный вихрь
 local timerStompCD							= mod:NewCDNPTimer(17, 373943, nil, nil, nil, 2) --Топот
-local timerRottingSurgeCD					= mod:NewCDNPTimer(19.1, 383385, nil, nil, nil, 3) --Гнилостный всплеск TODO, limited data
+local timerRottingSurgeCD					= mod:NewCDNPTimer(15.5, 383385, nil, nil, nil, 3) --Гнилостный всплеск TODO, limited data
 --local timerRottenMeatCD						= mod:NewCDNPTimer(23, 384974, nil, nil, nil, 3, nil, DBM_COMMON_L.POISON_ICON)
 
 local yellspecWarnWithering					= mod:NewYell(368081, nil, nil, nil, "YELL") --Иссушение

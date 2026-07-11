@@ -89,7 +89,7 @@ local function scanBosses(self, delay)
 				timerGashFrenzyCD:Start(2.4-delay, 1, bossGUID) --
 				timerDecayedSensesCD:Start(45.8-delay, bossGUID)
 				if self:IsMythic() then
-					timerMarkedforButcheryCD:Start(12.5-delay, 1, bossGUID)
+					timerMarkedforButcheryCD:Start(12.3-delay, 1, bossGUID)
 				end
 			else --Лови-тотем
 				timerGreaterHealingRapidsCD:Start(12-delay, 1, bossGUID) --
