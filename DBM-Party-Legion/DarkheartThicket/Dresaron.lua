@@ -4,8 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(99200)
 mod:SetEncounterID(1838)
-mod:SetHotfixNoticeRev(20260630000000)
-mod:SetMinSyncRevision(20260630000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
 mod.sendMainBossGUID = true

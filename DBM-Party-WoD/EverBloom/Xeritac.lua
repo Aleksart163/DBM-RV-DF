@@ -12,6 +12,8 @@ end
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.
 
 mod:RegisterCombat("combat_emotefind", L.Pull)

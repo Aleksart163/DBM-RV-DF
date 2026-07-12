@@ -4,8 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(122965)
 mod:SetEncounterID(2085)
-mod:SetHotfixNoticeRev(20260715000000)
---mod:SetMinSyncRevision(20260715000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 250585",
-	"SPELL_CAST_START 250258",
+	"SPELL_CAST_START 250258 259531",
 	"SPELL_CAST_SUCCESS 259572 250241",
 	"SPELL_PERIODIC_DAMAGE 250585",
 	"SPELL_PERIODIC_MISSED 250585",
@@ -27,16 +27,18 @@ ability.id = 250258 and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, stench says it's interruptable but cannot verify this. When I determine what to do with it, improve warning
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
-local warnTotemsLeft				= mod:NewAddsLeftAnnounce(250190, 2, 250192)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2) --Фаза 2
+local warnTotemsLeft				= mod:NewAddsLeftAnnounce(250190, 2, 250192) --Тотем воскрешения (Плохое вуду)
+local warnReanimate					= mod:NewCastAnnounce(259531, 2) --Оживление
 --local warnNoxiousStench				= mod:NewSpellAnnounce(250368, 3)
 
-local specWarnLeap					= mod:NewSpecialWarningDodge(250258, nil, nil, nil, 2, 2)
-local specWarnNoxiousStench			= mod:NewSpecialWarningInterrupt(259572, "HasInterrupt", nil, nil, 1, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(250585, nil, nil, nil, 1, 8)
+local specWarnLeap					= mod:NewSpecialWarningDodge(250258, nil, 47482, nil, 2, 2) --Токсичный прыжок (Прыжок)
+local specWarnNoxiousStench			= mod:NewSpecialWarningInterrupt(259572, "HasInterrupt", nil, nil, 1, 2) --Токсичное зловоние
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(250585, nil, nil, nil, 1, 8) --Ядовитая лужа
 
-local timerLeapCD					= mod:NewCDTimer(5.3, 250258, nil, nil, nil, 3)--6 uness delayed by stentch, then 8
-local timerNoxiousStenchCD			= mod:NewCDCountTimer(18.2, 259572, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DISEASE_ICON)
+local timerReanimate				= mod:NewCDNPTimer(7, 259531, nil, nil, nil, 7) --Оживление
+local timerLeapCD					= mod:NewCDTimer(5.3, 250258, 47482, nil, nil, 3) --Токсичный прыжок (Прыжок) 6 uness delayed by stentch, then 8
+local timerNoxiousStenchCD			= mod:NewCDCountTimer(18.2, 259572, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DISEASE_ICON) --Токсичное зловоние
 
 mod.vb.totemRemaining = 3
 mod.vb.stenchCount = 0
@@ -51,7 +53,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 250585 and args:IsPlayer() and self:AntiSpam(3, 1) then
+	if spellId == 250585 and args:IsPlayer() and self:AntiSpam(3, 1) then --Ядовитая лужа
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	end
@@ -63,6 +65,11 @@ function mod:SPELL_CAST_START(args)
 		specWarnLeap:Show()
 		specWarnLeap:Play("watchstep")
 		timerLeapCD:Start()
+	elseif spellId == 259531 then --Оживление
+		timerReanimate:Start(nil, args.sourceGUID)
+		if self:AntiSpam(1, "Reanimate") then
+			warnReanimate:Show()
+		end
 	end
 end
 
@@ -80,7 +87,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerNoxiousStenchCD:Start(19.5, self.vb.stenchCount+1)
 			timerLeapCD:AddTime(2)--Consistent with early alpha, might use more complex code if this becomes inconsistent
 		end
-	elseif spellId == 250241 then
+	elseif spellId == 250241 then --Стремительное разложение (Фаза 2)
 		self:SetStage(2)
 		timerNoxiousStenchCD:Stop()
 		timerLeapCD:Stop()
@@ -106,5 +113,6 @@ function mod:UNIT_DIED(args)
 		if self.vb.totemRemaining > 0 then
 			warnTotemsLeft:Show(self.vb.totemRemaining)
 		end
+		timerReanimate:Stop(args.destGUID)
 	end
 end

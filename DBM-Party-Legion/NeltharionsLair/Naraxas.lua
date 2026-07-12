@@ -10,7 +10,7 @@ mod.respawnTime = 15--10-15, trying 15 for now, def not 30
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 199176 210150 205549",
+	"SPELL_CAST_START 199176 210150 205549 198963",
 	"SPELL_AURA_APPLIED 209906 199775",
 	"SPELL_AURA_REMOVED 199178",
 	"SPELL_PERIODIC_DAMAGE 188494",
@@ -22,10 +22,12 @@ mod:RegisterEventsInCombat(
 (ability.id = 199176 or ability.id = 210150 or ability.id = 205549) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+local warnPutridSkies				= mod:NewCastAnnounce(198963, 4) --Омерзительные небеса
 local warnFixate					= mod:NewTargetNoFilterAnnounce(209906, 2, nil, false) --Самопожертвование фанатика Could be spammy, optional
 local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1, nil, nil, 142649) --Шипастый язык (Пожирание)
 local warnFrenzy					= mod:NewTargetNoFilterAnnounce(199775, 4) --Бешенство
 
+local specWarnPutridSkies			= mod:NewSpecialWarningMoveTo(198963, "Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Омерзительные небеса (АоЕ)
 local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, DBM_COMMON_L.ADDS, 2, 2) --Призыв прислужников
 local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) --Самопожертвование фанатика
 local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, 142649, nil, 4, 4) --Шипастый язык (Пожирание)
@@ -62,28 +64,6 @@ function mod:OnCombatStart(delay)
 	timerSpikedTongueCD:Start(49.9-delay) --
 end
 
-function mod:SPELL_AURA_APPLIED(args)
-	local spellId = args.spellId
-	if spellId == 209906 then
-		if args:IsPlayer() and self:AntiSpam(4, 1) then
-			specWarnFixate:Show()
-			specWarnFixate:Play("targetyou")
-		else
-			warnFixate:Show(args.destName)
-		end
-	elseif spellId == 199775 then --Бешенство
-		warnFrenzy:Show(args.destName)
-	end
-end
-
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 199178 and self:AntiSpam(4, 2) then --Шипастый язык (притяжка)
-		warnSpikedTongueOver:Show()
-		timerSpikedTongue:Stop()
-	end
-end
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 199176 then --Шипастый язык
@@ -107,6 +87,35 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 210150 then
 		self.vb.retchCount = self.vb.retchCount + 1
 		timerToxicRetchCD:Start(nil, self.vb.retchCount+1)
+	elseif spellId == 198963 then --Омерзительные небеса
+		if self:IsTank() then
+			specWarnPutridSkies:Show(DBM_COMMON_L.BOSS)
+			specWarnPutridSkies:Play("movetoboss")
+		else
+			warnPutridSkies:Show()
+		end
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 209906 then
+		if args:IsPlayer() and self:AntiSpam(4, 1) then
+			specWarnFixate:Show()
+			specWarnFixate:Play("targetyou")
+		else
+			warnFixate:Show(args.destName)
+		end
+	elseif spellId == 199775 then --Бешенство
+		warnFrenzy:Show(args.destName)
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 199178 and self:AntiSpam(4, 2) then --Шипастый язык (притяжка)
+		warnSpikedTongueOver:Show()
+		timerSpikedTongue:Stop()
 	end
 end
 

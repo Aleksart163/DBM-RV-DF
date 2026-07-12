@@ -13,6 +13,8 @@ end
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(40586)
 mod:SetEncounterID(1045)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 
 mod:RegisterCombat("combat")
 

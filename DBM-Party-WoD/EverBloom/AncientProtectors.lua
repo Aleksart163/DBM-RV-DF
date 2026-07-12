@@ -11,8 +11,8 @@ end
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(83894, 83892, 83893)--Dulhu 83894, Gola 83892, Telu 83893
 mod:SetEncounterID(1757)
-mod:SetHotfixNoticeRev(20260630000000)
-mod:SetMinSyncRevision(20260630000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")

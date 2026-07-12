@@ -3,12 +3,12 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
 
-mod:SetRevision("20240428124541")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(198996)
 mod:SetEncounterID(2667)
 mod:SetUsedIcons(1, 2)
-mod:SetHotfixNoticeRev(20231102000000)
-mod:SetMinSyncRevision(20231102000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 

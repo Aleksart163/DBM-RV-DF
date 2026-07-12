@@ -13,6 +13,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 253583 253721",
 	"SPELL_AURA_APPLIED 260666 255824 256849 252781 252687 255814",
 	"SPELL_AURA_APPLIED_DOSE 255814",
+	"SPELL_AURA_REMOVED 252781",
 	"UNIT_DIED"
 )
 
@@ -24,53 +25,55 @@ mod:RegisterEvents(
 (ability.id = 255824 or ability.id = 253562 or ability.id = 255041 or ability.id = 253544 or ability.id = 253517 or ability.id = 256849 or ability.id = 252781 or ability.id = 256138 or ability.id = 253239 or ability.id = 254959 or ability.id = 252923 or ability.id = 256882 or ability.id = 255567 or ability.id = 256846 or ability.id = 252687) and type = "begincast"
  or (ability.id = 253583 or ability.id = 253721) and type = "cast"
 --]]
-local warnBulwarkofJuju				= mod:NewSpellAnnounce(253721, 2)--Add Crowd Control audio
-local warnFerventStrike				= mod:NewCastAnnounce(256138, 3, nil, nil, "Tank|Healer")
-local warnMercilessAssault			= mod:NewCastAnnounce(253239, 3)
-local warnDeadlyAim					= mod:NewCastAnnounce(256846, 3)
-local warnSoulburn					= mod:NewCastAnnounce(254959, 3, nil, nil, false)--Mentioned in guide but not emphasized
-local warnTerrifyingScreech			= mod:NewCastAnnounce(255041, 4)
-local warnBwonsamdisMantle			= mod:NewCastAnnounce(253544, 4)
-local warnMendingWord				= mod:NewCastAnnounce(253517, 4)
-local warnUnstableHex				= mod:NewCastAnnounce(252781, 4)
-local warnRendingMaul				= mod:NewStackAnnounce(255814, 2, nil, "Tank|Healer")
+local warnBulwarkofJuju				= mod:NewSpellAnnounce(253721, 2) --Оплот джуджу Add Crowd Control audio
+local warnFerventStrike				= mod:NewCastAnnounce(256138, 3, nil, nil, "Tank|Healer") --Ревностный удар
+local warnMercilessAssault			= mod:NewCastAnnounce(253239, 3) --Безжалостная атака
+local warnDeadlyAim					= mod:NewCastAnnounce(256846, 3) --Меткий выстрел
+local warnSoulburn					= mod:NewCastAnnounce(254959, 3, nil, nil, false) --Горящая душа Mentioned in guide but not emphasized
+local warnTerrifyingScreech			= mod:NewCastAnnounce(255041, 4) --Ужасающий визг
+local warnBwonsamdisMantle			= mod:NewCastAnnounce(253544, 4) --Покров Бвонсамди
+local warnMendingWord				= mod:NewCastAnnounce(253517, 4) --Исцеляющее слово
+local warnUnstableHex				= mod:NewCastAnnounce(252781, 4) --Заразный сглаз
+local warnRendingMaul				= mod:NewStackAnnounce(255814, 2, nil, "Tank|Healer") --Раздирающий удар
 --local warnFrenziedCharge			= mod:NewTargetNoFilterAnnounce(255567, 4)
 
-local specWarnWildThrash			= mod:NewSpecialWarningSpell(256882, nil, nil, nil, 2, 2)
-local specWarnVenomfangStrike		= mod:NewSpecialWarningDefensive(252687, nil, nil, nil, 1, 2)
-local specWarnUnstableHexSelf		= mod:NewSpecialWarningMoveAway(252781, nil, nil, nil, 1, 2)
-local yellUnstableHex				= mod:NewYell(252781)
-local specWarnFrenziedCharge		= mod:NewSpecialWarningDodge(255567, nil, nil, nil, 2, 2)
-local yellFrenziedCharge			= mod:NewYell(255567)
-local specWarnFanaticsRage			= mod:NewSpecialWarningInterrupt(255824, "HasInterrupt", nil, nil, 1, 2)
-local specWarnWildFire				= mod:NewSpecialWarningInterrupt(253562, false, nil, 2, 1, 2)
-local specWarnFieryEnchant			= mod:NewSpecialWarningInterrupt(253583, "HasInterrupt", nil, nil, 1, 2)
-local specWarnTerrifyingScreech		= mod:NewSpecialWarningInterrupt(255041, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBwonsamdisMantle		= mod:NewSpecialWarningInterrupt(253544, "HasInterrupt", nil, nil, 1, 2)
-local specWarnMendingWord			= mod:NewSpecialWarningInterrupt(253517, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDinoMight				= mod:NewSpecialWarningInterrupt(256849, "HasInterrupt", nil, nil, 1, 2)
-local specWarnUnstableHex			= mod:NewSpecialWarningInterrupt(252781, "HasInterrupt", nil, nil, 1, 2)
-local specWarnVenomBlast			= mod:NewSpecialWarningInterrupt(252923, false, nil, 2, 1, 2)
-local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(260666, nil, nil, nil, 3, 2)
-local specWarnFanaticsRageDispel	= mod:NewSpecialWarningDispel(255824, "RemoveEnrage", nil, 2, 1, 2)
-local specWarnDinoMightDispel		= mod:NewSpecialWarningDispel(256849, "MagicDispeller", nil, nil, 1, 2)
-local specWarnVenomfangStrikeDispel	= mod:NewSpecialWarningDispel(252687, "RemovePoison", nil, nil, 1, 2)
+local specWarnWildThrash			= mod:NewSpecialWarningSpell(256882, nil, nil, nil, 2, 2) --Дикая взбучка
+local specWarnVenomfangStrike		= mod:NewSpecialWarningDefensive(252687, nil, nil, nil, 1, 2) --Изводящий удар
+local specWarnUnstableHexSelf		= mod:NewSpecialWarningMoveAway(252781, nil, nil, nil, 4, 2) --Заразный сглаз
+local specWarnFrenziedCharge		= mod:NewSpecialWarningDodge(255567, nil, nil, nil, 2, 2) --Бешеный рывок
+local specWarnFanaticsRage			= mod:NewSpecialWarningInterrupt(255824, "HasInterrupt", nil, nil, 1, 2) --Ярость фанатика
+local specWarnWildFire				= mod:NewSpecialWarningInterrupt(253562, false, nil, 2, 1, 2) --Дикий огонь
+local specWarnFieryEnchant			= mod:NewSpecialWarningInterrupt(253583, "HasInterrupt", nil, nil, 1, 2) --Чары огня
+local specWarnTerrifyingScreech		= mod:NewSpecialWarningInterrupt(255041, "HasInterrupt", nil, nil, 1, 2) --Ужасающий визг
+local specWarnBwonsamdisMantle		= mod:NewSpecialWarningInterrupt(253544, "HasInterrupt", nil, nil, 1, 2) --Покров Бвонсамди
+local specWarnMendingWord			= mod:NewSpecialWarningInterrupt(253517, "HasInterrupt", nil, nil, 1, 2) --Исцеляющее слово
+local specWarnDinoMight				= mod:NewSpecialWarningInterrupt(256849, "HasInterrupt", nil, nil, 1, 2) --Мощь динозавра
+local specWarnUnstableHex			= mod:NewSpecialWarningInterrupt(252781, "HasInterrupt", nil, nil, 1, 2) --Заразный сглаз
+local specWarnVenomBlast			= mod:NewSpecialWarningInterrupt(252923, false, nil, 2, 1, 2) --Ядовитая стрела
+local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(260666, nil, nil, nil, 3, 2) --Переливание
+local specWarnFanaticsRageDispel	= mod:NewSpecialWarningDispel(255824, "RemoveEnrage", nil, 2, 1, 2) --Ярость фанатика
+local specWarnDinoMightDispel		= mod:NewSpecialWarningDispel(256849, "MagicDispeller", nil, nil, 1, 2) --Мощь динозавра
+local specWarnVenomfangStrikeDispel	= mod:NewSpecialWarningDispel(252687, "RemovePoison", nil, nil, 1, 2) --Изводящий удар
 
-local timerFieryEnchantCD			= mod:NewCDNPTimer(15.3, 253583, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--More Data needed
-local timerMendingWardCD			= mod:NewCDNPTimer(13.3, 253517, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerFerventStrikeCD			= mod:NewCDNPTimer(12.1, 256138, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--17-19
-local timerFanaticsRageCD			= mod:NewCDNPTimer(20.2, 255824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerMercilessAssaultCD		= mod:NewCDNPTimer(9.8, 253239, nil, nil, nil, 3)
-local timerBwonsamdisMantleCD		= mod:NewCDNPTimer(20.5, 253544, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerSoulburnCD				= mod:NewCDNPTimer(13.3, 254959, nil, nil, nil, 3)
-local timerTerrifyingScreechCD		= mod:NewCDNPTimer(18.2, 255041, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Could be 17, watch for debug
-local timerVenomfangStrikeCD		= mod:NewCDNPTimer(15.3, 252687, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBulwarkofJujuCD			= mod:NewCDNPTimer(22.2, 253721, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerHexCD					= mod:NewCDNPTimer(18.1, 252781, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerFrenziedChargeCD			= mod:NewCDNPTimer(13.3, 255567, nil, nil, nil, 3)--13.3-18.2
-local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3)--13.3-18.2
-local timerDinoMightCD				= mod:NewCDNPTimer(14.5, 256849, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--More data needed
-local timerDeadeyeAimCD				= mod:NewCDNPTimer(10.9, 256846, nil, nil, nil, 3)--10.9-20
+local timerFieryEnchantCD			= mod:NewCDNPTimer(15.3, 253583, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чары огня More Data needed
+local timerMendingWardCD			= mod:NewCDNPTimer(13.3, 253517, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Исцеляющее слово
+local timerFerventStrikeCD			= mod:NewCDNPTimer(12.1, 256138, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Ревностный удар 17-19
+local timerFanaticsRageCD			= mod:NewCDNPTimer(20.2, 255824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ярость фанатика
+local timerMercilessAssaultCD		= mod:NewCDNPTimer(9.8, 253239, nil, nil, nil, 3) --Безжалостная атака
+local timerBwonsamdisMantleCD		= mod:NewCDNPTimer(20.5, 253544, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Покров Бвонсамди
+local timerSoulburnCD				= mod:NewCDNPTimer(13.3, 254959, nil, nil, nil, 3) --Горящая душа
+local timerTerrifyingScreechCD		= mod:NewCDNPTimer(18.2, 255041, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ужасающий визг Could be 17, watch for debug
+local timerVenomfangStrikeCD		= mod:NewCDNPTimer(15.3, 252687, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Изводящий удар
+local timerBulwarkofJujuCD			= mod:NewCDNPTimer(22.2, 253721, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оплот джуджу
+local timerHexCD					= mod:NewCDNPTimer(18.1, 252781, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Заразный сглаз
+local timerFrenziedChargeCD			= mod:NewCDNPTimer(13.3, 255567, nil, nil, nil, 3) --Бешеный рывок 13.3-18.2
+local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3) --Дикая взбучка 13.3-18.2
+local timerDinoMightCD				= mod:NewCDNPTimer(14.5, 256849, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Мощь динозавра More data needed
+local timerDeadeyeAimCD				= mod:NewCDNPTimer(10.9, 256846, nil, nil, nil, 3) --Меткий выстрел 10.9-20
+
+local yellUnstableHex				= mod:NewShortYell(252781, nil, nil, nil, "YELL") --Заразный сглаз
+local yellUnstableHexFades			= mod:NewShortFadesYell(252781, nil, nil, nil, "YELL") --Заразный сглаз
+local yellFrenziedCharge			= mod:NewYell(255567, nil, nil, nil, "YELL") --Бешеный рывок
 
 local taintedBlood = DBM:GetSpellName(255558)
 
@@ -211,6 +214,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnUnstableHexSelf:Show()
 		specWarnUnstableHexSelf:Play("runout")
 		yellUnstableHex:Yell()
+		yellUnstableHexFades:Countdown(5)
 	elseif spellId == 252687 and args:IsDestTypePlayer() then
 		if args:IsPlayer() then
 			specWarnVenomfangStrike:Show()
@@ -227,6 +231,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 252781 then
+		if args:IsPlayer() then
+			yellUnstableHexFades:Cancel()
+		end
+	end
+end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

@@ -4,8 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(122968)
 mod:SetEncounterID(2087)
-mod:SetHotfixNoticeRev(20260715000000)
-mod:SetMinSyncRevision(20260715000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -25,21 +25,26 @@ mod:RegisterEventsInCombat(
  or ability.id = 250096 and (type = "cast" or type = "interrupt")
 --]]
 --TODO: Verify CHAT_MSG_RAID_BOSS_EMOTE for soulrend. I know i saw it but not sure I got spellId right since chatlog only grabs parsed name
-local warnSoulRend					= mod:NewTargetAnnounce(259187, 4)
-local warnWrackingPain				= mod:NewTargetNoFilterAnnounce(250096, 4, nil, "Healer")
+local warnSoulRend					= mod:NewTargetAnnounce(259187, 4) --Раздирание души
+local warnWrackingPain				= mod:NewTargetNoFilterAnnounce(250096, 4, nil, "Healer") --Нестерпимая боль
 
-local specWarnSoulRend				= mod:NewSpecialWarningRun(259187, nil, nil, nil, 4, 2)
-local yellSoulRend					= mod:NewYell(259187)
-local specWarnWrackingPain			= mod:NewSpecialWarningInterruptCount(250096, "HasInterrupt", nil, nil, 1, 2)
-local specWarnWrackingPainYou		= mod:NewSpecialWarningYou(250096, nil, nil, nil, 1, 2)
-local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, nil, nil, nil, 1, 2)
-local specWarnEchoes				= mod:NewSpecialWarningDodgeCount(250050, nil, nil, nil, 2, 2)
-local specWarnGTFO					= mod:NewSpecialWarningGTFO(250036, nil, nil, nil, 1, 8)
+local specWarnSoulRend				= mod:NewSpecialWarningRun(259187, nil, nil, nil, 4, 4) --Раздирание души
+local specWarnSoulRend2				= mod:NewSpecialWarningSwitch(259187, "Dps", nil, DBM_COMMON_L.ADDS, 3, 4) --Раздирание души
+local specWarnWrackingPain			= mod:NewSpecialWarningInterrupt(250096, "HasInterrupt", nil, nil, 1, 2) --Нестерпимая боль
+local specWarnWrackingPainYou		= mod:NewSpecialWarningYou(250096, nil, nil, nil, 1, 2) --Нестерпимая боль
+local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, nil, nil, nil, 3, 2) --Пронзание
+local specWarnEchoes				= mod:NewSpecialWarningDodge(250050, nil, nil, nil, 2, 2) --Эхо Шадры
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(250036, nil, nil, nil, 1, 8) --Темные отголоски
 
-local timerSoulrendCD				= mod:NewCDCountTimer(38.4, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerWrackingPainCD			= mod:NewCDCountTimer(16.7, 250096, nil, nil, nil, 3)--17-23
-local timerSkewerCD					= mod:NewCDCountTimer(12, 249919, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerEchoesCD					= mod:NewCDCountTimer(31.2, 250050, nil, nil, nil, 3)
+local timerSoulrend					= mod:NewCastTimer(5, 259187, DBM_COMMON_L.ADDS, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Раздирание души
+local timerSoulrendCD				= mod:NewCDCountTimer(38.4, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Раздирание души
+local timerWrackingPainCD			= mod:NewCDCountTimer(16.7, 250096, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Нестерпимая боль 17-23
+local timerSkewerCD					= mod:NewCDCountTimer(12, 249919, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пронзание
+local timerEchoesCD					= mod:NewCDCountTimer(31.2, 250050, nil, nil, nil, 3) --Эхо Шадры
+
+local yellSoulRend					= mod:NewShortYell(259187, nil, nil, nil, "YELL") --Раздирание души
+local yellSoulRend2					= mod:NewShortFadesYell(259187, nil, nil, nil, "YELL") --Раздирание души
+local yellWrackingPain				= mod:NewShortYell(250096, nil, nil, nil, "YELL") --Нестерпимая боль
 
 mod.vb.soulCount = 0
 mod.vb.wrackCount = 0
@@ -83,6 +88,7 @@ function mod:WrackingPainTarget(targetname)
 	if targetname == UnitName("player") then
 		specWarnWrackingPainYou:Show()
 		specWarnWrackingPainYou:Play("targetyou")
+		yellWrackingPain:Yell()
 	else
 		warnWrackingPain:Show(targetname)
 	end
@@ -108,12 +114,15 @@ function mod:SPELL_CAST_START(args)
 			specWarnSoulRend:Show()
 			specWarnSoulRend:Play("runout")
 		end
+		specWarnSoulRend2:Schedule(5)
+		specWarnSoulRend2:ScheduleVoice(5, "changetarget")
+		timerSoulrend:Start()
 		updateAllTimers(self, 6)
 	elseif spellId == 250096 then--Can stutter cast, but since it can be kicked on non mythic+, timer can't be moved to success
 		self.vb.wrackCount = self.vb.wrackCount + 1
 		timerWrackingPainCD:Start(nil, self.vb.wrackCount+1)
-		if not self:IsMythic() and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-			specWarnWrackingPain:Show(args.sourceName, self.vb.wrackCount+1)
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnWrackingPain:Show(args.sourceName)
 			specWarnWrackingPain:Play("kickcast")
 		else
 			self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "WrackingPainTarget", 0.1, 7, true)
@@ -128,7 +137,7 @@ function mod:SPELL_CAST_START(args)
 		updateAllTimers(self, 2.4)
 	elseif spellId == 250050 then
 		self.vb.echoCount = self.vb.echoCount + 1
-		specWarnEchoes:Show(self.vb.echoCount)
+		specWarnEchoes:Show()
 		specWarnEchoes:Play("watchstep")
 		timerEchoesCD:Start(nil, self.vb.echoCount+1)
 		updateAllTimers(self, 3.5)
@@ -151,8 +160,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetname)
 				specWarnSoulRend:Show()
 				specWarnSoulRend:Play("runout")
 				yellSoulRend:Yell()
+				yellSoulRend2:Countdown(5)
 			else
-				warnSoulRend:Show(targetname)
+			--	warnSoulRend:Show(targetname)
+				warnSoulRend:CombinedShow(0.3, targetname) --тест версия
 			end
 		end
 	end

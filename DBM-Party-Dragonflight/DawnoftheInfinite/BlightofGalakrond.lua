@@ -3,14 +3,14 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
 
-mod:SetRevision("20240115231709")
+mod:SetRevision("20260630000000")
 mod:SetMultiIDSingleBoss()
 mod:SetCreatureID(198997, 201792, 201788, 201790)--It's technically just one creature animated 3 others, but checkbossHp will query all and return highest health for boss health percent
 mod:SetEncounterID(2668)
 --mod:SetUsedIcons(1, 2, 3)
 --mod:SetBossHPInfoToHighest()--may not be needed due to shared/synced health pools
-mod:SetHotfixNoticeRev(20231102000000)
-mod:SetMinSyncRevision(20231102000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 --mod.sendMainBossGUID = true--sendMainBossGUID is not sent because of stage 3 split
 

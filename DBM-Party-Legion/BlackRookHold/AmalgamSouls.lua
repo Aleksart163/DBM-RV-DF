@@ -4,8 +4,8 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(98542)
 mod:SetEncounterID(1832)
-mod:SetHotfixNoticeRev(20260630000000)
-mod:SetMinSyncRevision(20231027000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
