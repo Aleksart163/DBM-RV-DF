@@ -10,8 +10,8 @@
 * Regular updates, which gives the addon up-to-date information that is presented on the server.
 * Built-in updater will help in 1 click to update your addon to the most current version.
 # <p align="center">Обновления / Updates</p>
-* Не забывайте хотя бы изредка обновлять настройки модулей аддона по умолчанию (обязательно при первой установке, если до этого стояла версия с Retail) Это делается очень легко и показывается на видео ниже.
-* Do not forget to update the default addon module settings at least occasionally (be sure to do so during the first installation if the Retail version was installed before) This is done very easily and is shown in the video below.
+* Не забывайте хотя бы изредка обновлять настройки модулей аддона по умолчанию (обязательно при первой установке, если до этого стояла версия с Retail. Но рекомендую сперва удалить все файлы с названием DBM из папки с игрой.) Это делается очень легко и показывается на видео ниже.
+* Do not forget to update the default addon module settings at least occasionally (it is mandatory at the first installation if the Retail version was installed before. But I recommend that you first delete all files with the name DBM from the game folder.) This is done very easily and is shown in the video below.
 
 [![Watch the video](https://img.youtube.com/vi/aLvleUczSe4/maxresdefault.jpg)](https://www.youtube.com/watch?v=aLvleUczSe4)
 
