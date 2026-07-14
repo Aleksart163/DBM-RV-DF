@@ -80,15 +80,15 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20260708000000")
+DBM.Revision = parseCurseDate("20260715000000")
 
 local fakeBWVersion, fakeBWHash = 471, "pr05h19p"
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
-DBM.DisplayVersion = "10.2.71"--Core version
+DBM.DisplayVersion = "10.2.72"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2026, 7, 8) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2026, 7, 15) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -8853,7 +8853,7 @@ function smartAss(msg, arg, target)
     end
 end
 
-local function startProshlyapationRinaBaka(self, event, arg1, arg2)
+--[[local function startProshlyapationRinaBaka(self, event, arg1, arg2) --Полностью отключено из-за ненадобности. Неадекватов на сервере нету, ну почти.
 	local message = arg1
 	local sender = arg2
 	if string.find(arg2, "-") then
@@ -8863,25 +8863,19 @@ local function startProshlyapationRinaBaka(self, event, arg1, arg2)
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "PARTY")
 			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "PARTY")]]
 		end
 	elseif event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER" then
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "INSTANCE_CHAT")
 			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-			SendChatMessage("[DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "INSTANCE_CHAT")]]
 		end
 	elseif event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
 		if message:find("EblanDetect") then
 			SendChatMessage("[OchkenProshlyapDetect v2.6] Найден очколиз Мурчаля Прошляпенко ==> " ..sender.. ".", "RAID")
 			SendChatMessage("Зачем ты спамишь этой хуетой? Выключай эту поеботу и прекрати уже лизать очко Мурчаля, лишь чат людям засераешь.", "WHISPER", nil, sender)
-	--[[	elseif message:find("%[LittleWigs%]") and DBM:AntiSpam(0.5, "PLW") then
-			SendChatMessage([DBM RV] Найден " ..sender.. ", что юзает помойный ЛитлВигс Эйнела. А зря! Майнеров там дохуя.", "RAID")]]
 		end
 	end
-end
+end]]
 
 local frame = CreateFrame("Frame")
 --frame:RegisterEvent("CHAT_MSG_WHISPER")
@@ -8891,7 +8885,7 @@ frame:RegisterEvent("CHAT_MSG_INSTANCE_CHAT")
 frame:RegisterEvent("CHAT_MSG_INSTANCE_CHAT_LEADER")
 frame:RegisterEvent("CHAT_MSG_RAID")
 frame:RegisterEvent("CHAT_MSG_RAID_LEADER")
-frame:SetScript("OnEvent", startProshlyapationRinaBaka)
+--frame:SetScript("OnEvent", startProshlyapationRinaBaka)
 
 local function proshlyapSoulburnin(self, event, msg)
 	if DBM.Options.AutoKeyLink then

@@ -37,13 +37,13 @@ local warnUnstableHex				= mod:NewCastAnnounce(252781, 4) --Заразный с�
 local warnRendingMaul				= mod:NewStackAnnounce(255814, 2, nil, "Tank|Healer") --Раздирающий удар
 --local warnFrenziedCharge			= mod:NewTargetNoFilterAnnounce(255567, 4)
 
-local specWarnWildThrash			= mod:NewSpecialWarningSpell(256882, nil, nil, nil, 2, 2) --Дикая взбучка
+local specWarnWildThrash			= mod:NewSpecialWarningMove(256882, "Melee", nil, nil, 2, 2) --Дикая взбучка
 local specWarnVenomfangStrike		= mod:NewSpecialWarningDefensive(252687, nil, nil, nil, 1, 2) --Изводящий удар
 local specWarnUnstableHexSelf		= mod:NewSpecialWarningMoveAway(252781, nil, nil, nil, 4, 2) --Заразный сглаз
 local specWarnFrenziedCharge		= mod:NewSpecialWarningDodge(255567, nil, nil, nil, 2, 2) --Бешеный рывок
 local specWarnFanaticsRage			= mod:NewSpecialWarningInterrupt(255824, "HasInterrupt", nil, nil, 1, 2) --Ярость фанатика
 local specWarnWildFire				= mod:NewSpecialWarningInterrupt(253562, false, nil, 2, 1, 2) --Дикий огонь
-local specWarnFieryEnchant			= mod:NewSpecialWarningInterrupt(253583, "HasInterrupt", nil, nil, 1, 2) --Чары огня
+local specWarnFieryEnchant			= mod:NewSpecialWarningInterrupt(253583, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Чары огня
 local specWarnTerrifyingScreech		= mod:NewSpecialWarningInterrupt(255041, "HasInterrupt", nil, nil, 1, 2) --Ужасающий визг
 local specWarnBwonsamdisMantle		= mod:NewSpecialWarningInterrupt(253544, "HasInterrupt", nil, nil, 1, 2) --Покров Бвонсамди
 local specWarnMendingWord			= mod:NewSpecialWarningInterrupt(253517, "HasInterrupt", nil, nil, 1, 2) --Исцеляющее слово
@@ -55,7 +55,7 @@ local specWarnFanaticsRageDispel	= mod:NewSpecialWarningDispel(255824, "RemoveEn
 local specWarnDinoMightDispel		= mod:NewSpecialWarningDispel(256849, "MagicDispeller", nil, nil, 1, 2) --Мощь динозавра
 local specWarnVenomfangStrikeDispel	= mod:NewSpecialWarningDispel(252687, "RemovePoison", nil, nil, 1, 2) --Изводящий удар
 
-local timerFieryEnchantCD			= mod:NewCDNPTimer(15.3, 253583, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чары огня More Data needed
+local timerFieryEnchantCD			= mod:NewCDNPTimer(15.3, 253583, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чары огня More Data needed
 local timerMendingWardCD			= mod:NewCDNPTimer(13.3, 253517, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Исцеляющее слово
 local timerFerventStrikeCD			= mod:NewCDNPTimer(12.1, 256138, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Ревностный удар 17-19
 local timerFanaticsRageCD			= mod:NewCDNPTimer(20.2, 255824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ярость фанатика
@@ -67,7 +67,7 @@ local timerVenomfangStrikeCD		= mod:NewCDNPTimer(15.3, 252687, nil, "Tank|Healer
 local timerBulwarkofJujuCD			= mod:NewCDNPTimer(22.2, 253721, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оплот джуджу
 local timerHexCD					= mod:NewCDNPTimer(18.1, 252781, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Заразный сглаз
 local timerFrenziedChargeCD			= mod:NewCDNPTimer(13.3, 255567, nil, nil, nil, 3) --Бешеный рывок 13.3-18.2
-local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3) --Дикая взбучка 13.3-18.2
+local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дикая взбучка 13.3-18.2
 local timerDinoMightCD				= mod:NewCDNPTimer(14.5, 256849, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Мощь динозавра More data needed
 local timerDeadeyeAimCD				= mod:NewCDNPTimer(10.9, 256846, nil, nil, nil, 3) --Меткий выстрел 10.9-20
 
@@ -162,7 +162,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 256882 then
 		timerWildThrashCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3, 4) then
+		if self:AntiSpam(2, "WildThrash") then
 			specWarnWildThrash:Show()
 			specWarnWildThrash:Play("aesoon")
 		end

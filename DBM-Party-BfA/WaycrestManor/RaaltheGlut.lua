@@ -24,8 +24,9 @@ mod:RegisterEventsInCombat(
 --]]
 --TODO, longer pulls to detect more variations in Rotten casts
 local warnTenderize					= mod:NewCountAnnounce(264923, 2) --Отбивка
-local warnConsumeAll				= mod:NewCastAnnounce(264734, 4) --Поглощение
 
+local specWarnConsumeAll			= mod:NewSpecialWarningMoveTo(264734, "Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Поглощение (АоЕ)
+local specWarnConsumeAll2			= mod:NewSpecialWarningDefensive(264734, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Поглощение (АоЕ)
 local specWarnServant				= mod:NewSpecialWarningSwitch(264931, "Dps", nil, DBM_COMMON_L.ADDS, 1, 2) --Призыв слуг
 local specWarnTenderize				= mod:NewSpecialWarningDodge(264923, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Отбивка (Фронталка)
 local specWarnRottenExpulsion		= mod:NewSpecialWarningDodge(264694, nil, nil, nil, 1, 2) --Волна гнили
@@ -81,8 +82,14 @@ function mod:SPELL_CAST_START(args)
 		else--2, 4, etc
 			timerRottenExpulsionCD:Start(20.2, self.vb.rottenCount+1)
 		end
-	elseif spellId == 264734 then
-		warnConsumeAll:Show()
+	elseif spellId == 264734 then --Поглощение
+		if self:IsTank() then
+			specWarnConsumeAll:Show(DBM_COMMON_L.BOSS)
+			specWarnConsumeAll:Play("movetoboss")
+		else
+			specWarnConsumeAll2:Show()
+			specWarnConsumeAll2:Play("defensive")
+		end
 	end
 end
 

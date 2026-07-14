@@ -749,7 +749,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 61994 then --Ритуал призыва
 		if self.Options.YellOnSummoning then
-			if args:IsPlayerSource() and self:AntiSpam(2, "RitualSummoning") then
+			if args:IsPlayerSource() and self:AntiSpam(3, "RitualSummoning") then
 				smartAss(L.SoulstoneYell:format(DbmRV, sourceName, SpellLinks(7720), UnitName("target")))
 			end
 		end

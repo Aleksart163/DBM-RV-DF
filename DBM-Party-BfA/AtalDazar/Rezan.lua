@@ -36,7 +36,8 @@ local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 4) 
 local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2) --Встряска костей
 
 local timerTeethCD				= mod:NewCDCountTimer(25, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Отточенные зубы actual minimum timer not known
-local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, 358971, nil, nil, 2) --Ужасающий образ (Волна страха) actual minimum timer not known
+local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, 358971, nil, nil, 7, nil, nil, nil, 1, 5) --Ужасающий образ (Волна страха) actual minimum timer not known
+local timerFearCast				= mod:NewCastTimer(5, 255371, 358971, nil, nil, 7, nil, nil, nil, 1, 5) --Шипастый язык (Пожирание)
 local timerPursuitCD			= mod:NewCDCountTimer(35.1, 257407, nil, nil, nil, 3) --Преследование actual minimum timer not known
 
 local yellTeeth					= mod:NewYell(255434, nil, nil, nil, "YELL") --Отточенные зубы
@@ -110,6 +111,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFear:Show(DBM_COMMON_L.BREAK_LOS)
 		specWarnFear:Play("breaklos")
 		timerFearCD:Start(nil, self.vb.fearCount+1)
+		timerFearCast:Start()
 		updateAllTimers(self, 9.5)
 	elseif spellId == 257407 then
 		self.vb.pursuitCount = self.vb.pursuitCount + 1

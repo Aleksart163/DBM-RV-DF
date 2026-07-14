@@ -557,6 +557,6 @@ function mod:OnSync(msg)
 	if msg == "RP1" and self:AntiSpam(10, 2) then --Таймер пула 2-го босса
 		timerPhaseCD:Start(10)
 	elseif msg == "RP2" and self:AntiSpam(10, 2) then --Таймер пула 3-го босса
-		timerPhaseCD:Start(10)
+		timerPhaseCD:Start(9.5)
 	end
 end

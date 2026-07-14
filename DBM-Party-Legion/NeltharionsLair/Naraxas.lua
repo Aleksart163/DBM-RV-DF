@@ -22,12 +22,12 @@ mod:RegisterEventsInCombat(
 (ability.id = 199176 or ability.id = 210150 or ability.id = 205549) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnPutridSkies				= mod:NewCastAnnounce(198963, 4) --Омерзительные небеса
 local warnFixate					= mod:NewTargetNoFilterAnnounce(209906, 2, nil, false) --Самопожертвование фанатика Could be spammy, optional
 local warnSpikedTongueOver			= mod:NewEndAnnounce(199176, 1, nil, nil, 142649) --Шипастый язык (Пожирание)
 local warnFrenzy					= mod:NewTargetNoFilterAnnounce(199775, 4) --Бешенство
 
 local specWarnPutridSkies			= mod:NewSpecialWarningMoveTo(198963, "Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Омерзительные небеса (АоЕ)
+local specWarnPutridSkies2			= mod:NewSpecialWarningDefensive(198963, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Омерзительные небеса (АоЕ)
 local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, DBM_COMMON_L.ADDS, 2, 2) --Призыв прислужников
 local specWarnFixate				= mod:NewSpecialWarningYou(209906, nil, nil, nil, 1, 2) --Самопожертвование фанатика
 local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, 142649, nil, 4, 4) --Шипастый язык (Пожирание)
@@ -87,12 +87,13 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 210150 then
 		self.vb.retchCount = self.vb.retchCount + 1
 		timerToxicRetchCD:Start(nil, self.vb.retchCount+1)
-	elseif spellId == 198963 then --Омерзительные небеса
+	elseif spellId == 198963 and self:AntiSpam(2, "PutridSkies") then --Омерзительные небеса
 		if self:IsTank() then
 			specWarnPutridSkies:Show(DBM_COMMON_L.BOSS)
 			specWarnPutridSkies:Play("movetoboss")
 		else
-			warnPutridSkies:Show()
+			specWarnPutridSkies2:Show()
+			specWarnPutridSkies2:Play("defensive")
 		end
 	end
 end
