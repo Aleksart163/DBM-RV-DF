@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(2579)
-mod:SetMinSyncRevision(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 
 mod.isTrashMod = true
 
