@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("DawnoftheInfiniteTrash", "DBM-Party-Dragonflight", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20260630000000")
+mod:SetRevision("20240615070000")
 --mod:SetModelID(47785)
 mod:SetZone(2579)
---mod:SetMinSyncRevision(20260714000000)
+mod:SetMinSyncRevision(20240614070000)
 
 mod.isTrashMod = true
+mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 415770 413487 415435 415437 413529 413621 413622 412806 411958 412505 400165 413607 412136 413024 413023 412922 417481 419327 412378 412262 412233 412200 413427 407205 407535 419351 413544 412215 418200 411300 407891 415769 415436 412156",
