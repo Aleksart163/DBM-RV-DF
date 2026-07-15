@@ -15,9 +15,9 @@ mod:RegisterEvents(
 --	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED",
 	"UNIT_DIED",
-	"GOSSIP_SHOW",
 	"CHAT_MSG_MONSTER_SAY",
-	"CHAT_MSG_MONSTER_YELL"
+	"CHAT_MSG_MONSTER_YELL",
+	"GOSSIP_SHOW"
 )
 
 --[[
@@ -119,7 +119,7 @@ local timerVolatileMortarCD					= mod:NewCDNPTimer(19.5, 407205, nil, nil, nil, 
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
 local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.8, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Бронзовый выдох (Фронталка)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerRP								= mod:NewRPTimer(22)
+local timerRP								= mod:NewRPTimer(30)
 
 local yellChronalEruption					= mod:NewShortYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
 local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
@@ -510,48 +510,55 @@ function mod:GOSSIP_SHOW()
 		end
 	end
 end
-
 --Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MProshlyapPrePull8 or msg:find(L.MProshlyapPrePull8)) then
+		DBM:Debug("MPPR8", 2)
 		self:SendSync("MPPR8") --
 	elseif (msg == L.MProshlyapPrePull4 or msg:find(L.MProshlyapPrePull4)) or (msg == L.MProshlyapPrePull5 or msg:find(L.MProshlyapPrePull5)) then
+		DBM:Debug("MPPR4", 2)
 		self:SendSync("MPPR4") --
 	elseif (msg == L.MProshlyapPrePull3 or msg:find(L.MProshlyapPrePull3)) then
+		DBM:Debug("MPPR3", 2)
 		self:SendSync("MPPR3") --
 	elseif (msg == L.MProshlyapPrePull2 or msg:find(L.MProshlyapPrePull2)) then
+		DBM:Debug("MPPR2", 2)
 		self:SendSync("MPPR2") --
 	elseif (msg == L.MProshlyapPrePull1 or msg:find(L.MProshlyapPrePull1)) then
+		DBM:Debug("MPPR1", 2)
 		self:SendSync("MPPR1") --
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if (msg == L.MProshlyapPrePull7 or msg:find(L.MProshlyapPrePull7)) then
+		DBM:Debug("MPPR7", 2)
 		self:SendSync("MPPR7") --
 	elseif (msg == L.MProshlyapPrePull6 or msg:find(L.MProshlyapPrePull6)) then
+		DBM:Debug("MPPR6", 2)
 		self:SendSync("MPPR6") --
 	elseif (msg == L.MProshlyapPrePull0 or msg:find(L.MProshlyapPrePull0)) then
+		DBM:Debug("MPPR0", 2)
 		self:SendSync("MPPR0") --
 	end
 end
 
-function mod:OnSync(event, arg)
-	if event == "MPPR8" and self:AntiSpam(10, "Morchie") then --Таймер пулла Морхи
+function mod:OnSync(msg, targetname)
+	if msg == "MPPR8" and self:AntiSpam(10, "Morchie") then --Таймер пулла Морхи
 		timerRP:Start(25) --
-	elseif event == "MPPR7" and self:AntiSpam(10, "Trash3") then --Таймер пулла треша после Тира
+	elseif msg == "MPPR7" and self:AntiSpam(10, "Trash3") then --Таймер пулла треша после Тира
 		timerRP:Start(15) --
-	elseif event == "MPPR6" and self:AntiSpam(10, "Trash2") then --Таймер пулла треша на Гнили
+	elseif msg == "MPPR6" and self:AntiSpam(10, "Trash2") then --Таймер пулла треша на Гнили
 		timerRP:Start(16.5) --
-	elseif event == "MPPR4" and self:AntiSpam(10, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
+	elseif msg == "MPPR4" and self:AntiSpam(10, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
 		timerRP:Start(15.5) --
-	elseif event == "MPPR3" and self:AntiSpam(10, "Blight2") then --Таймер пула после Гнили 2
+	elseif msg == "MPPR3" and self:AntiSpam(10, "Blight2") then --Таймер пула после Гнили 2
 		timerRP:Start(88) --
-	elseif event == "MPPR2" and self:AntiSpam(10, "Iridikron") then --Таймер пула Иридикрона
+	elseif msg == "MPPR2" and self:AntiSpam(10, "Iridikron") then --Таймер пула Иридикрона
 		timerRP:Start(29) --
-	elseif event == "MPPR1" and self:AntiSpam(10, "Blight1") then --Таймер пула после Гнили 1
+	elseif msg == "MPPR1" and self:AntiSpam(10, "Blight1") then --Таймер пула после Гнили 1
 		timerRP:Start(73.5) --
-	elseif event == "MPPR0" and self:AntiSpam(10, "Trash1") then --Таймер пула перед 1-ым боссом
+	elseif msg == "MPPR0" and self:AntiSpam(10, "Trash1") then --Таймер пула перед 1-ым боссом
 		timerRP:Start(24) --
 		timerTimelessCurseCD:Start(12)
 		specWarnTimelessCurse:Schedule(12)
