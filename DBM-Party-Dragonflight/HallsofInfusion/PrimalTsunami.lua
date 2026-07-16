@@ -12,9 +12,11 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 387504 387571 388424 387559",
+	"SPELL_CAST_START 387504 387571 388424 387559 388882",
 	"SPELL_AURA_APPLIED 387585",
-	"SPELL_AURA_REMOVED 387585"
+	"SPELL_AURA_REMOVED 387585",
+	"UNIT_POWER_UPDATE",
+	"UNIT_DIED"
 )
 
 --TODO: Warn Undertow? It's only used if tank is messing up
@@ -29,13 +31,15 @@ local warnFocusedDeluge							= mod:NewCastAnnounce(387571, 4) --Направл�
 local warnInfusedGlobule						= mod:NewCountAnnounce(387474, 2) --Заряженная капля
 local warnTempestsFury							= mod:NewCountAnnounce(388424, 4) --Неистовство бури
 
+local specWarnInundate2							= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 local specWarnInfusedGlobule					= mod:NewSpecialWarningDodge(387474, nil, nil, nil, 1, 2) --Заряженная капля
 local specWarnSquallBuffet						= mod:NewSpecialWarningDefensive(387504, nil, nil, nil, 3, 4) --Шквальный толчок
-local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Неистовство бури
+local specWarnTempestsFury						= mod:NewSpecialWarningDefensive(388424, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Неистовство бури (АоЕ)
 
+local timerInundate2CD							= mod:NewCDNPTimer(10, 388882, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Затопление
 local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Шквальный толчок Squall Buffet/Focused Deluge tank combo
 local timerInfusedGlobuleCD						= mod:NewCDTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
-local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури
+local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури (АоЕ)
 
 local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
 
@@ -87,7 +91,16 @@ function mod:SPELL_CAST_START(args)
 		specWarnInfusedGlobule:Show()
 		specWarnInfusedGlobule:Play("watchstep")
 		if self.vb.GlobCount >= 1 then-- Прошляп Мурчаля с первых сезонов, в 4-ом не работает
-			timerInfusedGlobuleCD:Start(24.2)
+			timerInfusedGlobuleCD:Start(23.2) --Нормально под кд от 1 до 2 каста после Погружения
+		end
+	elseif spellId == 388882 then --Затопление
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 198994 then --Воин стихий – насыщательница
+			if self:AntiSpam(3, "Inundate2") then
+				specWarnInundate2:Show(args.sourceName)
+				specWarnInundate2:Play("crowdcontrol")
+			end
+			timerInundate2CD:Start(6.3, args.sourceGUID)
 		end
 	end
 end
@@ -116,5 +129,22 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSquallBuffetCD:Start(19.4)--
 		timerSubmergedCD:Start(57)--
 	--	self:Schedule(57, startProshlyapationOfMurchal, self)
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 198994 then --Воин стихий – насыщательница
+		timerInundate2CD:Stop(args.destGUID)
+	end
+end
+
+function mod:UNIT_POWER_UPDATE()
+	local bossPower = UnitPower("boss1")
+	if bossPower == 100 and self:AntiSpam(5, "FullPower") then
+		timerSquallBuffetCD:Stop()
+		timerInfusedGlobuleCD:Stop()
+		timerTempestsFuryCD:Stop()
+		DBM:Debug("Check Murchal proshlyap (FullPower)", 2)
 	end
 end

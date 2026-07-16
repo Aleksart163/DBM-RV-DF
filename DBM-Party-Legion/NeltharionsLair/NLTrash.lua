@@ -21,7 +21,7 @@ mod:RegisterEvents(
 --]]
 local warnSubmerge						= mod:NewSpellAnnounce(183433, 3) --Погружение
 local warnWarDrums						= mod:NewSpellAnnounce(183526, 4) --Боевые барабаны
-local warnBurningHatred					= mod:NewTargetNoFilterAnnounce(200154, 3, nil, nil, 62374) --Пламенная ненависть
+local warnBurningHatred					= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 62374) --Пламенная ненависть (Преследование)
 local warnMetamorphosis					= mod:NewTargetNoFilterAnnounce(193803, 3, nil, false)
 local warnPetrifed						= mod:NewTargetNoFilterAnnounce(186616, 4)
 local warnCallWorm						= mod:NewCastAnnounce(183548, 3)
@@ -37,7 +37,7 @@ local warnBarbedTongue					= mod:NewCastAnnounce(183539, 3) --Шипастый �
 
 local specWarnPiercingShards			= mod:NewSpecialWarningDefensive(226296, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Острые осколки
 local specWarnPiercingShards2			= mod:NewSpecialWarningTarget(226296, nil, nil, DBM_COMMON_L.FRONTAL, 2, 4) --Острые осколки
-local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть
+local specWarnBurningHatred				= mod:NewSpecialWarningRun(200154, nil, 62374, nil, 4, 2) --Пламенная ненависть (Преследование)
 local specWarnCrush						= mod:NewSpecialWarningRun(226287, "Melee", nil, nil, 1, 2) --Сокрушение
 local specWarnAvalanche					= mod:NewSpecialWarningDodge(183088, nil, nil, 3, 2, 2) --Лавина
 local specWarnPetrifyingTotem			= mod:NewSpecialWarningDodge(202108, nil, nil, nil, 2, 2) --Каменящий тотем
@@ -167,11 +167,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 200154 then
-		if args:IsPlayer() then
-			specWarnBurningHatred:Show()
-			specWarnBurningHatred:Play("justrun")
-		else
-			warnBurningHatred:Show(args.destName)
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if (cid == 102253 or cid == 101652) then --Разрушитель из Подкаменного разлома, Огромный углешкур
+			if args:IsPlayer() then
+				specWarnBurningHatred:Show()
+				specWarnBurningHatred:Play("justrun")
+			else
+				warnBurningHatred:Show(args.destName)
+			end
 		end
 	elseif (spellId == 183407 or spellId == 226388) and args:IsPlayer() and self:AntiSpam(3, 7) then
 		specWarnGTFO:Show(args.spellName)

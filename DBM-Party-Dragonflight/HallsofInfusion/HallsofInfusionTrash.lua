@@ -224,9 +224,14 @@ function mod:SPELL_CAST_START(args)
 		timerThunderstormCD:Start(nil, args.sourceGUID)
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ThunderstormTarget", 0.1, 8)
 	elseif spellId == 388882 then --Затопление (1ый каст через 2.9 сек)
-		specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
-		specWarnInundate:Play("breaklos")
-		timerInundateCD:Start(nil, args.sourceGUID)
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 190405 then --Насыщательница Сария
+			if self:AntiSpam(3, "Inundate") then
+				specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
+				specWarnInundate:Play("breaklos")
+			end
+			timerInundateCD:Start(nil, args.sourceGUID)
+		end
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)
 	end

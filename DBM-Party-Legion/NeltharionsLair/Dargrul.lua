@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnCrystalSpikes				= mod:NewCastAnnounce(200551, 2) --Кристальные шипы
-local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 62374) --Пламенная ненависть (Преследование)
+--local warnBurningHatred				= mod:NewTargetNoFilterAnnounce(200154, 4, nil, nil, 62374) --Пламенная ненависть (Преследование)
 
 local specWarnCrystalSpikes			= mod:NewSpecialWarningDodge(200551, "-Tank", nil, nil, 2, 2) --Кристальные шипы
 local specWarnMoltenCrash			= mod:NewSpecialWarningDefensive(200732, nil, nil, nil, 3, 4) --Магматический удар
@@ -134,12 +134,15 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 200154 then
-		if args:IsPlayer() then
-			specWarnBurningHatred:Show(CrystalSpikes)
-			specWarnBurningHatred:Play("targetyou")
-			yellBurningHatred:Yell()
-		else
-			warnBurningHatred:Show(args.destName)
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 101476 then --Раскаленный углешкур
+			if args:IsPlayer() then
+				specWarnBurningHatred:Show(CrystalSpikes)
+				specWarnBurningHatred:Play("targetyou")
+				yellBurningHatred:Yell()
+			else
+				warnBurningHatred:Show(args.destName)
+			end
 		end
 		if self.Options.SetIconOnBurningHatred then
 			self:SetIcon(args.destName, 8)

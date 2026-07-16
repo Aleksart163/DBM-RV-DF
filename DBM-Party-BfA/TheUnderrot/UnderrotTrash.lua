@@ -256,14 +256,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 278789 and args:IsPlayer() and self:AntiSpam(3, 8) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 278961 then --Гниющий разум
+	elseif spellId == 278961 and args:IsDestTypePlayer() then --Гниющий разум
 		if args:IsPlayer() then
 			yellDecayingMind:Yell()
-		elseif args:IsDestTypePlayer() and self:CheckDispelFilter("disease") and self:AntiSpam(3, "DecayingMind") then
+		elseif self:CheckDispelFilter("disease") and self:AntiSpam(2, "DecayingMind") then
 			specWarnDecayingMindDispel:Show(args.destName)
 			specWarnDecayingMindDispel:Play("helpdispel")
 		end
-	elseif spellId == 266265 then --Злые объятия
+	elseif spellId == 266265 and args:IsDestTypePlayer() then --Злые объятия
 		if args:IsPlayer() then
 			specWarnWickedEmbrace:Show()
 			specWarnWickedEmbrace:Play("targetyou")
@@ -281,7 +281,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 266107 then --Кровожадность
 		if args:IsPlayer() then
-			yellThirstforBlood2:Cancel()
+			yellThirstforBlood2:Cancel(args.destGUID)
 		end
 	end
 end
