@@ -40,6 +40,7 @@ local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Ра
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
 local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Затопление
+local specWarnInundate2						= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
@@ -226,11 +227,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 388882 then --Затопление (1ый каст через 2.9 сек)
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
 		if cid == 190405 then --Насыщательница Сария
-			if self:AntiSpam(3, "Inundate") then
-				specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
-				specWarnInundate:Play("breaklos")
-			end
+			specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
+			specWarnInundate:Play("breaklos")
 			timerInundateCD:Start(nil, args.sourceGUID)
+		elseif self:AntiSpam(3, "Inundate") then
+			specWarnInundate2:Show(args.sourceName)
+			specWarnInundate2:Play("crowdcontrol")
+		else
+			timerInundate2CD:Start(6.3, args.sourceGUID)
 		end
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)
