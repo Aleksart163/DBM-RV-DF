@@ -282,6 +282,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407544 then --Огненный взмах
 		self.vb.comboCount = self.vb.comboCount + 1
 		self:BossTargetScanner(args.sourceGUID, "FlamingSlashTarget", 0.1, 2)
+		DBM:Debug("Murchal not proshlyap (Огненный взмах)", 2)
 	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnFlamingSlash:Show()
 			specWarnFlamingSlash:Play("defensive")
@@ -299,6 +300,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407596 then --Земляное сокрушение
 		self.vb.comboCount = self.vb.comboCount + 1
 		self:BossTargetScanner(args.sourceGUID, "EarthenCrushTarget", 0.1, 2)
+		DBM:Debug("Murchal not proshlyap (Земляное сокрушение)", 2)
 	--[[	if self:IsTanking("player", "boss1", nil, true) then
 			specWarnEarthenCrush:Show()
 			specWarnEarthenCrush:Play("defensive")
@@ -328,7 +330,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 407641 then
-		DBM:Debug("Murchal not proshlyap", 2)
+		DBM:Debug("Murchal not proshlyap (Танковское комбо)", 2)
 --[[	self.vb.firstHitTank = ""
 		self.vb.tankCombo = self.vb.tankCombo + 1
 		self.vb.comboCount = 0

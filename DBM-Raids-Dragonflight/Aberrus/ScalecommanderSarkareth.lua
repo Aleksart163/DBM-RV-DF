@@ -383,38 +383,36 @@ local function startPhase3RP(self) --Версия 1
 	timerDesolateBlossomCD:Stop()
 	timerInfiniteDuressCD:Stop()
 	timerVoidClawsCD:Stop()
-	timerIntermission:Start(12.5)
-	-----------------------------
+	timerIntermission:Start(13)
 	if self:IsMythic() then
-		timerInfiniteDuressCD:Start(17, 1)
-		timerCosmicAscensionCD:Start(19.3, 1)
-		timerHurtlingBarrageCD:Start(31, 1)
-		timerVoidSlashCD:Start(32.3)--
-		timerEmbraceofNothingnessCD:Start(35.8, 1)
-		timerVoidBombCD:Start(37)
-		timerScouringEternityCD:Start(65.6, 1) --46.2
-		timerEbonMight:Start(23.5, 1)
+		timerInfiniteDuressCD:Start(17.5, 1)
+		timerCosmicAscensionCD:Start(19.8, 1)
+		timerHurtlingBarrageCD:Start(31.5, 1)
+		timerVoidSlashCD:Start(32.8)--
+		timerEmbraceofNothingnessCD:Start(36.3, 1)
+		timerVoidBombCD:Start(37.5)
+		timerScouringEternityCD:Start(66.1, 1) --46.2
+		timerEbonMight:Start(24, 1)
 	elseif self:IsHeroic() then
-		timerInfiniteDuressCD:Start(17.2, 1)
-		timerCosmicAscensionCD:Start(20, 1)
-		timerHurtlingBarrageCD:Start(32.2, 1)
-		timerVoidSlashCD:Start(33.5)
-		timerEmbraceofNothingnessCD:Start(37.2, 1)
-		timerVoidBombCD:Start(41)
-		timerScouringEternityCD:Start(63, 1)
+		timerInfiniteDuressCD:Start(17.7, 1)
+		timerCosmicAscensionCD:Start(20.5, 1)
+		timerHurtlingBarrageCD:Start(32.7, 1)
+		timerVoidSlashCD:Start(34)
+		timerEmbraceofNothingnessCD:Start(37.7, 1)
+		timerVoidBombCD:Start(41.5)
+		timerScouringEternityCD:Start(63.5, 1)
 	elseif self:IsNormal() then
-		timerCosmicAscensionCD:Start(20.2, 1)
-		timerHurtlingBarrageCD:Start(33.5, 1)
-		timerVoidSlashCD:Start(34.8)
-		timerEmbraceofNothingnessCD:Start(38.8, 1)
-		timerVoidBombCD:Start(42.8)
-		timerScouringEternityCD:Start(65.6, 1) --48.6
+		timerCosmicAscensionCD:Start(20.7, 1)
+		timerHurtlingBarrageCD:Start(34, 1)
+		timerVoidSlashCD:Start(35.3)
+		timerEmbraceofNothingnessCD:Start(39.3, 1)
+		timerVoidBombCD:Start(43.3)
+		timerScouringEternityCD:Start(66.1, 1) --48.6
 	else--LFR
-		timerCosmicAscensionCD:Start(19.7, 1)
-		timerVoidSlashCD:Start(33.5)
-		timerScouringEternityCD:Start(58.6, 1)
+		timerCosmicAscensionCD:Start(20.2, 1)
+		timerVoidSlashCD:Start(34)
+		timerScouringEternityCD:Start(59.1, 1)
 	end
-	DBM:Debug("Murchal proshlyap (Старт фазы 3 при наложении баффа)", 2)
 end
 
 function mod:OnCombatStart(delay)
@@ -644,20 +642,15 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end]]
---[[	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
+	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
 		self.vb.blossomCount = self.vb.blossomCount + 1
-		specWarnScouringEternity:Show()
+		specWarnScouringEternity:Show(Asteroid)
 		specWarnScouringEternity:Play("findshelter")
-		specWarnScouringEternity:ScheduleVoice(4, "watchstep")
+		specWarnScouringEternity:ScheduleVoice(2, "watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
 		if timer then
 			timerScouringEternityCD:Start(timer)
 		end
-		self:SendSync("SupernovaCast")]]
-	elseif spellId == 403625 then --В поисках вечности (Сверхновая)
-		specWarnScouringEternity:Show(Asteroid)
-		specWarnScouringEternity:Play("findshelter")
-		specWarnScouringEternity:ScheduleVoice(2, "watchstep")
 		self:SendSync("SupernovaCast")
 	elseif spellId == 403741 then --Космическое вознесение (Вознесение)
 		self.vb.addIcon = 7
@@ -962,7 +955,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 410654 then --Начало эвента фазы 3 (Бафф наложился на босса)
 		specWarnVoidEmpowerment:Show(args.destName)
 		specWarnVoidEmpowerment:Play("stopattack")
-		self:SendSync("Phase3RP")
+		self:Schedule(0.5, startPhase3RP, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -1142,7 +1135,7 @@ end]]
 
 function mod:OnSync(msg)
 	if msg == "Phase3RP" then
-		self:Schedule(1, startPhase3RP, self)
+	--	self:Schedule(1, startPhase3RP, self)
 --[[		timerVoidBombCD:Stop()
 		timerAbyssalBreathCD:Stop()
 		timerDesolateBlossomCD:Stop()
@@ -1193,11 +1186,6 @@ function mod:OnSync(msg)
 		end
 		DBM:Debug("Murchal proshlyap 3 (Старт фазы 3)", 2)]]
 	elseif msg == "SupernovaCast" then
-		self.vb.blossomCount = self.vb.blossomCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 403625, self.vb.blossomCount+1)
-		if timer then
-			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
-		end
 		timerScouringEternity:Start()
 		DBM:Debug("Murchal proshlyap (Начало каста Сверхновая)", 2)
 --[[	elseif msg == "BlackHole" then
