@@ -86,7 +86,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTank() then
 			specWarnConsumeAll:Show(DBM_COMMON_L.BOSS)
 			specWarnConsumeAll:Play("movetoboss")
-		else
+		elseif not UnitIsDeadOrGhost("player") then
 			specWarnConsumeAll2:Show()
 			specWarnConsumeAll2:Play("defensive")
 		end

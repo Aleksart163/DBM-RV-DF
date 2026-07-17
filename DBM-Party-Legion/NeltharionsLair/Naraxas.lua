@@ -91,7 +91,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTank() then
 			specWarnPutridSkies:Show(DBM_COMMON_L.BOSS)
 			specWarnPutridSkies:Play("movetoboss")
-		else
+		elseif not UnitIsDeadOrGhost("player") then
 			specWarnPutridSkies2:Show()
 			specWarnPutridSkies2:Play("defensive")
 		end
