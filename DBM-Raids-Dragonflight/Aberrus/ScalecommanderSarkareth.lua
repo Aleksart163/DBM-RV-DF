@@ -383,35 +383,35 @@ local function startPhase3RP(self) --Версия 1
 	timerDesolateBlossomCD:Stop()
 	timerInfiniteDuressCD:Stop()
 	timerVoidClawsCD:Stop()
-	timerIntermission:Start(13)
+	timerIntermission:Start(13.4)
 	if self:IsMythic() then
-		timerInfiniteDuressCD:Start(17.5, 1)
-		timerCosmicAscensionCD:Start(19.8, 1)
-		timerHurtlingBarrageCD:Start(31.5, 1)
-		timerVoidSlashCD:Start(32.8)--
-		timerEmbraceofNothingnessCD:Start(36.3, 1)
-		timerVoidBombCD:Start(37.5)
-		timerScouringEternityCD:Start(66.1, 1) --46.2
-		timerEbonMight:Start(24, 1)
-	elseif self:IsHeroic() then
-		timerInfiniteDuressCD:Start(17.7, 1)
-		timerCosmicAscensionCD:Start(20.5, 1)
-		timerHurtlingBarrageCD:Start(32.7, 1)
-		timerVoidSlashCD:Start(34)
-		timerEmbraceofNothingnessCD:Start(37.7, 1)
-		timerVoidBombCD:Start(41.5)
-		timerScouringEternityCD:Start(63.5, 1)
-	elseif self:IsNormal() then
-		timerCosmicAscensionCD:Start(20.7, 1)
-		timerHurtlingBarrageCD:Start(34, 1)
-		timerVoidSlashCD:Start(35.3)
-		timerEmbraceofNothingnessCD:Start(39.3, 1)
-		timerVoidBombCD:Start(43.3)
-		timerScouringEternityCD:Start(66.1, 1) --48.6
-	else--LFR
+		timerInfiniteDuressCD:Start(17.9, 1)
 		timerCosmicAscensionCD:Start(20.2, 1)
-		timerVoidSlashCD:Start(34)
-		timerScouringEternityCD:Start(59.1, 1)
+		timerHurtlingBarrageCD:Start(31.9, 1)
+		timerVoidSlashCD:Start(33.2)--
+		timerEmbraceofNothingnessCD:Start(36.7, 1)
+		timerVoidBombCD:Start(37.9)
+		timerScouringEternityCD:Start(66.5, 1) --46.2
+		timerEbonMight:Start(24.4, 1)
+	elseif self:IsHeroic() then
+		timerInfiniteDuressCD:Start(18.1, 1)
+		timerCosmicAscensionCD:Start(20.9, 1)
+		timerHurtlingBarrageCD:Start(33.1, 1)
+		timerVoidSlashCD:Start(34.4)
+		timerEmbraceofNothingnessCD:Start(38.1, 1)
+		timerVoidBombCD:Start(41.9)
+		timerScouringEternityCD:Start(63.9, 1)
+	elseif self:IsNormal() then
+		timerCosmicAscensionCD:Start(21.1, 1)
+		timerHurtlingBarrageCD:Start(34.4, 1)
+		timerVoidSlashCD:Start(35.7)
+		timerEmbraceofNothingnessCD:Start(39.7, 1)
+		timerVoidBombCD:Start(43.7)
+		timerScouringEternityCD:Start(66.5, 1) --48.6
+	else--LFR
+		timerCosmicAscensionCD:Start(20.6, 1)
+		timerVoidSlashCD:Start(34.4)
+		timerScouringEternityCD:Start(59.5, 1)
 	end
 end
 
@@ -955,7 +955,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 410654 then --Начало эвента фазы 3 (Бафф наложился на босса)
 		specWarnVoidEmpowerment:Show(args.destName)
 		specWarnVoidEmpowerment:Play("stopattack")
-		self:Schedule(0.5, startPhase3RP, self)
+		self:Schedule(0.1, startPhase3RP, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
