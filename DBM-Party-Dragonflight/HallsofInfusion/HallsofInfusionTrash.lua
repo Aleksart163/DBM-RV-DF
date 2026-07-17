@@ -234,7 +234,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnInundate2:Show(args.sourceName)
 			specWarnInundate2:Play("crowdcontrol")
 		else
-			timerInundate2CD:Start(6.3, args.sourceGUID)
+			timerInundateCD:Start(6.3, args.sourceGUID)
 		end
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)

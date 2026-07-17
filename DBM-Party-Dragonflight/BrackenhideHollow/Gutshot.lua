@@ -57,7 +57,7 @@ mod:AddNamePlateOption("NPAuraOnHunterleadersTactics", 387889)
 
 function mod:OnCombatStart(delay)
 	timerEnsnaringTrapCD:Start(8-delay) --
-	timerGutShotCD:Start(16.4-delay) --
+	timerGutShotCD:Start(14.8-delay) --
 	timerMeatTossCD:Start(13-delay) --
 	timerCallHyenasCD:Start(30-delay) --
 --	timerMastersCallCD:Start(37-delay)--Not timer based?
