@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(96512)
 mod:SetEncounterID(1836)
-mod:SetUsedIcons(8, 7)
+mod:SetUsedIcons(7, 6)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
@@ -16,8 +16,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 198379",
 	"SPELL_CAST_SUCCESS 198401 212464 196354",
 	"SPELL_SUMMON 198432",
-	"SPELL_AURA_APPLIED 198477",
-	"SPELL_AURA_REMOVED 198477",
+	"SPELL_AURA_APPLIED 198477 196376",
+	"SPELL_AURA_REMOVED 198477 196376",
 	"SPELL_PERIODIC_DAMAGE 198408",
 	"SPELL_PERIODIC_MISSED 198408"
 )
@@ -30,25 +30,28 @@ ability.id = 198379 and type = "begincast"
 --]]
 --NOTE: Leap will be broken until 10.2 but that's fine. in TW or while leveling dungeon is easy
 --TODO, min timers could still possibly need tweaking/lowering. Same with min ICD of each ability
-local warnLeap					= mod:NewCountAnnounce(196354, 2)
-local warnNightFall				= mod:NewCountAnnounce(212464, 2)
+local warnLeap					= mod:NewTargetNoFilterAnnounce(196354, 4, nil, nil, 47482) --Мучительный прыжок (Прыжок)
+local warnNightFall				= mod:NewCountAnnounce(212464, 2) --Сумерки
 
-local specWarnNightfall			= mod:NewSpecialWarningMove(212464, nil, nil, nil, 1, 2)
+local specWarnLeap				= mod:NewSpecialWarningDefensive(196354, nil, 47482, nil, 2, 4) --Мучительный прыжок (Прыжок)
+local specWarnNightfall			= mod:NewSpecialWarningMove(212464, nil, nil, nil, 1, 2) --Сумерки
+local specWarnRampage			= mod:NewSpecialWarningDefensive(198379, nil, nil, nil, 3, 2) --Первобытная ярость
+local specWarnRampage2			= mod:NewSpecialWarningDodge(198379, nil, nil, nil, 2, 2) --Первобытная ярость
+local specWarnFixate			= mod:NewSpecialWarningYou(198477, nil, 62374, nil, 1, 2) --Сосредоточение внимания (Преследование)
 --local specWarnLeap			= mod:NewSpecialWarningDodge(196354, nil, nil, nil, 1)
-local yellLeap					= mod:NewYell(196354)
-local specWarnRampage			= mod:NewSpecialWarningDefensive(198379, nil, nil, nil, 1, 2)
-local specWarnFixate			= mod:NewSpecialWarningYou(198477, nil, nil, nil, 1, 2)
 
-local timerLeapCD				= mod:NewCDCountTimer(11.9, 196354, nil, nil, nil, 3)--11.9-17 depending on travel time and spell queuing (timer could be even shorter, small sample)
-local timerRampageCD			= mod:NewCDCountTimer(26.7, 198379, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--26.7-32.7
-local timerNightfallCD			= mod:NewCDCountTimer(20.6, 212464, nil, nil, nil, 3)--20.6--30.4
+local timerLeapCD				= mod:NewCDCountTimer(11.9, 196354, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мучительный прыжок (Прыжок) 11.9-17 depending on travel time and spell queuing (timer could be even shorter, small sample)
+local timerRampageCD			= mod:NewCDCountTimer(26.7, 198379, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Первобытная ярость 26.7-32.7
+local timerNightfallCD			= mod:NewCDCountTimer(20.6, 212464, nil, nil, nil, 3) --Сумерки 20.6--30.4
 
-mod:AddSetIconOption("SetIconOnAdd", -13302, true, 5, {8, 7})
-mod:AddNamePlateOption("NPAuraOnFixate", 198477)
+local yellLeap					= mod:NewShortYell(196354, 47482, nil, nil, "YELL") --Мучительный прыжок (Прыжок)
+
+mod:AddSetIconOption("SetIconOnAdd", -13302, true, 5, {7, 6})
+mod:AddNamePlateOption("NPAuraOnFixate", 198477) --Сосредоточение внимания
 
 mod:GroupSpells(198401, -13302)--Group add with it's parent spell
 
-mod.vb.addIcon = 8
+mod.vb.addIcon = 7
 mod.vb.leapCount = 0
 mod.vb.rampageCount = 0
 mod.vb.nightCount = 0
@@ -114,6 +117,11 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnRampage:Show()
 			specWarnRampage:Play("defensive")
+			specWarnRampage2:Schedule(2.5)
+			specWarnRampage2:ScheduleVoice(2.5, "watchstep")
+		else
+			specWarnRampage2:Show()
+			specWarnRampage2:Play("watchstep")
 		end
 		timerRampageCD:Start(nil, self.vb.rampageCount+1)
 		updateAllTimers(self, 5.7)
@@ -124,13 +132,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if (spellId == 198401 or spellId == 212464) and self:AntiSpam(2, 1) then
 		self.vb.nightCount = self.vb.nightCount + 1
-		self.vb.addIcon = 8
+		self.vb.addIcon = 7
 		warnNightFall:Show(self.vb.nightCount)
 		timerNightfallCD:Start(nil, self.vb.nightCount+1)
 		updateAllTimers(self, 2.6)
 	elseif spellId == 196354 then
 		self.vb.leapCount = self.vb.leapCount + 1
-		warnLeap:Show(self.vb.leapCount)
 		--"<398.10 22:27:23> [UNIT_SPELLCAST_SUCCEEDED] Archdruid Glaidalis(76.9%-100.0%){Target:Lucyz} -Grievous Leap- [[boss1:Cast-3-5770-1466-11160-196354-0007A1BF2D:196354]]", -- [4835]
 		--"<398.12 22:27:23> [UNIT_TARGET] boss1#Archdruid Glaidalis#Target: Fxa#TargetOfTarget: Archdruid Glaidalis", -- [4842]
 		--"<398.11 22:27:23> [CLEU] SPELL_DAMAGE#Creature-0-5770-1466-11160-96512-000021BD9C#Archdruid Glaidalis#Player-5765-0007A043#Lucyz-Raszageth#196354#Grievous Leap", -- [4843]
@@ -161,6 +168,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self.Options.NPAuraOnFixate then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, 20)
+		end
+	elseif spellId == 196376 then --Мучительный прыжок
+		warnLeap:CombinedShow(0.7, args.destName)
+		if args:IsPlayer() then
+			specWarnLeap:Show()
+			specWarnLeap:Play("defensive")
 		end
 	end
 end
