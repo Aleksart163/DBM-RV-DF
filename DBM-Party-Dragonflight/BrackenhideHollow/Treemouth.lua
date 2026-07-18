@@ -41,6 +41,7 @@ local specWarnDecaySpray						= mod:NewSpecialWarningDodge(376811, nil, nil, nil
 local specWarnDecaySpray2						= mod:NewSpecialWarningSwitch(376811, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 4) --Разлагающие брызги (Адды)
 local specWarnGraspingVines						= mod:NewSpecialWarningRun(376933, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 4) --Хваткие лозы (Притягивание)
 local specWarnGraspingVines2					= mod:NewSpecialWarningMoveTo(376933, "Tank", nil, DBM_COMMON_L.ATTRACTION, 3, 4) --Хваткие лозы (Притягивание)
+local specWarnGraspingVines3					= mod:NewSpecialWarningDefensive(376933, "Tank", 181295, nil, 3, 4) --Хваткие лозы (Переваривание)
 local specWarnGushingOoze						= mod:NewSpecialWarningInterrupt(381770, "HasInterrupt", nil, nil, 1, 2) --Хлещущая слизь
 local specWarnVineWhip							= mod:NewSpecialWarningDefensive(377559, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Хлещущая лоза
 local specWarnVineWhip2							= mod:NewSpecialWarningDodge(377559, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Хлещущая лоза
@@ -53,7 +54,7 @@ local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, DBM_COMMON_L.ADDS, ni
 --local timerInfectiousSpitCD					= mod:NewCDTimer(20.1, 377864, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)
 local timerVineWhipCD							= mod:NewCDTimer(16, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза (Фронталка)
 
-local yellVineWhip								= mod:NewShortYell(377559, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Хлещущая лоза
+local yellVineWhip								= mod:NewShortYell(377559, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Хлещущая лоза (Фронталка)
 --local yellInfusedStrikes						= mod:NewShortFadesYell(361966)
 
 mod:AddInfoFrameOption(378022, true)
@@ -109,6 +110,8 @@ function mod:SPELL_CAST_START(args)
 			if self:IsTank() then
 				specWarnGraspingVines2:Show(DBM_COMMON_L.BOSS)
 				specWarnGraspingVines2:Play("movetoboss")
+				specWarnGraspingVines3:Schedule(3.5)
+				specWarnGraspingVines3:ScheduleVoice(3.5, "defensive")
 			else
 				specWarnGraspingVines:Show()
 				specWarnGraspingVines:Play("justrun")

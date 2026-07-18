@@ -48,14 +48,10 @@ local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружен
 
 local specWarnInundate2							= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 
-local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
+--local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
 
 mod.vb.GlobCount = 0
 mod.vb.tempestCount = 0
-
-local function startProshlyapationOfMurchal(self) -- Proshlyapation of Murchal
-	warnSubmerged:Show()
-end
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -64,7 +60,6 @@ function mod:OnCombatStart(delay)
 	timerTempestsFuryCD:Start(4-delay, 1)--
 	timerInfusedGlobuleCD:Start(7.9-delay, 1)--
 	timerSquallBuffetCD:Start(15.9-delay)--
---	self:Schedule(53, startProshlyapationOfMurchal, self)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -131,8 +126,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerTempestsFuryCD:Start(7.5, 1)--
 		timerInfusedGlobuleCD:Start(11.5, 1)--
 		timerSquallBuffetCD:Start(19.4)--
-		timerSubmergedCD:Start(57)--
-	--	self:Schedule(57, startProshlyapationOfMurchal, self)
+	--	timerSubmergedCD:Start(57)--
 	end
 end
 
