@@ -40,7 +40,6 @@ local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Ра
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
 local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Затопление
-local specWarnInundate2						= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
 local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
@@ -230,9 +229,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnInundate:Play("breaklos")
 			timerInundateCD:Start(nil, args.sourceGUID)
-		elseif self:AntiSpam(3, "Inundate") then
-			specWarnInundate2:Show(args.sourceName)
-			specWarnInundate2:Play("crowdcontrol")
 		else
 			timerInundateCD:Start(6.3, args.sourceGUID)
 		end
@@ -308,9 +304,6 @@ function mod:UNIT_DIED(args)
 		timerWhirlingFuryCD:Stop(args.destGUID)
 	elseif cid == 190403 then--Glacial Proto-Dragon
 		timerOceanicBreathCD:Stop(args.destGUID)
-	elseif cid == 190405 then--Infuser Sariya
-		timerAqueousBarrierCD:Stop(args.destGUID)
-		timerFlashFloodCD:Stop(args.destGUID)
 	elseif cid == 190368 then--Flamecaller Aymi
 		timerMoltenSubductionCD:Stop(args.destGUID)
 	elseif cid == 190401 then--Gusting Proto-Dragon
@@ -322,7 +315,11 @@ function mod:UNIT_DIED(args)
 		timerTectonicBreathCD:Stop(args.destGUID)
 	elseif cid == 190377 then--Primalist Icecaller
 		timerRefreshingTidesCD:Stop(args.destGUID)
-	elseif cid == 190405 then--Насыщательница Сария
+	elseif cid == 190405 then --Насыщательница Сария
+		timerAqueousBarrierCD:Stop(args.destGUID)
+		timerFlashFloodCD:Stop(args.destGUID)
+		timerInundateCD:Stop(args.destGUID)
+	elseif (cid == 198994 or cid == 196043) then --Воин стихий – насыщательница
 		timerInundateCD:Stop(args.destGUID)
 	end
 end

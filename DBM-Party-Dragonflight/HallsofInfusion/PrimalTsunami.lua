@@ -12,7 +12,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 387504 387571 388424 387559",
+	"SPELL_CAST_START 387504 387571 388424 387559 388882",
 	"SPELL_AURA_APPLIED 387585",
 	"SPELL_AURA_REMOVED 387585",
 	"UNIT_POWER_UPDATE",
@@ -45,6 +45,8 @@ local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") -
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
 local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружение
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
+
+local specWarnInundate2							= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 
 local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
 
@@ -91,13 +93,19 @@ function mod:SPELL_CAST_START(args)
 		if self:GetStage(1) and self.vb.GlobCount >= 1 then
 			timerInfusedGlobuleCD:Start(23.2, self.vb.GlobCount+1)
 		elseif self:GetStage(2) then
-			if self.vb.GlobCount == 1 then --1ый каст через 10.5 после начала фазы, потом 24, дальше 8.8, а потом хз
-				timerInfusedGlobuleCD:Start(24, self.vb.GlobCount+1) --24, 8.8
+			if self.vb.GlobCount == 1 then --1ый каст через 11.5 после начала фазы, потом 23.2, дальше 8.8, а потом хз
+				timerInfusedGlobuleCD:Start(23.2, self.vb.GlobCount+1) --23.2, 8.8
 			elseif self.vb.GlobCount == 2 then
 				timerInfusedGlobuleCD:Start(8.8, self.vb.GlobCount+1)
 			else
-				timerInfusedGlobuleCD:Start(24, self.vb.GlobCount+1)
+				timerInfusedGlobuleCD:Start(23.2, self.vb.GlobCount+1)
 			end
+		end
+	elseif spellId == 388882 then --Затопление
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if (cid == 198994 or cid == 196043) and self:AntiSpam(3, "Inundate") then
+			specWarnInundate2:Show(args.sourceName)
+			specWarnInundate2:Play("crowdcontrol")
 		end
 	end
 end
@@ -120,8 +128,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.GlobCount = 0
 		self.vb.tempestCount = 0
 		warnSubmergedEnded:Show()
-		timerTempestsFuryCD:Start(6.5, 1)--
-		timerInfusedGlobuleCD:Start(10.5, 1)--
+		timerTempestsFuryCD:Start(7.5, 1)--
+		timerInfusedGlobuleCD:Start(11.5, 1)--
 		timerSquallBuffetCD:Start(19.4)--
 		timerSubmergedCD:Start(57)--
 	--	self:Schedule(57, startProshlyapationOfMurchal, self)
