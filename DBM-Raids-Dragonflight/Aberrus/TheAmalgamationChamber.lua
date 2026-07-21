@@ -32,12 +32,12 @@ mod:RegisterEventsInCombat(
 --TODO, if both tank abilities in P2 are a combo, just use generic tank combo timer
 --General
 
-local specWarnShadowSpike						= mod:NewSpecialWarningDefensive(403699, nil, nil, nil, 1, 3) --Теневой шип
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(405084, nil, nil, nil, 1, 8)
 
 mod:AddBoolOption("AdvancedBossFiltering", true, "misc")--May be default to off on live, but for testing purposes it needs to be forced
 --Сущность Тьмы
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26336))
+local specWarnShadowSpike						= mod:NewSpecialWarningDefensive(403699, nil, nil, nil, 1, 3) --Теневой шип
 local warnCorruptingShadow						= mod:NewCountAnnounce(401809, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(401809))
 local warnCorruptingShadowFades					= mod:NewFadesAnnounce(401809, 1)
 local warnUmbralDetonation						= mod:NewTargetCountAnnounce(405036, 3, nil, nil, 167180, nil, nil, nil, true) --Теневая детонация (Бомбы)
