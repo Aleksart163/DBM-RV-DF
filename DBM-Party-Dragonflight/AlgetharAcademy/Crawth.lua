@@ -107,6 +107,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnFirestorm:Show()
 		specWarnFirestorm:Play("watchstep")
 		specWarnFirestorm2:Schedule(1)
+		specWarnFirestorm2:ScheduleVoice(1, "dpsmore")
 	end
 end
 

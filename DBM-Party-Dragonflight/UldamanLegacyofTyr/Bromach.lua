@@ -275,6 +275,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.totemCount = 0
 			self.vb.bloodlustCount = 0
 			specWarnTremor:Show()
+			specWarnTremor:Play("dpsmore")
 			timerThunderingSlamCD:Stop()
 			timerCalloftheDeepCD:Stop()
 			timerQuakingTotemCD:Stop()

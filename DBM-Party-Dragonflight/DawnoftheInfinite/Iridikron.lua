@@ -123,6 +123,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 414178 then --Трансцендентность временной линии (Повышенный урон)
 		if args:IsPlayer() then
 			specWarnTimelineTranscendence:Show()
+			specWarnTimelineTranscendence:Play("dpsmore")
 		end
 	end
 end

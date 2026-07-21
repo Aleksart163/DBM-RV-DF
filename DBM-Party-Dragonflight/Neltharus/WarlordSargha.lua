@@ -162,6 +162,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 377014 then --Обратный поток (Повышенный урон)
 		specWarnBackdraft:Show()
+		specWarnBackdraft:Play("dpsmore")
 		timerBackdraft:Start(args.destName)
 		self:Schedule(1, pointlessDelay, self)
 	end

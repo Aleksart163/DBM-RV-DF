@@ -119,6 +119,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.bossFettered = true
 			warnFetter:Show(args.destName)
 			specWarnFetter:Show()
+			specWarnFetter:Play("dpsmore")
 			timerFetter:Start(args.destName)
 			--Stop timers, since they'll reset on fetter ending, most of the time anyways
 			timerGroundingSpearCD:Stop()

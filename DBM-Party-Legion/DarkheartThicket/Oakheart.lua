@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(103344)
 mod:SetEncounterID(1837)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
@@ -12,7 +13,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 204666 204646 204574 204667 204611 212786"
+	"SPELL_CAST_START 204666 204646 204574 204667 204611 212786",
+	"SPELL_AURA_APPLIED 204611"
 )
 
 --[[
@@ -22,20 +24,29 @@ mod:RegisterEventsInCombat(
 --]]
 --NOTE: this boss has some serious spell queuing issues that causes wild variation in timers and ability orders
 --As such, it will use aggressive on the fly timer correction that may feel jarring to users that don't recognize it's happening til they realize it is and why
-local warnShatteredEarth			= mod:NewCountAnnounce(204666, 2)
-local warnThrowTarget				= mod:NewTargetNoFilterAnnounce(204658, 2)--This is target the tank is THROWN at.
-local warnUproot					= mod:NewCountAnnounce(212786, 2)
+local warnShatteredEarth			= mod:NewCountAnnounce(204666, 2) --Расколовшаяся земля
+local warnThrowTarget				= mod:NewTargetNoFilterAnnounce(204658, 2, nil, nil, 2764) --Сокрушительная хватка (Бросок)
+local warnUproot					= mod:NewCountAnnounce(212786, 2) --Пересадка
 
-local specWarnRoots					= mod:NewSpecialWarningDodgeCount(204574, nil, nil, nil, 2, 2)
-local specWarnBreath				= mod:NewSpecialWarningDodgeCount(204667, nil, nil, nil, 2, 2)
+local specWarnShatteredEarth		= mod:NewSpecialWarningDefensive(204666, nil, nil, nil, 3, 4) --Расколовшаяся земля
+local specWarnThrow					= mod:NewSpecialWarningDefensive(204611, nil, nil, nil, 3, 4) --Сокрушительная хватка
+local specWarnThrow2				= mod:NewSpecialWarningMoveAway(204658, nil, nil, nil, 4, 2) --Сокрушительная хватка (Бросок)
+local specWarnRoots					= mod:NewSpecialWarningDodge(204574, nil, nil, nil, 2, 2) --Корни-душители
+local specWarnBreath				= mod:NewSpecialWarningDefensive(204667, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание Кошмара
+local specWarnBreath2				= mod:NewSpecialWarningDodge(204667, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание Кошмара
+local specWarnUproot				= mod:NewSpecialWarningSwitch(212786, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 2) --Пересадка (Адды)
 
-local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, nil, nil, nil, 2)--34-60 (basically same as OG)
-local timerCrushingGripCD			= mod:NewCDCountTimer(27.9, 204611, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 4)--27.9-36 (basically same as OG)
-local timerRootsCD					= mod:NewCDCountTimer(18.2, 204574, nil, nil, nil, 3)--18.2-35.1 (basically same as OG)
-local timerBreathCD					= mod:NewCDCountTimer(26.5, 204667, nil, nil, nil, 5)--26-35 (basically same as OG)
-local timerUprootCD					= mod:NewCDCountTimer(32.4, 212786, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--32.7-37.6 (Probably also OG timer, but didn't have it in OG mod)
+local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Расколовшаяся земля 34-60 (basically same as OG)
+local timerCrushingGripCD			= mod:NewCDCountTimer(27.9, 204611, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 5) --Сокрушительная хватка 27.9-36 (basically same as OG)
+local timerRootsCD					= mod:NewCDCountTimer(18.2, 204574, nil, nil, nil, 3) --Корни-душители 18.2-35.1 (basically same as OG)
+local timerBreathCD					= mod:NewCDCountTimer(26.5, 204667, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание Кошмара 26-35 (basically same as OG)
+local timerUprootCD					= mod:NewCDCountTimer(32.4, 212786, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Пересадка (Адды) 32.7-37.6 (Probably also OG timer, but didn't have it in OG mod)
 
-local yellThrow						= mod:NewYell(204658, 2764, nil, nil, "YELL")--yell so others can avoid splash damage. I don't think target can avoid
+local yellThrow						= mod:NewYell(204611, nil, nil, nil, "YELL") --Сокрушительная хватка
+local yellThrow2					= mod:NewYell(204658, 2764, nil, nil, "YELL") --Сокрушительная хватка (Бросок)
+local yellThrow2Fades				= mod:NewShortFadesYell(204658, nil, nil, nil, "YELL") --Сокрушительная хватка (Бросок)
+
+mod:AddSetIconOption("SetIconOnThrow", 204658, true, 0, {8}) --Сокрушительная хватка (Бросок)
 
 mod.vb.shatteredCount = 0
 mod.vb.crushingCount = 0
@@ -89,10 +100,16 @@ function mod:ThrowTarget(targetname, uId)
 	if not targetname then
 		return
 	end
-	warnThrowTarget:Show(targetname)
 	if targetname == UnitName("player") then
-		--Can this be dodged? personal warning?
-		yellThrow:Yell()
+		specWarnThrow2:Show()
+		specWarnThrow2:Play("scatter")
+		yellThrow2:Yell()
+		yellThrow2Fades:Countdown(5)
+	else
+		warnThrowTarget:Show(targetname)
+	end
+	if self.Options.SetIconOnThrow then
+		self:SetIcon(targetname, 8, 8)
 	end
 end
 
@@ -117,20 +134,27 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 204666 then
 		self.vb.shatteredCount = self.vb.shatteredCount + 1
 		warnShatteredEarth:Show(self.vb.shatteredCount)
+		specWarnShatteredEarth:Show()
+		specWarnShatteredEarth:Play("defensive")
 		--35.2, 44.9 / 51.8, 36.3 / 52.2, 60.7
 		timerShatteredEarthCD:Start(nil, self.vb.shatteredCount+1)
 		updateAllTimers(self, 7.2, true)
 	elseif spellId == 204574 then
 		self.vb.rootsCount = self.vb.rootsCount + 1
-		specWarnRoots:Show(self.vb.rootsCount)
+		specWarnRoots:Show()
 		specWarnRoots:Play("watchstep")
 		--25.5, 29.1, 35.1 / 28.7, 32.7, 27.9, 23 / 27.9, 32.7, 31.6, 27.9
 		timerRootsCD:Start(nil, self.vb.rootsCount+1)
 		updateAllTimers(self, 2.4)
-	elseif spellId == 204667 then
+	elseif spellId == 204667 then --Дыхание Кошмара (Фронталка)
 		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnBreath:Show(self.vb.breathCount)
-		specWarnBreath:Play("breathsoon")
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+			specWarnBreath:Show()
+			specWarnBreath:Play("breathsoon")
+		else
+			specWarnBreath2:Show()
+			specWarnBreath2:Play("watchstep")
+		end
 		--32.7, 27.9 / 29.1, 32.7, 36.4 / 29.1, 32.8, 27.9
 		timerBreathCD:Start(nil, self.vb.breathCount+1)
 		updateAllTimers(self, 7.2, true)
@@ -142,8 +166,21 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 212786 then
 		self.vb.uprootCount = self.vb.uprootCount + 1
 		warnUproot:Show(self.vb.uprootCount)
+		specWarnUproot:Show()
+		specWarnUproot:Play("changetarget")
 		--32.7, 35.1 / 33.5, 34.5 / 32.7, 37.6, 33.9
 		timerUprootCD:Start(nil, self.vb.uprootCount+1)
 		updateAllTimers(self, 3.6)
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 204611 then
+		if args:IsPlayer() then
+			specWarnThrow:Show()
+			specWarnThrow:Play("defensive")
+			yellThrow:Yell()
+		end
 	end
 end
