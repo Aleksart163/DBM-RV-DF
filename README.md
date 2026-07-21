@@ -6,8 +6,8 @@
 * Встроенный апдейтер (батник), что поможет в 1 нажатие обновить ваш аддон до самой актуальной версии.
 
 # <p align="center">Обновления</p>
+* Если у вас до установки DBM RV стояла версия с Retail, то рекомендуется сперва удалить все файлы и папки с названием DBM из папки с игрой.
 * Не забывайте хотя бы изредка обновлять настройки модулей аддона по умолчанию, это делается очень легко и показывается на видео ниже. Это обязательно при первой установке, если до этого стояла версия с Retail (т.е. с офы).
-* Если у вас до установки DBM RV стояла версия с Retail, то рекомендую сперва удалить все файлы и папки с названием DBM из папки с игрой.
 [![Watch the video](https://img.youtube.com/vi/aLvleUczSe4/maxresdefault.jpg)](https://www.youtube.com/watch?v=aLvleUczSe4)
 
 # <p align="center">Features</p>
@@ -17,8 +17,8 @@
 * Built-in updater will help in 1 click to update your addon to the most current version.
 
 # <p align="center">Updates</p>
-* Do not forget to update the default addon module settings at least occasionally, this is done very easily and is shown in the video above. This is mandatory during the first installation, if the Retail version was installed before (i.e. from the official version).
 * If you had a Retail version before installing DBM RV, I recommend that you first delete all files and folders with the DBM name from the game folder.
+* Do not forget to update the default addon module settings at least occasionally, this is done very easily and is shown in the video above. This is mandatory during the first installation, if the Retail version was installed before (i.e. from the official version).
 
 <a href="https://github.com/Aleksart163/DBM-RV-DF/archive/refs/heads/main.zip"><img src="https://www.freepngimg.com/thumb/download_now_button/25860-7-download-now-button-glossy-green.png"/></a>
 
