@@ -31,9 +31,9 @@ local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 3, nil, "Ta
 local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Неистовство огнекованной стали (Обстрел)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
 local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, 286503, nil, 4, 4) --Луч жестокой боли
-local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)
+local specWarnHellbeam								= mod:NewSpecialWarningDodge(400430, nil, 18357, nil, 2, 2) --Огненный луч (Дыхание)
 local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Истребляющие крылья (Отталкивание)
-local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404743, nil, nil, nil, 1, 2) --Ужасные когти
+local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404743, nil, nil, nil, 3, 2) --Ужасные когти
 local specWarnTerrorClawsTaunt						= mod:NewSpecialWarningTaunt(404743, nil, nil, nil, 1, 2) --Ужасные когти
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(406530, nil, nil, nil, 1, 8) --Огонь разлома
 --
@@ -59,8 +59,8 @@ mod.vb.riftIcon = 1
 mod.vb.rayCount = 0
 mod.vb.hellCount = 0
 mod.vb.wingsCount = 0
-
-local dreadRiftsMythicTimers = {7, 34, 34, 33} --Первые 4 точно, дальше на проверке
+--Ужасные разломы
+local dreadRiftsMythicTimers = {7, 34, 34, 33, 35, 32.5} --Первые 6 точно, дальше на проверке
 
 function mod:TerrorClawsTarget(targetname, uId)
 	if not targetname then return end
@@ -111,10 +111,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407069 then --Лучи жестокой боли
 		self.vb.rayCount = self.vb.rayCount + 1
 	--	timerRaysofAnguishCD:Start(nil, self.vb.rayCount+1)
-		timerRaysofAnguishCD:Start(self:IsEasy() and 33 or 34, self.vb.rayCount+1) --В обычке 2 каст на 1 сек раньше, дальше хз
+		timerRaysofAnguishCD:Start(self:IsEasy() and 33 or 34, self.vb.rayCount+1) --В обычке 2 каст на 1 сек раньше, дальше хз. В мифике 3 каст может быть на 1 сек раньше
 	elseif spellId == 400430 then
 		self.vb.hellCount = self.vb.hellCount + 1
-		specWarnHellbeam:Show(self.vb.hellCount)
+		specWarnHellbeam:Show()
 		specWarnHellbeam:Play("watchstep")
 		timerHellbeamCD:Start(nil, self.vb.hellCount+1)
 	elseif spellId == 403326 then
