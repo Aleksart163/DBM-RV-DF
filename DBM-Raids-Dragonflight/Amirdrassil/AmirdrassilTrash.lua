@@ -15,16 +15,13 @@ mod:RegisterEvents(
 
 --TODO, kick blazing pulse
 --TODO, inferno heart spread
-local warnShadowflameBomb					= mod:NewTargetAnnounce(425300, 3)
-local warnInfernoHeart						= mod:NewTargetAnnounce(425388, 3)
+local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, nil, 167180) --Бомба пламени Тьмы (Бомбы)
+local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
 local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee")
 
-local specWarnShadowflameBomb				= mod:NewSpecialWarningMoveAway(425300, nil, nil, nil, 1, 2)
-local yellShadowflameBomb					= mod:NewYell(425300)
-local yellShadowflameBombFades				= mod:NewShortFadesYell(425300)
-local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2)
-local yellInfernoHeart						= mod:NewYell(425388)
-local yellInfernoHeartFades					= mod:NewShortFadesYell(425388)
+local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2) --Сердце Преисподней
+local specWarnInfernoHeartDispel			= mod:NewSpecialWarningDispel(425388, "RemoveCurse", nil, nil, 1, 2) --Сердце Преисподней
+local specWarnShadowflameBomb				= mod:NewSpecialWarningMoveAway(425300, nil, 174716, nil, 1, 2) --Бомба пламени Тьмы (Бомба)
 local specWarnChargedStomp					= mod:NewSpecialWarningDodge(425149, "Melee", nil, nil, 4, 2)
 local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM_COMMON_L.BOMBING, 2, 2)
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2)
@@ -32,6 +29,11 @@ local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInte
 
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3)--CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5)--How long it's active and when not to come up
+
+local yellShadowflameBomb					= mod:NewShortYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
+local yellShadowflameBombFades				= mod:NewShortFadesYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
+local yellInfernoHeart						= mod:NewShortYell(425388, nil, nil, nil, "YELL") --Сердце Преисподней
+local yellInfernoHeartFades					= mod:NewShortFadesYell(425388, nil, nil, nil, "YELL") --Сердце Преисподней
 
 --local playerName = UnitName("player")
 
@@ -71,6 +73,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnInfernoHeart:Play("runout")
 			yellInfernoHeart:Yell()
 			yellInfernoHeartFades:Countdown(spellId)
+		elseif self:CheckDispelFilter("curse") then
+			specWarnInfernoHeartDispel:Schedule(2, args.destName)
+			specWarnInfernoHeartDispel:ScheduleVoice(2, "helpdispel")
 		end
 	elseif spellId == 425381 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBlazingPulse:Show(args.destName)

@@ -35,7 +35,6 @@ local specWarnCinderboltSalvo					= mod:NewSpecialWarningSpell(427223, nil, nil,
 --local specWarnSpatialDisruption					= mod:NewSpecialWarningSpell(426974, nil, nil, nil, 2, 13)
 local specWarnColdFusion						= mod:NewSpecialWarningDodge(426845, nil, nil, nil, 2, 2)
 local specWarnVenomBurst						= mod:NewSpecialWarningMoveAway(165123, nil, nil, nil, 1, 2)
-local yellnVenomBurst							= mod:NewYell(165123)
 local specWarnEnragedGrowth						= mod:NewSpecialWarningInterrupt(165213, "HasInterrupt", nil, nil, 1, 2)
 local specWarnChokingVines						= mod:NewSpecialWarningInterrupt(164965, "HasInterrupt", nil, nil, 1, 2)
 local specWarnHealingWaters						= mod:NewSpecialWarningInterrupt(164887, "HasInterrupt", nil, nil, 1, 2)
@@ -61,6 +60,8 @@ local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18.2, 427223, nil, nil, nil,
 local timerFrostboltCD							= mod:NewCDNPTimer(6, 169840, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerColdfusionCD							= mod:NewCDNPTimer(21.8, 426845, nil, nil, nil, 3)--21.8-25, maybe shorter
 local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, nil, nil, nil, 3)
+
+local yellnVenomBurst							= mod:NewYell(165123, nil, nil, nil, "YELL")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 

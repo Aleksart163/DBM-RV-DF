@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240507051555")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
@@ -39,7 +39,7 @@ local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинстве�
 local warnSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
 local warnWakingBane2						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
 
-local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, nil, nil, 3, 4) --Дыхание магического льда
+local specWarnSpellfrostBreath				= mod:NewSpecialWarningDefensive(391118, nil, 18357, nil, 3, 4) --Дыхание магического льда (Дыхание)
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
 local specWarnForbiddenKnowledge			= mod:NewSpecialWarningDodge(371358, nil, nil, nil, 2, 2)
 local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2, 2, 2) --Нейтрализующий топот
@@ -67,7 +67,7 @@ local timerBestialRoarCD					= mod:NewCDNPTimer(17, 396991, nil, nil, nil, 2)
 local timerUnstablePowerCD					= mod:NewCDNPTimer(7.3, 374885, nil, nil, nil, 3)
 local timerWildEruptionCD					= mod:NewCDNPTimer(12.1, 375652, nil, nil, nil, 3)
 
-local yellSpellfrostBreath					= mod:NewShortYell(391118, nil, nil, nil, "YELL") --Дыхание магического льда
+local yellSpellfrostBreath					= mod:NewYell(391118, 18357, nil, nil, "YELL") --Дыхание магического льда (Дыхание)
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL")
 local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
 local yellWakingBane						= mod:NewYell(386549, nil, nil, nil, "YELL") --Изгнание в сон

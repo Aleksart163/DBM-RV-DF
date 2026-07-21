@@ -42,10 +42,8 @@ local warnAgonizingClaws							= mod:NewStackAnnounce(421022, 2, nil, "Tank|Heal
 local warnUrsineRage								= mod:NewSpellAnnounce(425114, 4)--You done fucked up
 
 local specWarnBlindingRage							= mod:NewSpecialWarningCount(420525, nil, nil, nil, 2, 2)
-local specWarnBarrelingCharge						= mod:NewSpecialWarningCount(420948, nil, nil, nil, 1, 14)
-local specWarnBarrelingChargeSpecial				= mod:NewSpecialWarningMoveTo(420948, nil, nil, nil, 3, 14)
-local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL")
-local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL")
+local specWarnBarrelingCharge						= mod:NewSpecialWarningCount(420948, nil, 100, nil, 1, 14) --Пробивной рывок (Рывок)
+local specWarnBarrelingChargeSpecial				= mod:NewSpecialWarningMoveTo(420948, nil, 100, nil, 3, 14) --Пробивной рывок (Рывок)
 local specWarnAgonizingClaws						= mod:NewSpecialWarningTaunt(421022, nil, nil, 2, 1, 2)
 --local specWarnPyroBlast							= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
 
@@ -59,17 +57,15 @@ local Aerwynn = DBM:EJ_GetSectionInfo(27301)
 mod:AddTimerLine(Aerwynn)
 local warnRelentlessBarrage							= mod:NewSpellAnnounce(420937, 4)--You done fucked up
 local warnNoxiousBlossom							= mod:NewCountAnnounce(420671, 3)
-local warnPoisonousJavelin							= mod:NewTargetCountAnnounce(420858, 3, nil, nil, 298110)--, nil, nil, nil, nil, nil, nil, true
+local warnPoisonousJavelin							= mod:NewTargetCountAnnounce(420858, 3, nil, nil, nil) --Отравленное копье , nil, nil, nil, nil, nil, nil, true
 
 local specWarnConstrictingThicket					= mod:NewSpecialWarningCount(421292, nil, nil, nil, 2, 2)
-local specWarnPoisonousJavelin						= mod:NewSpecialWarningMoveAway(420858, nil, nil, nil, 1, 2)
-local yellPoisonousJavelin							= mod:NewShortYell(420858, 298110, false)
-local yellPoisonousJavelinFades						= mod:NewShortFadesYell(420858)--For unstable Venom
+local specWarnPoisonousJavelin						= mod:NewSpecialWarningMoveAway(420858, nil, nil, nil, 1, 2) --Отравленное копье
 
 local timerConstrictingThicketCD					= mod:NewNextCountTimer(11.8, 421292, nil, nil, nil, 2)
 local timerConstrictingThicket						= mod:NewBuffActiveTimer(15, 421292, nil, nil, nil, 5)
 local timerNoxiousBlossomCD							= mod:NewCDCountTimer(21, 420671, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3)
-local timerPoisonousJavelinCD						= mod:NewCDCountTimer(25, 420858, 298110, nil, nil, 3, nil, DBM_COMMON_L.POISON_ICON)--Shortname "Javelin
+local timerPoisonousJavelinCD						= mod:NewCDCountTimer(25, 420858, nil, nil, nil, 3, nil, DBM_COMMON_L.POISON_ICON) --Отравленное копье
 
 --Pip
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27302))
@@ -80,15 +76,20 @@ local warnSongFaded									= mod:NewFadesAnnounce(421029, 1)
 
 local specWarnSongoftheDragon						= mod:NewSpecialWarningMoveTo(421029, nil, nil, nil, 2, 2)
 local specWarnCaptivatingFinale						= mod:NewSpecialWarningYou(421032, nil, nil, nil, 1, 2)
-local yellCaptivatingFinale							= mod:NewShortYell(421032)
-local specWarnPolymorphBomb							= mod:NewSpecialWarningYou(418720, nil, nil, nil, 1, 2)
-local yellPolymorphBombFades						= mod:NewIconFadesYell(418720)
-local specWarnEmeraldWinds							= mod:NewSpecialWarningCount(421024, nil, nil, nil, 2, 13)
+local specWarnPolymorphBomb							= mod:NewSpecialWarningYou(418720, nil, 118, nil, 1, 2)
+local specWarnEmeraldWinds							= mod:NewSpecialWarningCount(421024, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13)
 
 local timerSongoftheDragonCD						= mod:NewNextCountTimer(200, 421029, nil, nil, nil, 2)
 local timerSongoftheDragon							= mod:NewBuffActiveTimer(20, 421029, nil, nil, nil, 5)
 local timerPolymorphBombCD							= mod:NewCDCountTimer(18.9, 418720, L.Ducks, nil, nil, 3)--Ducks already has count in mod localization
 local timerEmeraldWindsCD							= mod:NewCDCountTimer(11.8, 421024, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2)
+
+local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL") --Пробивной рывок (Рывок)
+local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL") --Пробивной рывок (Рывок)
+local yellPoisonousJavelin							= mod:NewShortYell(420858, 79572, false, nil, "YELL") --Отравленное копье (Копье)
+local yellPoisonousJavelinFades						= mod:NewShortFadesYell(420858, 79572, nil, nil, "YELL") --Отравленное копье (Копье)
+local yellCaptivatingFinale							= mod:NewShortYell(421032, nil, nil, nil, "YELL") --Захватывающий финал
+local yellPolymorphBombFades						= mod:NewIconFadesYell(418720, 118, nil, nil, "YELL") --Превращающая бомба (Превращение)
 
 mod:AddPrivateAuraSoundOption(418589, true, 418720, 1)--Polymorph Bomb
 --mod:AddInfoFrameOption(407919, true)

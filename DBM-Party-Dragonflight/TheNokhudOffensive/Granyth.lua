@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2498, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186616)
 mod:SetEncounterID(2637)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20221029000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -34,8 +34,9 @@ local warnShardsofStone							= mod:NewCountAnnounce(388817, 3) --Каменны
 local warnReload								= mod:NewCastAnnounce(386921, 1) --Перезарядка
 local warnAdd									= mod:NewCountAnnounce(386320, 4) --Призыв диверсанта
 
-local specWarnEruption							= mod:NewSpecialWarningCount(388283, nil, nil, nil, 3, 4) --Извержение
-local specWarnTectonicStomp						= mod:NewSpecialWarningRun(385916, "Melee", nil, nil, 4, 2) --Тектонический топот
+local specWarnEruption							= mod:NewSpecialWarningSpell(388283, nil, nil, nil, 3, 4) --Извержение
+local specWarnTectonicStomp						= mod:NewSpecialWarningRun(385916, nil, nil, nil, 4, 2) --Тектонический топот
+local specWarnTectonicStomp2					= mod:NewSpecialWarningDodge(385916, nil, nil, nil, 2, 2) --Тектонический топот
 
 local timerEruptionCD							= mod:NewCDTimer(35, 388283, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Извержение
 local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, nil, nil, nil, 2) --Каменные осколки
@@ -65,7 +66,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 388283 then
 		self.vb.eruptionCount = self.vb.eruptionCount + 1
-		specWarnEruption:Show(self.vb.eruptionCount)
+		specWarnEruption:Show()
 		specWarnEruption:Play("interruptsoon")
 --		timerEruptionCD:Start()--In between times not known yet since doing fight correctly shouldn't see in betweens
 	elseif spellId == 388817 then--388817 confirmed on mythic/heroic/normal, 385657 unused?
@@ -73,8 +74,13 @@ function mod:SPELL_CAST_START(args)
 		warnShardsofStone:Show(self.vb.shardsCount)
 		timerShardsofStoneCD:Start()
 	elseif spellId == 385916 then
-		specWarnTectonicStomp:Show()
-		specWarnTectonicStomp:Play("justrun")
+		if self:IsMelee() then
+			specWarnTectonicStomp:Show()
+			specWarnTectonicStomp:Play("justrun")
+		else
+			specWarnTectonicStomp2:Show()
+			specWarnTectonicStomp2:Play("watchstep")
+		end
 --		timerTectonicStompCD:Start()--In between times not known yet since doing fight correctly shouldn't see in betweens
 	elseif spellId == 386921 then
 		warnReload:Show()

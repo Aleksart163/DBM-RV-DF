@@ -99,7 +99,7 @@ function mod:FlamingSlashTarget(targetname, uId)
 	else
 		if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
 			local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407547)
-			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
+			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(3, "FlamingSlash") and not UnitIsDeadOrGhost("player") then
 				specWarnFlamingSlashTaunt:Show(UnitName("boss1target"))
 				specWarnFlamingSlashTaunt:Play("tauntboss")
 			end
@@ -115,7 +115,7 @@ function mod:EarthenCrushTarget(targetname, uId)
 	else
 		if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
 			local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", 407597)
-			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(1, 1) and not UnitIsDeadOrGhost("player") then
+			if (expireTimeTarget and expireTimeTarget-GetTime() >= 2) and self:AntiSpam(3, "EarthenCrush") and not UnitIsDeadOrGhost("player") then
 				specWarnEarthenCrushTaunt:Show(UnitName("boss1target"))
 				specWarnEarthenCrushTaunt:Play("tauntboss")
 			end

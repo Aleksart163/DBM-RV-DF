@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2474, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186121)
 mod:SetEncounterID(2569)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20230513000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -40,7 +40,7 @@ local timerRotburstTotemCD						= mod:NewCDTimer(17, 373944, 374057, nil, nil, 1
 local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Удушающее облако гнили (Фронталка)
 local timerDecayStrikeCD						= mod:NewCDCountTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Удар разложения
 
-local yellChokingRotcloud						= mod:NewShortYell(376170, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Удушающее облако гнили (Фронталка)
+local yellChokingRotcloud						= mod:NewYell(376170, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Удушающее облако гнили (Фронталка)
 
 mod:AddRangeFrameOption(5, 373941)
 mod:AddInfoFrameOption(373896, true)

@@ -76,7 +76,7 @@ local warnBlisteringTwilight					= mod:NewTargetCountAnnounce(405641, 3, nil, ni
 local warnShadowflameBurst						= mod:NewCountAnnounce(406783, 3) --Взрыв пламени Тьмы
 
 local specWarnShadowandFlame					= mod:NewSpecialWarningMoveAway(409385, nil, nil, nil, 3, 2) --Тьма и пламя
-local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Возгорание мрака (248815 Возгорание)
+local specWarnGloomConflag						= mod:NewSpecialWarningCount(405437, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Возгорание мрака (Разделение урона)
 local specWarnBlisteringTwilight				= mod:NewSpecialWarningYou(405642, nil, 49685, nil, 1, 2) --Обжигающий сумрак (Бомбы)
 local specWarnConvergentEruption				= mod:NewSpecialWarningSoakCount(408193, nil, nil, nil, 2, 2) --Объединенный взрыв
 local specWarnWitheringVulnerability			= mod:NewSpecialWarningDefensive(405914, nil, 160149, nil, 3, 2) --Иссушающая слабость
@@ -85,7 +85,7 @@ local specWarnWitheringVulnerabilityTaunt		= mod:NewSpecialWarningTaunt(405914, 
 local timerIntermission							= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 local timerShadowandFlameCD						= mod:NewCDCountTimer(47.4, 409385, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Тьма и пламя
 local timerShadowandFlameCast					= mod:NewCastTimer(4, 409385, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 4) --Тьма и пламя
-local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Возгорание мрака
+local timerGloomConflagCD						= mod:NewCDCountTimer(40, 405437, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Возгорание мрака (Разделение урона)
 local timerGloomConflagCast						= mod:NewCastCountTimer(5, 405437, 240446, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Возгорание мрака (Взрыв)
 local timerBlisteringTwilightCD					= mod:NewCDCountTimer(40, 405642, 167180, nil, nil, 3) --Обжигающий сумрак (Бомбы)
 local timerConvergentEruptionCD					= mod:NewCDCountTimer(40, 408193, nil, nil, nil, 5) --Объединенный взрыв
@@ -225,7 +225,7 @@ local allTimers = {
 		[403101] = {16.7, 34.6, 34, 34}, --16.7, 40.5, 34.5, 34 по инфе с офы
 		----Shadow Duder
 		--Теневой шип
-		[403699] = {9.5, 15.8, 13.2, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4}, --{9.5, 15.8, 15.8, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4} по инфе с офы
+		[403699] = {9.5, 15.6, 13.2, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4}, --{9.5, 15.8, 15.8, 10.1, 15.8, 19.5, 15.7, 19.4, 15.8, 19.4} по инфе с офы
 		--Umbral Detonation
 		[405016] = {14.2, 34.6, 34.5, 35.2}, --14.2, 41.7, 34.5, 35.2 по инфе с офы
 		--Coalescing Void
@@ -242,7 +242,7 @@ local allTimers = {
 		--Объединенный взрыв (Heroic+)
 		[408193] = {33.6, 47.4, 47.4, 47.3, 47.5, 47.4}, --33.6, 51, 47.4, 47.3, 47.5, 47.4 по инфе с офы
 		--Иссушающая слабость (Слабость) 7 штук точные под гер
-		[405914] = {15.6, 26.8, 24.2, 24.1, 24.2, 22.1, 24.2, 24.2, 23.1, 24.3, 23.1, 24.3}, --16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3 по инфе с офы
+		[405914] = {15.6, 26.8, 24.2, 23.1, 24.2, 22.1, 24.2, 24.2, 23.1, 24.3, 23.1, 24}, --16.6, 24.3, 26.8, 24.3, 23.1, 24.2, 23.1, 24.2, 23.1, 24.3, 23.1, 24.3 по инфе с офы
 		--Взрыв пламени Тьмы (Фронталка) 9 штук точные под гер (2-ая под миф)
 		[406783] = {17.6, 26.8, 24.2, 23.1, 22.7, 23, 24.2, 23.2, 23, 24.3, 23.1, 24.1}, --{19.4, 24.4, 26.8, 24.3, 23.2, 24.3, 23.2, 24.3, 23.1, 24.3, 23.1, 24.3}, по инфе с офы
 	},
@@ -258,7 +258,7 @@ local allTimers = {
 --		[403101] = {},
 		----Shadow Duder
 		--Теневой шип
-		[403699] = {9.3, 15.7, 15.7, 10.9, 15.7, 19.5, 16.2, 19.4, 15.8, 19.5, 15.9},
+		[403699] = {9.3, 15.7, 13.2, 10.9, 15.7, 19.5, 16.2, 19.4, 15.8, 19.5, 15.9}, --По инфе с офы {9.3, 15.7, 15.7, 10.9, 15.7, 19.5, 16.2, 19.4, 15.8, 19.5, 15.9},
 		--Umbral Detonation
 		[405016] = {16.6, 21.9, 18.3, 36.9, 34.0, 35.3},
 		--Coalescing Void
@@ -268,16 +268,16 @@ local allTimers = {
 		----Phase 2
 		--Shadow and Flame (mythic Only)
 --		[409385] = {},
-		--Gloom Conflag
-		[405437] = {50.3, 44.9, 45.2, 44.9, 46.2},
+		--Возгорание мрака (Разделение урона)
+		[405437] = {50.3, 46, 45.2, 44.9, 46.2}, --По старой инфе с офы {50.3, 44.9, 45.2, 44.9, 46.2},
 		--Blistering Twilight
 		[405641] = {20.2, 15.7, 36.4, 15.7, 31.6},
 		--Convergent Eruption (Heroic+)
 --		[408193] = {},
-		--Withering Vulnerability
-		[405914] = {15.8, 24.2, 28.1, 24.2, 23.1},
+		--Иссушающая слабость
+		[405914] = {15.8, 24.2, 24.3, 23.1, 23.1}, --По старой инфе с офы {15.8, 24.2, 28.1, 24.2, 23.1},
 		--Взрыв пламени Тьмы (Фронталка)
-		[406783] = {18.5, 24.2, 28.1, 24.2, 23.1},
+		[406783] = {18.5, 24.2, 24.3, 23.1, 23.1}, --По старой инфе с офы {18.5, 24.2, 28.1, 24.2, 23.1},
 	},
 }
 
@@ -616,8 +616,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBlisteringTwilight:CombinedShow(0.5, self.vb.umbralCount, args.destName)
 		self.vb.umbralIcon = self.vb.umbralIcon + 1
 	elseif (spellId == 413597 or spellId == 405914) and not args:IsPlayer() then
-		specWarnWitheringVulnerabilityTaunt:Show(args.destName)
-		specWarnWitheringVulnerabilityTaunt:Play("tauntboss")
+		if not UnitIsDeadOrGhost("player") then
+			specWarnWitheringVulnerabilityTaunt:Show(args.destName)
+			specWarnWitheringVulnerabilityTaunt:Play("tauntboss")
+		end
 		if self.Options.SetIconOnWitheringVulnerability then
 			self:SetIcon(args.destName, 8, 10)
 		end

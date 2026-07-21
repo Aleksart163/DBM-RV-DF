@@ -53,7 +53,7 @@ local timerSleepySililoquyCD				= mod:NewCDNPTimer(9, 395872, nil, "HasInterrupt
 local timerFlamesofDoubtCD					= mod:NewCDNPTimer(15, 398300, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пламя сомнения
 local timerDefilingMistsCD					= mod:NewCDNPTimer(10, 397914, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющая дымка
 
-local yellSleepySililoquy					= mod:NewShortYell(395872, nil, nil, nil, "YELL") --Вялый монолог
+local yellSleepySililoquy					= mod:NewYell(395872, nil, nil, nil, "YELL") --Вялый монолог
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt

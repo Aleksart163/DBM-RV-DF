@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2492, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240507051555")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186644)
 mod:SetEncounterID(2582)
 mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20221127000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 

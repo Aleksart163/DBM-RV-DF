@@ -35,14 +35,15 @@ local warnFeedOnTheWeak				= mod:NewTargetNoFilterAnnounce(200238, 2)
 
 local specWarnFesteringRip			= mod:NewSpecialWarningDispel(200182, "RemoveMagic", nil, 2, 1, 2)
 local specWarnWakingNightmare		= mod:NewSpecialWarningMoveTo(200243, nil, nil, nil, 1, 2)
-local yellWakingNightmare			= mod:NewYell(200243, nil, nil, nil, "YELL")--Yell is standard for grou up
 local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289, nil, nil, nil, 1, 2)
-local yellParanoia					= mod:NewYell(200289)--Say is standard for avoid
 
 local timerFesteringRipCD			= mod:NewCDCountTimer(17, 200182, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--17-21
 local timerNightmareBoltCD			= mod:NewCDCountTimer(22.7, 200185, nil, nil, nil, 3)--24.3-36.5
 local timerParanoiaCD				= mod:NewCDCountTimer(22, 200289, nil, nil, nil, 3)--22-34 (200359 matches journal, but better to sync up with debuff for WA keys)
 local timerFeedOnTheWeakCD			= mod:NewCDCountTimer(18.2, 200238, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+
+local yellWakingNightmare			= mod:NewYell(200243, nil, nil, nil, "YELL")--Yell is standard for grou up
+local yellParanoia					= mod:NewYell(200289, nil, nil, nil, "YELL")--Say is standard for avoid
 
 mod:AddSetIconOption("SetIconOnNightmare", 200243, true, 0, {1})
 mod:AddSetIconOption("SetIconOnParanoia", 200289, true, 0, {2})

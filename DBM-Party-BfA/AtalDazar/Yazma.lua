@@ -42,9 +42,9 @@ local timerWrackingPainCD			= mod:NewCDCountTimer(16.7, 250096, nil, nil, nil, 3
 local timerSkewerCD					= mod:NewCDCountTimer(12, 249919, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пронзание
 local timerEchoesCD					= mod:NewCDCountTimer(31.2, 250050, nil, nil, nil, 3) --Эхо Шадры
 
-local yellSoulRend					= mod:NewShortYell(259187, nil, nil, nil, "YELL") --Раздирание души
+local yellSoulRend					= mod:NewYell(259187, nil, nil, nil, "YELL") --Раздирание души
 local yellSoulRend2					= mod:NewShortFadesYell(259187, nil, nil, nil, "YELL") --Раздирание души
-local yellWrackingPain				= mod:NewShortYell(250096, nil, nil, nil, "YELL") --Нестерпимая боль
+local yellWrackingPain				= mod:NewYell(250096, nil, nil, nil, "YELL") --Нестерпимая боль
 
 mod.vb.soulCount = 0
 mod.vb.wrackCount = 0

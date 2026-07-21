@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NeltharusTrash", "DBM-Party-Dragonflight", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412191704")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
@@ -81,11 +81,11 @@ local timerConflagrantBatteryCD				= mod:NewCDNPTimer(22.6, 372296, DBM_COMMON_L
 local timerCandescentTempestCD				= mod:NewCDNPTimer(27, 381663, DBM_COMMON_L.PUSHBACK, nil, nil, 2) --Раскаленная буря
 local timerForgestompCD						= mod:NewCDNPTimer(16.1, 384623, nil, nil, nil, 2) --Топот кузнеца
 
-local yellBurningChain						= mod:NewShortYell(371992, nil, nil, nil, "YELL") --Горящая цепь
-local yellBindingSpear						= mod:NewShortYell(372561, nil, nil, nil, "YELL") --Приковывающее копье
-local yellScorchingFusillade				= mod:NewShortYell(372543, nil, nil, nil, "YELL") --Обжигающий обстрел
-local yellMoteofCombustion					= mod:NewShortYell(384161, nil, nil, nil, "YELL") --Частица возгорания
-local yellBoldAmbush						= mod:NewShortYell(372566, nil, nil, nil, "YELL") --Смелая засада
+local yellBurningChain						= mod:NewYell(371992, nil, nil, nil, "YELL") --Горящая цепь
+local yellBindingSpear						= mod:NewYell(372561, nil, nil, nil, "YELL") --Приковывающее копье
+local yellScorchingFusillade				= mod:NewYell(372543, nil, nil, nil, "YELL") --Обжигающий обстрел
+local yellMoteofCombustion					= mod:NewYell(384161, nil, nil, nil, "YELL") --Частица возгорания
+local yellBoldAmbush						= mod:NewYell(372566, nil, nil, nil, "YELL") --Смелая засада
 
 mod:AddBoolOption("AGBuffs", true)
 

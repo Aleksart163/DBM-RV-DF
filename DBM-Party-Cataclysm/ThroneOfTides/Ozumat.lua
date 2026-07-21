@@ -47,7 +47,6 @@ if (wowToc >= 100200) then
 
 
 	local specWarnBlottingBarrage						= mod:NewSpecialWarningYou(428407, nil, nil, nil, 1, 2)
-	local yellBlottingBarrage							= mod:NewShortYell(428407)
 	local specWarnPutridRoar							= mod:NewSpecialWarningCount(428868, nil, nil, nil, 2, 2)
 	local specWarnMurkSpew								= mod:NewSpecialWarningDefensive(428530, nil, nil, nil, 1, 2)
 	--local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
@@ -61,7 +60,6 @@ if (wowToc >= 100200) then
 	local warnCleansingFlux								= mod:NewTargetNoFilterAnnounce(428668, 1)
 
 	local specWarnCleansingFlux							= mod:NewSpecialWarningMoveTo(428668, nil, nil, nil, 1, 15)
-	local yellCleansingFlux								= mod:NewShortYell(428668)
 
 	local timerCleansingFluxCD							= mod:NewNextTimer(30.3, 428668, nil, nil, nil, 5)
 	--Ozumat
@@ -73,6 +71,9 @@ if (wowToc >= 100200) then
 	local timerDelugeofFilthCD							= mod:NewCDCountTimer(30.3, 428594, nil, nil, nil, 1)--30-31.5
 	local timerInkBlastCD								= mod:NewCDNPTimer(4.2, 428526, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--4.2-4.9 CD, nameplate only bar
 
+	local yellBlottingBarrage							= mod:NewYell(428407, nil, nil, nil, "YELL")
+	local yellCleansingFlux								= mod:NewYell(428668, nil, nil, nil, "YELL")
+		
 	mod.vb.barrageCount = 0
 	mod.vb.putridCount = 0
 	mod.vb.murkCount = 0

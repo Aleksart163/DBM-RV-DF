@@ -46,7 +46,7 @@ local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, 
 local timerUnwindCD									= mod:NewCDTimer(30, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil) --Обращение вспять (Фронталка)
 local timerRP										= mod:NewRPTimer(22)
 
-local yellUnwind									= mod:NewShortYell(414303, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обращение вспять (Фронталка)
+local yellUnwind									= mod:NewYell(414303, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обращение вспять (Фронталка)
 local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL") --Временное затухание
 local yellChronofadedFades							= mod:NewIconFadesYell(405696, nil, nil, nil, "YELL") --Временное затухание
 

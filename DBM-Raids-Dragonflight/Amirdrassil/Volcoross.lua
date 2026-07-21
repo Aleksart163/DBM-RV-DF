@@ -61,11 +61,11 @@ local timerVolcanicDisgorgeCD						= mod:NewNextCountTimer(10, 421616, DBM_COMMO
 local timerScorchtailCrashCD						= mod:NewCDCountTimer(20, 420415, 136870, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--Short name "Tail Slam"
 local timerCataclysmJawsCD							= mod:NewNextCountTimer(10, 423117, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local berserkTimer								= mod:NewBerserkTimer(600)
-local yellCoilingFlames								= mod:NewYell(421207, 7897)--Shortname Flames
-local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207)
+local yellCoilingFlames								= mod:NewShortYell(421207, 7897, nil, nil, "YELL")--Shortname Flames
+local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207, nil, nil, nil, "YELL")
 local yellCoilingEruption							= mod:NewShortYell(427201, DBM_COMMON_L.GROUPSOAK, nil, nil, "YELL")--NewShortPosYell
 local yellCoilingEruptionFades						= mod:NewShortFadesYell(427201, nil, nil, nil, "YELL")--NewIconFadesYell
-local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS)
+local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS, nil, nil, "YELL")
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnCoilingFlames", 421207, false, 0, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnCoilingEruption", 427201, false, 0, {1, 2, 3, 4})--Off by default since other mods don't use icons at all

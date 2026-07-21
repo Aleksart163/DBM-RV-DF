@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2505, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186739)
 mod:SetEncounterID(2585)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20230103000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -30,7 +30,7 @@ local warnSummonDraconicImage					= mod:NewSpellAnnounce(384223, 4) --Призы
 local warnOverwhelmingEnergy					= mod:NewEndAnnounce(384132, 1) --Переполняющая энергия
 local warnDraconicImageLeft						= mod:NewAnnounce("warnDraconicImage", 2, 384223)
 
-local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, 37859, nil, 2, 4) --Нестабильная магия (Бомбардировка)
+local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, nil, DBM_COMMON_L.BOMBING, 2, 4) --Нестабильная магия (Обстрел)
 local specWarnArcaneCleave						= mod:NewSpecialWarningDefensive(372222, nil, nil, nil, 3, 4) --Удар тайной магии
 local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "MeleeDps", nil, nil, 2, 2) --Удар тайной магии
 local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2) --Древняя сфера

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2489, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(189478)--Forgemaster Gorek
 mod:SetEncounterID(2612)
 --mod:SetUsedIcons(1, 2, 3)
---mod:SetHotfixNoticeRev(20220322000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -39,9 +39,9 @@ local timerBlazinAegisCD						= mod:NewNextCountTimer(30, 374842, nil, nil, nil,
 local timerHeatedSwingsCD						= mod:NewNextCountTimer(30.3, 374534, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Разгоряченные удары Tracked by all since it has 8 yard splash damage
 local timerForgestormCD							= mod:NewNextCountTimer(28, 374969, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Огонь кузни (Обстрел)
 
-local yellBlazinAegis							= mod:NewShortYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
+local yellBlazinAegis							= mod:NewYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
 local yellBlazinAegisFades						= mod:NewShortFadesYell(374842, nil, nil, nil, "YELL") --Пылающая эгида
-local yellHeatedSwings							= mod:NewShortYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
+local yellHeatedSwings							= mod:NewYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
 local yellHeatedSwingsFades						= mod:NewShortFadesYell(374534, nil, nil, nil, "YELL") --Разгоряченные удары
 
 mod.vb.mightoftheForgeCount = 0

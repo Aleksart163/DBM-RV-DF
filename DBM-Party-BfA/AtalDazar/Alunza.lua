@@ -42,7 +42,7 @@ local timerGildedClawsCD			= mod:NewCDCountTimer(34, 255579, nil, "Tank", nil, 5
 local timerMoltenGoldCD				= mod:NewCDCountTimer(8.1, 255582, nil, nil, nil, 3) --Расплавленное золото 8.1, but reset by transfusion 99% of time
 local timerSpiritofGoldCD			= mod:NewCDCountTimer(34, 259205, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Дух золота
 
-local yellMoltenGold				= mod:NewShortYell(255582, nil, nil, nil, "YELL") --Расплавленное золото
+local yellMoltenGold				= mod:NewYell(255582, nil, nil, nil, "YELL") --Расплавленное золото
 
 mod:AddSetIconOption("SetIconOnSpirit", 259205, true, 5, {8}) --Дух золота
 

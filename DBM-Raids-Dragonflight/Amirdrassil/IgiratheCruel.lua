@@ -46,20 +46,14 @@ local warnFleshMortification						= mod:NewYouAnnounce(419462, 4)
 
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2)
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2)
-local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, false)--Shorttext "Spear"
-local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, false)
 local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2)--Shorttext "Chains"
-local yellBlisteringTorment							= mod:NewShortYell(414770, 184656)
 local specWarnTwistingBlade							= mod:NewSpecialWarningDodgeCount(416996, nil, 138737, nil, 2, 2)
 local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2)
 --Torments
 local specWarnUmbralDestruction						= mod:NewSpecialWarningCount(416048, nil, nil, nil, 2, 14)
 local specWarnSmashingViscera						= mod:NewSpecialWarningYou(424456, nil, 47482, nil, 1, 2)--Not in combat log
-local yellSmashingViscera							= mod:NewShortYell(424456, 47482)
-local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456)
 local specWarnHeartStopper							= mod:NewSpecialWarningYou(415623, nil, nil, nil, 1, 2)
 local specWarnHeartStopperTaunt						= mod:NewSpecialWarningTaunt(415623, nil, nil, nil, 1, 2)
-local yellHeartStopperFades							= mod:NewShortFadesYell(415623)
 local specWarnVitalRupture							= mod:NewSpecialWarningYou(426056, nil, nil, nil, 1, 2)
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
@@ -73,6 +67,13 @@ local timerUmbralDestructionCD						= mod:NewCDCountTimer(49, 416048, DBM_COMMON
 local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, nil, 3)--Shorttext "Leap"
 local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3)
 local berserkTimer									= mod:NewBerserkTimer(600)
+
+local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, false, nil, "YELL")--Shorttext "Spear"
+local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, false, nil, "YELL")
+local yellBlisteringTorment							= mod:NewShortYell(414770, 184656, nil, nil, "YELL")
+local yellSmashingViscera							= mod:NewShortYell(424456, 47482, nil, nil, "YELL")
+local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456, nil, nil, nil, "YELL")
+local yellHeartStopperFades							= mod:NewShortFadesYell(415623, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, 0, {1, 2, 3, 4, 5, 6})
 

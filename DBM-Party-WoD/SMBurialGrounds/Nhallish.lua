@@ -42,7 +42,7 @@ local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979, nil, nil, nil, 7) --�
 local timerReturnedSoul			= mod:NewBuffFadesTimer(20, 153033, nil, nil, nil, 7) --Вернувшаяся душа
 local timerVoidDevastationCD	= mod:NewNextTimer(77, 153067, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Опустошение Бездны
 
-local yellVoidBlast				= mod:NewShortYell(152792, nil, nil, nil, "YELL") --Вспышка Бездны
+local yellVoidBlast				= mod:NewYell(152792, nil, nil, nil, "YELL") --Вспышка Бездны
 
 mod:AddSetIconOption("SetIconOnVoidBlast", 152792, true, 0, {8})
 

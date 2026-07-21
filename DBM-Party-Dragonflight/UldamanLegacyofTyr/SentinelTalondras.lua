@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2484, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428124541")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(184124)
 mod:SetEncounterID(2557)
 mod:SetUsedIcons(1, 2, 3, 8)
---mod:SetHotfixNoticeRev(20220322000000)
---mod:SetMinSyncRevision(20211203000000)
+--mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -48,7 +48,7 @@ local timerEarthenShardsCD						= mod:NewCDTimer(16, 372718, nil, nil, nil, 3, n
 
 local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
 local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
-local yellEarthenShards							= mod:NewShortYell(372718, nil, nil, nil, "YELL") --Земляные осколки
+local yellEarthenShards							= mod:NewYell(372718, nil, nil, nil, "YELL") --Земляные осколки
 
 mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3}) --Резонирующая сфера
 mod:AddSetIconOption("SetIconOnEarthenShards", 372718, true, 0, {8}) --Земляные осколки

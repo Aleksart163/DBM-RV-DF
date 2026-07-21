@@ -46,8 +46,8 @@ local timerShieldOfLightCD			= mod:NewCDTimer(26.6, 192018, nil, nil, nil, 3, ni
 local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 7, 143497, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)--Shared timer by eye of storm and Sanctify
 local timerExpelLightCD				= mod:NewCDTimer(23, 192048, nil, nil, nil, 3)--May be lower but almost always delayed by spell queue ICDs
 
-local yellShieldOfLight				= mod:NewShortYell(192018, nil, nil, nil, "YELL") --Щит света
-local yellExpelLight				= mod:NewShortYell(192048, nil, nil, nil, "YELL")
+local yellShieldOfLight				= mod:NewYell(192018, nil, nil, nil, "YELL") --Щит света
+local yellExpelLight				= mod:NewYell(192048, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnShieldOfLight", 192018, true, 0, {8})
 

@@ -42,7 +42,6 @@ local warnBrutalGlaive				= mod:NewTargetAnnounce(197546, 2)
 local warnDarkRush					= mod:NewTargetAnnounce(197478, 3)
 
 local specWarnBrutalGlaive			= mod:NewSpecialWarningMoveAway(197546, nil, nil, nil, 1, 2)
-local yellBrutalGlaive				= mod:NewYell(197546)
 local specWarnVengefulShear			= mod:NewSpecialWarningDefensive(197418, nil, nil, nil, 3, 2)
 local specWarnDarkRush				= mod:NewSpecialWarningYou(197478, nil, nil, nil, 1, 2)
 
@@ -57,13 +56,15 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(12281))
 local warnEyeBeam					= mod:NewTargetNoFilterAnnounce(197696, 2)
 
 local specWarnEyeBeam				= mod:NewSpecialWarningRunCount(197696, nil, nil, nil, 4, 2)
-local yellEyeBeam					= mod:NewYell(197696)
 local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(197974, "Tank", nil, nil, 1, 2)
 local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(197797, "HasInterrupt", nil, nil, 1, 2)
 
 local timerEyeBeamCD				= mod:NewCDCountTimer(13.5, 197696, nil, nil, nil, 3)
 local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 197974, nil, nil, nil, 3)
 local timerGroundedCD				= mod:NewStageContextTimer(44.8, -12277, nil, nil, nil, 6, 197394)
+
+local yellBrutalGlaive				= mod:NewYell(197546, nil, nil, nil, "YELL")
+local yellEyeBeam					= mod:NewYell(197696, nil, nil, nil, "YELL")
 
 --mod:AddRangeFrameOption(5, 197546)--Range not given for Brutal Glaive
 

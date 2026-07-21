@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2512, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240501102915")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186951)
 mod:SetEncounterID(2563)
-mod:SetHotfixNoticeRev(20230103000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -34,7 +34,7 @@ local warnLasherToxin							= mod:NewStackAnnounce(389033, 2, nil, "Tank|Healer|
 
 local specWarnAbundance							= mod:NewSpecialWarningSoak(396721, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Изобилие
 local specWarnGerminate							= mod:NewSpecialWarningDodge(388796, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Прорастание
-local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 12, nil, nil, 1, 6) --Токсин плеточника
+local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 10, nil, nil, 1, 6) --Токсин плеточника
 local specWarnBurstForth						= mod:NewSpecialWarningSpell(388923, nil, nil, nil, 2, 2) --Взрывной рост
 local specWarnBranchOut							= mod:NewSpecialWarningDodge(388623, nil, nil, nil, 2, 2) --Ответвление
 local specWarnBarkbreaker						= mod:NewSpecialWarningDefensive(388544, nil, nil, nil, 3, 4) --Пробивание коры
@@ -125,7 +125,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks, 0.2)
 		end
-		if args:IsPlayer() and amount >= (self:IsTank() and 20 or 12) and self:AntiSpam(3.5, 1) then
+		if args:IsPlayer() and amount >= (self:IsTank() and 20 or 10) and self:AntiSpam(3.5, 1) then
 			specWarnLasherToxin:Show(amount)
 			specWarnLasherToxin:Play("stackhigh")
 		elseif amount % 8 == 0 then

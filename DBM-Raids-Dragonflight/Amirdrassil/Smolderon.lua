@@ -45,16 +45,10 @@ local warnOverheated								= mod:NewTargetCountAnnounce(421455, 3, nil, nil, ni
 local warnSeekingInferno							= mod:NewIncomingCountAnnounce(425885, 2)
 
 local specWarnBrandofDamnation						= mod:NewSpecialWarningCount(421343, nil, nil, nil, 2, 2)
-local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL")
-local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL")
 local specWarnAftermathTaunt						= mod:NewSpecialWarningTaunt(422577, nil, nil, nil, 1, 2)
 local specWarnSearingAftermath						= mod:NewSpecialWarningMoveAway(422577, nil, nil, nil, 1, 2)
-local yellSearingAftermath							= mod:NewShortYell(422577, 37859)
-local yellSearingAftermathFades						= mod:NewShortFadesYell(422577)
 local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, nil, nil, 1, 2)
 local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, nil, nil, 1, 2)
---local yellOverheated								= mod:NewShortYell(421455)
-local yellOverheatedFades							= mod:NewShortFadesYell(421455)
 local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, nil, 2, 2)
 
 local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, nil, nil, nil, 5)
@@ -76,6 +70,12 @@ local specWarnWorldinFlames							= mod:NewSpecialWarningDodgeCount(422172, nil,
 local timerDevourEssenceCD							= mod:NewCDCountTimer(49, 422277, nil, nil, nil, 3)
 --local timerWorldinFlamesCD							= mod:NewAITimer(49, 422172, nil, nil, nil, 3)
 
+local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL")
+local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL")
+local yellSearingAftermath							= mod:NewShortYell(422577, 37859, nil, nil, "YELL")
+local yellSearingAftermathFades						= mod:NewShortFadesYell(422577, nil, nil, nil, "YELL")
+local yellOverheatedFades							= mod:NewShortFadesYell(421455, nil, nil, nil, "YELL")
+--local yellOverheated								= mod:NewShortYell(421455, nil, nil, nil, "YELL")
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})
 

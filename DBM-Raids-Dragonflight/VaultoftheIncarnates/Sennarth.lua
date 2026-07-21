@@ -37,7 +37,7 @@ mod:RegisterEventsInCombat(
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 --local berserkTimer							= mod:NewBerserkTimer(600)
---Stage One: Ice Climbers
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnChillingBlast							= mod:NewTargetAnnounce(371976, 2)
@@ -70,7 +70,7 @@ local yellEnvelopingWebsFades					= mod:NewIconFadesYell(372082, nil, nil, nil, 
 mod:AddInfoFrameOption(372030, false)--Useful raid leader tool, but not needed by everyone
 mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing with enveloping Webs
 
---Stage Two: Cold Peak
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
 local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3) --Удушающие тенета
 

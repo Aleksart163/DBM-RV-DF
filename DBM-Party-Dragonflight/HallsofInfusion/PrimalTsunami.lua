@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2511, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240727070000")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(189729)
 mod:SetEncounterID(2618)
-mod:SetHotfixNoticeRev(20240728070000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -39,7 +39,7 @@ local timerSquallBuffetCD						= mod:NewCDTimer(35, 387504, nil, "Tank|Healer", 
 local timerInfusedGlobuleCD						= mod:NewCDCountTimer(17.5, 387474, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная капля
 local timerTempestsFuryCD						= mod:NewCDCountTimer(31, 388424, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Неистовство бури (АоЕ)
 
-local yellSquallBuffet							= mod:NewShortYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
+local yellSquallBuffet							= mod:NewYell(387504, nil, nil, nil, "YELL") --Шквальный толчок
 
 --Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25531))
@@ -47,6 +47,8 @@ local warnSubmerged								= mod:NewSpellAnnounce(387585, 2) --Погружен�
 local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружение
 
 local specWarnInundate2							= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
+
+local timerInundate2CD							= mod:NewCDNPTimer(10, 388882, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Затопление
 
 --local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
 
@@ -98,9 +100,12 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 388882 then --Затопление
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		if (cid == 198994 or cid == 196043) and self:AntiSpam(3, "Inundate") then
-			specWarnInundate2:Show(args.sourceName)
-			specWarnInundate2:Play("crowdcontrol")
+		if (cid == 198994 or cid == 196043) then
+			if self:AntiSpam(3, "Inundate") then
+				specWarnInundate2:Show(args.sourceName)
+				specWarnInundate2:Play("crowdcontrol")
+			end
+			timerInundate2CD:Start(6.3, args.sourceGUID)
 		end
 	end
 end
@@ -127,6 +132,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerInfusedGlobuleCD:Start(11.5, 1)--
 		timerSquallBuffetCD:Start(19.4)--
 	--	timerSubmergedCD:Start(57)--
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if (cid == 198994 or cid == 196043) then
+		timerInundate2CD:Stop(args.destGUID)
 	end
 end
 

@@ -44,7 +44,7 @@ local timerLeapCD				= mod:NewCDCountTimer(11.9, 196354, 47482, nil, nil, 3, nil
 local timerRampageCD			= mod:NewCDCountTimer(26.7, 198379, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Первобытная ярость 26.7-32.7
 local timerNightfallCD			= mod:NewCDCountTimer(20.6, 212464, nil, nil, nil, 3) --Сумерки 20.6--30.4
 
-local yellLeap					= mod:NewShortYell(196354, 47482, nil, nil, "YELL") --Мучительный прыжок (Прыжок)
+local yellLeap					= mod:NewYell(196354, 47482, nil, nil, "YELL") --Мучительный прыжок (Прыжок)
 
 mod:AddSetIconOption("SetIconOnAdd", -13302, true, 5, {7, 6})
 mod:AddNamePlateOption("NPAuraOnFixate", 198477) --Сосредоточение внимания

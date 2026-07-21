@@ -35,7 +35,7 @@ local specWarnCleansingLight		= mod:NewSpecialWarningMoveTo(269310, nil, nil, ni
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(269838, nil, nil, nil, 1, 8) --Гнусный выброс
 
 local timerBloodVisageCD			= mod:NewCDTimer(15.7, -18312, nil, nil, nil, 1, 269692) --Кровавый образ
-local timerVileExpulsionCD			= mod:NewNextTimer(15.7, 269843, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Гнусный выброс (Фронталка)
+local timerVileExpulsionCD			= mod:NewCDTimer(15.7, 269843, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Гнусный выброс (Фронталка)
 local timerCleansingLightCD			= mod:NewCDCountTimer(15.7, 269310, nil, nil, nil, 7) --Очищающий свет
 
 mod:AddInfoFrameOption(269301, "Healer")

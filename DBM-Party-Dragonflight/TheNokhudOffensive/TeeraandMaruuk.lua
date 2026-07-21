@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2478, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186339, 186338)
 mod:SetEncounterID(2581)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20221127000000)
-mod:SetMinSyncRevision(20221105000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -32,18 +32,19 @@ local warnRepel									= mod:NewCastAnnounce(386547, 3, nil, nil, nil, nil, nil
 local warnSpiritLeap							= mod:NewSpellAnnounce(385434, 3) --Прыжок духа
 local warnGaleArrow								= mod:NewCountAnnounce(382670, 3) --Ураганная стрела
 
+local specWarnRepel								= mod:NewSpecialWarningSpell(386547, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 4) --Отпор (Отталкивание)
 local specWarnGaleArrow							= mod:NewSpecialWarningDefensive(382670, nil, nil, nil, 3, 4) --Ураганная стрела
 local specWarnGaleArrow2						= mod:NewSpecialWarningDodge(382670, nil, nil, nil, 2, 4) --Ураганная стрела
 local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
 local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Ураганная стрела
-local timerRepelCD								= mod:NewCDCountTimer(60, 386547, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 5) --Отпор
+local timerRepelCD								= mod:NewCDCountTimer(60, 386547, DBM_COMMON_L.PUSHBACK, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 5) --Отпор (Отталкивание)
 local timerSpiritLeapCD							= mod:NewCDTimer(20.4, 385434, nil, nil, nil, 3) --Прыжок духа 20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
 
 --Maruuk
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25546))
 
-local specWarnEarthsplitter						= mod:NewSpecialWarningDodgeCount(385339, nil, nil, nil, 2, 2) --Раскол земли
+local specWarnEarthsplitter						= mod:NewSpecialWarningDodge(385339, nil, nil, nil, 2, 2) --Раскол земли
 local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, nil, nil, nil, 4, 2) --Отпугивающий рык
 local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, nil, nil, nil, 2, 2) --Отпугивающий рык
 local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 3, 4) --Свирепый удар
@@ -147,13 +148,13 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 386063 then --Отпугивающий рык
 		self.vb.roarCount = self.vb.roarCount + 1
-		if self:IsRanged() then
-			specWarnFrightfulRoar2:Show()
-			specWarnFrightfulRoar2:Play("watchstep")
-		else
+		if self:IsMelee() then
 			specWarnFrightfulRoar:Show()
 			specWarnFrightfulRoar:Play("justrun")
 			specWarnFrightfulRoar:ScheduleVoice(1, "fearsoon")
+		else
+			specWarnFrightfulRoar2:Show()
+			specWarnFrightfulRoar2:Play("watchstep")
 		end
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.roarCount+1) or 19
 		if timer then
@@ -161,7 +162,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 385339 then --Раскол земли
 		self.vb.splitterCount = self.vb.splitterCount + 1
-		specWarnEarthsplitter:Show(self.vb.splitterCount)
+		specWarnEarthsplitter:Show()
 		specWarnEarthsplitter:Play("watchstep")
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.splitterCount+1) or 60.5
 		if timer then
@@ -170,7 +171,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 386547 then --Отпор
 		self.vb.repelCount = self.vb.repelCount + 1
 		warnRepel:Show(self.vb.repelCount)
-		warnRepel:Play("carefly")
+		specWarnRepel:Show()
+		specWarnRepel:Play("carefly")
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.repelCount+1) or 60.5
 		if timer then
 			timerRepelCD:Start(timer, self.vb.repelCount+1, args.sourceGUID)

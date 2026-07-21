@@ -82,7 +82,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26210))
 local warnScorchingRoar								= mod:NewCastAnnounce(408620, 4) --Обжигающий рык
 local warnVolcanicShield							= mod:NewCastAnnounce(401867, 4) --Вулканический щит
 
-local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2)
+local specWarnVolcanicShield						= mod:NewSpecialWarningYou(401867, nil, nil, nil, 2, 2) --Вулканический щит
 
 --local timerScorchingRoarCD							= mod:NewCDTimer(9.7, 408620, nil, nil, nil, 2) --Обжигающий рык
 --local timerVolcanicShieldCD							= mod:NewCDTimer(15, 401867, nil, nil, nil, 3) --Вулканический щит 30-40
@@ -108,9 +108,9 @@ local timerCatastrophicSlamCD						= mod:NewCDCountTimer(26.7, 410516, DBM_COMMO
 local timerFlamingCudgelCD							= mod:NewCDCountTimer(34, 410351, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Горящая дубина
 local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
-local yellHeavyCudgel								= mod:NewShortYell(401258, nil, nil, nil, "YELL") --Тяжелая дубина
-local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL")
-local yellVolcanicShieldFades						= mod:NewShortFadesYell(401867, nil, nil, nil, "YELL")
+local yellHeavyCudgel								= mod:NewShortYell(401258, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Тяжелая дубина
+local yellVolcanicShield							= mod:NewShortYell(401867, nil, nil, nil, "YELL") --Вулканический щит
+local yellVolcanicShieldFades						= mod:NewShortFadesYell(401867, nil, nil, nil, "YELL") --Вулканический щит
 local yellBlazingSpear								= mod:NewShortYell(401401, nil, nil, nil, "YELL") --Пылающее копье
 local yellBlazingSpearFades							= mod:NewShortFadesYell(401401, nil, nil, nil, "YELL") --Пылающее копье
 
@@ -264,6 +264,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFlamingCudgel:Show(self.vb.cudgelCount+1)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnFlamingCudgel:Play("defensive")
+			yellHeavyCudgel:Yell()
 		else
 			specWarnFlamingCudgel:Play("scatter")
 		end

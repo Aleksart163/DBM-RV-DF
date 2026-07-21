@@ -122,12 +122,12 @@ local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.8, 419351, DBM_COMMON_L.F
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(10.4, 411300, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerRP								= mod:NewRPTimer(30)
 
-local yellChronalEruption					= mod:NewShortYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
-local yellOrbofContemplation				= mod:NewShortYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
-local yellEnervate							= mod:NewShortYell(415437, nil, nil, nil, "YELL")
-local yellChronoburst						= mod:NewShortYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв (Бомба)
+local yellChronalEruption					= mod:NewYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
+local yellOrbofContemplation				= mod:NewYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
+local yellEnervate							= mod:NewYell(415437, nil, nil, nil, "YELL")
+local yellChronoburst						= mod:NewYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв (Бомба)
 local yellChronoburstFades					= mod:NewShortFadesYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв
-local yellUntwist							= mod:NewShortYell(413529, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Распутывание (Фронталка)
+local yellUntwist							= mod:NewYell(413529, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Распутывание (Фронталка)
 
 mod:AddBoolOption("AutoRift", true)
 
@@ -560,7 +560,7 @@ function mod:OnSync(msg, targetname)
 	elseif msg == "MPPR1" and self:AntiSpam(10, "Blight1") then --Таймер пула после Гнили 1
 		timerRP:Start(73.5) --
 	elseif msg == "MPPR0" and self:AntiSpam(10, "Trash1") then --Таймер пула перед 1-ым боссом
-		timerRP:Start(24) --
+		timerRP:Start(21) --21 до исчезания лужи и 24 до открытия двери (возможно можно и на 21 пройти через дверь)
 		timerTimelessCurseCD:Start(12)
 		specWarnTimelessCurse:Schedule(12)
 		specWarnTimelessCurse:ScheduleVoice(12, "watchstep")

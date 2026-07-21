@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2488, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240504141048")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(188252)
 mod:SetEncounterID(2609)
-mod:SetHotfixNoticeRev(20221126000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -37,14 +37,14 @@ local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 4, nil,
 local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
 local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 4, 4) --Ледяная буря
 local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, 2, 1, 3, 4) --Ледяная перегрузка
-local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, nil, 1, 2) --Пробуждение дракончиков
+local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 2) --Пробуждение дракончиков (Адды)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8) --Ледяная буря
 
 local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Ледяная буря
 local timerHailbombsCD							= mod:NewCDTimer(20, 396044, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывные градины
 local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка
 
-local yellFrozenSolid							= mod:NewShortYell(373022, nil, nil, nil, "YELL") --Полная заморозка
+local yellFrozenSolid							= mod:NewYell(373022, nil, nil, nil, "YELL") --Полная заморозка
 local yellChillstorm							= mod:NewYell(372851, nil, nil, nil, "YELL") --Ледяная буря
 local yellChillstormFades						= mod:NewShortFadesYell(372851, nil, nil, nil, "YELL") --Ледяная буря
 
@@ -96,10 +96,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(chillStacks, 0.2)
 		end
-		if args:IsPlayer() and amount >= 4 then
-			specWarnPrimalChill:Cancel()--Possible to get multiple applications at once so we throttle by scheduling
-			specWarnPrimalChill:Schedule(0.2, amount)
-			specWarnPrimalChill:ScheduleVoice(0.2, "stackhigh")
+		if args:IsPlayer() and amount >= 4 and amount % 2 == 0 then
+			specWarnPrimalChill:Show(amount)
+			specWarnPrimalChill:Play("stackhigh")
 		end
 	elseif spellId == 373022 then --Полная заморозка
 		if args:IsPlayer() then

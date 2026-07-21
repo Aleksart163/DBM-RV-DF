@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2509, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(194181)
 mod:SetEncounterID(2562)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20221015000000)
-mod:SetMinSyncRevision(20221015000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -39,7 +39,7 @@ local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386181, 3, nil, nil, 
 local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4) --Волна тайной магии (Фронталка)
 
 local specWarnArcaneFissure						= mod:NewSpecialWarningDefensive(388537, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Магический разлом (АоЕ)
-local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, 49685, nil, 1, 2) --Мана-бомбы (Бомба)
+local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, 174716, nil, 1, 2) --Мана-бомбы (Бомба)
 local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Волна тайной магии (Фронталка)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8) --Оскверненная мана
 
@@ -49,9 +49,9 @@ local timerArcaneFissureCD						= mod:NewCDCountTimer(40.7, 388537, DBM_COMMON_L
 local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386181, 167180, nil, nil, 3) --Мана-бомбы (Бомбы)
 local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Волна тайной магии (Фронталка)
 
-local yellArcaneExpulsion						= mod:NewShortYell(385958, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Волна тайной магии (Фронталка)
-local yellManaBomb								= mod:NewYell(386181, 49685, nil, nil, "YELL") --Мана-бомбы
-local yellManaBombFades							= mod:NewShortFadesYell(386181, 49685, nil, nil, "YELL") --Мана-бомбы
+local yellArcaneExpulsion						= mod:NewYell(385958, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Волна тайной магии (Фронталка)
+local yellManaBomb								= mod:NewYell(386181, 174716, nil, nil, "YELL") --Мана-бомбы (Бомба)
+local yellManaBombFades							= mod:NewShortFadesYell(386181, 174716, nil, nil, "YELL") --Мана-бомбы (Бомба)
 
 mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8}) --Волна тайной магии
 mod:AddInfoFrameOption(391977, true)

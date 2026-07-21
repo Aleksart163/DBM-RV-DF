@@ -61,8 +61,8 @@ local specWarnRitual2				= mod:NewSpecialWarningSoon(260773, nil, nil, nil, 2, 4
 local timerRitualCD					= mod:NewCDTimer(75, 260773, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасный ритуал
 local timerRitualCast				= mod:NewCastTimer(5, 260773, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасный ритуал
 
-local yellJaggedNettles				= mod:NewShortYell(260741, nil, nil, nil, "YELL") --Зазубренные стебли
-local yellUnstableMark				= mod:NewShortYell(260703, 174716, nil, nil, "YELL") --Нестабильная руническая метка (Бомба)
+local yellJaggedNettles				= mod:NewYell(260741, nil, nil, nil, "YELL") --Зазубренные стебли
+local yellUnstableMark				= mod:NewYell(260703, 174716, nil, nil, "YELL") --Нестабильная руническая метка (Бомба)
 local yellUnstableMarkFades			= mod:NewShortFadesYell(260703, 174716, nil, nil, "YELL") --Нестабильная руническая метка (Бомба)
 
 mod:AddSetIconOption("SetIconOnTriad", 260805, true, 5, {8}) --Радужный кристалл

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2510, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240810070000")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(189727)
 mod:SetEncounterID(2617)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20240811070000)
-mod:SetMinSyncRevision(20240811070000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -41,7 +41,7 @@ local timerGlacialSurgeCD						= mod:NewCDTimer(22, 386559, nil, nil, nil, 2, ni
 local timerFrostCycloneCD						= mod:NewCDTimer(29.9, 390111, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Морозный смерч
 local timerFrostShockCD							= mod:NewCDTimer(11, 385963, nil, "RemoveMagic", nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON) --Ледяной шок
 
-local yellFrostShock							= mod:NewShortYell(385963, nil, nil, nil, "YELL") --Ледяной шок
+local yellFrostShock							= mod:NewYell(385963, nil, nil, nil, "YELL") --Ледяной шок
 
 mod:AddSetIconOption("SetIconOnFrostShock", 385963, true, 0, {8})
 

@@ -71,7 +71,7 @@ local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3, ni
 local timerDinoMightCD				= mod:NewCDNPTimer(14.5, 256849, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Мощь динозавра More data needed
 local timerDeadeyeAimCD				= mod:NewCDNPTimer(10.9, 256846, nil, nil, nil, 3) --Меткий выстрел 10.9-20
 
-local yellUnstableHex				= mod:NewShortYell(252781, nil, nil, nil, "YELL") --Заразный сглаз
+local yellUnstableHex				= mod:NewYell(252781, nil, nil, nil, "YELL") --Заразный сглаз
 local yellUnstableHexFades			= mod:NewShortFadesYell(252781, nil, nil, nil, "YELL") --Заразный сглаз
 local yellFrenziedCharge			= mod:NewYell(255567, nil, nil, nil, "YELL") --Бешеный рывок
 

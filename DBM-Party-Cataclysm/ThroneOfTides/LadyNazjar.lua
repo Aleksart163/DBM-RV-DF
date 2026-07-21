@@ -41,7 +41,6 @@ if (wowToc >= 100200) then
 	local warnFocusedTempest							= mod:NewTargetNoFilterAnnounce(428374, 3)
 
 	local specWarnShockBlast							= mod:NewSpecialWarningMoveAway(428054, nil, nil, nil, 1, 2)
-	local yellShockBlast								= mod:NewShortYell(428054)
 	local specWarnFocusedTempest						= mod:NewSpecialWarningCount(428374, nil, nil, nil, 2, 2)
 	local specWarnWaterbolt								= mod:NewSpecialWarningInterrupt(428263, "HasInterrupt", nil, nil, 1, 2)
 	local specWarnTridentFlurry							= mod:NewSpecialWarningDodge(428293, nil, nil, nil, 2, 2)
@@ -54,6 +53,8 @@ if (wowToc >= 100200) then
 	local timerFocusedTempestCD							= mod:NewCDTimer(14.5, 428374, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--14.5-16.9
 	--local timerTridentFlurryCD							= mod:NewAITimer(49, 428293, nil, nil, nil, 3)
 
+	local yellShockBlast								= mod:NewYell(428054, nil, nil, nil, "YELL")
+	
 	--mod:AddRangeFrameOption("5/6/10")
 	--mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})
 

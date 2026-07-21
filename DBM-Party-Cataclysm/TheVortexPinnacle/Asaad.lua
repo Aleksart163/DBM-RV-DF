@@ -49,7 +49,7 @@ local timerStorm				= mod:NewCastTimer(10, 86930, nil, nil, nil, 2, nil, DBM_COM
 local timerGroundingFieldCD		= mod:NewCDTimer(45.7, 86911, 87474, nil, nil, 7, nil, nil, nil, 1, 5) --Нестабильное заземляющее поле (Заземляющее поле)
 local timerNovaCD				= mod:NewCDTimer(12.1, 413263, DBM_COMMON_L.BIG_ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Кольцо падающих звезд (Упавшая звезда)
 
-local yellChainLit				= mod:NewShortYell(87622, nil, nil, nil, "YELL") --Цепная молния
+local yellChainLit				= mod:NewYell(87622, nil, nil, nil, "YELL") --Цепная молния
 
 mod:AddSetIconOption("SetIconOnChainLightning", 87622, true, 0, {8}) --Цепная молния
 

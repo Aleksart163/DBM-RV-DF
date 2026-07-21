@@ -61,7 +61,7 @@ local timerBoundCD						= mod:NewCDNPTimer(20.6, 193585, nil, nil, nil, 4, nil, 
 
 local timerRP							= mod:NewRPTimer(30)
 
-local yellPiercingShards				= mod:NewShortYell(226296, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Острые осколки
+local yellPiercingShards				= mod:NewYell(226296, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Острые осколки
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 GTFO
 

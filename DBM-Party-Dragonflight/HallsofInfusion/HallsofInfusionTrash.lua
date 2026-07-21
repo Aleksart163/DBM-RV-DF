@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("HallsofInfusionTrash", "DBM-Party-Dragonflight", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 390290 374080 375351 375348 375327 375384 374563 374045 374339 374066 374020 395694 374699 374706 375079 374823 385141 377341 377402 376171 388882",--437719
-	"SPELL_AURA_APPLIED 374724 374615 391610 391613 377384 377402 437717",
+	"SPELL_CAST_SUCCESS 408388",
+	"SPELL_AURA_APPLIED 374724 374615 391610 391613 377384 377402 437717 374389",
 	"SPELL_AURA_APPLIED_DOSE 374389",
 --	"SPELL_AURA_REMOVED 437717",
 	"UNIT_DIED",
@@ -39,12 +40,12 @@ local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подл�
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
 local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
 
+local specWarnRumblingEarth					= mod:NewSpecialWarningDodge(408388, nil, nil, nil, 2, 2) --Сотрясение земли
 local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Затопление
 local specWarnGulpSwogToxin					= mod:NewSpecialWarningStack(374389, nil, 4, nil, nil, 1, 6) --Токсин рогоплава
-local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание
-local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание
-local specWarnTectonicBreath				= mod:NewSpecialWarningDodge(375327, nil, 18357, nil, 2, 2) --Тектоническое дыхание
-local specWarnRumblingEarth					= mod:NewSpecialWarningDodge(375384, nil, nil, nil, 2, 2)
+local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357, nil, 2, 2) --Океаническое дыхание (Дыхание)
+local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание (Дыхание)
+local specWarnTectonicBreath				= mod:NewSpecialWarningDodge(375327, nil, 18357, nil, 2, 2) --Тектоническое дыхание (Дыхание)
 local specWarnDazzle						= mod:NewSpecialWarningDodge(374563, nil, nil, nil, 2, 2) --Блеск
 local specWarnFlashFlood					= mod:NewSpecialWarningDodge(390290, nil, nil, nil, 3, 2) --Стремительные волны
 local specWarnThunderstorm					= mod:NewSpecialWarningYou(385141, nil, nil, nil, 1, 2) --Гром и молния
@@ -72,18 +73,18 @@ local timerDazzleCD							= mod:NewCDNPTimer(15, 374563, nil, nil, nil, 3) --Б�
 local timerZephyrsCallCD					= mod:NewCDNPTimer(5.5, 374823, nil, nil, nil, 1) --Зов ветра (23.1)
 local timerWhirlingFuryCD					= mod:NewCDNPTimer(5.2, 375079, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Кружащее неистовство (было 16.2)
 local timerMoltenSubductionCD				= mod:NewCDNPTimer(20.6, 374724, nil, nil, nil, 3) --Раскаленная субдукция
-local timerOceanicBreathCD					= mod:NewCDNPTimer(18.1, 375351, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Океаническое дыхание
-local timerGustingBreathCD					= mod:NewCDNPTimer(19.3, 375348, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сметающее дыхание Could also be 18.1, but need bigger sample
-local timerTectonicBreathCD					= mod:NewCDNPTimer(18.1, 375327, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тектоническое дыхание
+local timerOceanicBreathCD					= mod:NewCDNPTimer(18.1, 375351, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Океаническое дыхание (Дыхание)
+local timerGustingBreathCD					= mod:NewCDNPTimer(19.3, 375348, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сметающее дыхание  (Дыхание) Could also be 18.1, but need bigger sample
+local timerTectonicBreathCD					= mod:NewCDNPTimer(18.1, 375327, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тектоническое дыхание (Дыхание)
 local timerThunderstormCD					= mod:NewCDNPTimer(19.4, 385141, nil, nil, nil, 3) --Гром и молния
 local timerAqueousBarrierCD					= mod:NewCDNPTimer(17.3, 377402, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Водяная преграда
 local timerFlashFloodCD						= mod:NewCDNPTimer(23, 390290, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Стремительные волны
 local timerRefreshingTidesCD				= mod:NewCDNPTimer(25, 376171, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Освежающие волны
 --local timerThunderstrikeCD					= mod:NewCDNPTimer(19.4, 437719, nil, nil, nil, 3)
 
-local yellCheapShot							= mod:NewShortYell(374615, nil, nil, nil, "YELL") --Подлый трюк
-local yellThunderstrike						= mod:NewShortYell(437719, nil, nil, nil, "YELL") --Громовой удар
-local yellThunderstorm						= mod:NewShortYell(385141, nil, nil, nil, "YELL") --Гром и молния
+local yellCheapShot							= mod:NewYell(374615, nil, nil, nil, "YELL") --Подлый трюк
+local yellThunderstrike						= mod:NewYell(437719, nil, nil, nil, "YELL") --Громовой удар
+local yellThunderstorm						= mod:NewYell(385141, nil, nil, nil, "YELL") --Гром и молния
 
 mod:AddBoolOption("AGBuffs", true)
 
@@ -201,9 +202,9 @@ function mod:SPELL_CAST_START(args)
 			specWarnTectonicBreath:Show()
 			specWarnTectonicBreath:Play("breathsoon")
 		end
-	elseif spellId == 375384 and self:AntiSpam(3, 2) then
+--[[	elseif spellId == 375384 and self:AntiSpam(3, 2) then --Сломано на стороне сервера
 		specWarnRumblingEarth:Show()
-		specWarnRumblingEarth:Play("watchstep")
+		specWarnRumblingEarth:Play("watchstep")]]
 	elseif spellId == 374563 then
 		timerDazzleCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
@@ -229,11 +230,17 @@ function mod:SPELL_CAST_START(args)
 			specWarnInundate:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnInundate:Play("breaklos")
 			timerInundateCD:Start(nil, args.sourceGUID)
-		else
-			timerInundateCD:Start(6.3, args.sourceGUID)
 		end
 --	elseif spellId == 437719 then
 --		timerThunderstrikeCD:Start(nil, args.sourceGUID)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 408388 and self:AntiSpam(2, "RumblingEarth") then
+		specWarnRumblingEarth:Show()
+		specWarnRumblingEarth:Play("watchstep")
 	end
 end
 
@@ -318,8 +325,6 @@ function mod:UNIT_DIED(args)
 	elseif cid == 190405 then --Насыщательница Сария
 		timerAqueousBarrierCD:Stop(args.destGUID)
 		timerFlashFloodCD:Stop(args.destGUID)
-		timerInundateCD:Stop(args.destGUID)
-	elseif (cid == 198994 or cid == 196043) then --Воин стихий – насыщательница
 		timerInundateCD:Stop(args.destGUID)
 	end
 end

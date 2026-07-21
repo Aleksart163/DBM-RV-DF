@@ -81,7 +81,7 @@ local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_
 local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --ЗА АЛЬЯНС!, ЗА ОРДУ!
 local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Боевой крик 2 варианта
 
-local yellBladestorm								= mod:NewShortYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
+local yellBladestorm								= mod:NewYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 
 --Write the custom WA keys into the spell headers
 mod:JustSetCustomKeys(rallySpellId, L.customWAMessage:format(418047, 418046))

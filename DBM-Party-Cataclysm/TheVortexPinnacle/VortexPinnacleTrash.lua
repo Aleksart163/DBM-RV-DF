@@ -82,10 +82,10 @@ local timerLightningLashCD						= mod:NewCDNPTimer(19, 87762, nil, nil, nil, 3, 
 local timerOverloadGroundingFieldCD				= mod:NewCDNPTimer(20.5, 413385, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перегрузка заземляющего поля
 local timerGreaterHealCD						= mod:NewCDNPTimer(14.1, 87779, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Великое исцеление Post retial May 30th 2023 hotfix, in cataclysm this will still be like 3 second CD
 
-local yellLethalCurrent							= mod:NewShortYell(411001, nil, nil, nil, "YELL") --Смертоносный поток
-local yellLightningLash							= mod:NewShortYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
-local yellCyclone								= mod:NewShortYell(88010, nil, nil, nil, "YELL") --Смерч
-local yellCyclone2								= mod:NewFadesYell(88010, nil, nil, nil, "YELL") --Смерч
+local yellLethalCurrent							= mod:NewYell(411001, nil, nil, nil, "YELL") --Смертоносный поток
+local yellLightningLash							= mod:NewYell(87762, nil, nil, nil, "YELL") --Искрящаяся плеть
+local yellCyclone								= mod:NewYell(88010, nil, nil, nil, "YELL") --Смерч
+local yellCyclone2								= mod:NewShortFadesYell(88010, nil, nil, nil, "YELL") --Смерч
 
 mod:AddSetIconOption("SetIconOnLightningLash", 87762, true, 0, {8}) --Искрящаяся плеть
 

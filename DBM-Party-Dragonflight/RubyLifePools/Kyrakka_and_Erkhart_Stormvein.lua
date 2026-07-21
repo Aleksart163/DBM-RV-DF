@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2503, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240507051050")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(190484, 190485)
 mod:SetEncounterID(2623)
 mod:SetUsedIcons(8)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20230109000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -28,13 +28,13 @@ mod:RegisterEventsInCombat(
 --]]
 --Kyrakka
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25365))
-local warnFlamespit								= mod:NewTargetNoFilterAnnounce(381605, 3)
+local warnFlamespit								= mod:NewTargetNoFilterAnnounce(381605, 3) --Огненный плевок
 local warnInfernoCore							= mod:NewYouAnnounce(381862, 4)
 
 local specWarnInfernoCore						= mod:NewSpecialWarningMoveAway(381862, nil, nil, nil, 1, 2)
 local specWarnRoaringFirebreath					= mod:NewSpecialWarningDodge(381525, nil, nil, nil, 2, 2)
 
-local timerFlamespitCD							= mod:NewCDTimer(15.7, 381605, nil, nil, nil, 3)
+local timerFlamespitCD							= mod:NewCDTimer(15.7, 381605, nil, nil, nil, 3) --Огненный плевок
 local timerRoaringFirebreathCD					= mod:NewCDTimer(18, 381525, nil, nil, nil, 3)
 --Erkhart Stormvein
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25369))
@@ -50,8 +50,8 @@ local timerStormslamCD							= mod:NewCDTimer(17, 381515, nil, "Tank|RemoveMagic
 local timerCloudburstCD							= mod:NewCDTimer(18.8, 385558, nil, nil, nil, 2)--Used for both mythic and non mythic versions of spell
 local timerCloudburst							= mod:NewCastTimer(3, 381516, nil, "SpellCaster", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 3)
 
-local yellFlamespit								= mod:NewShortYell(381605, nil, nil, nil, "YELL")
-local yellStormslam								= mod:NewShortYell(381515, nil, nil, nil, "YELL") --Сметающая буря
+local yellFlamespit								= mod:NewYell(381605, nil, nil, nil, "YELL") --Огненный плевок
+local yellStormslam								= mod:NewYell(381515, nil, nil, nil, "YELL") --Сметающая буря
 
 mod:AddSetIconOption("SetIconOnStormslam", 381515, true, 0, {8})
 mod:AddInfoFrameOption(381862, false)--Infernocore

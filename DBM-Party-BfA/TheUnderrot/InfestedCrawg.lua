@@ -38,7 +38,7 @@ local timerIndigestionCD			= mod:NewCDTimer(30, 260793, DBM_COMMON_L.FRONTAL, ni
 local timerChargeCD					= mod:NewCDTimer(30, 260292, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Рывок
 local timerTantrumCD				= mod:NewCDCountTimer(48.1, 260333, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 7) --Припадок
 
-local yellIndigestion				= mod:NewShortYell(260793, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Несварение (Фронталка)
+local yellIndigestion				= mod:NewYell(260793, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Несварение (Фронталка)
 
 mod:AddNamePlateOption("NPAuraMetamorphosis", 260416)
 

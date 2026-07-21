@@ -37,7 +37,7 @@ local timerMaelstromCD				= mod:NewCDCountTimer(24.2, 209676, nil, nil, nil, 3)
 local timerGaleCD					= mod:NewCDTimer(23.8, 209628, nil, nil, nil, 2)
 
 local yellSurge						= mod:NewYell(209602, nil, nil, nil, "YELL")
-local yellEnvelopingWinds			= mod:NewShortYell(224333, nil, nil, nil, "YELL") --Вихрь
+local yellEnvelopingWinds			= mod:NewYell(224333, nil, nil, nil, "YELL") --Вихрь
 
 local trashmod = DBM:GetModByName("CoSTrash")
 mod.vb.slicingMaelstromCount = 0

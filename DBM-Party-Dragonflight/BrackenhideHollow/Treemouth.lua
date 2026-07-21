@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2473, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240507051050")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186120)
 mod:SetEncounterID(2568)
 mod:SetUsedIcons(8, 7, 6, 5)
-mod:SetHotfixNoticeRev(20230516000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -35,7 +35,7 @@ local warnConsume								= mod:NewTargetNoFilterAnnounce(377222, 4) --Погло
 local warnDecaySpray							= mod:NewSpellAnnounce(376811, 2) --Разлагающие брызги
 --local warnInfectiousSpit						= mod:NewStackAnnounce(377864, 2, nil, "Healer|RemoveDisease")
 
-local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, nil, nil, 1, 8) --Частичное переваривание
+local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, nil, nil, 3, 8) --Частичное переваривание
 local specWarnStarvingFrenzy					= mod:NewSpecialWarningSpell(390968, nil, 156861, nil, 3, 4) --Иссушающее бешенство (Бешенство)
 local specWarnDecaySpray						= mod:NewSpecialWarningDodge(376811, nil, nil, nil, 2, 2) --Разлагающие брызги
 local specWarnDecaySpray2						= mod:NewSpecialWarningSwitch(376811, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 4) --Разлагающие брызги (Адды)
@@ -54,7 +54,7 @@ local timerDecaySprayCD							= mod:NewCDTimer(40, 376811, DBM_COMMON_L.ADDS, ni
 --local timerInfectiousSpitCD					= mod:NewCDTimer(20.1, 377864, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON)
 local timerVineWhipCD							= mod:NewCDTimer(16, 377559, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Хлещущая лоза (Фронталка)
 
-local yellVineWhip								= mod:NewShortYell(377559, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Хлещущая лоза (Фронталка)
+local yellVineWhip								= mod:NewYell(377559, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Хлещущая лоза (Фронталка)
 --local yellInfusedStrikes						= mod:NewShortFadesYell(361966)
 
 mod:AddInfoFrameOption(378022, true)
@@ -62,6 +62,7 @@ mod:AddSetIconOption("SetIconOnDecaySpray", 376811, true, 5, {8, 7, 6, 5})
 
 --mod:GroupSpells(377222, 378022)--Consume with Consuming
 
+local partiallyDigested = DBM:GetSpellName(383875) --Частичное переваривание
 mod.vb.addIcon = 8
 mod.vb.graspingVinesCount = 0
 
@@ -107,7 +108,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 376934 then --Хваткие лозы (Притягивание)
 		self.vb.graspingVinesCount = 0
 		if self:IsMythic() then
-			if self:IsTank() then
+			if self:IsTank() and not DBM:UnitDebuff("player", partiallyDigested) then
 				specWarnGraspingVines2:Show(DBM_COMMON_L.BOSS)
 				specWarnGraspingVines2:Play("movetoboss")
 				specWarnGraspingVines3:Schedule(3.5)
@@ -120,10 +121,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnGraspingVines:Show()
 			specWarnGraspingVines:Play("justrun")
 		end
-	--[[	if DBM:UnitDebuff("player", 383875) then--Partially Digested
-			specWarnGraspingVines:Show()
-			specWarnGraspingVines:Play("justrun")
-		end]]
 		timerVineWhipCD:Stop()
 		timerDecaySprayCD:Stop()
 		timerGraspingVinesCD:Start()

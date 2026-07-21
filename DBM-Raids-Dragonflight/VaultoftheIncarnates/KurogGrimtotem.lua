@@ -89,6 +89,7 @@ local warnFrozenSolid							= mod:NewTargetNoFilterAnnounce(372517, 4, nil, fals
 local specWarnFrigidTorrent						= mod:NewSpecialWarningDodge(391019, nil, nil, nil, 2, 2) --Ледяные звезды Cast by boss AND Dominator
 local specWarnFrigidTorrent2					= mod:NewSpecialWarningRun(391019, nil, nil, nil, 4, 4) --Ледяные звезды
 local specWarnAbsoluteZero						= mod:NewSpecialWarningYouPos(372458, nil, nil, nil, 3, 4) --Абсолютный нуль
+
 local yellAbsoluteZero							= mod:NewShortPosYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 local yellAbsoluteZeroFades						= mod:NewIconFadesYell(372458, nil, nil, nil, "YELL") --Абсолютный нуль
 

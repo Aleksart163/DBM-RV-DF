@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 local warnHellsteelCarnage							= mod:NewCastAnnounce(401319, 2, nil, nil, nil, 257305) --Неистовство огнекованной стали (Обстрел)
 local warnDreadRifts								= mod:NewTargetCountAnnounce(407196, 3) --Ужасные разломы
 local warnDreadRayofAnguish							= mod:NewTargetCountAnnounce(407069, 4) --Лучи жестокой боли
-local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 4, nil, "Tank|Healer") --Ужасные когти
+local warnTerrorClaws								= mod:NewTargetNoFilterAnnounce(404743, 3, nil, "Tank|Healer") --Ужасные когти
 
 local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Неистовство огнекованной стали (Обстрел)
 local specWarnDreadRift								= mod:NewSpecialWarningYou(407196, nil, nil, nil, 4, 2) --Ужасные разломы
@@ -93,11 +93,12 @@ function mod:SPELL_CAST_START(args)
 		self.vb.carnageCount = self.vb.carnageCount + 1
 		warnHellsteelCarnage:Show()
 		--Add 9 seconds to all timers. May be diff in other difficulties so needs review
+		timerTerrorClawsCD:AddTime(9)
 		timerDreadRiftsCD:AddTime(9, self.vb.riftsCount+1)
 		timerRaysofAnguishCD:AddTime(9, self.vb.rayCount+1)
 		timerHellbeamCD:AddTime(9, self.vb.hellCount+1)
 		timerWingsofExtinctionCD:AddTime(9, self.vb.wingsCount+1)
-	elseif args:IsSpellID(406516, 407198, 407199, 407200) then--Each Id adds 1 additional rift, base Id starts at 2 or 3
+	elseif args:IsSpellID(406516, 407198, 407199, 407200) then --Ужасные разломы
 		self.vb.riftsCount = self.vb.riftsCount + 1
 		self.vb.riftIcon = 1
 		local timer
@@ -107,9 +108,10 @@ function mod:SPELL_CAST_START(args)
 			timer = 34
 		end
 		timerDreadRiftsCD:Start(timer, self.vb.riftsCount+1)
-	elseif spellId == 407069 then
+	elseif spellId == 407069 then --Лучи жестокой боли
 		self.vb.rayCount = self.vb.rayCount + 1
-		timerRaysofAnguishCD:Start(nil, self.vb.rayCount+1)
+	--	timerRaysofAnguishCD:Start(nil, self.vb.rayCount+1)
+		timerRaysofAnguishCD:Start(self:IsEasy() and 33 or 34, self.vb.rayCount+1) --В обычке 2 каст на 1 сек раньше, дальше хз
 	elseif spellId == 400430 then
 		self.vb.hellCount = self.vb.hellCount + 1
 		specWarnHellbeam:Show(self.vb.hellCount)

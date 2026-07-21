@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2490, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240817070000")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(189340)
 mod:SetEncounterID(2613)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20230703000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -47,8 +47,8 @@ local timerGroundingSpearCD						= mod:NewCDTimer(8.9, 373424, nil, nil, nil, 3)
 local timerFetter								= mod:NewBuffActiveTimer(15, 374655, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Кандалы (Повышенный урон)
 local timerFieryFocusCD							= mod:NewCDTimer(30, 375056, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Огненное преследование
 
-local yellGroundingSpear						= mod:NewShortYell(373424, nil, nil, nil, "YELL") --Сбивающее копье
-local yellDragonStrike							= mod:NewShortYell(373733, nil, nil, nil, "YELL") --Удар дракона
+local yellGroundingSpear						= mod:NewYell(373424, nil, nil, nil, "YELL") --Сбивающее копье
+local yellDragonStrike							= mod:NewYell(373733, nil, nil, nil, "YELL") --Удар дракона
 
 mod:AddSetIconOption("SetIconOnDragonStrike", 373733, true, 0, {8}) --Удар дракона
 

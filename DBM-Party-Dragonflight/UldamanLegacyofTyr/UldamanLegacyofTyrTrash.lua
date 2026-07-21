@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UldamanLegacyofTyrTrash", "DBM-Party-Dragonflight", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
@@ -74,8 +74,8 @@ local timerThunderousClapCD					= mod:NewCDNPTimer(18, 381593, nil, nil, nil, 2)
 local timerBulwarkSlamCD					= mod:NewCDNPTimer(10.6, 382696, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар бастиона
 local timerHastenCD							= mod:NewCDNPTimer(21.1, 377500, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ускорение
 
-local yellCurseofStone						= mod:NewShortYell(369365, nil, nil, nil, "YELL") --Проклятие камня
-local yellTrappedInStone					= mod:NewShortYell(369366, nil, nil, nil, "YELL") --В каменном плену
+local yellCurseofStone						= mod:NewYell(369365, nil, nil, nil, "YELL") --Проклятие камня
+local yellTrappedInStone					= mod:NewYell(369366, nil, nil, nil, "YELL") --В каменном плену
 
 --local playerName = UnitName("player")
 

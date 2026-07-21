@@ -38,8 +38,8 @@ local timerFungistormCD				= mod:NewCDTimer(21.5, 330422, nil, nil, nil, 7, nil,
 local timerShockwaveCD				= mod:NewCDTimer(60, 272457, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ударная волна (Фронталка)
 local timerUpheavalCD				= mod:NewCDTimer(60, 259718, nil, nil, nil, 3, nil) --Дрожь земли
 
-local yellShockwave					= mod:NewShortYell(272457, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Ударная волна (Фронталка)
-local yellUpheaval					= mod:NewShortYell(259718, nil, nil, nil, "YELL") --Дрожь земли
+local yellShockwave					= mod:NewYell(272457, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Ударная волна (Фронталка)
+local yellUpheaval					= mod:NewYell(259718, nil, nil, nil, "YELL") --Дрожь земли
 local yellUpheavalFades				= mod:NewShortFadesYell(259718, nil, nil, nil, "YELL") --Дрожь земли
 
 mod.vb.festeringCount = 0

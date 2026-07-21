@@ -30,7 +30,7 @@ local timerDancingBladeCD			= mod:NewCDTimer(10, 193235, nil, nil, nil, 3, nil, 
 local timerHornCD					= mod:NewCDTimer(42.6, 191284, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Рог доблести
 local timerBreathCast				= mod:NewCastCountTimer(43.8, 188404, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури
 
-local yellDancingBlade				= mod:NewShortYell(193235, nil, nil, nil, "YELL") --Танцующий клинок
+local yellDancingBlade				= mod:NewYell(193235, nil, nil, nil, "YELL") --Танцующий клинок
 
 mod:AddSetIconOption("SetIconOnDancingBlade", 193235, true, 0, {8})
 

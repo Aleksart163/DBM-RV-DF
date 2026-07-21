@@ -148,7 +148,7 @@ mod:AddBoolOption("YellOnSummoning", true)
 --mod:AddBoolOption("YellOnBank", true) --банк
 --mod:AddBoolOption("YellOnRepair", true) --починка
 mod:AddBoolOption("YellOnToys", true) --игрушки
-mod:AddBoolOption("AutoSpirit", false)
+--mod:AddBoolOption("AutoSpirit", false)
 
 local Rebirth = DBM:GetSpellName(20484) 
 local typeInstance = nil
@@ -1116,13 +1116,13 @@ function mod:LOADING_SCREEN_DISABLED()
 	DBM:Debug("Murchal proshlyap 3", 2)
 end]]
 
-function mod:PLAYER_DEAD()
+--[[function mod:PLAYER_DEAD()
 	if not self.Options.Enabled then return end
 	if not IsInInstance() and self.Options.AutoSpirit then
 --	if not IsInInstance() and not HasSoulstone() and self.Options.AutoSpirit then
 		RepopMe()
 	end
-end
+end]]
 
 function mod:OnSync(premsg_announce, sender)
 	if not self.Options.Enabled then return end

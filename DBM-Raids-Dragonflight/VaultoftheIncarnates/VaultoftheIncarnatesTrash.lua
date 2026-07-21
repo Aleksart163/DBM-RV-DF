@@ -39,9 +39,9 @@ local specWarnStoneBarrage2						= mod:NewSpecialWarningDodge(392280, nil, nil, 
 local specWarnIgnite							= mod:NewSpecialWarningDefensive(393787, "-Tank", nil, nil, 2, 2) --Воспламенение
 local specWarnIgnite2							= mod:NewSpecialWarningDodge(393787, nil, nil, nil, 2, 2) --Воспламенение
 
-local yellMeteorStrike							= mod:NewYell(396439, nil, nil, nil, "YELL") --Падение метеора
-local yellConductiveCharge						= mod:NewYell(397052, nil, nil, nil, "YELL") --Проводящий заряд
-local yellConductiveCharge2						= mod:NewYell(396993, nil, nil, nil, "YELL") --Проводящий заряд2
+local yellMeteorStrike							= mod:NewShortYell(396439, nil, nil, nil, "YELL") --Падение метеора
+local yellConductiveCharge						= mod:NewShortYell(397052, nil, nil, nil, "YELL") --Проводящий заряд
+local yellConductiveCharge2						= mod:NewShortYell(396993, nil, nil, nil, "YELL") --Проводящий заряд2
 local yellMeteorStrike2							= mod:NewShortFadesYell(396439, nil, nil, nil, "YELL") --Падение метеора
 local yellElectricSurge							= mod:NewShortYell(395273, nil, nil, nil, "YELL") --Электрический импульс
 local yellElectricSurge2						= mod:NewShortFadesYell(395273, nil, nil, nil, "YELL") --Электрический импульс

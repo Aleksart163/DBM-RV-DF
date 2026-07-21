@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2471, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240503080930")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186122, 186124, 186125)
 mod:SetEncounterID(2570)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20221205000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -63,8 +63,8 @@ local specWarnGreaterHealingRapids				= mod:NewSpecialWarningInterrupt(377950, "
 local timerHexrickTotemCD						= mod:NewCDTimer(59.4, 381470, 374057, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Тотем хитрого сглаза (Призыв тотема)
 local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, 87779, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Великий исцеляющий поток (Великое исцеление)
 
-local yellHextrick								= mod:NewShortYell(381466, nil, nil, nil, "YELL") --Хитрый сглаз
-local yellDecayedSenses							= mod:NewShortYell(381379, 65960, nil, nil, "YELL") --Гниющие глаза (Ослепление)
+local yellHextrick								= mod:NewYell(381466, nil, nil, nil, "YELL") --Хитрый сглаз
+local yellDecayedSenses							= mod:NewYell(381379, 65960, nil, nil, "YELL") --Гниющие глаза (Ослепление)
 local yellBladestorm							= mod:NewYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
 local yellBladestormFades						= mod:NewShortFadesYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
 local yellSavageCharge							= mod:NewYell(381461, 260292, nil, nil, "YELL") --Дикий рывок (Рывок)

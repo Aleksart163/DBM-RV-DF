@@ -37,7 +37,7 @@ local timerDarkenedLightningCD		= mod:NewCDCountTimer(14.1, 266225, nil, nil, ni
 local timerSummonSlaverCD			= mod:NewCDCountTimer(16, 266266, DBM_COMMON_L.ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв меченного смертью поработителя (Адд) 16-22
 local timerDreadEssenceCD			= mod:NewCDCountTimer(27.5, 266181, nil, nil, nil, 2, nil, nil, nil, 1, 5) --Сущность ужаса
 
-local yellDeathlens					= mod:NewShortYell(268202, nil, nil, nil, "YELL") --Линза смерти
+local yellDeathlens					= mod:NewYell(268202, nil, nil, nil, "YELL") --Линза смерти
 
 mod:AddRangeFrameOption(6, 266225)--Range guessed, can't find spell data for it
 

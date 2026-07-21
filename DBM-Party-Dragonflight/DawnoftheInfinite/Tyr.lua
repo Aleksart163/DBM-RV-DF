@@ -56,7 +56,7 @@ local timerSparkofTyrCD								= mod:NewCDCountTimer(60.7, 400681, nil, nil, nil
 local timerSiphonOathCD								= mod:NewCDCountTimer(60.7, 400642, 181503, nil, nil, 6, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Вытягивание энергии камня (Вытягивание энергии)
 local timerSiphonOathCast							= mod:NewCastTimer(15, 400642, 181503, nil, nil, 6, nil, nil, nil, 2, 5) --Вытягивание энергии камня (Вытягивание энергии)
 
-local yellTitanicBlow								= mod:NewShortYell(401248, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Титанический удар (Фронталка)
+local yellTitanicBlow								= mod:NewYell(401248, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Титанический удар (Фронталка)
 local yellSparkofTyr								= mod:NewShortPosYell(400681, nil, nil, nil, "YELL") --Искра Тира
 
 mod:AddSetIconOption("SetIconOnSparkofTyr", 400681, true, 0, {1, 2})

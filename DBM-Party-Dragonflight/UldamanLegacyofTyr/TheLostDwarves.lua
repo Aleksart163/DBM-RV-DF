@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2475, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426062327")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(184580, 184581, 184582)
 mod:SetEncounterID(2555)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20230508000000)
-mod:SetMinSyncRevision(20230508000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")

@@ -48,7 +48,6 @@ local warnIncarnationOwl							= mod:NewCountAnnounce(425576, 4)
 
 local specWarnSearingWrath							= mod:NewSpecialWarningTaunt(422000, nil, nil, nil, 1, 2)
 local specWarnFieryGrowth							= mod:NewSpecialWarningMoveAway(424581, nil, nil, nil, 1, 2)
-local yellFieryGrowth								= mod:NewShortPosYell(424581, nil, false, 2)
 local specWarnFallingStars							= mod:NewSpecialWarningCount(420236, nil, nil, nil, 2, 2)
 local specWarnMassEntanglement						= mod:NewSpecialWarningYou(424495, nil, nil, nil, 1, 2)
 
@@ -92,6 +91,8 @@ local specWarnFlamingGermination					= mod:NewSpecialWarningCount(423265, nil, 9
 local timerTreeofFlameCD							= mod:NewNextCountTimer(20, 422115, L.TreeForm.." (%s)", false, nil, 6)--Kinda redundant, ability has own timer
 local timerFlamingGerminationCD						= mod:NewNextCountTimer(20, 423265, 99727, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Short name "Flame Seeds"
 local timerSuperNovaCD								= mod:NewNextTimer(20, 424140, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+
+local yellFieryGrowth								= mod:NewShortPosYell(424581, nil, false, 2, "YELL")
 
 --base abilities
 mod.vb.shroomCount = 0

@@ -84,11 +84,11 @@ local timerThunderingSquallCD			= mod:NewCDNPTimer(20.6, 257736, nil, nil, nil, 
 local timerOiledBladeCD					= mod:NewCDNPTimer(12.4, 257908, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Смазанный нефтью клинок
 local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяной удар
 
-local yellOiledBlade					= mod:NewShortYell(257908, nil, nil, nil, "YELL") --Смазанный нефтью клинок
-local yellBlindRagePlayer				= mod:NewShortYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
+local yellOiledBlade					= mod:NewYell(257908, nil, nil, nil, "YELL") --Смазанный нефтью клинок
+local yellBlindRagePlayer				= mod:NewYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
 local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
-local yellRicochetingThrow				= mod:NewShortYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
-local yellDuelistDash					= mod:NewShortYell(274400, nil, nil, nil, "YELL") --Рывок дуэлянта
+local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
+local yellDuelistDash					= mod:NewYell(274400, nil, nil, nil, "YELL") --Рывок дуэлянта
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 extremely unique but unthrottled (except with itself)
 

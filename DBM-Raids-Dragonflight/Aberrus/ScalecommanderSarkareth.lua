@@ -128,7 +128,7 @@ local warnHurtlingBarrage						= mod:NewTargetCountAnnounce(405486, 3, nil, nil,
 local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil, 385541, nil, 2, 2) --Космическое вознесение (Вознесение)
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
 local specWarnScouringEternity					= mod:NewSpecialWarningMoveTo(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
-local specWarnEmbraceofNothingness				= mod:NewSpecialWarningYou(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
+local specWarnEmbraceofNothingness				= mod:NewSpecialWarningMoveTo(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
 local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Рассечение Бездны
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
@@ -928,7 +928,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.hurtlingIcon = self.vb.hurtlingIcon + 1
 	elseif spellId == 403520 then --Объятия пустоты (Черная дыра) аура на игроке
 		if args:IsPlayer() then
-			specWarnEmbraceofNothingness:Show()
+			specWarnEmbraceofNothingness:Show(Asteroid)
 			specWarnEmbraceofNothingness:Play("gathershare")
 			specWarnEmbraceofNothingness:ScheduleVoice(5, "defensive")
 			yellEmbraceofNothingness:Yell()

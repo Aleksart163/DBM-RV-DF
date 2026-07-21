@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2508, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426062327")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186738)
 mod:SetEncounterID(2584)
-mod:SetHotfixNoticeRev(20230110000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -31,15 +31,15 @@ local warnArcaneEruption						= mod:NewCountAnnounce(385075, 3) --Чародей
 
 local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 3, 4) --Удар дракона
 local specWarnDragonStrikeDebuff				= mod:NewSpecialWarningDispel(384978, "RemoveMagic", nil, nil, 3, 2) --Удар дракона
-local specWarnCrystallineRoar					= mod:NewSpecialWarningDodgeCount(384699, nil, nil, nil, 3, 2) --Кристаллический рев
-local specWarnUnleashedDestruction				= mod:NewSpecialWarningCount(385399, nil, nil, nil, 2, 2) --Высвобожденное разрушение
+local specWarnCrystallineRoar					= mod:NewSpecialWarningDodge(384699, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Кристаллический рев
+local specWarnUnleashedDestruction				= mod:NewSpecialWarningSpell(385399, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Высвобожденное разрушение (Отталкивание)
 
 local timerDragonStrikeCD						= mod:NewCDTimer(7.3, 384978, nil, "Tank|Healer|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)--Удар дракона 7.3-24, probably delayed by CLEU events I couldn't see
-local timerCrystallineRoarCD					= mod:NewCDCountTimer(111.6, 384699, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристаллический рев
-local timerUnleashedDestructionCD				= mod:NewCDCountTimer(103.1, 385399, nil, nil, nil, 2)--Высвобожденное разрушение 103-115
+local timerCrystallineRoarCD					= mod:NewCDCountTimer(111.6, 384699, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кристаллический рев
+local timerUnleashedDestructionCD				= mod:NewCDCountTimer(103.1, 385399, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Высвобожденное разрушение (Отталкивание) 103-115
 local timerArcaneEruptionCD						= mod:NewCDCountTimer(54.6, 385075, nil, nil, nil, 3) --Чародейское извержение
 
-local yellDragonStrike							= mod:NewShortYell(384978, nil, nil, nil, "YELL") --Удар дракона
+local yellDragonStrike							= mod:NewYell(384978, nil, nil, nil, "YELL") --Удар дракона
 
 mod:AddSetIconOption("SetIconOnDragonStrike", 384978, true, 0, {8}) --Удар дракона
 mod:AddInfoFrameOption(388777, false)
@@ -73,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(args.sourceGUID, "DragonStrikeTarget", 0.1, 2)
 		timerDragonStrikeCD:Start()
 	elseif spellId == 385399 or spellId == 388804 then--Высвобожденное разрушение Easy, Hard
-		specWarnUnleashedDestruction:Show(self.vb.unleashedCast+1)
+		specWarnUnleashedDestruction:Show()
 		specWarnUnleashedDestruction:Play("carefly")
 	elseif spellId == 385075 then --Чародейское извержение
 		self.vb.eruptionCount = self.vb.eruptionCount + 1
@@ -81,7 +81,7 @@ function mod:SPELL_CAST_START(args)
 		timerArcaneEruptionCD:Start(nil, self.vb.eruptionCount+1)
 	elseif spellId == 384699 then --Кристаллический рев
 		self.vb.roarCount = self.vb.roarCount + 1
-		specWarnCrystallineRoar:Show(self.vb.roarCount)
+		specWarnCrystallineRoar:Show()
 		specWarnCrystallineRoar:Play("shockwave")
 	end
 end
@@ -90,7 +90,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 384696 then
 	--	self.vb.roarCount = self.vb.roarCount + 1
-	--	specWarnCrystallineRoar:Show(self.vb.roarCount)
+	--	specWarnCrystallineRoar:Show()
 	--	specWarnCrystallineRoar:Play("shockwave")
 		timerCrystallineRoarCD:Start(nil, self.vb.roarCount+1)
 	elseif spellId == 385399 or spellId == 388804 then--Easy, Hard

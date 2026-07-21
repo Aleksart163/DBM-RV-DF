@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2472, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186116)--194745 for Rotfang Hyena
 mod:SetEncounterID(2567)
-mod:SetHotfixNoticeRev(20230507000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -45,7 +45,7 @@ local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1, n
 --local timerMastersCallCD						= mod:NewCDTimer(35, 384638, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Doesn't seem to have an actual CD?
 local timerGutShotCD							= mod:NewCDTimer(16.7, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Выстрел в живот
 
-local yellEnsnaringTrap							= mod:NewShortYell(384148, nil, nil, nil, "YELL") --Оплетающая ловушка
+local yellEnsnaringTrap							= mod:NewYell(384148, nil, nil, nil, "YELL") --Оплетающая ловушка
 
 mod:AddRangeFrameOption(4, 384558)
 mod:AddNamePlateOption("NPAuraOnFixate", 384725)

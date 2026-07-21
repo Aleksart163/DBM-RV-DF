@@ -27,7 +27,6 @@ local warnThrowTarget				= mod:NewTargetNoFilterAnnounce(204658, 2)--This is tar
 local warnUproot					= mod:NewCountAnnounce(212786, 2)
 
 local specWarnRoots					= mod:NewSpecialWarningDodgeCount(204574, nil, nil, nil, 2, 2)
-local yellThrow						= mod:NewYell(204658, 2764)--yell so others can avoid splash damage. I don't think target can avoid
 local specWarnBreath				= mod:NewSpecialWarningDodgeCount(204667, nil, nil, nil, 2, 2)
 
 local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, nil, nil, nil, 2)--34-60 (basically same as OG)
@@ -35,6 +34,8 @@ local timerCrushingGripCD			= mod:NewCDCountTimer(27.9, 204611, nil, nil, nil, 5
 local timerRootsCD					= mod:NewCDCountTimer(18.2, 204574, nil, nil, nil, 3)--18.2-35.1 (basically same as OG)
 local timerBreathCD					= mod:NewCDCountTimer(26.5, 204667, nil, nil, nil, 5)--26-35 (basically same as OG)
 local timerUprootCD					= mod:NewCDCountTimer(32.4, 212786, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--32.7-37.6 (Probably also OG timer, but didn't have it in OG mod)
+
+local yellThrow						= mod:NewYell(204658, 2764, nil, nil, "YELL")--yell so others can avoid splash damage. I don't think target can avoid
 
 mod.vb.shatteredCount = 0
 mod.vb.crushingCount = 0

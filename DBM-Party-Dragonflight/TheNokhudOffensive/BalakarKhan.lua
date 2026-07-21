@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2477, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(186151)
 mod:SetEncounterID(2580)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20221214000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -65,10 +65,10 @@ local timerStaticSpearCD						= mod:NewCDTimer(39, 376864, nil, nil, nil, 7) --�
 local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3) --Трескучий сдвиг
 local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Проводящий удар CD used for both Condutive and Thunder
 
-local yellIronSpear								= mod:NewShortYell(376634, nil, nil, nil, "YELL") --Железное копье
+local yellIronSpear								= mod:NewYell(376634, nil, nil, nil, "YELL") --Железное копье
 local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YELL") --Железное копье
-local yellConductiveStrike						= mod:NewShortYell(376827, nil, nil, nil, "YELL") --Проводящий удар
-local yellStaticSpear							= mod:NewShortYell(376864, nil, nil, nil, "YELL") --Заряженное копье
+local yellConductiveStrike						= mod:NewYell(376827, nil, nil, nil, "YELL") --Проводящий удар
+local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL") --Заряженное копье
 local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL") --Заряженное копье
 
 mod:AddSetIconOption("SetIconOnConductiveStrike", 376827, true, 0, {8})

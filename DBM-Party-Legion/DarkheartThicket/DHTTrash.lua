@@ -82,11 +82,11 @@ local timerRootBurstCD				= mod:NewCDNPTimer(16.2, 201129, nil, nil, nil, 3) --�
 local timerVileMushroomCD			= mod:NewCDNPTimer(17, 198910, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Злогриб
 local timerDarksoulBiteCD			= mod:NewCDNPTimer(12.1, 201361, nil, nil, nil, 5) --Укус темного духа 12.1-18.2
 
-local yellNightmareToxin			= mod:NewShortYell(200684, nil, nil, nil, "YELL") --Ядовитый кошмар
+local yellNightmareToxin			= mod:NewYell(200684, nil, nil, nil, "YELL") --Ядовитый кошмар
 local yellNightmareToxin2			= mod:NewShortFadesYell(200684, nil, nil, nil, "YELL") --Ядовитый кошмар
-local yellCurseofIsolation			= mod:NewShortYell(201839, nil, nil, nil, "YELL") --Проклятие уединения
+local yellCurseofIsolation			= mod:NewYell(201839, nil, nil, nil, "YELL") --Проклятие уединения
 local yellCurseofIsolation2			= mod:NewShortFadesYell(201839, nil, nil, nil, "YELL") --Проклятие уединения
-local yellDreadInferno				= mod:NewShortYell(201399, nil, nil, nil, "YELL") --Жуткое пекло
+local yellDreadInferno				= mod:NewYell(201399, nil, nil, nil, "YELL") --Жуткое пекло
 
 mod.vb.trashRemaining = 5
 

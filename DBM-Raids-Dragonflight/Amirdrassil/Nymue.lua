@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 429983 and (type = "applydebuff" or type = "applydebuffstack")
 --]]
 --TODO, Unravel stack tracking in Stage 2?
---Stage One: Rapid Iteration
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28355))
 local warnContinuum									= mod:NewCountAnnounce(420846, 2)
 local warnVerdantMatrix								= mod:NewCountAnnounce(420554, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(420554))
@@ -45,8 +45,6 @@ local specWarnImpendingLoom							= mod:NewSpecialWarningDodgeCount(429615, nil,
 local specWarnEphemeralFlora						= mod:NewSpecialWarningSoakCount(430563, "Melee", nil, nil, 2, 2)
 local specWarnViridianRain							= mod:NewSpecialWarningDodgeCount(420907, nil, nil, nil, 2, 2)
 local specWarnWeaversBurden							= mod:NewSpecialWarningMoveAway(426519, nil, 37859, nil, 1, 2)
-local yellWeaversBurden								= mod:NewShortYell(426519, 37859)--ST "Bomb"
---local yellWeaversBurdenFades						= mod:NewShortFadesYell(426519)
 local specWarnWeaversBurdenOther					= mod:NewSpecialWarningTaunt(426519, nil, 37859, nil, 1, 2)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(428474, nil, nil, nil, 1, 8)
 
@@ -60,7 +58,7 @@ local timerWeaversBurdenCD							= mod:NewCDCountTimer(17.8, 426519, 167180, "Ta
 local berserkTimer									= mod:NewBerserkTimer(720)
 
 mod:AddPrivateAuraSoundOption(427722, true, 426519, 1)--Weaver's Burden
---Stage Two: Creation Complete
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28356))
 local warnFullBloom									= mod:NewCountAnnounce(426855, 2)
 local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false)
@@ -72,6 +70,9 @@ local timerFullBloomCD								= mod:NewCDCountTimer(49, 426855, nil, nil, nil, 6
 local timerLumberingSlamCD							= mod:NewCDNPTimer(18.2, 429108, nil, nil, nil, 3)--No reason to CL it, it's a nameplate only timer
 local timerRadialFlourishCD							= mod:NewCDNPTimer(5.5, 422721, nil, false, nil, 3)--5-12 so kinda fickle, off by default
 local timerWakingDecimation							= mod:NewCastTimer(36, 428471, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--1sec delay before energy starts + 30 + 5 second cast
+
+local yellWeaversBurden								= mod:NewShortYell(426519, 37859, nil, nil, "YELL")--ST "Bomb"
+--local yellWeaversBurdenFades						= mod:NewShortFadesYell(426519, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnWarden", -27432, true, 5, {7, 6})
 mod:AddSetIconOption("SetIconOnManifestedDream", -28482, true, 5, {8})

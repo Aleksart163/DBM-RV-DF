@@ -68,7 +68,6 @@ local specWarnFieryFlourish							= mod:NewSpecialWarningInterruptCount(426524, 
 --local yellScorchingPursuit						= mod:NewShortYell(420544)
 local specWarnScorchingBramblethorn					= mod:NewSpecialWarningYou(426387, nil, nil, nil, 1, 2)
 local specWarnFuriousCharge							= mod:NewSpecialWarningRun(418637, nil, 100, nil, 4, 2)
-local yellFuriousCharge								= mod:NewShortYell(418637, 100)
 local specWarnFuriousChargePreTaunt					= mod:NewSpecialWarningTaunt(418637, nil, 100, nil, 1, 2)--Taunt on cast start
 local specWarnNaturesFury							= mod:NewSpecialWarningTaunt(423719, nil, nil, nil, 1, 2)--Yell to taunt again if you didn't taunt in pre cast
 local specWarnBlazingThornsAvoid					= mod:NewSpecialWarningDodgeCount(426206, "-Healer", nil, nil, 1, 2)--Initial cast to dodge
@@ -106,14 +105,10 @@ local warnAshenDevastation							= mod:NewCountAnnounce(428896, 3, nil, nil, 167
 
 local specWarnFallingEmbers							= mod:NewSpecialWarningSoakCount(427252, nil, nil, nil, 2, 2)
 local specWarnFlashFire								= mod:NewSpecialWarningMoveAway(427299, nil, nil, nil, 1, 2)--Blizzard didn't flag right spellids as private aura, so this probably still works for now
-local yellFlashFire									= mod:NewShortYell(427299)--Blizzard didn't flag right spellids as private aura, so this probably still works for now
-local yellFlashFireFades							= mod:NewShortFadesYell(427299)--Blizzard didn't flag right spellids as private aura, so this probably still works for now
 local specWarnEncasedInAsh							= mod:NewSpecialWarningYou(427306, nil, nil, nil, 1, 2)
-local yellEncasedInAsh								= mod:NewShortYell(427306)
 local specWarnFireWhirl								= mod:NewSpecialWarningDodgeCount(427343, nil, 86189, nil, 2, 2)
 local specWarnSmolderingBackdraft					= mod:NewSpecialWarningDefensive(429973, nil, nil, nil, 1, 2)
 local specWarnSmolderingSuffocation					= mod:NewSpecialWarningTaunt(421594, nil, nil, nil, 1, 2)
-local yellSmolderingSuffocationRepeater				= mod:NewIconRepeatYell(421594, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, false, nil, "YELL")--using custom yell text "%s" because of custom needs (it has to use not only icons but two asci emoji
 --local specWarnAshenDevestation					= mod:NewSpecialWarningMoveAway(428896, nil, 37859, nil, 1, 2, 4)
 --local yellAshenDevestation						= mod:NewShortYell(428896, 37859)--Shortname "Bomb"
 --local yellAshenDevestationFades					= mod:NewShortFadesYell(428896)
@@ -124,6 +119,12 @@ local timerFireWhirlCD								= mod:NewCDCountTimer(50, 427343, 86189, nil, nil,
 local timerSmolderingBackdraftCD					= mod:NewCDCountTimer(49, 429973, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerAshenCallCD								= mod:NewCDCountTimer(11.8, 421325, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerAshenDevestationCD						= mod:NewCDCountTimer(49, 428896, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
+
+local yellSmolderingSuffocationRepeater				= mod:NewIconRepeatYell(421594, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, false, nil, "YELL")--using custom yell text "%s" because of custom needs (it has to use not only icons but two asci emoji
+local yellFuriousCharge								= mod:NewShortYell(418637, 100, nil, nil, "YELL")
+local yellFlashFire									= mod:NewShortYell(427299, nil, nil, nil, "YELL")--Blizzard didn't flag right spellids as private aura, so this probably still works for now
+local yellFlashFireFades							= mod:NewShortFadesYell(427299, nil, nil, nil, "YELL")--Blizzard didn't flag right spellids as private aura, so this probably still works for now
+local yellEncasedInAsh								= mod:NewShortYell(427306, nil, nil, nil, "YELL")
 
 mod:AddPrivateAuraSoundOption(421461, true, 427299, 1)--Flash Fire
 mod:AddPrivateAuraSoundOption(428901, true, 428896, 1)--Ashen Devestation

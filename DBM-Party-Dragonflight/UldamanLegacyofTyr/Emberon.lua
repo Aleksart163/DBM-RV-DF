@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2476, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(184422)
 mod:SetEncounterID(2558)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20230810000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -44,8 +44,8 @@ local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, 405812, nil, n
 local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильные угли
 local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Обжигающий хлопок
 
-local yellSearingClap							= mod:NewShortYell(369061, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обжигающий хлопок
-local yellUnstableEmbers						= mod:NewShortYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
+local yellSearingClap							= mod:NewYell(369061, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обжигающий хлопок
+local yellUnstableEmbers						= mod:NewYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
 local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110, nil, nil, nil, "YELL") --Нестабильные угли
 
 mod:AddSetIconOption("SetIconOnSearingClap", 369061, true, 0, {8}) --Обжигающий хлопок

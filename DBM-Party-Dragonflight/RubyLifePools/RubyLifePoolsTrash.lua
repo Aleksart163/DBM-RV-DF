@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240504141048")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
@@ -58,11 +58,11 @@ local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5) -
 local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Бушующий щит бури
 local timerIcyShieldCD						= mod:NewCDNPTimer(21.9, 372743, nil, nil, nil, 5)--17-21
 
-local yellSteelBarrage						= mod:NewShortYell(372047, nil, nil, nil, "YELL") --Ураган стали
-local yellLivingBomb						= mod:NewShortYell(373693, nil, nil, nil, "YELL") --Живая бомба
+local yellSteelBarrage						= mod:NewYell(372047, nil, nil, nil, "YELL") --Ураган стали
+local yellLivingBomb						= mod:NewYell(373693, nil, nil, nil, "YELL") --Живая бомба
 local yellLivingBombFades					= mod:NewShortFadesYell(373693, nil, nil, nil, "YELL") --Живая бомба
-local yellStormBreath						= mod:NewShortYell(391726, nil, nil, nil, "YELL") --Дыхание бури
-local yellFlameBreath						= mod:NewShortYell(391723, nil, nil, nil, "YELL") --Огненное дыхание
+local yellStormBreath						= mod:NewYell(391726, nil, nil, nil, "YELL") --Дыхание бури
+local yellFlameBreath						= mod:NewYell(391723, nil, nil, nil, "YELL") --Огненное дыхание
 
 --local playerName = UnitName("player")
 

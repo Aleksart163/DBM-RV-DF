@@ -38,7 +38,7 @@ local timerMagmaSculptorCD			= mod:NewCDTimer(71, 200637, DBM_COMMON_L.BIG_ADD, 
 local timerMagmaWaveCD				= mod:NewCDTimer(90, 200404, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Магматическая волна (АоЕ)
 local timerMagmaWave				= mod:NewCastTimer(2.5, 200404, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, nil, nil, 1, 5) --Магматическая волна (АоЕ)
 
-local yellBurningHatred				= mod:NewShortYell(200154, 62374, nil, nil, "YELL") --Пламенная ненависть (Преследование)
+local yellBurningHatred				= mod:NewYell(200154, 62374, nil, nil, "YELL") --Пламенная ненависть (Преследование)
 
 mod:AddSetIconOption("SetIconOnBurningHatred", 200154, true, 0, {8}) --Пламенная ненависть (Преследование)
 

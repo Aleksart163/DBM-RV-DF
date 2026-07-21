@@ -80,9 +80,9 @@ local timerMaddeningGazeCD			= mod:NewCDNPTimer(15.5, 272609, DBM_COMMON_L.FRONT
 
 local yellDecayingMind				= mod:NewYell(278961, nil, nil, nil, "YELL") --Гниющий разум
 local yellWickedEmbrace				= mod:NewYell(266265, nil, nil, nil, "YELL") --Злые объятия
-local yellBloodHarvest				= mod:NewShortYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
-local yellDarkOmen					= mod:NewShortYell(265568, nil, nil, nil, "YELL") --Темное знамение
-local yellThirstforBlood			= mod:NewShortYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellBloodHarvest				= mod:NewYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
+local yellDarkOmen					= mod:NewYell(265568, nil, nil, nil, "YELL") --Темное знамение
+local yellThirstforBlood			= mod:NewYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
 
 --[[function mod:OnInitialize()

@@ -39,7 +39,7 @@ local timerAddsCD					= mod:NewCDTimer(120, 199817, DBM_COMMON_L.ADDS, nil, nil,
 local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, nil, nil, 2) --Зловонная пасть
 local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, nil, nil, 3) --Токсичная желчь
 
-local yellSpikedTongue				= mod:NewShortYell(199176, 142649, nil, nil, "YELL") --Шипастый язык
+local yellSpikedTongue				= mod:NewYell(199176, 142649, nil, nil, "YELL") --Шипастый язык
 
 mod.vb.retchCount = 0
 mod.vb.addsCount = 0

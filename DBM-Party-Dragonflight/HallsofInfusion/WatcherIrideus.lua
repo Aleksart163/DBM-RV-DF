@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2504, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412075414")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(189719)
 mod:SetEncounterID(2615)
-mod:SetHotfixNoticeRev(20240628070000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -48,8 +48,8 @@ local timerSparkVolleyCD						= mod:NewCDTimer(30, 384351, DBM_COMMON_L.BOMBING,
 local timerStaticSurgeCD						= mod:NewCDCountTimer(28, 384014, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Статический выброс
 local timerTitanicFistCD						= mod:NewCDTimer(30, 384524, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кулак титана (Фронталка)
 
-local yellTitanicFist							= mod:NewShortYell(384524, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Кулак титана (Фронталка)
-local yellPowerOverload							= mod:NewShortYell(389179, nil, nil, nil, "YELL") --Перегрузка
+local yellTitanicFist							= mod:NewYell(384524, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Кулак титана (Фронталка)
+local yellPowerOverload							= mod:NewYell(389179, nil, nil, nil, "YELL") --Перегрузка
 local yellPowerOverloadFades					= mod:NewShortFadesYell(389179, nil, nil, nil, "YELL") --Перегрузка
 
 mod.vb.surgeCount = 0

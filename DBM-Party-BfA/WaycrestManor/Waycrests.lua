@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or (target.id = 131527 or target.id = 131545) and type = "death"
 --]]
-local warnVirulentPathogen			= mod:NewTargetNoFilterAnnounce(261440, 2) --Смертоносный патоген
+local warnVirulentPathogen			= mod:NewTargetNoFilterAnnounce(261440, 3) --Смертоносный патоген
 local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2) --Передача жизненной силы
 
 local specWarnWrackingChord			= mod:NewSpecialWarningInterruptCount(268278, "HasInterrupt", nil, nil, 1, 2) --Сокрушающий аккорд
@@ -40,7 +40,7 @@ local timerVirulentPathogenCD		= mod:NewCDCountTimer(15.4, 261440, nil, nil, nil
 local timerDiscordantCadenzaCD		= mod:NewCDCountTimer(23.5, 268306, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестройная каденция (Обстрел) Casting transfer can delay it further since that triggers a 3 second spell lockout+cast time
 local timerWrackingChordCD			= mod:NewCDCountTimer(7.3, 268278, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Сокрушающий аккорд
 
-local yellVirulentPathogen			= mod:NewShortYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
+local yellVirulentPathogen			= mod:NewYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
 local yellVirulentPathogenFades		= mod:NewShortFadesYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
 
 mod:AddRangeFrameOption(6, 261440)

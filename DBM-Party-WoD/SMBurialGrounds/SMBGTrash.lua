@@ -41,7 +41,7 @@ local timerVoidEruptionsCD					= mod:NewCDNPTimer(19.1, 394512, nil, nil, nil, 2
 local timerNecroticBurstCD					= mod:NewCDNPTimer(19.4, 156718, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Некротический взрыв
 local timerBodySlamCD						= mod:NewCDNPTimer(14.5, 153395, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мощный удар
 
-local yellShadowWordFrailty					= mod:NewShortYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
+local yellShadowWordFrailty					= mod:NewYell(152819, nil, nil, nil, "YELL") --Слово Тьмы: Хрупкость
 
 mod:AddSetIconOption("SetIconOnShadowWordFrailty", 152819, true, 0, {8})
 

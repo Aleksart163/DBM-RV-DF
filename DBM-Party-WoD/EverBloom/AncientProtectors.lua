@@ -61,10 +61,11 @@ if (wowToc >= 100200) then
 	local warnNoxiousCharge								= mod:NewTargetNoFilterAnnounce(427510, 3)
 
 	local specWarnNoxiousCharge							= mod:NewSpecialWarningYou(427510, nil, nil, nil, 3, 2)
-	local yellNoxiousCharge								= mod:NewShortYell(427510)
 
 	local timerNoxiousChargeCD							= mod:NewCDCountTimer(16.2, 427510, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
+	local yellNoxiousCharge								= mod:NewYell(427510, nil, nil, nil, "YELL")
+	
 	mod.vb.revitalizeCount = 0
 	mod.vb.torrentialCount = 0
 	mod.vb.bloomCount = 0

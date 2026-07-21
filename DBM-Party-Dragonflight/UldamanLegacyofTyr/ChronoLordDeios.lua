@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2479, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(184125)
 mod:SetEncounterID(2559)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20230510000000)
---mod:SetMinSyncRevision(20211203000000)
+mod:SetHotfixNoticeRev(20260714000000)
+--mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -47,8 +47,8 @@ local timerWingBuffetCD							= mod:NewCDCountTimer(23, 376049, DBM_COMMON_L.PUS
 local timerTimeSinkCD							= mod:NewCDTimer(15.7, 377405, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON) --Пожиратель времени
 local timerSandBreathCD							= mod:NewCDCountTimer(18.1, 375727, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание песка
 
-local yellSandBreath							= mod:NewShortYell(375727, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Дыхание песка
-local yellTimeSink								= mod:NewShortYell(377405, nil, nil, nil, "YELL") --Пожиратель времени
+local yellSandBreath							= mod:NewYell(375727, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Дыхание песка
+local yellTimeSink								= mod:NewYell(377405, nil, nil, nil, "YELL") --Пожиратель времени
 
 mod:AddRangeFrameOption(5, 377405)
 mod:AddSetIconOption("SetIconOnSandBreath", 375727, true, 0, {8}) --Дыхание песка

@@ -48,7 +48,6 @@ local specWarnThrowArtifact			= mod:NewSpecialWarningDodge(201176, nil, nil, nil
 local specWarnRavensDive			= mod:NewSpecialWarningDodge(214001, nil, nil, nil, 2, 2)
 local specWarnOverDetonation		= mod:NewSpecialWarningRun(221688, nil, nil, nil, 4, 2)
 local specWarnSoulEchos				= mod:NewSpecialWarningMoveAway(194966, nil, nil, nil, 1, 2)
-local yellArrowBarrage				= mod:NewYell(200343)
 local specWarnSpiritBlast			= mod:NewSpecialWarningInterrupt(196883, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDarkMending			= mod:NewSpecialWarningInterrupt(225573, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSoulBlast				= mod:NewSpecialWarningInterrupt(199663, "HasInterrupt", nil, nil, 1, 2)
@@ -72,6 +71,8 @@ local timerDrinkPotionCD			= mod:NewCDNPTimer(21.8, 200784, nil, nil, nil, 5)
 local timerSicBatsCD				= mod:NewCDNPTimer(21.8, 203163, nil, nil, nil, 5)
 local timerCoupdeGraceCD			= mod:NewCDNPTimer(8.4, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerRavensDiveCD				= mod:NewCDNPTimer(16, 214001, nil, nil, nil, 3)
+
+local yellArrowBarrage				= mod:NewYell(200343, nil, nil, nil, "YELL")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 

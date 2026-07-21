@@ -29,29 +29,29 @@ mod:RegisterEventsInCombat(
 --]]
 --https://www.warcraftlogs.com/reports/q8cZgTfWkBRp3vFy#fight=last&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20409261%20or%20ability.id%20%3D%20414535%20or%20ability.id%20%3D%20409456%20or%20ability.id%20%3D%20409635%20or%20ability.id%20%3D%20414184%20or%20ability.id%20%3D%20414652)%20and%20type%20%3D%20%22begincast%22%0A%20or%20(ability.id%20%3D%20409456%20or%20ability.id%20%3D%20414177)%20and%20type%20%3D%20%22removebuff%22%0A%20or%20type%20%3D%20%22dungeonencounterstart%22%20or%20type%20%3D%20%22dungeonencounterend%22&view=events
 --NOTES: Crushing Onslaught seems utterly passive and not much point in warning for it really
-local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4) --Истребляющий взрыв
+local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4, nil, nil, 174716) --Истребляющий взрыв (Бомба)
 local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной импульс
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
 local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Катастрофическое истребление
 
 local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, nil, 1, 4) --Трансцендентность временной линии (Повышенный урон)
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
-local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, nil, nil, 3, 4) --Истребляющий взрыв
+local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, 174716, nil, 3, 4) --Истребляющий взрыв (Бомба)
 local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoak(414535, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Камнекрушащий шквал
 local specWarnPulvBreath						= mod:NewSpecialWarningDodge(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
-local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв
+local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв (Бомба)
 local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 
-local yellExtinctionBlast						= mod:NewShortYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
-local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв
+local yellExtinctionBlast						= mod:NewYell(409261, 174716, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
+local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, 174716, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
 
 mod:AddInfoFrameOption(410719, true)
-mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв
+mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв (Бомба)
 
 mod.vb.surgeCount = 0
 

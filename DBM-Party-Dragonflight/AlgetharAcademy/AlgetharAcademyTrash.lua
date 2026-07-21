@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AlgetharAcademyTrash", "DBM-Party-Dragonflight", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426062327")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod:SetZone(2526)
 
@@ -24,12 +24,12 @@ mod:RegisterEvents(
 --TODO: add https://www.wowhead.com/spell=386026/surge ?
 local warnManavoid								= mod:NewCastAnnounce(388863, 3)
 local warnMonotonousLecture						= mod:NewCastAnnounce(388392, 2)
-local warnViciousAmbush							= mod:NewTargetAnnounce(388984, 3)
+local warnViciousAmbush							= mod:NewTargetAnnounce(388984, 3) --Жестокая засада
 local warnCalloftheFlock						= mod:NewCastAnnounce(377389, 3) --Призыв стаи
 local warnMysticBlast							= mod:NewCastAnnounce(396812, 3) --Потусторонний взрыв
 local warnAstralWhirlwind						= mod:NewCastAnnounce(387910, 3)
-local warnAstralBomb							= mod:NewCastAnnounce(387843, 3)
-local warnAstralBombTargets						= mod:NewTargetAnnounce(387843, 3)
+local warnAstralBomb							= mod:NewCastAnnounce(387843, 3) --Астральная бомба (Бомба)
+local warnAstralBombTargets						= mod:NewTargetAnnounce(387843, 3, nil, nil, 174716) --Астральная бомба (Бомба)
 
 local specWarnBronzeDragonflight				= mod:NewSpecialWarning("BronzeDragonflight", nil, nil, nil, 1, 2) --Брошь союзника бронзовых драконов 389512 (Скорость усилена)
 local specWarnBlueDragonflight					= mod:NewSpecialWarning("BlueDragonflight", nil, nil, nil, 1, 2) --Брошь союзника синих драконов 389521 (Искусность усилена)
@@ -41,8 +41,8 @@ local specWarnDetonateSeeds						= mod:NewSpecialWarningDodge(390915, nil, nil, 
 local specWarnDeadlyWinds						= mod:NewSpecialWarningDodge(378003, nil, nil, nil, 2, 2) --Смертоносный ветер
 local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, nil, 2, 2) --Дыхание разлома
 local specWarnGust								= mod:NewSpecialWarningDodge(377383, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Порыв
-local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, nil, 1, 2)--You warning not move away, because some strategies involve actually baiting charge into melee instead of out
-local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, nil, nil, 2, 2)
+local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, nil, 1, 2) --Жестокая засада You warning not move away, because some strategies involve actually baiting charge into melee instead of out
+local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, 174716, nil, 2, 2) --Астральная бомба (Бомба)
 local specWarnMonotonousLecture					= mod:NewSpecialWarningInterrupt(388392, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticBlast						= mod:NewSpecialWarningInterrupt(396812, "HasInterrupt", nil, nil, 1, 2) --Потусторонний взрыв
 local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasInterrupt", nil, nil, 1, 2) --Призыв стаи
@@ -53,15 +53,15 @@ local timerCalloftheFlockCD						= mod:NewCDNPTimer(20, 377389, nil, nil, nil, 4
 local timerDeadlyWindsCD						= mod:NewCDNPTimer(10.9, 378003, nil, nil, nil, 3) --Смертоносный ветер
 local timerExpelIntruders						= mod:NewCastTimer(5.5, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3)
+local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3) --Жестокая засада
 local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
-local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, nil, nil, nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
+local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, 174716, nil, nil, 3) --Астральная бомба (Бомба) These mob packs are heavily stunned and CD can be delayed by stuns
 local timerVicousLungeCD						= mod:NewCDNPTimer(11.4, 389054, nil, nil, nil, 3)
 
 local yellGust									= mod:NewYell(377383, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Порыв
-local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL")
-local yellAstralBomb							= mod:NewYell(387843, nil, nil, nil, "YELL")
-local yellAstralBombFades						= mod:NewShortFadesYell(387843, nil, nil, nil, "YELL")
+local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL") --Жестокая засада
+local yellAstralBomb							= mod:NewYell(387843, 174716, nil, nil, "YELL") --Астральная бомба (Бомба)
+local yellAstralBombFades						= mod:NewShortFadesYell(387843, 174716, nil, nil, "YELL") --Астральная бомба (Бомба)
 
 mod:AddBoolOption("AGBuffs", true)
 

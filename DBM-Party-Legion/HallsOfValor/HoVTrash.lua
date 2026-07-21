@@ -58,9 +58,9 @@ local timerSanctifyCD				= mod:NewCDNPTimer(25, 192158, nil, nil, nil, 3, nil, D
 local timerRP						= mod:NewRPTimer(28.5)
 
 local yellAegis						= mod:NewYell(193783, nil, nil, nil, "YELL") --Эгида Агграмара
-local yellCrackle					= mod:NewShortYell(199805, nil, nil, nil, "YELL") --Разряд
-local yellCracklingStorm			= mod:NewShortYell(198892, nil, nil, nil, "YELL")
-local yellThunderstrike				= mod:NewShortYell(215430, nil, nil, nil, "YELL")
+local yellCrackle					= mod:NewYell(199805, nil, nil, nil, "YELL") --Разряд
+local yellCracklingStorm			= mod:NewYell(198892, nil, nil, nil, "YELL")
+local yellThunderstrike				= mod:NewYell(215430, nil, nil, nil, "YELL")
 
 mod:AddBoolOption("AGSkovaldTrash", true)
 mod:AddBoolOption("AGStartOdyn", true)
