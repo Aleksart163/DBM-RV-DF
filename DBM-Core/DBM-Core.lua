@@ -736,7 +736,7 @@ private.sendSync = sendSync]]
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
---[[local function sendGuildSync(protocol, prefix, msg)
+local function sendGuildSync(protocol, prefix, msg)
 	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -748,9 +748,9 @@ private.sendSync = sendSync]]
 		end
 	end
 end
-private.sendGuildSync = sendGuildSync]]
+private.sendGuildSync = sendGuildSync
 
-local function sendGuildSync(protocol, prefix, msg)
+--[[local function sendGuildSync(protocol, prefix, msg)
 	if IsInGuild() and (dbmIsEnabled or prefix == "V" or prefix == "H") then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -760,14 +760,14 @@ local function sendGuildSync(protocol, prefix, msg)
 		end
 	end
 end
-private.sendGuildSync = sendGuildSync
+private.sendGuildSync = sendGuildSync]]
 
 ---Custom sync function that should only be used for user generated sync messages
 ---@param protocol number
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
--local function sendLoggedSync(protocol, prefix, msg)
+local function sendLoggedSync(protocol, prefix, msg)
 	if dbmIsEnabled then
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
