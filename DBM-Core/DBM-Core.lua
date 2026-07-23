@@ -672,7 +672,7 @@ end
 ---@param prefix string
 ---@param msg any
 --Прошляп Мурчаля
---[[local function sendSync(protocol, prefix, msg)
+local function sendSync(protocol, prefix, msg)
 	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -700,9 +700,9 @@ end
 		end
 	end
 end
-private.sendSync = sendSync]]
+private.sendSync = sendSync
 
-local function sendSync(protocol, prefix, msg)
+--[[local function sendSync(protocol, prefix, msg)
 	if dbmIsEnabled or prefix == "V" or prefix == "H" then--Only show version checks if force disabled, nothing else
 		msg = msg or ""
 		local fullname = playerName .. "-" .. normalizedPlayerRealm
@@ -729,7 +729,7 @@ local function sendSync(protocol, prefix, msg)
 		end
 	end
 end
-private.sendSync = sendSync
+private.sendSync = sendSync]]
 
 ---Customized syncing specifically for guild comms
 ---@param protocol number
