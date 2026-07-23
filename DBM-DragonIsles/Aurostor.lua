@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2562, "DBM-DragonIsles", nil, 1205)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240119065317")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(209574)
 mod:SetEncounterID(2828)
 mod:SetReCombatTime(30)
 mod:EnableWBEngageSync()--Enable syncing engage in outdoors
-mod:SetHotfixNoticeRev(20240119000000)
-mod:SetMinSyncRevision(20240119000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 
 mod:RegisterCombat("combat")
 --mod:RegisterCombat("combat_yell", L.Pull)
@@ -19,16 +19,19 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 421260 181089"
 )
 
-local warnCrankyTantrum				= mod:NewCountAnnounce(421059, 3)
+local warnCrankyTantrum					= mod:NewCountAnnounce(421059, 3)
 
-local specWarnGroggyBash				= mod:NewSpecialWarningYou(420895, nil, nil, nil, 1, 2)
-local specWarnPulverizingOutburst		= mod:NewSpecialWarningDodge(420925, nil, nil, nil, 1, 2)
-local specWarnRoarDebuff				= mod:NewSpecialWarningJump(421260, nil, nil, nil, 1, 6)
+local specWarnCrankyTantrum				= mod:NewSpecialWarningDodge(421059, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Приступ раздражения
+local specWarnGroggyBash				= mod:NewSpecialWarningDefensive(420895, nil, nil, nil, 3, 2) --Неуверенный замах
+local specWarnPulverizingOutburst		= mod:NewSpecialWarningDodge(420925, nil, 185824, nil, 2, 2) --Изничтожающий порыв (Взрыв)
+local specWarnRoarDebuff				= mod:NewSpecialWarningJump(421260, nil, nil, nil, 1, 6) --Дремотный рев
 
-local timerGroggyBashCD					= mod:NewCDTimer(32.7, 420895, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerGroggyBashCD					= mod:NewCDTimer(32.7, 420895, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Неуверенный замах
 --local timerPulverizingOutburstCD		= mod:NewAITimer(15.7, 420925, nil, nil, nil, 3)--15-59 is too much variation, would need spell queuing and cast priority to be sorted out
-local timerSlumberingRoarCD				= mod:NewCDTimer(70.9, 421260, nil, nil, nil, 2)--Small sample
-local timerCrankyTantrumCD				= mod:NewCDTimer(27.9, 421059, nil, nil, nil, 3)--27.9-43.8
+local timerSlumberingRoarCD				= mod:NewCDTimer(70.9, 421260, nil, nil, nil, 2) --Дремотный рев Small sample
+local timerCrankyTantrumCD				= mod:NewCDTimer(27.9, 421059, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Приступ раздражения 27.9-43.8
+
+local yellGroggyBash					= mod:NewYell(420895, nil, nil, nil, "YELL") --Неуверенный замах
 
 mod.vb.tantrumCount = 0
 
@@ -39,6 +42,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnGroggyBash:Show()
 			specWarnGroggyBash:Play("carefly")
+			yellGroggyBash:Yell()
 		end
 	elseif spellId == 420925 then
 		specWarnPulverizingOutburst:Show()
@@ -49,6 +53,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 421059 then
 		self.vb.tantrumCount = self.vb.tantrumCount + 1
 		warnCrankyTantrum:Show(self.vb.tantrumCount)
+		if self.vb.tantrumCount == 1 then
+			specWarnCrankyTantrum:Show()
+			specWarnCrankyTantrum:Play("watchstep")
+		end
 	end
 end
 
