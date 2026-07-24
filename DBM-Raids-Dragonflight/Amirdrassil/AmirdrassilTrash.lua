@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AmirdrassilTrash", "DBM-Raids-Dragonflight", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240207092305")
+mod:SetRevision("20260630000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -17,18 +17,19 @@ mod:RegisterEvents(
 --TODO, inferno heart spread
 local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, nil, 167180) --Бомба пламени Тьмы (Бомбы)
 local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
-local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee")
+local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee") --Заряженный Тьмой удар
 
 local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2) --Сердце Преисподней
 local specWarnInfernoHeartDispel			= mod:NewSpecialWarningDispel(425388, "RemoveCurse", nil, nil, 1, 2) --Сердце Преисподней
 local specWarnShadowflameBomb				= mod:NewSpecialWarningMoveAway(425300, nil, 174716, nil, 1, 2) --Бомба пламени Тьмы (Бомба)
-local specWarnChargedStomp					= mod:NewSpecialWarningDodge(425149, "Melee", nil, nil, 4, 2)
-local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM_COMMON_L.BOMBING, 2, 2)
-local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2)
+local specWarnChargedStomp					= mod:NewSpecialWarningRun(425149, "Melee", 185824, nil, 4, 2) --Заряженная поступь (Взрыв)
+local specWarnChargedStomp2					= mod:NewSpecialWarningDodge(425149, "-Melee", 185824, nil, 2, 2) --Заряженная поступь (Взрыв)
+local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Перьевая бомба (Обстрел)
+local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
+local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
-local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3)--CD for it starting after RP starts
-local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5)--How long it's active and when not to come up
+local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3) --Перьевая бомба (Обстрел) CD for it starting after RP starts
+local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5) --Перьевая бомба (Обстрел) How long it's active and when not to come up
 
 local yellShadowflameBomb					= mod:NewShortYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
 local yellShadowflameBombFades				= mod:NewShortFadesYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
@@ -45,9 +46,14 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 425995 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnTranquility:Show(args.sourceName)
 		specWarnTranquility:Play("kickcast")
-	elseif spellId == 425149 and self:AntiSpam(5, 2) then
-		specWarnChargedStomp:Show()
-		specWarnChargedStomp:Play("justrun")
+	elseif spellId == 425149 and self:AntiSpam(3, "ChargedStomp") then
+		if self:IsMelee() then
+			specWarnChargedStomp:Show()
+			specWarnChargedStomp:Play("justrun")
+		else
+			specWarnChargedStomp2:Show()
+			specWarnChargedStomp2:Play("justrun")
+		end
 	end
 end
 

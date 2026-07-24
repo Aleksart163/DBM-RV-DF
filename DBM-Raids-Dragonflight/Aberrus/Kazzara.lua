@@ -59,6 +59,9 @@ mod.vb.riftIcon = 1
 mod.vb.rayCount = 0
 mod.vb.hellCount = 0
 mod.vb.wingsCount = 0
+--Лучи жестокой боли
+local raysofAnguishNormalTimers = {24, 32}
+local raysofAnguishHeroicTimers = {23.2, 34, 32.8}
 --Ужасные разломы
 local dreadRiftsMythicTimers = {7, 34, 34, 33, 35, 32.5} --Первые 6 точно, дальше на проверке
 
@@ -83,8 +86,13 @@ function mod:OnCombatStart(delay)
 	timerTerrorClawsCD:Start(3.4)
 	timerDreadRiftsCD:Start(7, 1)
 	timerWingsofExtinctionCD:Start(14.3, 1)
-	timerRaysofAnguishCD:Start(24, 1)
 	timerHellbeamCD:Start(29.2, 1)
+	if self:IsHeroic() then
+		timerRaysofAnguishCD:Start(23.2, 1)
+	else
+		timerRaysofAnguishCD:Start(24, 1)
+	end
+		
 end
 
 function mod:SPELL_CAST_START(args)
@@ -110,8 +118,13 @@ function mod:SPELL_CAST_START(args)
 		timerDreadRiftsCD:Start(timer, self.vb.riftsCount+1)
 	elseif spellId == 407069 then --Лучи жестокой боли
 		self.vb.rayCount = self.vb.rayCount + 1
-	--	timerRaysofAnguishCD:Start(nil, self.vb.rayCount+1)
-		timerRaysofAnguishCD:Start(self:IsEasy() and 33 or 34, self.vb.rayCount+1) --В обычке 2 каст на 1 сек раньше, дальше хз. В мифике 3 каст может быть на 1 сек раньше
+		local timer
+		if self:IsNormal() then
+			timer = raysofAnguishNormalTimers[self.vb.rayCount+1] or 33
+		else
+			timer = raysofAnguishHeroicTimers[self.vb.rayCount+1] or 34
+		end
+		timerRaysofAnguishCD:Start(timer, self.vb.rayCount+1)
 	elseif spellId == 400430 then
 		self.vb.hellCount = self.vb.hellCount + 1
 		specWarnHellbeam:Show()

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2564, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240208053057")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(209333)
 mod:SetEncounterID(2820)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20231116000000)
-mod:SetMinSyncRevision(20231116000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -31,42 +31,45 @@ mod:RegisterEventsInCombat(
 --TODO, maybe nameplate aura timers for https://www.wowhead.com/ptr-2/spell=422053/shadow-spines if it's not spam cast?
 --Stage One: Garden of Despair
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27467))
-local warnFlamingPestilence							= mod:NewCountAnnounce(421898, 3)
-local warnShadowSpines								= mod:NewCountAnnounce(422053, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(422053))
-local warnControlledBurn							= mod:NewTargetCountAnnounce(421972, 3, nil, nil, 167180, nil, nil, nil, true) --Контролируемое горение
-local warnDreadfireBarrage							= mod:NewStackAnnounce(424352, 2, nil, "Tank|Healer")
+local warnFlamingPestilence							= mod:NewCountAnnounce(421898, 3) --Пылающий мор
+local warnShadowSpines								= mod:NewCountAnnounce(422053, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(422053)) --Темные шипы
+local warnControlledBurn							= mod:NewTargetCountAnnounce(421972, 3, nil, nil, 167180, nil, nil, nil, true) --Контролируемое горение (Бомбы)
+local warnDreadfireBarrage							= mod:NewStackAnnounce(424352, 2, nil, "Tank|Healer", 216043) --Залп жуткого пламени (Жуткое пламя)
 local warnFlamingSap								= mod:NewTargetAnnounce(425820, 2) --Пылающая смола
 
+local specWarnDreadfireBarrage						= mod:NewSpecialWarningDefensive(424352, nil, 216043, nil, 3, 2) --Залп жуткого пламени (Жуткое пламя)
+local specWarnDreadfireBarrageStack					= mod:NewSpecialWarningStack(424352, nil, 5, 216043, nil, 3, 2) --Залп жуткого пламени (Жуткое пламя)
+local specWarnDreadfireBarrageTaunt					= mod:NewSpecialWarningTaunt(424352, nil, 216043, nil, 3, 2) --Залп жуткого пламени (Жуткое пламя)
 local specWarnControlledBurn						= mod:NewSpecialWarningYou(421972, nil, 174716, nil, 1, 2) --Контролируемое горение (Бомба)
-local specWarnDreadfireBarrage						= mod:NewSpecialWarningTaunt(424352, nil, 120360, nil, 1, 2)
-local specWarnTorturedScream						= mod:NewSpecialWarningCount(422026, nil, 31295, nil, 2, 2)
-local specWarnShadowflameCleave						= mod:NewSpecialWarningDodgeCount(422039, nil, nil, nil, 2, 2)
-local specWarnBlazingPollen							= mod:NewSpecialWarningInterruptCount(425816, "HasInterrupt", nil, nil, 1, 2, 4)
+local specWarnTorturedScream						= mod:NewSpecialWarningCount(422026, nil, nil, nil, 2, 2) --Крик агонии
+local specWarnShadowflameCleave						= mod:NewSpecialWarningDodge(422039, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Рассекающий удар пламени Тьмы (Фронталка)
+local specWarnBlazingPollen							= mod:NewSpecialWarningInterruptCount(425816, "HasInterrupt", nil, nil, 1, 2, 4) --Пламенная пыльца
 local specWarnFlamingSap							= mod:NewSpecialWarningMoveAway(425820, nil, nil, nil, 1, 2, 4) --Пылающая смола
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(422023, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(422023, nil, nil, nil, 1, 8) --Выжженная Тьмой земля
 
-local timerFlamingPestilenceCD						= mod:NewCDCountTimer(34.7, 421898, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1)
+local timerFlamingPestilenceCD						= mod:NewCDCountTimer(34.7, 421898, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --Пылающий мор (Адды)
 local timerControlledBurnCD							= mod:NewCDCountTimer(49, 421972, 167180, nil, nil, 3) --Контролируемое горение (Бомбы)
-local timerDreadfireBarrageCD						= mod:NewCDCountTimer(21.5, 424352, 120360, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Shortname Barrage
-local timerTorturedScreamCD							= mod:NewCDCountTimer(11.8, 422026, 31295, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--Scream shorttext
-local timerShadowflameCleaveCD						= mod:NewCDCountTimer(49, 422039, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3)
-local timerBlazingPollenCD							= mod:NewCDNPTimer(11.8, 425816, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Nameplate only timer
-local timerFlamingSapCD								= mod:NewCDNPTimer(11.8, 425820, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
+local timerDreadfireBarrageCD						= mod:NewCDCountTimer(21.5, 424352, 216043, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Залп жуткого пламени (Жуткое пламя)
+local timerTorturedScreamCD							= mod:NewCDCountTimer(11.8, 422026, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Крик агонии
+local timerShadowflameCleaveCD						= mod:NewCDCountTimer(49, 422039, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Рассекающий удар пламени Тьмы (Фронталка)
+local timerBlazingPollenCD							= mod:NewCDNPTimer(11.8, 425816, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пламенная пыльца Nameplate only timer
+local timerFlamingSapCD								= mod:NewCDNPTimer(11.8, 425820, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Пылающая смола
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("SetIconOnControlledBurn", 421972, true, 0, {1, 2, 3, 4}) --Контролируемое горение
 mod:AddSetIconOption("SetIconOnBlazingTaintedTreant", -28350, true, 5, {8, 7, 6, 5})
 --Intermission: Frenzied Growth
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27475))
-local warnEmberCharred								= mod:NewCountAnnounce(421038, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(421038))
-local warnUprootedAgony								= mod:NewSpellAnnounce(421840, 1)
-local warnUprootedAgonyOver							= mod:NewEndAnnounce(421840, 2)
+local warnEmberCharred								= mod:NewCountAnnounce(421038, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(421038)) --Ожог углями
+local warnUprootedAgonyOver							= mod:NewEndAnnounce(421840, 1) --Выкорчеванная агония
 
-local specWarnDoomCultivation						= mod:NewSpecialWarningDodgeCount(421013, "Melee", nil, nil, 2, 2)--Prevent melee dying if they tunnel boss too long
+local specWarnUprootedAgony							= mod:NewSpecialWarningSpell(421840, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Выкорчеванная агония (Повышенный урон)
+local specWarnDoomCultivation						= mod:NewSpecialWarningDodge(421013, "Melee", nil, nil, 2, 2) --Роковой рост Prevent melee dying if they tunnel boss too long
 
-local timerUprootAgonyCD							= mod:NewBuffActiveTimer(20, 421840, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerDoomCultivationCD						= mod:NewStageCountCycleTimer(49, 421013, nil, nil, nil, 6)
+local timerUprootAgonyCD							= mod:NewBuffActiveTimer(20, 421840, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Выкорчеванная агония (Повышенный урон)
+local timerDoomCultivationCD						= mod:NewStageCountCycleTimer(49, 421013, nil, nil, nil, 6) --Роковой рост
 
+local yellDreadfireBarrage							= mod:NewYell(424352, 216043, nil, nil, "YELL") --Залп жуткого пламени (Жуткое пламя)
 local yellControlledBurn							= mod:NewShortPosYell(421972, 174716, nil, nil, "YELL") --Контролируемое горение (Бомба)
 local yellControlledBurnFades						= mod:NewIconFadesYell(421972, 174716, nil, nil, "YELL") --Контролируемое горение (Бомба)
 local yellFlamingSap								= mod:NewShortYell(425820, nil, nil, nil, "YELL") --Пылающая смола
@@ -205,7 +208,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 422039 then
 		self.vb.cleaveCount = self.vb.cleaveCount + 1
-		specWarnShadowflameCleave:Show(self.vb.cleaveCount)
+		specWarnShadowflameCleave:Show()
 		specWarnShadowflameCleave:Play("shockwave")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.cleaveCount+1)
 		if timer then
@@ -214,7 +217,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 421013 then
 		self:SetStage(2)
 		self.vb.doomCount = self.vb.doomCount + 1
-		specWarnDoomCultivation:Show(self.vb.doomCount)
+		specWarnDoomCultivation:Show()
 		specWarnDoomCultivation:Play("runout")
 		timerFlamingPestilenceCD:Stop()
 		timerControlledBurnCD:Stop()
@@ -303,7 +306,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		--Applies 5 stacks at a time (then just refreshes after that)
 		--so this should effectively warn once per barrage
-		if amount % 5 == 0 then
+		if amount == 1 then
+			if args:IsPlayer() then
+				specWarnDreadfireBarrage:Show()
+				specWarnDreadfireBarrage:Play("defensive")
+				yellDreadfireBarrage:Yell()
+			end
+		elseif amount % 5 == 0 then
 			if args:IsPlayer() then--This basically can swap every 1-2 stacks based on it's cooldown.
 				warnDreadfireBarrage:Show(args.destName, amount)
 			else
@@ -313,19 +322,22 @@ function mod:SPELL_AURA_APPLIED(args)
 					remaining = expireTime-GetTime()
 				end
 				if (not remaining or remaining and remaining < 22) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-					specWarnDreadfireBarrage:Show(args.destName)
-					specWarnDreadfireBarrage:Play("tauntboss")
+					specWarnDreadfireBarrageTaunt:Show(args.destName)
+					specWarnDreadfireBarrageTaunt:Play("tauntboss")
 				else
 					warnDreadfireBarrage:Show(args.destName, amount)
 				end
 			end
+		else
+			warnDreadfireBarrage:Show(args.destName, amount)
 		end
 	elseif spellId == 421038 then
 		if args:IsPlayer() then
 			warnEmberCharred:Show(args.amount or 1)
 		end
 	elseif spellId == 421840 then
-		warnUprootedAgony:Show()
+		specWarnUprootedAgony:Show()
+		specWarnUprootedAgony:Play("dpsmore")
 		timerUprootAgonyCD:Start()
 	elseif spellId == 425820 then
 		warnFlamingSap:CombinedShow(0.3, args.destName)

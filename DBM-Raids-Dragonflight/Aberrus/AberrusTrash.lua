@@ -7,7 +7,7 @@ mod:SetMinSyncRevision(20240614070000)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 409612 406911 411755 409473 406282",
+	"SPELL_CAST_START 409612 406911 411755 409473 406282 406854",
 	"SPELL_CAST_SUCCESS 409473",
 	"SPELL_AURA_APPLIED 411808 413785 409576",
 --	"SPELL_AURA_APPLIED_DOSE",
@@ -26,6 +26,7 @@ local warnLavaPurge							= mod:NewCastAnnounce(409473, 2) --Лавовое ис
 local warnDreamBurst						= mod:NewTargetNoFilterAnnounce(406282, 4) --Усыпляющий взрыв
 local warnSlimeInjection					= mod:NewTargetNoFilterAnnounce(411808, 2) --Разбрызгивание слизи
 
+local specWarnArcaneChaos					= mod:NewSpecialWarningDodge(406854, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Чародейский хаос
 local specWarnDreamBurst					= mod:NewSpecialWarningMoveAway(406282, nil, nil, nil, 4, 2) --Усыпляющий взрыв
 local specWarnLavaPurge						= mod:NewSpecialWarningDodge(409473, nil, nil, nil, 2, 2) --Лавовое истребление
 local specWarnEradicate						= mod:NewSpecialWarningDodge(411755, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Истребление (Фронталка)
@@ -87,6 +88,9 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(args.sourceGUID, "DreamBurstTarget", 0.1, 2)
 	elseif spellId == 409473 and self:AntiSpam(3, "LavaPurge1") then --Лавовое истребление
 		warnLavaPurge:Show()
+	elseif spellId == 406854 then --Чародейский хаос
+		specWarnArcaneChaos:Show()
+		specWarnArcaneChaos:Play("watchstep")
 	end
 end
 

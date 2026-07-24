@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2553, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240315041745")
+mod:SetRevision("20260630000000")
 mod:SetCreatureID(208445)
 mod:SetEncounterID(2731)
 mod:SetUsedIcons(6, 7, 8)
-mod:SetHotfixNoticeRev(20240315000000)
-mod:SetMinSyncRevision(20231115000000)
+mod:SetHotfixNoticeRev(20260714000000)
+mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")

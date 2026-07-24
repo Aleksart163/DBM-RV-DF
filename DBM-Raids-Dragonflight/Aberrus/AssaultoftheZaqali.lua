@@ -54,9 +54,9 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26209))
 local warnHeavyCudgel								= mod:NewStackAnnounce(401258, 2, nil, "Tank|Healer") --Тяжелая дубина
 local warnMagmaMystic								= mod:NewCountAnnounce(397383, 3) --Раскаленный барьер
 local warnWallClimber								= mod:NewCountAnnounce("ej26221", 2, 163789, false, 2)
-local warnHeavyCudgel2								= mod:NewTargetNoFilterAnnounce(401258, 4) --Тяжелая дубина
 
 local specWarnHeavyCudgel							= mod:NewSpecialWarningDefensive(401258, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Тяжелая дубина
+local specWarnHeavyCudgel2							= mod:NewSpecialWarningDodge(401258, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Тяжелая дубина (Фронталка)
 local specWarnHeavyCudgelStack						= mod:NewSpecialWarningStack(401258, nil, 2, nil, nil, 1, 6) --Тяжелая дубина
 local specWarnHeavyCudgelSwap						= mod:NewSpecialWarningTaunt(401258, nil, nil, nil, 1, 2) --Тяжелая дубина
 local specWarnDevastatingLeap						= mod:NewSpecialWarningDodgeCount(408959, nil, 67382, nil, 2, 2) --Разрушительный прыжок (Прыжок)
@@ -99,7 +99,9 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26683))
 local warnFlamingCudgel								= mod:NewStackAnnounce(410351, 2, nil, "Tank|Healer") --Горящая дубина
 
 local specWarnCatastrophicSlam						= mod:NewSpecialWarningCount(410516, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 3) --Катастрофический удар
-local specWarnFlamingCudgel							= mod:NewSpecialWarningDefensive(410351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Горящая дубина Count because it's hybrid warning
+local specWarnFlamingCudgel							= mod:NewSpecialWarningDefensive(410351, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Горящая дубина (Фронталка)
+local specWarnFlamingCudgel2						= mod:NewSpecialWarningDodge(410351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Горящая дубина (Фронталка)
+local specWarnFlamingCudgel3						= mod:NewSpecialWarningSpell(410351, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Горящая дубина (Обстрел)
 local specWarnFlamingCudgelStack					= mod:NewSpecialWarningStack(410351, nil, 2, nil, nil, 1, 6) --Горящая дубина
 local specWarnFlamingCudgelSwap						= mod:NewSpecialWarningTaunt(410351, nil, nil, nil, 1, 2) --Горящая дубина
 
@@ -137,11 +139,12 @@ mod.vb.wallClimberCount = 0
 function mod:HeavyCudgelTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		specWarnHeavyCudgel:Show(self.vb.cudgelCount+1)
+		specWarnHeavyCudgel:Show()
 		specWarnHeavyCudgel:Play("defensive")
 		yellHeavyCudgel:Yell()
 	else
-		warnHeavyCudgel2:Show(targetname)
+		specWarnHeavyCudgel2:Show()
+		specWarnHeavyCudgel2:Play("watchstep")
 	end
 end
 
@@ -261,12 +264,15 @@ function mod:SPELL_CAST_START(args)
 			timerVigorousGaleCD:Start(63.1, self.vb.galeCount+1)--63.1-65.5
 		end
 	elseif spellId == 410351 then
-		specWarnFlamingCudgel:Show(self.vb.cudgelCount+1)
 		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnFlamingCudgel:Show()
 			specWarnFlamingCudgel:Play("defensive")
 			yellHeavyCudgel:Yell()
 		else
-			specWarnFlamingCudgel:Play("scatter")
+			specWarnFlamingCudgel2:Show()
+			specWarnFlamingCudgel2:Play("watchstep")
+			specWarnFlamingCudgel3:Schedule(2)
+			specWarnFlamingCudgel3:ScheduleVoice(2, "scatter")
 		end
 		--Timers moved to success event
 	elseif spellId == 397386 then
