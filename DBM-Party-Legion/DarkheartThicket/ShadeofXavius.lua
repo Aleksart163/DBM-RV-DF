@@ -7,7 +7,7 @@ mod:SetEncounterID(1839)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
-mod:SetUsedIcons(2, 1)
+mod:SetUsedIcons(8, 7)
 mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
@@ -28,25 +28,29 @@ mod:RegisterEventsInCombat(
  or (ability.id = 200182 or ability.id = 200238) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnWakingNightmare			= mod:NewTargetAnnounce(200243, 3)
-local warnParanoia					= mod:NewTargetAnnounce(200289, 3)
-local warnApocNightmare				= mod:NewSpellAnnounce(200050, 4)
-local warnFeedOnTheWeak				= mod:NewTargetNoFilterAnnounce(200238, 2)
+local warnWakingNightmare			= mod:NewTargetAnnounce(200243, 3, nil, nil, 193069) --Кошмар наяву (Кошмары)
+local warnParanoia					= mod:NewTargetAnnounce(200289, 3, nil, nil, 315927) --Усугубляющаяся паранойя (Паранойя)
+local warnFeedOnTheWeak				= mod:NewTargetNoFilterAnnounce(200238, 4) --Пожирание слабых
 
-local specWarnFesteringRip			= mod:NewSpecialWarningDispel(200182, "RemoveMagic", nil, 2, 1, 2)
-local specWarnWakingNightmare		= mod:NewSpecialWarningMoveTo(200243, nil, nil, nil, 1, 2)
-local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289, nil, nil, nil, 1, 2)
+local specWarnApocNightmare			= mod:NewSpecialWarningDefensive(200050, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Апокалиптический Кошмар
+local specWarnFeedOnTheWeak			= mod:NewSpecialWarningDefensive(200238, nil, nil, nil, 3, 2) --Пожирание слабых
+local specWarnFesteringRip			= mod:NewSpecialWarningYou(200182, nil, nil, nil, 1, 2) --Гноящаяся рана
+local specWarnFesteringRip2			= mod:NewSpecialWarningDispel(200182, "RemoveMagic", nil, 2, 1, 2) --Гноящаяся рана
+local specWarnWakingNightmare		= mod:NewSpecialWarningMoveTo(200243, nil, 193069, nil, 4, 2) --Кошмар наяву (Кошмары)
+local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289, nil, 315927, nil, 3, 2) --Усугубляющаяся паранойя (Паранойя)
 
-local timerFesteringRipCD			= mod:NewCDCountTimer(17, 200182, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--17-21
-local timerNightmareBoltCD			= mod:NewCDCountTimer(22.7, 200185, nil, nil, nil, 3)--24.3-36.5
-local timerParanoiaCD				= mod:NewCDCountTimer(22, 200289, nil, nil, nil, 3)--22-34 (200359 matches journal, but better to sync up with debuff for WA keys)
-local timerFeedOnTheWeakCD			= mod:NewCDCountTimer(18.2, 200238, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+local timerApocNightmare			= mod:NewCastTimer(5, 200050, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Апокалиптический Кошмар
+local timerFesteringRipCD			= mod:NewCDCountTimer(17, 200182, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Гноящаяся рана 17-21
+local timerNightmareBoltCD			= mod:NewCDCountTimer(22.7, 200185, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Кошмарная стрела 24.3-36.5
+local timerParanoiaCD				= mod:NewCDCountTimer(22, 200289, 315927, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Усугубляющаяся паранойя (Паранойя) 22-34 (200359 matches journal, but better to sync up with debuff for WA keys)
+local timerFeedOnTheWeakCD			= mod:NewCDCountTimer(18.2, 200238, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Пожирание слабых
 
-local yellWakingNightmare			= mod:NewYell(200243, nil, nil, nil, "YELL")--Yell is standard for grou up
-local yellParanoia					= mod:NewYell(200289, nil, nil, nil, "YELL")--Say is standard for avoid
+local yellFesteringRip				= mod:NewYell(200182, nil, nil, nil, "YELL") --Гноящаяся рана
+local yellWakingNightmare			= mod:NewYell(200243, 193069, nil, nil, "YELL") --Кошмар наяву (Кошмары)
+local yellParanoia					= mod:NewYell(200289, 315927, nil, nil, "YELL") --Усугубляющаяся паранойя (Паранойя)
 
-mod:AddSetIconOption("SetIconOnNightmare", 200243, true, 0, {1})
-mod:AddSetIconOption("SetIconOnParanoia", 200289, true, 0, {2})
+mod:AddSetIconOption("SetIconOnNightmare", 200243, true, 0, {7}) --Кошмар наяву
+mod:AddSetIconOption("SetIconOnParanoia", 200289, true, 0, {8}) --Усугубляющаяся паранойя
 
 mod.vb.festerCount = 0
 mod.vb.nightmareCount = 0
@@ -101,17 +105,19 @@ end
 --<1631.04 22:47:56> [CLEU] SPELL_CAST_SUCCESS#Creature-0-5770-1466-11160-99192-000021BD9C#Shade of Xavius(78.8%-100.0%)##nil#200359#Induced Paranoia#nil#nil", -- [20174]
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 212834 or spellId == 200185 then--212834 is easy mode non waking nightmare mechanic, 200185 is one with waking nightmare
+	if spellId == 212834 or spellId == 200185 then --Кошмарная стрела 212834 is easy mode non waking nightmare mechanic, 200185 is one with waking nightmare
 		self.vb.nightmareCount = self.vb.nightmareCount + 1
 		--7.2, 26.6, 36.5 (8.6 added), 24.3
 		--6.8, 26.7, 27.9, 32.7 (8.4 added), 27.8
 		--6.9, 26.7, 27.9
 		timerNightmareBoltCD:Start(nil, self.vb.nightmareCount+1)
 		updateAllTimers(self, 4.8)
-	elseif spellId == 200050 then
-		warnApocNightmare:Show()
+	elseif spellId == 200050 then --Апокалиптический Кошмар
+		specWarnApocNightmare:Show()
+		specWarnApocNightmare:Play("defensive")
+		timerApocNightmare:Start()
 		updateAllTimers(self, 5.2)
-	elseif spellId == 200289 then--Slightly faster in CLEU than 200359
+	elseif spellId == 200289 then --Усугубляющаяся паранойя Slightly faster in CLEU than 200359
 		self.vb.paranoiaCount = self.vb.paranoiaCount + 1
 		--27.8, 34, 24.4, 32.8
 		--27.5, 27.9, 32.7, 27.9, 32.7
@@ -123,14 +129,14 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 200182 then
+	if spellId == 200182 then --Гноящаяся рана
 		self.vb.festerCount = self.vb.festerCount + 1
 		--3.5, 21.8, 19.4, 23.1, 24.4, 24.3
 		--3.2, 21.8, 19.4, 21.8, 19.4, 19.3, 21.8, 19.4
 		--3.2, 21.9, 19.3, 21.8, 19.4
 		timerFesteringRipCD:Start(nil, self.vb.festerCount+1)
 		updateAllTimers(self, 2.4)
-	elseif spellId == 200238 then
+	elseif spellId == 200238 then --Пожирание слабых
 		self.vb.feedCount = self.vb.feedCount + 1
 		--16.9, 30.3, 30.5, 30.3
 		--16.6, 30.3, 30.3, 30.3, 30.3
@@ -144,8 +150,14 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 200182 then
-		specWarnFesteringRip:Show(args.destName)
-		specWarnFesteringRip:Play("helpdispel")
+		if args:IsPlayer() then
+			specWarnFesteringRip:Show()
+			specWarnFesteringRip:Play("targetyou")
+			yellFesteringRip:Yell()
+		else
+			specWarnFesteringRip2:Show(args.destName)
+			specWarnFesteringRip2:Play("helpdispel")
+		end
 	elseif spellId == 200243 then
 		if args:IsPlayer() then
 			specWarnWakingNightmare:Show(DBM_COMMON_L.ALLY)
@@ -156,7 +168,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		--CD increased in 10.2, no longer needs to use two icons
 		if self.Options.SetIconOnNightmare then
-			self:SetIcon(args.destName, 1)
+			self:SetIcon(args.destName, 7)
 		end
 	elseif spellId == 200289 then
 		if args:IsPlayer() then
@@ -168,10 +180,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		--CD increased in 10.2, no longer needs to use two icons
 		if self.Options.SetIconOnParanoia then
-			self:SetIcon(args.destName, 2)
+			self:SetIcon(args.destName, 8)
 		end
-	elseif spellId == 200238 and (args:IsPlayer() or self:IsHealer()) then
-		warnFeedOnTheWeak:Show(args.destName)
+	elseif spellId == 200238 then
+		if args:IsPlayer() then
+			specWarnFeedOnTheWeak:Show()
+			specWarnFeedOnTheWeak:Play("defensive")
+		else
+			warnFeedOnTheWeak:Show(args.destName)
+		end
 	end
 end
 

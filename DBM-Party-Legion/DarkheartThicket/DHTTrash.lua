@@ -49,7 +49,8 @@ local specWarnPropellingCharge		= mod:NewSpecialWarningDodge(200768, nil, nil, n
 local specWarnRootBurst				= mod:NewSpecialWarningDodge(201129, nil, nil, nil, 2, 2) --Рост корней
 local specWarnVileMushroom			= mod:NewSpecialWarningDodge(198910, nil, nil, nil, 2, 2) --Злогриб
 local specWarnDreadInfernoFailed	= mod:NewSpecialWarningMoveAway(201399, nil, nil, nil, 1, 2) --Жуткое пекло
-local specWarnBloodAssault			= mod:NewSpecialWarningDefensive(201226, nil, nil, nil, 3, 2) --Кровавая атака (Отталкивание)
+local specWarnBloodAssault			= mod:NewSpecialWarningDefensive(201226, nil, 260292, nil, 3, 2) --Кровавая атака (Рывок)
+local specWarnBloodAssault2			= mod:NewSpecialWarningDodge(201226, nil, 260292, nil, 2, 2) --Кровавая атака (Рывок)
 local specWarnStarShower			= mod:NewSpecialWarningInterrupt(200658, "HasInterrupt", nil, nil, 1, 2) --Звездный дождь
 local specWarnUnnervingScreech		= mod:NewSpecialWarningInterrupt(200630, "HasInterrupt", nil, nil, 1, 2) --Ошеломляющий визг High Priority
 local specWarnDespair				= mod:NewSpecialWarningInterrupt(200642, "HasInterrupt", nil, nil, 1, 2) --Отчаяние
@@ -74,7 +75,7 @@ local timerPropellingChargeCD		= mod:NewCDNPTimer(18.2, 200768, nil, nil, nil, 3
 local timerPoisonSpearCD			= mod:NewCDNPTimer(18.2, 198904, nil, nil, nil, 3) --Отравленное копье 18.2-22
 local timerTormentingEyeCD			= mod:NewCDNPTimer(5.2, 204243, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Истязающий глаз
 local timerBloodBombCD				= mod:NewCDNPTimer(15.7, 201272, nil, nil, nil, 2) --Кровавая бомба
-local timerBloodAssaultCD			= mod:NewCDNPTimer(22.6, 201226, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кровавая атака (Отталкивание)
+local timerBloodAssaultCD			= mod:NewCDNPTimer(22.6, 201226, 260292, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кровавая атака (Рывок)
 local timerBloodMetaCD				= mod:NewCDNPTimer(10.9, 225562, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровавая метаморфоза
 local timerDreadInfernoCD			= mod:NewCDNPTimer(15.8, 201399, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Жуткое пекло
 local timerCurseofIsolationCD		= mod:NewCDNPTimer(15.8, 201839, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Проклятие уединения
@@ -163,6 +164,9 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(3, 5) then
 			specWarnBloodAssault:Show()
 			specWarnBloodAssault:Play("carefly")
+		else
+			specWarnBloodAssault2:Show()
+			specWarnBloodAssault2:Play("watchstep")
 		end
 	elseif spellId == 201839 then
 		timerCurseofIsolationCD:Start(nil, args.sourceGUID)

@@ -28,7 +28,7 @@ local warnShatteredEarth			= mod:NewCountAnnounce(204666, 2) --Расколов�
 local warnThrowTarget				= mod:NewTargetNoFilterAnnounce(204658, 2, nil, nil, 2764) --Сокрушительная хватка (Бросок)
 local warnUproot					= mod:NewCountAnnounce(212786, 2) --Пересадка
 
-local specWarnShatteredEarth		= mod:NewSpecialWarningDefensive(204666, nil, nil, nil, 3, 4) --Расколовшаяся земля
+local specWarnShatteredEarth		= mod:NewSpecialWarningDefensive(204666, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Расколовшаяся земля (АоЕ)
 local specWarnThrow					= mod:NewSpecialWarningDefensive(204611, nil, nil, nil, 3, 4) --Сокрушительная хватка
 local specWarnThrow2				= mod:NewSpecialWarningMoveAway(204658, nil, nil, nil, 4, 2) --Сокрушительная хватка (Бросок)
 local specWarnRoots					= mod:NewSpecialWarningDodge(204574, nil, nil, nil, 2, 2) --Корни-душители
@@ -36,7 +36,7 @@ local specWarnBreath				= mod:NewSpecialWarningDefensive(204667, nil, nil, DBM_C
 local specWarnBreath2				= mod:NewSpecialWarningDodge(204667, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание Кошмара
 local specWarnUproot				= mod:NewSpecialWarningSwitch(212786, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 2) --Пересадка (Адды)
 
-local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Расколовшаяся земля 34-60 (basically same as OG)
+local timerShatteredEarthCD			= mod:NewCDCountTimer(31.6, 204666, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Расколовшаяся земля (АоЕ) 34-60 (basically same as OG)
 local timerCrushingGripCD			= mod:NewCDCountTimer(27.9, 204611, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 5) --Сокрушительная хватка 27.9-36 (basically same as OG)
 local timerRootsCD					= mod:NewCDCountTimer(18.2, 204574, nil, nil, nil, 3) --Корни-душители 18.2-35.1 (basically same as OG)
 local timerBreathCD					= mod:NewCDCountTimer(26.5, 204667, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание Кошмара 26-35 (basically same as OG)

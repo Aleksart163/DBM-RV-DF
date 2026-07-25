@@ -24,16 +24,18 @@ mod:RegisterEventsInCombat(
  or ability.name = "Breath of Corruption" and type = "damage"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnRoar						= mod:NewCountAnnounce(199389, 2)
+local warnRoar						= mod:NewSpellAnnounce(199389, 2) --Сотрясающий землю рык
 
-local specWarnDownDraft				= mod:NewSpecialWarningCount(199345, nil, nil, nil, 2, 2)
-local specWarnBreath				= mod:NewSpecialWarningDodgeCount(191325, "Tank", nil, nil, 1, 2)
+local specWarnDownDraft				= mod:NewSpecialWarningMoveTo(199345, nil, nil, DBM_COMMON_L.PUSHBACK, 4, 2) --Нисходящий поток (Отталкивание)
+local specWarnBreath				= mod:NewSpecialWarningDodge(191325, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание порчи (Фронталка)
+local specWarnFallingRocks			= mod:NewSpecialWarningGTFO(199460, nil, nil, nil, 1, 8) --Каменная осыпь
+
+local timerBreathCD					= mod:NewCDCountTimer(22, 191325, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание порчи (Фронталка) 22/30 alternating? need more logs to confirm
+local timerEarthShakerCD			= mod:NewCDCountTimer(30.3, 199389, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сотрясающий землю рык OLD: 21
+local timerDownDraftCD				= mod:NewCDCountTimer(30.3, 199345, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий поток (Отталкивание) OLD: 30-42 (health based or varaible?)
+local timerDownDraft				= mod:NewCastTimer(9, 199345, DBM_COMMON_L.PUSHBACK, nil, nil, 7, nil, nil, nil, 1, 3) --Нисходящий поток (Отталкивание)
+
 --local yellBreath					= mod:NewYell(199332)
-local specWarnFallingRocks			= mod:NewSpecialWarningGTFO(199460, nil, nil, nil, 1, 8)
-
-local timerBreathCD					= mod:NewCDCountTimer(22, 191325, nil, "Tank", nil, 5)--22/30 alternating? need more logs to confirm
-local timerEarthShakerCD			= mod:NewCDCountTimer(30.3, 199389, nil, nil, nil, 3)--OLD: 21
-local timerDownDraftCD				= mod:NewCDCountTimer(30.3, 199345, nil, nil, nil, 2)--OLD: 30-42 (health based or varaible?)
 
 mod.vb.breathCount = 0
 mod.vb.earthCount = 0
@@ -52,13 +54,14 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 199389 then
 		self.vb.earthCount = self.vb.earthCount + 1
-		warnRoar:Show(self.vb.earthCount)
+		warnRoar:Show()
 		timerEarthShakerCD:Start(nil, self.vb.earthCount+1)
 	elseif spellId == 199345 then
 		self.vb.draftCount = self.vb.draftCount + 1
-		specWarnDownDraft:Show(self.vb.draftCount)
-		specWarnDownDraft:Play("keepmove")
+		specWarnDownDraft:Show(DBM_COMMON_L.BOSS)
+		specWarnDownDraft:Play("movetoboss")
 		timerDownDraftCD:Start(nil, self.vb.draftCount+1)
+		timerDownDraft:Start()
 --	elseif spellId == 191325 then--If they ever enable it in combat log, it'll be this ID
 --		self.vb.breathCount = self.vb.breathCount + 1
 --		specWarnBreath:Show(self.vb.breathCount)
@@ -90,7 +93,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 199332 then--Target scanning not an option, boss wipes target as seen above
 		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnBreath:Show(self.vb.breathCount)
+		specWarnBreath:Show()
 		specWarnBreath:Play("breathsoon")
 		--"Breath of Corruption-199332-npc:99200-000021BD9C = pull:14.6, 22.0, 30.4", -- [8]
 		if self.vb.breathCount == 2 then--TODO, longer pulls to find out if it's 30 every other one
