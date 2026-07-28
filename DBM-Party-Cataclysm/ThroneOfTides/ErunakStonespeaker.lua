@@ -36,33 +36,38 @@ if (wowToc >= 100200) then
 	--TODO longer stage 2s to get repeat timer for fear
 	--Erunak Stonespeaker
 	mod:AddTimerLine(DBM:EJ_GetSectionInfo(2194))
-	local warnFlameShock								= mod:NewTargetNoFilterAnnounce(429048, 3)
+	local warnFlameShock								= mod:NewTargetNoFilterAnnounce(429048, 3) --Огненный шок
 
-	local specWarnEarthfury								= mod:NewSpecialWarningDodge(429051, nil, nil, nil, 2, 2)
-	local specWarnStormflurryTotem						= mod:NewSpecialWarningSwitchCount(429037, "-Healer", nil, nil, 1, 2)
+	local specWarnEarthfury								= mod:NewSpecialWarningDodge(429051, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Ярость земли (Обстрел)
+	local specWarnStormflurryTotem						= mod:NewSpecialWarningSwitch(429037, "Dps", 375065, nil, 1, 2) --Тотем грозового шквала (Призыв тотема)
+	local specWarnStormflurryTotem2						= mod:NewSpecialWarningDefensive(429037, "Tank", 375065, nil, 3, 2) --Тотем грозового шквала (Призыв тотема)
+	local specWarnFlameShock							= mod:NewSpecialWarningDispel(429048, "RemoveMagic", nil, nil, 1, 2) --Огненный шок
 
 	--local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
-	local timerEarthfuryCD								= mod:NewCDTimer(32.7, 429051, nil, nil, nil, 3)
-	local timerStormflurryTotemCD						= mod:NewCDCountTimer(26.6, 429037, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-	local timerFlameShockCD								= mod:NewCDTimer(6, 429048, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
+	local timerEarthfuryCD								= mod:NewCDCountTimer(32.7, 429051, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Ярость земли (Обстрел)
+	local timerStormflurryTotemCD						= mod:NewCDCountTimer(26.6, 429037, 375065, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON) --Тотем грозового шквала (Призыв тотема)
+	local timerFlameShockCD								= mod:NewCDTimer(6, 429048, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Огненный шок
 
 	--Mindbender Ghur'sha
 	mod:AddTimerLine(DBM:EJ_GetSectionInfo(2199))
 	local warnPhase2									= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
-	local specWarnTerrifyingVision						= mod:NewSpecialWarningMoveTo(429172, nil, nil, nil, 2, 13)
+	local specWarnTerrifyingVision						= mod:NewSpecialWarningMoveTo(429172, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 13) --Ужасающее видение (АоЕ)
 
-	local timerTerrifyingVisionCD						= mod:NewCDTimer(100, 429172, nil, nil, nil, 2)
+	local timerTerrifyingVisionCD						= mod:NewCDTimer(100, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
+	local timerTerrifyingVision							= mod:NewCastTimer(5, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
 
 	mod.vb.totemCount = 0
+	mod.vb.earthfuryCount = 0
 
 	function mod:OnCombatStart(delay)
 		self:SetStage(1)
 		self.vb.totemCount = 0
+		self.vb.earthfuryCount = 0
 		timerFlameShockCD:Start(6-delay)
 		timerStormflurryTotemCD:Start(12.1-delay, 1)
-		timerEarthfuryCD:Start(20.3-delay)
+		timerEarthfuryCD:Start(20.3-delay, 1)
 	end
 
 	--function mod:OnCombatEnd()
@@ -74,28 +79,37 @@ if (wowToc >= 100200) then
 	function mod:SPELL_CAST_START(args)
 		local spellId = args.spellId
 		if spellId == 429051 then
+			self.vb.earthfuryCount = self.vb.earthfuryCount + 1
 			specWarnEarthfury:Schedule(2)--2.5 second cast, I want alert at 2 so it is just slightly faster than using success
 			specWarnEarthfury:ScheduleVoice(2, "keepmove")
-			timerEarthfuryCD:Start()
+			timerEarthfuryCD:Start(nil, self.vb.earthfuryCount+1)
 		elseif spellId == 429037 then
 			self.vb.totemCount = self.vb.totemCount + 1
-			specWarnStormflurryTotem:Show(self.vb.totemCount)
-			specWarnStormflurryTotem:Play("attacktotem")
+			if self:IsTank() then
+				specWarnStormflurryTotem2:Show()
+				specWarnStormflurryTotem2:Play("defensive")
+			else
+				specWarnStormflurryTotem:Show()
+				specWarnStormflurryTotem:Play("attacktotem")
+			end
 			timerStormflurryTotemCD:Start(nil, self.vb.totemCount+1)
 		elseif spellId == 429172 then
 			specWarnTerrifyingVision:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnTerrifyingVision:Play("breaklos")
+			timerTerrifyingVision:Start()
 --			timerTerrifyingVisionCD:Start()
 		end
 	end
 
 	function mod:SPELL_CAST_SUCCESS(args)
 		local spellId = args.spellId
-		if spellId == 429173 and self:GetStage(1) then
+		if spellId == 429173 and self:GetStage(1) then --Гниение разума (Начало фазы 2)
 			self:SetStage(2)
 			timerEarthfuryCD:Stop()
 			timerStormflurryTotemCD:Stop()
 			timerFlameShockCD:Stop()
+			specWarnEarthfury:Cancel()
+			specWarnEarthfury:CancelVoice()
 			warnPhase2:Show()
 			warnPhase2:Play("ptwo")
 			timerTerrifyingVisionCD:Start(7.2)
@@ -106,8 +120,13 @@ if (wowToc >= 100200) then
 
 	function mod:SPELL_AURA_APPLIED(args)
 		local spellId = args.spellId
-		if spellId == 429048 and args:IsPlayer() or self:CheckDispelFilter("magic") then
-			warnFlameShock:Show(args.destName)
+		if spellId == 429048 then
+			if self:CheckDispelFilter("magic") then
+				specWarnFlameShock:Show(args.destName)
+				specWarnFlameShock:Play("helpdispel")
+			else
+				warnFlameShock:Show(args.destName)
+			end
 		end
 	end
 

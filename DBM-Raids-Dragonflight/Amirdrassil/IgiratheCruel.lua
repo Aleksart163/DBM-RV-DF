@@ -18,6 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 414340",
 	"SPELL_AURA_REMOVED 414888 422961 415623",
 	"UNIT_AURA player",
+	"UNIT_POWER_UPDATE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -32,50 +33,51 @@ mod:RegisterEventsInCombat(
 --TODO, Smashing Viscera is a hidden aura that's not logged, but UNIT_AURA might work
 --TODO, spears 13 is long by 2.3?
 --https://www.warcraftlogs.com/reports/N2k1xpg9rVqRDyQZ#fight=11&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20414425%20or%20ability.id%20%3D%20416996%20or%20ability.id%20%3D%20422776%20or%20ability.id%20%3D%20419048%20or%20ability.id%20%3D%20416048%20or%20ability.id%20%3D%20418531%20or%20ability.id%20%3D%20415624)%20and%20type%20%3D%20%22begincast%22%0A%20or%20ability.id%20%3D%20424456%20and%20type%20%3D%20%22cast%22%0A%20or%20ability.id%20%3D%20415020%20or%20ability.id%20%3D%20415094%20or%20ability.id%20%3D%20415090%20or%20ability.id%20%3D%20425282%20or%20ability.id%20%3D%20425283%20or%20ability.id%20%3D%20414357%0A%20or%20ability.name%20%3D%20%22Heart%20Stopper%22&view=events
-local warnDrenchedBlades							= mod:NewStackAnnounce(414340, 2, nil, "Tank|Healer")
-local warnBlisteringSpear							= mod:NewTargetCountAnnounce(414888, 3, nil, nil, 282481, nil, nil, nil, true)
-local warnMarkedforTorment							= mod:NewCountAnnounce(422776, 3, nil, nil, 99256)
-local warnGatheringTorment							= mod:NewYouAnnounce(414367, 4)
+local warnDrenchedBlades							= mod:NewStackAnnounce(414340, 2, nil, "Tank|Healer") --Промокшие клинки
+local warnBlisteringSpear							= mod:NewTargetCountAnnounce(414888, 3, nil, nil, 282481, nil, nil, nil, true) --Обжигающее копье (Копья)
+local warnMarkedforTorment							= mod:NewCountAnnounce(422776, 3, nil, nil, 234406) --Метка мучений (Мучения)
+local warnGatheringTorment							= mod:NewYouAnnounce(414367, 4) --Сбор мучений
 --Torments
-local warnSmashingVisceraSoon						= mod:NewSoonAnnounce(424456, 2, nil, nil, 47482)--Sword Stance
-local warnHeartstopperSoon							= mod:NewSoonAnnounce(415623, 2)--Knife Stance
-local warnUmbralDestructionSoon						= mod:NewSoonAnnounce(416048, 2)--Axe Stance
+local warnSmashingVisceraSoon						= mod:NewSoonAnnounce(424456, 2, nil, nil, 47482) --Крушащие внутренности (Прыжок) Sword Stance
+local warnHeartstopperSoon							= mod:NewSoonAnnounce(415623, 2) --Остановка сердца Knife Stance
+local warnUmbralDestructionSoon						= mod:NewSoonAnnounce(416048, 2, nil, nil, 354147) --Теневое разрушение (Разрушение) Axe Stance
+local warnHeartStopper								= mod:NewTargetCountAnnounce(415623, 3, nil, nil, nil, nil, nil, nil, true) --Остановка сердца
+local warnFleshMortification						= mod:NewYouAnnounce(419462, 4) --Омертвение плоти
 --local warnSmashingViscera							= mod:NewTargetNoFilterAnnounce(424456, 3)--Re-add if it gets put back in combat log
-local warnHeartStopper								= mod:NewTargetCountAnnounce(415623, 3, nil, nil, nil, nil, nil, nil, true)
-local warnFleshMortification						= mod:NewYouAnnounce(419462, 4)
 
-local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2)
-local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2)
-local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2)--Shorttext "Chains"
-local specWarnTwistingBlade							= mod:NewSpecialWarningDodgeCount(416996, nil, 138737, nil, 2, 2)
-local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2)
+local specWarnMarkedforTorment						= mod:NewSpecialWarningSoonCount(422776, nil, 234406, nil, 2, 2) --Метка мучений (Мучения)
+local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2) --Промокшие клинки
+local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
+local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2) --Обжигающие муки (Цепи)
+local specWarnTwistingBlade							= mod:NewSpecialWarningDodge(416996, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Танцующий клинок (Фронталка)
+local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2) --Гибельное разрушение
 --Torments
-local specWarnUmbralDestruction						= mod:NewSpecialWarningCount(416048, nil, nil, nil, 2, 14)
-local specWarnSmashingViscera						= mod:NewSpecialWarningYou(424456, nil, 47482, nil, 1, 2)--Not in combat log
-local specWarnHeartStopper							= mod:NewSpecialWarningYou(415623, nil, nil, nil, 1, 2)
-local specWarnHeartStopperTaunt						= mod:NewSpecialWarningTaunt(415623, nil, nil, nil, 1, 2)
-local specWarnVitalRupture							= mod:NewSpecialWarningYou(426056, nil, nil, nil, 1, 2)
+local specWarnUmbralDestruction						= mod:NewSpecialWarningCount(416048, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 14) --Теневое разрушение (Разделение урона)
+local specWarnSmashingViscera						= mod:NewSpecialWarningYou(424456, nil, 47482, nil, 1, 2) --Крушащие внутренности (Прыжок) Not in combat log
+local specWarnHeartStopper							= mod:NewSpecialWarningYou(415623, nil, nil, nil, 1, 2) --Остановка сердца
+local specWarnHeartStopperTaunt						= mod:NewSpecialWarningTaunt(415623, nil, nil, nil, 1, 2) --Остановка сердца
+local specWarnVitalRupture							= mod:NewSpecialWarningYou(426056, nil, nil, nil, 1, 2) --Разрыв органов
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
-local timerBlisteringSpearCD						= mod:NewCDCountTimer(49, 414888, 282481, nil, nil, 3)--Short text "Spears"
-local timerTwistingBladeCD							= mod:NewCDCountTimer(20.6, 416996, 138737, nil, nil, 3)--Short Text "Blades"
+local timerBlisteringSpearCD						= mod:NewCDCountTimer(49, 414888, 282481, nil, nil, 3) --Обжигающее копье (Копья)
+local timerTwistingBladeCD							= mod:NewCDCountTimer(20.6, 416996, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Танцующий клинок (Фронталка)
 
-local timerMarkedforTorment							= mod:NewCastTimer(20, 422776, 99256, nil, nil, 2)--Short text "Torment"
-local timerMarkedforTormentCD						= mod:NewCDCountTimer(49, 422776, 99256, nil, nil, 6)--Short text "Torment"
+local timerIntermission								= mod:NewIntermissionTimer(20, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
+local timerMarkedforTormentCD						= mod:NewCDCountTimer(49, 422776, 234406, nil, nil, 6, nil, nil, nil, 3, 5) --Метка мучений (Мучения)
 --Torments
-local timerUmbralDestructionCD						= mod:NewCDCountTimer(49, 416048, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5)--Shorttext "Soak"
-local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, nil, 3)--Shorttext "Leap"
-local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3)
+local timerUmbralDestructionCD						= mod:NewCDCountTimer(49, 416048, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5) --Теневое разрушение (Разделение урона)
+local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Крушащие внутренности (Прыжок)
+local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3) --Остановка сердца
 local berserkTimer									= mod:NewBerserkTimer(600)
 
-local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, false, nil, "YELL")--Shorttext "Spear"
-local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, false, nil, "YELL")
-local yellBlisteringTorment							= mod:NewShortYell(414770, 184656, nil, nil, "YELL")
-local yellSmashingViscera							= mod:NewShortYell(424456, 47482, nil, nil, "YELL")
-local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456, nil, nil, nil, "YELL")
-local yellHeartStopperFades							= mod:NewShortFadesYell(415623, nil, nil, nil, "YELL")
+local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, nil, nil, "YELL") --Обжигающее копье (Копьё)
+local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, 369351, nil, nil, "YELL") --Обжигающее копье (Копьё)
+local yellBlisteringTorment							= mod:NewShortYell(414770, 184656, nil, nil, "YELL") --Обжигающие муки (Цепи)
+local yellSmashingViscera							= mod:NewShortYell(424456, 47482, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
+local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456, 47482, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
+local yellHeartStopperFades							= mod:NewShortFadesYell(415623, nil, nil, nil, "YELL") --Остановка сердца
 
-mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, 0, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, 0, {1, 2, 3, 4, 5, 6}) --Обжигающее копье
 
 local blisteringMythicTimers = {14, 32.1, 35.1, 20.2}
 local blisteringHeroicTimers = {14, 23.0, 23.0, 22.5, 20.2}
@@ -140,7 +142,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 416996 then
 		self.vb.TwistingCount = self.vb.TwistingCount + 1
 		self.vb.TwistingTotal = self.vb.TwistingTotal + 1
-		specWarnTwistingBlade:Show(self.vb.TwistingTotal)
+		specWarnTwistingBlade:Show()
 		specWarnTwistingBlade:Play("watchstep")
 		--Changes to 25.5 when out of weapons
 		if self:IsHard() and self.vb.tormentCount >= 4 then
@@ -274,7 +276,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 422961 then--Torment Beginning
 		tormentOverTime = GetTime() + 20--Expected duration
-		timerMarkedforTorment:Start()
+		timerIntermission:Start()
 		--Timers started in applied instead of removed, so they don't need adjusting later in LFR due to overtime
 		if self:IsHard() and self.vb.tormentCount >= 4 then
 --			timerTwistingBladeCD:Start(self:IsMythic() and 138.8 or 30.9, self.vb.TwistingTotal+1)--Mythic twisted not seen yet
@@ -304,7 +306,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 422961 then--Torment Ending
 		tormentOverTime = GetTime() - tormentOverTime--Should be 0 all the time in non LFR, in LFR it will be 0 or greater
-		timerMarkedforTorment:Stop()
+		timerIntermission:Stop()
 		--Handle initial timer resets
 		self.vb.spearCount = 0
 		self.vb.TwistingCount = 0
@@ -326,6 +328,14 @@ do
 			warnedLeap = false
 			yellSmashingVisceraFades:Cancel()
 		end
+	end
+end
+
+function mod:UNIT_POWER_UPDATE()
+	local bossPower = UnitPower("boss1")
+	if bossPower == 100 and self:AntiSpam(10, "FullPower") then
+		specWarnMarkedforTorment:Show(self.vb.tormentCount+1)
+		specWarnMarkedforTorment:Play("specialsoon")
 	end
 end
 
@@ -378,4 +388,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		timerSmashingVisceraCD:Start(22.8, 1)
 	end
 end
-
