@@ -44,7 +44,7 @@ local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil
 local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
 local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, nil, nil, 3, 4) --Новые проблемы!
 local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, DBM_COMMON_L.FRONTAL, 4, 4) --Дыхание дракона (Дыхание)
-local specWarnTimeTraps								= mod:NewSpecialWarningDodgeCount(406481, nil, nil, nil, 2, 2) --Временные ловушки
+local specWarnTimeTraps								= mod:NewSpecialWarningDodge(406481, nil, nil, nil, 2, 2) --Временные ловушки
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8) --Безвременное разложение
 
 local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Песчаный вихрь (Фронталка) 21.8-38.8
@@ -185,7 +185,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 406481 then
 		self.vb.trapsCount = self.vb.trapsCount + 1
-		specWarnTimeTraps:Show(self.vb.trapsCount)
+		specWarnTimeTraps:Show()
 		specWarnTimeTraps:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.trapsCount+1)
 		if timer then

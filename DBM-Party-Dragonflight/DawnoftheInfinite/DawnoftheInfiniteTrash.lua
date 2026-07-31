@@ -72,7 +72,7 @@ local specWarnInfiniteBoltVolley			= mod:NewSpecialWarningInterrupt(415770, "Has
 local specWarnChronomelt					= mod:NewSpecialWarningInterrupt(411994, "HasInterrupt", nil, nil, 1, 2)
 local specWarnInfiniteBolt					= mod:NewSpecialWarningInterrupt(415435, "HasInterrupt", nil, nil, 1, 2)
 local specWarnEnervate						= mod:NewSpecialWarningInterrupt(415437, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnStonebolt						= mod:NewSpecialWarningInterrupt(411958, "HasInterrupt", nil, nil, 1, 2)
+local specWarnStonebolt						= mod:NewSpecialWarningInterrupt(411958, "HasInterrupt", nil, nil, 1, 2) --Каменная стрела
 local specWarnCorrodingVolley				= mod:NewSpecialWarningInterrupt(413607, "HasInterrupt", nil, nil, 1, 2) --Разъедающий залп
 local specWarnEpochBolt						= mod:NewSpecialWarningInterrupt(400165, false, nil, 2, 1, 2)--Lower prio over Corroding Volley
 local specWarnBindingGrasp					= mod:NewSpecialWarningInterrupt(412922, "HasInterrupt", nil, nil, 1, 2) --Сковывающая хватка
@@ -97,7 +97,7 @@ local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, DBM_COMMON_L.FRONTAL,
 local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие (Обстрел)
 local timerInfiniteFuryCD					= mod:NewCDNPTimer(19, 413622, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Бесконечная ярость (19 сек у Караульного из рода Бесконечности и Диверсанта)
 local timerBlightSpewCD						= mod:NewCDNPTimer(13.3, 412806, nil, nil, nil, 3)
-local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerStoneboltCD						= mod:NewCDNPTimer(10.9, 411958, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Каменная стрела
 --Second half
 local timerRendingCleaveCD					= mod:NewCDNPTimer(8.4, 412505, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--10.5-13.3
 local timerCorrodingVolleyCD				= mod:NewCDNPTimer(15, 413607, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Разъедающий залп (18.2 с офы)
@@ -275,7 +275,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnBlightSpew:Play("watchstep")
 		end
 	elseif spellId == 411958 then
-		timerStoneboltCD:Start(nil, args.sourceGUID)
+		if self:IsMythicPlus() or self:IsMythic() then
+			timerStoneboltCD:Start(6.5, args.sourceGUID)
+		else
+			timerStoneboltCD:Start(nil, args.sourceGUID)
+		end
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnStonebolt:Show(args.sourceName)
 			specWarnStonebolt:Play("kickcast")
@@ -545,24 +549,36 @@ function mod:CHAT_MSG_MONSTER_SAY(msg)
 end
 
 function mod:OnSync(msg, targetname)
-	if msg == "MPPR8" and self:AntiSpam(10, "Morchie") then --Таймер пулла Морхи
+	if msg == "MPPR8" and self:AntiSpam(15, "Morchie") then --Таймер пулла Морхи
 		timerRP:Start(25) --
-	elseif msg == "MPPR7" and self:AntiSpam(10, "Trash3") then --Таймер пулла треша после Тира
+	elseif msg == "MPPR7" and self:AntiSpam(15, "Trash3") then --Таймер пулла треша после Тира
 		timerRP:Start(15) --
-	elseif msg == "MPPR6" and self:AntiSpam(10, "Trash2") then --Таймер пулла треша на Гнили
+	elseif msg == "MPPR6" and self:AntiSpam(15, "Trash2") then --Таймер пулла треша на Гнили
 		timerRP:Start(16.5) --
-	elseif msg == "MPPR4" and self:AntiSpam(10, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
+	elseif msg == "MPPR4" and self:AntiSpam(15, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
 		timerRP:Start(15.5) --
-	elseif msg == "MPPR3" and self:AntiSpam(10, "Blight2") then --Таймер пула после Гнили 2
+	elseif msg == "MPPR3" and self:AntiSpam(15, "Blight2") then --Таймер пула после Гнили 2
 		timerRP:Start(88) --
-	elseif msg == "MPPR2" and self:AntiSpam(10, "Iridikron") then --Таймер пула Иридикрона
-		timerRP:Start(29) --
-	elseif msg == "MPPR1" and self:AntiSpam(10, "Blight1") then --Таймер пула после Гнили 1
-		timerRP:Start(73.5) --
-	elseif msg == "MPPR0" and self:AntiSpam(10, "Trash1") then --Таймер пула перед 1-ым боссом
-		timerRP:Start(21) --21 до исчезания лужи и 24 до открытия двери (возможно можно и на 21 пройти через дверь)
-		timerTimelessCurseCD:Start(12)
-		specWarnTimelessCurse:Schedule(12)
-		specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
+	elseif msg == "MPPR2" and self:AntiSpam(15, "Iridikron") then --Таймер пула Иридикрона
+		if self:IsMythicPlus() then
+			timerRP:Start(32) --
+		else
+			timerRP:Start(29)
+		end
+	elseif msg == "MPPR1" and self:AntiSpam(15, "Blight1") then --Таймер пула после Гнили 1
+		if self:IsMythicPlus() then
+			timerRP:Start(34.5) --
+		else
+			timerRP:Start(73.5) --
+		end
+	elseif msg == "MPPR0" and self:AntiSpam(15, "Trash1") then --Таймер пула перед 1-ым боссом
+		if self:IsMythicPlus() then
+			timerRP:Start(12)
+		else
+			timerRP:Start(21) --21 до исчезания лужи и 24 до открытия двери (возможно можно и на 21 пройти через дверь)
+			timerTimelessCurseCD:Start(12)
+			specWarnTimelessCurse:Schedule(12)
+			specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
+		end
 	end
 end

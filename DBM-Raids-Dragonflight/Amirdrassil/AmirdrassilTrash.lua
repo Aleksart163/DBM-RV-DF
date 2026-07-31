@@ -10,7 +10,8 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 428765 425300 425388 425381",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 428765 425300 425388",
-	"CHAT_MSG_MONSTER_YELL"
+	"CHAT_MSG_MONSTER_YELL",
+	"UNIT_DIED"
 )
 
 --TODO, kick blazing pulse
@@ -28,6 +29,7 @@ local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
+local timerChargedStompCD					= mod:NewCDNPTimer(29.2, 425149, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Взрыв)
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3) --Перьевая бомба (Обстрел) CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5) --Перьевая бомба (Обстрел) How long it's active and when not to come up
 
@@ -46,13 +48,16 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 425995 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnTranquility:Show(args.sourceName)
 		specWarnTranquility:Play("kickcast")
-	elseif spellId == 425149 and self:AntiSpam(3, "ChargedStomp") then
-		if self:IsMelee() then
-			specWarnChargedStomp:Show()
-			specWarnChargedStomp:Play("justrun")
-		else
-			specWarnChargedStomp2:Show()
-			specWarnChargedStomp2:Play("justrun")
+	elseif spellId == 425149 then
+		timerChargedStompCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(3, "ChargedStomp") then
+			if self:IsMelee() then
+				specWarnChargedStomp:Show()
+				specWarnChargedStomp:Play("justrun")
+			else
+				specWarnChargedStomp2:Show()
+				specWarnChargedStomp2:Play("watchstep")
+			end
 		end
 	end
 end
@@ -102,6 +107,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellInfernoHeartFades:Cancel()
 		end
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 210172 then --Закали-исполин
+		timerChargedStompCD:Stop(args.destGUID)
 	end
 end
 

@@ -34,7 +34,7 @@ local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной 
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
 local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Катастрофическое истребление
 
-local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, nil, 1, 4) --Трансцендентность временной линии (Повышенный урон)
+local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Трансцендентность временной линии (Повышенный урон)
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, 174716, nil, 3, 4) --Истребляющий взрыв (Бомба)
 local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoak(414535, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Камнекрушащий шквал
@@ -61,6 +61,12 @@ function mod:OnCombatStart(delay)
 	timerExtinctionBlastCD:Start(8.5, 1)
 	timerStonecrackerBarrageCD:Start(14, 1) --а было 16.3
 	timerEarthSurgeCD:Start(35, 1) --а было 35.2
+end
+
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)

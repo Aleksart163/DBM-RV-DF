@@ -62,9 +62,14 @@ function mod:OnCombatStart(delay)
 	self.vb.fadedCount = 0
 	self.vb.fragmentsCount = 0
 	self.vb.unwindCount = 0
-	timerUnwindCD:Start(5.5-delay, 1)
-	timerFragmentsofTimeCD:Start(15.6-delay, 1)
-	timerChronofadedCD:Start(30.2-delay, 1)
+	if self:IsEasy() then
+		timerUnwindCD:Start(5.5-delay, 1)
+		timerFragmentsofTimeCD:Start(15.6-delay, 1)
+		timerChronofadedCD:Start(30.2-delay, 1)
+	elseif self:IsMythicPlus() then
+		timerFragmentsofTimeCD:Start(15.6-delay, 1)
+		timerChronofadedCD:Start(30.2-delay, 1)
+	end
 end
 
 function mod:SPELL_CAST_START(args)

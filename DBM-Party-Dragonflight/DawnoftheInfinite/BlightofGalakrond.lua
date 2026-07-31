@@ -92,7 +92,7 @@ local function checkDebuffPass(self)
 end
 
 local function checkProshlyapOfMurchal(self) --Старт таймеров 2 фазы
-	timerCorrosiveInfusionCD:Start(6.1, 1)
+	timerCorrosiveInfusionCD:Start(7, 1)
 	timerNecroticWindsCD:Start(19.7, 1)
 	timerBlightReclamationCD:Start(16.7, 1) --
 	DBM:Debug("Murchal proshlyap (Начался бой с Анзон (Фаза 2))", 2)

@@ -21,47 +21,48 @@ mod:RegisterEvents(
 (ability.id = 164965 or ability.id = 165213 or ability.id = 169657 or ability.id = 169445 or ability.id = 164887 or ability.id = 169494 or ability.id = 169839 or ability.id = 426845 or ability.id = 169840 or ability.id = 426974) and type = "begincast"
  or (ability.id = 165213 or ability.id = 172578 or ability.id = 165123 or ability.id = 426500 or ability.id = 427223) and type = "cast"
 --]]
-local warnPoisonousClaws						= mod:NewSpellAnnounce(169657, 3, nil, "Tank")
-local warnSpatialDisruption						= mod:NewSpellAnnounce(426974, 2)
-local warnEnragedGrowth							= mod:NewCastAnnounce(165213, 4)
-local warnChokingVines							= mod:NewCastAnnounce(164965, 3)
-local warnNoxiousEruption						= mod:NewCastAnnounce(169445, 3)
-local warnHealingWaters							= mod:NewCastAnnounce(164887, 3)
-local warnVenomBurst							= mod:NewTargetNoFilterAnnounce(165123, 4)
-local warnGnarledroots							= mod:NewTargetNoFilterAnnounce(426500, 3)
+local warnPoisonousClaws						= mod:NewSpellAnnounce(169657, 3, nil, "Tank") --Ядовитые когти
+local warnSpatialDisruption						= mod:NewSpellAnnounce(426974, 2) --Разрыв пространства
+local warnEnragedGrowth							= mod:NewCastAnnounce(165213, 4) --Яростный рост
+local warnChokingVines							= mod:NewCastAnnounce(164965, 3) --Удушающие лианы
+local warnNoxiousEruption						= mod:NewCastAnnounce(169445, 3) --Ядовитое извержение
+local warnHealingWaters							= mod:NewCastAnnounce(164887, 3) --Целительные воды
+local warnVenomBurst							= mod:NewTargetNoFilterAnnounce(165123, 4) --Взрыв яда
+local warnGnarledroots							= mod:NewTargetNoFilterAnnounce(426500, 3) --Корявые корни
 
-local specWarnBoundingWhirl						= mod:NewSpecialWarningSpell(172578, "Melee", nil, nil, 4, 2)
-local specWarnCinderboltSalvo					= mod:NewSpecialWarningSpell(427223, nil, nil, nil, 2, 2)
+local specWarnBoundingWhirl						= mod:NewSpecialWarningSpell(172578, "Melee", 410234, nil, 4, 2) --Сдерживающий вихрь (Вихрь клинков)
+local specWarnCinderboltSalvo					= mod:NewSpecialWarningSpell(427223, nil, nil, nil, 2, 2) --Залп тлеющих стрел
 --local specWarnSpatialDisruption					= mod:NewSpecialWarningSpell(426974, nil, nil, nil, 2, 13)
-local specWarnColdFusion						= mod:NewSpecialWarningDodge(426845, nil, nil, nil, 2, 2)
-local specWarnVenomBurst						= mod:NewSpecialWarningMoveAway(165123, nil, nil, nil, 1, 2)
-local specWarnEnragedGrowth						= mod:NewSpecialWarningInterrupt(165213, "HasInterrupt", nil, nil, 1, 2)
-local specWarnChokingVines						= mod:NewSpecialWarningInterrupt(164965, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHealingWaters						= mod:NewSpecialWarningInterrupt(164887, "HasInterrupt", nil, nil, 1, 2)
-local specWarnPyroblast							= mod:NewSpecialWarningInterrupt(169839, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFrostbolt							= mod:NewSpecialWarningInterrupt(169840, false, nil, nil, 1, 2)
-local specWarnChokingVinesDispel				= mod:NewSpecialWarningDispel(164965, "RemoveMagic", nil, nil, 1, 2)
-local specWarnVenomBurstDispel					= mod:NewSpecialWarningDispel(165123, "RemovePoison", nil, nil, 1, 2)
+local specWarnColdFusion						= mod:NewSpecialWarningDodge(426845, nil, 63912, nil, 2, 2) --Холодный синтез (Кольцо льда)
+local specWarnVenomBurst						= mod:NewSpecialWarningMoveAway(165123, nil, nil, nil, 1, 2) --Взрыв яда
+local specWarnEnragedGrowth						= mod:NewSpecialWarningInterrupt(165213, "HasInterrupt", nil, nil, 1, 2) --Яростный рост
+local specWarnChokingVines						= mod:NewSpecialWarningInterrupt(164965, "HasInterrupt", nil, nil, 1, 2) --Удушающие лианы
+local specWarnHealingWaters						= mod:NewSpecialWarningInterrupt(164887, "HasInterrupt", nil, nil, 1, 2) --Целительные воды
+local specWarnPyroblast							= mod:NewSpecialWarningInterrupt(169839, "HasInterrupt", nil, nil, 1, 2) --Огненная глыба
+local specWarnFrostbolt							= mod:NewSpecialWarningInterrupt(169840, false, nil, nil, 1, 2) --Ледяная стрела
+local specWarnChokingVinesDispel				= mod:NewSpecialWarningDispel(164965, "RemoveMagic", nil, nil, 1, 2) --Удушающие лианы
+local specWarnVenomBurstDispel					= mod:NewSpecialWarningDispel(165123, "RemovePoison", nil, nil, 1, 2) --Взрыв яда
 --local specWarnDreadpetalToxinDispel				= mod:NewSpecialWarningDispel(164886, "RemovePoison", nil, nil, 1, 2)
-local specWarnPoisonClawsDispel					= mod:NewSpecialWarningDispel(169658, "RemovePoison", nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(169495, nil, nil, nil, 1, 8)
+local specWarnPoisonClawsDispel					= mod:NewSpecialWarningDispel(169657, "RemovePoison", nil, nil, 1, 2) --Ядовитые когти
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(169495, nil, 6726, nil, 1, 8) --Живые листья (Безмолвие)
 
 local timerRP									= mod:NewRPTimer(68)
-local timerEnragedGrowthCD						= mod:NewCDNPTimer(12.8, 165213, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--CD from success or interrupt
-local timerChokingVinesCD						= mod:NewCDNPTimer(20.6, 164965, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerBoundingWhirlCD						= mod:NewCDNPTimer(16.5, 172578, nil, nil, nil, 3)
-local timerPoisonousClawsCD						= mod:NewCDNPTimer(16.5, 169657, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerVenomBurstCD							= mod:NewCDNPTimer(10.6, 165123, nil, nil, nil, 3)
-local timerHealingWatersCD						= mod:NewCDNPTimer(19.4, 164887, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerLivingLeavesCD						= mod:NewCDNPTimer(18.1, 169494, nil, nil, nil, 3)
-local timerGnarledRootsCD						= mod:NewCDNPTimer(18.1, 426500, nil, nil, nil, 3)
-local timerPyroblastCD							= mod:NewCDNPTimer(8, 169839, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--8-13 window, quite large
-local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18.2, 427223, nil, nil, nil, 2)
-local timerFrostboltCD							= mod:NewCDNPTimer(6, 169840, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerColdfusionCD							= mod:NewCDNPTimer(21.8, 426845, nil, nil, nil, 3)--21.8-25, maybe shorter
-local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, nil, nil, nil, 3)
+local timerEnragedGrowthCD						= mod:NewCDNPTimer(12.8, 165213, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Яростный рост CD from success or interrupt
+local timerChokingVinesCD						= mod:NewCDNPTimer(20.4, 164965, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Удушающие лианы
+local timerBoundingWhirlCD						= mod:NewCDNPTimer(16.5, 172578, 410234, nil, nil, 3) --Сдерживающий вихрь (Вихрь клинков)
+local timerPoisonousClawsCD						= mod:NewCDNPTimer(16.5, 169657, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Ядовитые когти
+local timerVenomBurstCD							= mod:NewCDNPTimer(10.6, 165123, nil, nil, nil, 3) --Взрыв яда
+local timerHealingWatersCD						= mod:NewCDNPTimer(19.4, 164887, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Целительные воды
+local timerLivingLeavesCD						= mod:NewCDNPTimer(18.1, 169495, nil, nil, nil, 3) --Живые листья (Безмолвие)
+local timerGnarledRootsCD						= mod:NewCDNPTimer(18.1, 426500, nil, nil, nil, 3) --Корявые корни
+local timerPyroblastCD							= mod:NewCDNPTimer(8, 169839, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная глыба 8-13 window, quite large
+local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18.2, 427223, nil, nil, nil, 2) --Залп тлеющих стрел
+local timerFrostboltCD							= mod:NewCDNPTimer(6, 169840, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная стрела
+local timerColdfusionCD							= mod:NewCDNPTimer(21.8, 426845, 63912, nil, nil, 3) --Холодный синтез (Кольцо льда) 21.8-25, maybe shorter
+local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, nil, nil, nil, 3) --Разрыв пространства
 
-local yellnVenomBurst							= mod:NewYell(165123, nil, nil, nil, "YELL")
+local yellChokingVines							= mod:NewYell(164965, 9179, nil, nil, "YELL") --Удушающие лианы (Оглушение)
+local yellVenomBurst							= mod:NewYell(165123, nil, nil, nil, "YELL") --Взрыв яда
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
@@ -170,9 +171,13 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 164965 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
-		specWarnChokingVinesDispel:Show(args.destName)
-		specWarnChokingVinesDispel:Play("helpdispel")
+	if spellId == 164965 and args:IsDestTypePlayer() then --Удушающие лианы
+		if args:IsPlayer() then
+			yellChokingVines:Yell()
+		elseif self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
+			specWarnChokingVinesDispel:Show(args.destName)
+			specWarnChokingVinesDispel:Play("helpdispel")
+		end
 --	elseif spellId == 164886 and args:IsDestTypePlayer() then
 --		local amount = args.amount or 1
 --		if amount >= 6 and self:CheckDispelFilter("poison") and self:AntiSpam(3, 3) then
@@ -190,7 +195,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self:AntiSpam(4, 5) then
 				specWarnVenomBurst:Show()
 				specWarnVenomBurst:Play("range5")
-				yellnVenomBurst:Yell()
+				yellVenomBurst:Yell()
 			end
 		else
 			warnVenomBurst:Show(args.destName)
