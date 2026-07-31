@@ -173,7 +173,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetName)
 				DBM:Debug("Преследование 3 на игроке", 2)
 			else
 				warnPursuit:Show(targetName)
-				timerPursuit:Start(args.destName)
 			end
 		end
 	end

@@ -96,7 +96,7 @@ local yellWitheringVulnerability				= mod:NewShortYell(405914, 160149, nil, nil,
 local yellUmbralDetonation						= mod:NewShortYell(405036, 49685, nil, nil, "YELL") --Теневая детонация (Бомба)
 local yellUmbralDetonationFades					= mod:NewShortFadesYell(405036, nil, nil, nil, "YELL") --Теневая детонация (Бомба)
 local yellBlisteringTwilight					= mod:NewShortYell(405642, 49685, nil, nil, "YELL") --Обжигающий сумрак (Бомба)
-local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642, 49685, nil, nil, "YELL") --Обжигающий сумрак (Бомба)
+local yellBlisteringTwilightFades				= mod:NewShortFadesYell(405642, nil, nil, nil, "YELL") --Обжигающий сумрак (Бомба)
 local yellShadowandFlameRepeat					= mod:NewIconRepeatYell(409385, nil, nil, 2, "YELL") --Тьма и пламя
 
 mod:AddSetIconOption("SetIconOnWitheringVulnerability", 405914, true, 0, {8}) --Иссушающая слабость

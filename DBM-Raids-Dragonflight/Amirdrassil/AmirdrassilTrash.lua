@@ -34,7 +34,7 @@ local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBI
 local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5) --Перьевая бомба (Обстрел) How long it's active and when not to come up
 
 local yellShadowflameBomb					= mod:NewShortYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
-local yellShadowflameBombFades				= mod:NewShortFadesYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
+local yellShadowflameBombFades				= mod:NewShortFadesYell(425300, nil, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
 local yellInfernoHeart						= mod:NewShortYell(425388, nil, nil, nil, "YELL") --Сердце Преисподней
 local yellInfernoHeartFades					= mod:NewShortFadesYell(425388, nil, nil, nil, "YELL") --Сердце Преисподней
 

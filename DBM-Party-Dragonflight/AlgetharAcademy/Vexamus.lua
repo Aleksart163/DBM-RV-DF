@@ -51,7 +51,7 @@ local timerArcaneExpulsionCD					= mod:NewCDTimer(19.4, 385958, DBM_COMMON_L.FRO
 
 local yellArcaneExpulsion						= mod:NewYell(385958, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Волна тайной магии (Фронталка)
 local yellManaBomb								= mod:NewYell(386181, 174716, nil, nil, "YELL") --Мана-бомбы (Бомба)
-local yellManaBombFades							= mod:NewShortFadesYell(386181, 174716, nil, nil, "YELL") --Мана-бомбы (Бомба)
+local yellManaBombFades							= mod:NewShortFadesYell(386181, nil, nil, nil, "YELL") --Мана-бомбы (Бомба)
 
 mod:AddSetIconOption("SetIconOnArcaneExpulsion", 385958, true, 0, {8}) --Волна тайной магии
 mod:AddInfoFrameOption(391977, true)

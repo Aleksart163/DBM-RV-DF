@@ -87,7 +87,7 @@ local timerEmeraldWindsCD							= mod:NewCDCountTimer(11.8, 421024, DBM_COMMON_L
 local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL") --Пробивной рывок (Рывок)
 local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL") --Пробивной рывок (Рывок)
 local yellPoisonousJavelin							= mod:NewShortYell(420858, 79572, false, nil, "YELL") --Отравленное копье (Копье)
-local yellPoisonousJavelinFades						= mod:NewShortFadesYell(420858, 79572, nil, nil, "YELL") --Отравленное копье (Копье)
+local yellPoisonousJavelinFades						= mod:NewShortFadesYell(420858, nil, nil, nil, "YELL") --Отравленное копье (Копье)
 local yellCaptivatingFinale							= mod:NewShortYell(421032, nil, nil, nil, "YELL") --Захватывающий финал
 local yellPolymorphBombFades						= mod:NewIconFadesYell(418720, 118, nil, nil, "YELL") --Превращающая бомба (Превращение)
 

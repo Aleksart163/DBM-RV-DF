@@ -61,7 +61,7 @@ local timerVicousLungeCD						= mod:NewCDNPTimer(11.4, 389054, nil, nil, nil, 3)
 local yellGust									= mod:NewYell(377383, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Порыв
 local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL") --Жестокая засада
 local yellAstralBomb							= mod:NewYell(387843, 174716, nil, nil, "YELL") --Астральная бомба (Бомба)
-local yellAstralBombFades						= mod:NewShortFadesYell(387843, 174716, nil, nil, "YELL") --Астральная бомба (Бомба)
+local yellAstralBombFades						= mod:NewShortFadesYell(387843, nil, nil, nil, "YELL") --Астральная бомба (Бомба)
 
 mod:AddBoolOption("AGBuffs", true)
 

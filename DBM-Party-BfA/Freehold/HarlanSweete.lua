@@ -41,7 +41,7 @@ local timerCannonBarrageCD			= mod:NewCDTimer(17.4, 257305, nil, nil, nil, 3, ni
 local timerWhirlingDaggerCD			= mod:NewCDCountTimer(18.8, 413131, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.BLEED_ICON) --Вращающийся кинжал
 
 local yellBlackPowder				= mod:NewYell(257314, 174716, nil, nil, "YELL") --Бомба с черным порохом (Бомба)
-local yellBlackPowder2				= mod:NewShortFadesYell(257314, 174716, nil, nil, "YELL") --Бомба с черным порохом (Бомба)
+local yellBlackPowder2				= mod:NewShortFadesYell(257314, nil, nil, nil, "YELL") --Бомба с черным порохом (Бомба)
 local yellCannonBarrage				= mod:NewYell(257305, nil, nil, nil, "YELL") --Обстрел
 local yellCannonBarrage2			= mod:NewShortFadesYell(257305, nil, nil, nil, "YELL") --Обстрел
 

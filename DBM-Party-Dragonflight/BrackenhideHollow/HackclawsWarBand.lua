@@ -66,7 +66,7 @@ local timerGreaterHealingRapidsCD				= mod:NewCDCountTimer(15.7, 377950, 87779, 
 local yellHextrick								= mod:NewYell(381466, nil, nil, nil, "YELL") --Хитрый сглаз
 local yellDecayedSenses							= mod:NewYell(381379, 65960, nil, nil, "YELL") --Гниющие глаза (Ослепление)
 local yellBladestorm							= mod:NewYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
-local yellBladestormFades						= mod:NewShortFadesYell(377827, 96306, nil, nil, "YELL") --Вихрь клинков
+local yellBladestormFades						= mod:NewShortFadesYell(377827, nil, nil, nil, "YELL") --Вихрь клинков
 local yellSavageCharge							= mod:NewYell(381461, 260292, nil, nil, "YELL") --Дикий рывок (Рывок)
 
 mod.vb.healingRapidsCount = 0

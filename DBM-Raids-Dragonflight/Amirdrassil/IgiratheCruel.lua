@@ -70,11 +70,11 @@ local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, 
 local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3) --Остановка сердца
 local berserkTimer									= mod:NewBerserkTimer(600)
 
-local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, nil, nil, "YELL") --Обжигающее копье (Копьё)
-local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, 369351, nil, nil, "YELL") --Обжигающее копье (Копьё)
+local yellBlisteringSpear							= mod:NewShortPosYell(414888, nil, nil, nil, "YELL") --Обжигающее копье (Копьё)
+local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, nil, nil, "YELL") --Обжигающее копье (Копьё)
 local yellBlisteringTorment							= mod:NewShortYell(414770, 184656, nil, nil, "YELL") --Обжигающие муки (Цепи)
 local yellSmashingViscera							= mod:NewShortYell(424456, 47482, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
-local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456, 47482, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
+local yellSmashingVisceraFades						= mod:NewShortFadesYell(424456, nil, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
 local yellHeartStopperFades							= mod:NewShortFadesYell(415623, nil, nil, nil, "YELL") --Остановка сердца
 
 mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, 0, {1, 2, 3, 4, 5, 6}) --Обжигающее копье

@@ -83,7 +83,7 @@ local yellWickedEmbrace				= mod:NewYell(266265, nil, nil, nil, "YELL") --Злы
 local yellBloodHarvest				= mod:NewYell(265016, nil, nil, nil, "YELL") --Кровавая жатва Pre Savage Cleave target awareness
 local yellDarkOmen					= mod:NewYell(265568, nil, nil, nil, "YELL") --Темное знамение
 local yellThirstforBlood			= mod:NewYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
-local yellThirstforBlood2			= mod:NewShortFadesYell(266107, 62374, nil, nil, "YELL") --Кровожадность (Преследование)
+local yellThirstforBlood2			= mod:NewShortFadesYell(266107, nil, nil, nil, "YELL") --Кровожадность (Преследование)
 
 --[[function mod:OnInitialize()
     if self.Options.Timer272609cdCVoice == true then

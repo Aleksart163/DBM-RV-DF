@@ -86,7 +86,7 @@ local timerFrostBlastCD					= mod:NewCDNPTimer(31.5, 257784, nil, nil, nil, 4, n
 
 local yellOiledBlade					= mod:NewYell(257908, nil, nil, nil, "YELL") --Смазанный нефтью клинок
 local yellBlindRagePlayer				= mod:NewYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
-local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, 96306, nil, nil, "YELL") --Слепая ярость (Преследование)
+local yellBlindRagePlayer2				= mod:NewShortFadesYell(257739, nil, nil, nil, "YELL") --Слепая ярость (Преследование)
 local yellRicochetingThrow				= mod:NewYell(272402, nil, nil, nil, "YELL") --Рикошетящий бросок
 local yellDuelistDash					= mod:NewYell(274400, nil, nil, nil, "YELL") --Рывок дуэлянта
 

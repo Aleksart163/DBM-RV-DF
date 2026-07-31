@@ -147,14 +147,14 @@ local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YE
 local yellVoidSlash								= mod:NewShortYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
 local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 --local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
-local yellMassDisintegrate						= mod:NewShortPosYell(401680, 405391, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
+local yellMassDisintegrate						= mod:NewShortPosYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)
 local yellMassDisintegrateFades					= mod:NewIconFadesYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция
 local yellInfiniteDuress						= mod:NewShortPosYell(404288, nil, nil, nil, "YELL") --Бесконечное заключение
 local yellInfiniteDuressFades					= mod:NewIconFadesYell(404288, nil, nil, nil, "YELL") --Бесконечное заключение
 local yellHurtlingBarrage						= mod:NewShortPosYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellHurtlingBarrageFades					= mod:NewIconFadesYell(405486, nil, nil, nil, "YELL") --Опасный шквал
 local yellEmbraceofNothingness					= mod:NewShortYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
-local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, 229042, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
+local yellEmbraceofNothingnessFades				= mod:NewShortFadesYell(403520, nil, nil, nil, "YELL") --Объятия пустоты (Черная дыра)
 
 mod:AddSetIconOption("SetIconOnHurtling", 405486, true, 0, {3, 4}) --Опасный шквал 2 on heroic
 mod:AddSetIconOption("SetIconOnEmbraceofNothingness", 403520, true, 0, {8}) --Объятия пустоты (Черная дыра)

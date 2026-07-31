@@ -48,7 +48,7 @@ local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_CO
 local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Катастрофическое истребление
 
 local yellExtinctionBlast						= mod:NewYell(409261, 174716, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
-local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, 174716, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
+local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
 
 mod:AddInfoFrameOption(410719, true)
 mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв (Бомба)

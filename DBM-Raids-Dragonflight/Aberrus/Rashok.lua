@@ -63,7 +63,7 @@ local timerUnleashedShadowflameCD					= mod:NewCDCountTimer(40, 410070, 205181, 
 --local berserkTimer									= mod:NewBerserkTimer(118)
 
 local yellSearingSlam								= mod:NewShortYell(405821, 47482, nil, nil, "YELL") --Обжигающий удар (Прыжок)
-local yellSearingSlamFades							= mod:NewShortFadesYell(405821, 47482, nil, nil, "YELL") --Обжигающий удар (Прыжок)
+local yellSearingSlamFades							= mod:NewShortFadesYell(405821, nil, nil, nil, "YELL") --Обжигающий удар (Прыжок)
 
 mod:AddInfoFrameOption(405827)
 mod:AddSetIconOption("SetIconOnSearingSlam", 405821, false, 0, {8}) --Обжигающий удар

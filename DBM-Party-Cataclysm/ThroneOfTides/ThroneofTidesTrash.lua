@@ -26,38 +26,40 @@ mod:RegisterEvents(
 (ability.id = 76813 or ability.id = 76815 or ability.id = 76820 or ability.id = 426741 or ability.id = 426684 or ability.id = 426645 or ability.id = 428926 or ability.id = 76590 or ability.id = 429021 or ability.id = 426783 or ability.id = 428542 or ability.id = 429176 or ability.id = 426905) and type = "begincast"
 --]]
 --https://www.wowhead.com/guide/mythic-plus-dungeons/throne-of-the-tides-strategy
-local warnCrushingDepths			= mod:NewTargetNoFilterAnnounce(428542, 4)
-local warnSlitheringAssault			= mod:NewTargetNoFilterAnnounce(426618, 2, nil, "RemoveEnrage")
-local warnHealingWave				= mod:NewCastAnnounce(76813, 3)
-local warnHex						= mod:NewCastAnnounce(76820, 2)
-local warnClenchingTentacles		= mod:NewCastAnnounce(428926, 4, nil, nil, nil, nil, nil, 13)
-local warnPsionicPulse				= mod:NewCastAnnounce(426905, 4, nil, nil, nil, nil, nil, 3)
-local warnAcidBarrage				= mod:NewSpellAnnounce(426645, 4)--, nil, nil, nil, nil, nil, 3
-local warnRazorJaws					= mod:NewStackAnnounce(426659, 2, nil, "Tank|Healer")
+local warnCrushingDepths			= mod:NewTargetNoFilterAnnounce(428542, 4) --Морская пучина
+local warnSlitheringAssault			= mod:NewTargetNoFilterAnnounce(426618, 2, nil, "RemoveEnrage") --Змеиная скорость
+local warnHealingWave				= mod:NewCastAnnounce(76813, 3) --Волна исцеления
+local warnHex						= mod:NewCastAnnounce(76820, 2) --Сглаз
+local warnClenchingTentacles		= mod:NewCastAnnounce(428926, 4, nil, nil, nil, nil, nil, 13) --Стискивающие щупальца
+local warnPsionicPulse				= mod:NewCastAnnounce(426905, 4, nil, nil, nil, nil, nil, 3) --Псионный импульс
+local warnAcidBarrage				= mod:NewSpellAnnounce(426645, 4) --Обстрел кислотой , nil, nil, nil, nil, nil, 3
+local warnRazorJaws					= mod:NewStackAnnounce(426659, 2, nil, "Tank|Healer") --Острые клыки
 
-local specWarnShadowSmash			= mod:NewSpecialWarningRun(76590, nil, nil, nil, 4, 2)
-local specWarnVolatileBolt			= mod:NewSpecialWarningDodge(426684, nil, nil, nil, 2, 2)
+local specWarnShadowSmash			= mod:NewSpecialWarningRun(76590, nil, 185824, nil, 4, 2) --Мощный удар тьмы (Взрыв)
+local specWarnVolatileBolt			= mod:NewSpecialWarningDodge(426684, nil, 174716, nil, 2, 2) --Нестабильная стрела (Бомба)
 local specWarnShellbreaker			= mod:NewSpecialWarningDefensive(426741, nil, nil, nil, 1, 2)
 local specWarnCrush					= mod:NewSpecialWarningDefensive(429021, nil, nil, nil, 1, 2)
 --local yellnViciousAmbush			= mod:NewYell(388984)
-local specWarnHealingWave			= mod:NewSpecialWarningInterrupt(76813, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHealingWave			= mod:NewSpecialWarningInterrupt(76813, "HasInterrupt", nil, nil, 1, 2) --Волна исцеления
 local specWarnWrath					= mod:NewSpecialWarningInterrupt(76815, false, nil, nil, 1, 2)--TODO, Is this even used in 10.2 version? no log of it
 local specWarnMindFlay				= mod:NewSpecialWarningInterrupt(426783, "HasInterrupt", nil, nil, 1, 2)
 local specWarnAquablast				= mod:NewSpecialWarningInterrupt(429176, "HasInterrupt", nil, nil, 1, 2)
-local specWarnHex					= mod:NewSpecialWarningDispel(76820, "RemoveMagic", nil, nil, 1, 2)
+local specWarnHex					= mod:NewSpecialWarningDispel(76820, "RemoveCurse", nil, nil, 1, 2) --Сглаз
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(426688, nil, nil, nil, 1, 8)
 
-local timerHealingWaveCD			= mod:NewCDNPTimer(17, 76813, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--17-18.2
-local timerHexCD					= mod:NewCDNPTimer(20.4, 76820, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--Weak sample size, could be wrong
-local timerCrushingDepthsCD			= mod:NewCDNPTimer(27.9, 428542, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Weak sample size, could be wrong
+local timerHealingWaveCD			= mod:NewCDNPTimer(17, 76813, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Волна исцеления 17-18.2
+local timerHexCD					= mod:NewCDNPTimer(20.4, 76820, nil, nil, nil, 5, nil, DBM_COMMON_L.CURSE_ICON) --Сглаз Weak sample size, could be wrong
+local timerCrushingDepthsCD			= mod:NewCDNPTimer(27.9, 428542, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Морская пучина Weak sample size, could be wrong
 local timerShellbreakerCD			= mod:NewCDNPTimer(17, 426741, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--17-19 (8.4?)
-local timerVolatileBoltCD			= mod:NewCDNPTimer(20.6, 426684, nil, nil, nil, 3)--20.6-24.2
-local timerAcidBarrageCD			= mod:NewCDNPTimer(10.2, 426645, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--10.2-13 (8.7 lowest?)
-local timerClenchingTentaclesCD		= mod:NewCDNPTimer(24.3, 428926, nil, nil, nil, 2)--24.3-25.5
+local timerVolatileBoltCD			= mod:NewCDNPTimer(20.6, 426684, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильная стрела (Бомба) 20.6-24.2
+local timerAcidBarrageCD			= mod:NewCDNPTimer(10.2, 426645, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Обстрел кислотой 10.2-13 (8.7 lowest?)
+local timerClenchingTentaclesCD		= mod:NewCDNPTimer(24.3, 428926, nil, nil, nil, 2) --Стискивающие щупальца 24.3-25.5
 local timerCrushCD					= mod:NewCDNPTimer(17, 429021, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerPsionicPulseCD			= mod:NewCDNPTimer(8.5, 426905, nil, nil, nil, 2)
+local timerPsionicPulseCD			= mod:NewCDNPTimer(8.5, 426905, nil, nil, nil, 2) --Псионный импульс
 local timerMindFlayCD				= mod:NewCDNPTimer(8.1, 426783, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
+local yellHex						= mod:NewYell(76820, nil, nil, nil, "YELL") --Сглаз
+local yellHexFades					= mod:NewShortFadesYell(76820, nil, nil, nil, "YELL") --Сглаз
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
 function mod:SPELL_CAST_START(args)
@@ -99,10 +101,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 426684 then
 		timerVolatileBoltCD:Start(nil, args.sourceGUID)
 		--If remaining time on acid barrage is less than 6 seconds when volatile bolt is cast, it'll be extended
-		if timerAcidBarrageCD:GetRemaining(args.sourceGUID) < 4.8 then
+		if timerAcidBarrageCD:GetRemaining(args.sourceGUID) < 2.5 then --4.8
 			DBM:Debug("extending acid barrage to 4.8 seconds", 2)
 			timerAcidBarrageCD:Stop(args.sourceGUID)
-			timerAcidBarrageCD:Start(4.8, args.sourceGUID)
+			timerAcidBarrageCD:Start(2.5, args.sourceGUID) --4.8
 		end
 		if self:AntiSpam(3, 2) then
 			specWarnVolatileBolt:Show()
@@ -156,9 +158,14 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 76820 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
-		specWarnHex:Show(args.destName)
-		specWarnHex:Play("helpdispel")
+	if spellId == 76820 and args:IsDestTypePlayer() then
+		if args:IsPlayer() then
+			yellHex:Yell()
+			yellHexFades:Countdown(spellId)
+		elseif self:CheckDispelFilter("curse") and self:AntiSpam(3, 3) then
+			specWarnHex:Show(args.destName)
+			specWarnHex:Play("helpdispel")
+		end
 	elseif spellId == 428542 and (args:IsPlayer() or self:IsHealer()) then
 		warnCrushingDepths:Show(args.destName)
 	elseif spellId == 426618 and self:AntiSpam(3, 5) then

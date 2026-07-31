@@ -90,9 +90,9 @@ local timerDreadMarkCD				= mod:NewCDNPTimer(18.2, 265880, 167180, nil, nil, 3) 
 local timerHorrificVisageCD			= mod:NewCDNPTimer(24, 264407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ужасающий лик
 
 local yellDreadMark					= mod:NewYell(265880, 49685, nil, nil, "YELL") --Жуткая метка (Бомба)
-local yellDreadMarkFades			= mod:NewShortFadesYell(265880, 49685, nil, nil, "YELL") --Жуткая метка (Бомба)
+local yellDreadMarkFades			= mod:NewShortFadesYell(265880, nil, nil, nil, "YELL") --Жуткая метка (Бомба)
 local yellRunicMark					= mod:NewYell(264105, 49685, nil, nil, "YELL") --Руническая метка (Бомба)
-local yellRunicMarkFades			= mod:NewShortFadesYell(264105, 49685, nil, nil, "YELL") --Руническая метка (Бомба)
+local yellRunicMarkFades			= mod:NewShortFadesYell(264105, nil, nil, nil, "YELL") --Руническая метка (Бомба)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
 

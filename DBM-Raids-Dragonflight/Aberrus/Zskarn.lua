@@ -58,7 +58,7 @@ local timerDragonDeezTrapsCD					= mod:NewCDCountTimer(32.2, 405736, DBM_COMMON_
 local berserkTimer								= mod:NewBerserkTimer(600)
 
 local yellUnstableEmbers						= mod:NewShortYell(404010, 264364, nil, nil, "YELL") --Нестабильные угли (Угли)
-local yellUnstableEmbersFades					= mod:NewShortFadesYell(404010, 264364, nil, nil, "YELL") --Нестабильные угли (Угли)
+local yellUnstableEmbersFades					= mod:NewShortFadesYell(404010, nil, nil, nil, "YELL") --Нестабильные угли (Угли)
 
 mod:AddInfoFrameOption(404942, "Tank|Healer")
 mod:AddSetIconOption("SetIconOnGolems", 405812, true, 5, {8, 7, 6, 5})
