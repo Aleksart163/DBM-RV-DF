@@ -35,13 +35,15 @@ local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, 358971, nil, 3,
 local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 4) --Преследование
 local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2) --Встряска костей
 
+local timerPursuit				= mod:NewBuffActiveTimer(15, 257407, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Преследование
 local timerTeethCD				= mod:NewCDCountTimer(25, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Отточенные зубы actual minimum timer not known
 local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, 358971, nil, nil, 7, nil, nil, nil, 1, 5) --Ужасающий образ (Волна страха) actual minimum timer not known
-local timerFearCast				= mod:NewCastTimer(5, 255371, 358971, nil, nil, 7, nil, nil, nil, 1, 5) --Шипастый язык (Пожирание)
+local timerFearCast				= mod:NewCastTimer(5, 255371, 358971, nil, nil, 7, nil, nil, nil, 1, 5) --Ужасающий образ (Волна страха)
 local timerPursuitCD			= mod:NewCDCountTimer(35.1, 257407, nil, nil, nil, 3) --Преследование actual minimum timer not known
 
 local yellTeeth					= mod:NewYell(255434, nil, nil, nil, "YELL") --Отточенные зубы
 local yellPursuit				= mod:NewYell(257407, nil, nil, nil, "YELL") --Преследование
+local yellPursuitFades			= mod:NewShortFadesYell(257407, nil, nil, nil, "YELL") --Преследование
 
 mod.vb.teethCount = 0--27.1, 49.7, 29.1, 47.5, 26.7 (some timer examples, min used, and timer correction used otherwise
 mod.vb.fearCount = 0
@@ -84,26 +86,6 @@ function mod:OnCombatStart(delay)
 	timerPursuitCD:Start(21.7-delay, 1)
 end
 
-function mod:SPELL_AURA_APPLIED(args)
-	local spellId = args.spellId
-	if spellId == 257407 and self:AntiSpam(5, args.destName) then--Backup if CHAT_MSG_RAID_BOSS_EMOTE/RAID_BOSS_WHISPER doesn't work
-		if args:IsPlayer() then
-			specWarnPursuit:Show()
-			specWarnPursuit:Play("justrun")
-			yellPursuit:Yell()
-		else
-			warnPursuit:Show(args.destName)
-		end
-	end
-end
-
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 257407 or (spellId == 255421 and args:IsDestTypeHostile()) then--Pursuit ending with no devour happening, or devour ending on Rezan
-		updateAllTimers(self, 9.1)
-	end
-end
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 255371 then
@@ -136,12 +118,37 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 257407 and self:AntiSpam(5, args.destName) then--Backup if CHAT_MSG_RAID_BOSS_EMOTE/RAID_BOSS_WHISPER doesn't work
+		if args:IsPlayer() then
+			specWarnPursuit:Show()
+			specWarnPursuit:Play("justrun")
+			yellPursuit:Yell()
+			yellPursuitFades:Countdown(15)
+			DBM:Debug("Преследование 1 на игроке", 2)
+		else
+			warnPursuit:Show(args.destName)
+			timerPursuit:Start(args.destName)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 257407 or (spellId == 255421 and args:IsDestTypeHostile()) then--Pursuit ending with no devour happening, or devour ending on Rezan
+		updateAllTimers(self, 9.1)
+	end
+end
+
 --10.2 switched event to WHISPER
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:255421") then
 		specWarnPursuit:Show()
 		specWarnPursuit:Play("justrun")
 		yellPursuit:Yell()
+		yellPursuitFades:Countdown(15)
+		DBM:Debug("Преследование 2 на игроке", 2)
 	end
 end
 
@@ -149,6 +156,7 @@ function mod:OnTranscriptorSync(msg, targetName)
 	if msg:find("255421") and targetName and self:AntiSpam(5, targetName) then
 		targetName = Ambiguate(targetName, "none")
 		warnPursuit:Show(targetName)
+		timerPursuit:Start(args.destName)
 	end
 end
 
@@ -161,8 +169,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetName)
 				specWarnPursuit:Show()
 				specWarnPursuit:Play("justrun")
 				yellPursuit:Yell()
+				yellPursuitFades:Countdown(15)
+				DBM:Debug("Преследование 3 на игроке", 2)
 			else
 				warnPursuit:Show(targetName)
+				timerPursuit:Start(args.destName)
 			end
 		end
 	end
