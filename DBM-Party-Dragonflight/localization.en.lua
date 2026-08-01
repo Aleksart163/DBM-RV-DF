@@ -339,10 +339,6 @@ L:SetOptionLocalization({
 -----------------------
 L= DBM:GetModLocalization(2528)
 
-L:SetMiscLocalization({
-	PrePullMTRP	= "Even the Aspect of Time cannot be allowed to disrupt the timeways!"
-})
-
 -----------------------
 -- Blight of Galakrond --
 -----------------------
@@ -402,6 +398,6 @@ L:SetMiscLocalization({
 	MProshlyapPrePull4	= "We need reinforcements!",
 	MProshlyapPrePull5	= "I need fighters!",
 	MProshlyapPrePull6	= "We don't have time for this! Oh... where's that relic I picked up?",
-	MProshlyapPrePull7	= "Okay, let's fix this. We just need to--uh oh.",
+	MProshlyapPrePull7	= "Even the Aspect of Time cannot be allowed to disrupt the timeways!",
 	MProshlyapPrePull8	= "Oh no, it's Morchie! What is she doing here?"
 })

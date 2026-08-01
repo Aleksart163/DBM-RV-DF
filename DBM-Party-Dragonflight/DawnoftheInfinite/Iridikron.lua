@@ -16,8 +16,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 414535 409456 409635 414184 414652",
-	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456 414178",
-	"SPELL_AURA_REMOVED 409456 414177 410719"
+	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456 414178 409879",
+	"SPELL_AURA_REMOVED 409456 414177 410719 409879"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 )
@@ -29,11 +29,13 @@ mod:RegisterEventsInCombat(
 --]]
 --https://www.warcraftlogs.com/reports/q8cZgTfWkBRp3vFy#fight=last&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20409261%20or%20ability.id%20%3D%20414535%20or%20ability.id%20%3D%20409456%20or%20ability.id%20%3D%20409635%20or%20ability.id%20%3D%20414184%20or%20ability.id%20%3D%20414652)%20and%20type%20%3D%20%22begincast%22%0A%20or%20(ability.id%20%3D%20409456%20or%20ability.id%20%3D%20414177)%20and%20type%20%3D%20%22removebuff%22%0A%20or%20type%20%3D%20%22dungeonencounterstart%22%20or%20type%20%3D%20%22dungeonencounterend%22&view=events
 --NOTES: Crushing Onslaught seems utterly passive and not much point in warning for it really
+local warnPulverizingCreations					= mod:NewTargetNoFilterAnnounce(409879, 2) --Крушащие творения (Адд)
 local warnExtinctionBlast						= mod:NewTargetNoFilterAnnounce(409261, 4, nil, nil, 174716) --Истребляющий взрыв (Бомба)
 local warnEarthsurge							= mod:NewCountAnnounce(409456, 3) --Земляной импульс
 local warnEarthsurgeOver						= mod:NewEndAnnounce(409456, 1) --Земляной импульс
 local warnCataclysmicObliteration				= mod:NewCastAnnounce(414184, 4) --Катастрофическое истребление
 
+local specWarnPulverizingCreations				= mod:NewSpecialWarningYou(409879, nil, nil, DBM_COMMON_L.ADD, 1, 2) --Крушащие творения (Адд)
 local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Трансцендентность временной линии (Повышенный урон)
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, 174716, nil, 3, 4) --Истребляющий взрыв (Бомба)
@@ -49,6 +51,8 @@ local timerCataclysmicObliteration				= mod:NewCastTimer(30, 414184, nil, nil, n
 
 local yellExtinctionBlast						= mod:NewYell(409261, 174716, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
 local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil, "YELL") --Истребляющий взрыв (Бомба)
+local yellPulverizingCreations					= mod:NewYell(409879, DBM_COMMON_L.ADD, nil, nil, "YELL") --Крушащие творения (Адд)
+local yellPulverizingCreationsFades				= mod:NewShortFadesYell(409879, nil, nil, nil, "YELL") --Крушащие творения (Адд)
 
 mod:AddInfoFrameOption(410719, true)
 mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв (Бомба)
@@ -101,7 +105,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnExtinctionBlast:Show(DBM_COMMON_L.SHIELD)
 			specWarnExtinctionBlast:Play("findshelter")
 			yellExtinctionBlast:Yell()
-			yellExtinctionBlastFades:Countdown(6)
+			yellExtinctionBlastFades:Countdown(spellId)
 		else
 			warnExtinctionBlast:Show(args.destName)
 		end
@@ -131,6 +135,15 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnTimelineTranscendence:Show()
 			specWarnTimelineTranscendence:Play("dpsmore")
 		end
+	elseif spellId == 409879 then --Крушащие творения (Адд)
+		if args:IsPlayer() then
+			specWarnPulverizingCreations:Show()
+			specWarnPulverizingCreations:Play("targetyou")
+			yellPulverizingCreations:Yell()
+			yellPulverizingCreationsFades:Countdown(spellId)
+		else
+			warnPulverizingCreations:CombinedShow(0.3, args.destName)
+		end
 	end
 end
 
@@ -153,6 +166,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	--		DBM.InfoFrame:Hide()
 	--	end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
+	elseif spellId == 409879 then --Крушащие творения (Адд)
+		if args:IsPlayer() then
+			yellPulverizingCreationsFades:Cancel()
+		end
 	end
 end
 

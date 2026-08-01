@@ -339,10 +339,6 @@ L:SetOptionLocalization({
 -----------------------
 L= DBM:GetModLocalization(2528)
 
-L:SetMiscLocalization({
-	PrePullMTRP	= "Даже Аспект Времени не должен менять временные пути!"
-})
-
 -----------------------
 -- Blight of Galakrond --
 -----------------------
@@ -369,7 +365,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2533)--Alliance ID used for both factions (2534 is horde id)
 
 L:SetGeneralLocalization({
-	name =	"Time-Lost Battlefield"--Manual local because auto inserts Alliance or horde to name and mod combines them since singular encounter ID
+	name =	"Затерянное во времени поле битвы"--Manual local because auto inserts Alliance or horde to name and mod combines them since singular encounter ID
 })
 
 L:SetMiscLocalization({
@@ -402,6 +398,6 @@ L:SetMiscLocalization({
 	MProshlyapPrePull4	= "Нам нужно подкрепление!",
 	MProshlyapPrePull5	= "Мне нужны бойцы!",
 	MProshlyapPrePull6	= "У нас нет на это времени! Где та реликвия, которую я взяла?",
-	MProshlyapPrePull7	= "Ладно, давайте это исправим. Надо просто... ой.",
+	MProshlyapPrePull7	= "Даже Аспект Времени не должен менять временные пути!",
 	MProshlyapPrePull8	= "О, нет. Это Морхи! Что она тут делает?"
 })

@@ -295,10 +295,6 @@ L:SetGeneralLocalization({
 -----------------------
 L= DBM:GetModLocalization(2528)
 
-L:SetMiscLocalization({
-	PrePullMTRP	= "¡Ni siquiera el Aspecto del Tiempo puede perturbar las líneas temporales!"
-})
-
 -----------------------
 -- Blight of Galakrond --
 -----------------------
@@ -322,7 +318,7 @@ L:SetMiscLocalization({
 -----------------------
 -- Time-Lost Battlefield  --
 -----------------------
---L= DBM:GetModLocalization(2533)--Alliance ID used for both factions (2534 is horde id)
+L= DBM:GetModLocalization(2533)--Alliance ID used for both factions (2534 is horde id)
 
 L:SetGeneralLocalization({
 --	name =	"Time-Lost Battlefield"--Manual local because auto inserts Alliance or horde to name and mod combines them since singular encounter ID
@@ -340,8 +336,24 @@ L:SetMiscLocalization({
 ---------
 --Trash--
 ---------
---L = DBM:GetModLocalization("DawnoftheInfiniteTrash")
+L = DBM:GetModLocalization("DawnoftheInfiniteTrash")
 
 L:SetGeneralLocalization({
 --	name =	"Трэш мобы Рассвет Бесконечности"
+})
+
+L:SetOptionLocalization({
+--	AutoRift 			= "Автоматически выбирать диалог для активации портала"
+})
+
+L:SetMiscLocalization({ 
+--	MProshlyapPrePull0	= "О, не волнуйся. Мы придумаем, как их остановить!",
+--	MProshlyapPrePull1	= "Ноздорму! Алекстраза! И остальные! Драконы Бесконечности здесь, их надо остановить.",
+--	MProshlyapPrePull2	= "Слуги титанов пришли сразиться со мной.",
+--	MProshlyapPrePull3	= "Пошли! Аспекты впереди. Ну, то есть... прото-аспекты.",
+--	MProshlyapPrePull4	= "Нам нужно подкрепление!",
+--	MProshlyapPrePull5	= "Мне нужны бойцы!",
+--	MProshlyapPrePull6	= "У нас нет на это времени! Где та реликвия, которую я взяла?",
+	MProshlyapPrePull7	= "¡Ni siquiera el Aspecto del Tiempo puede perturbar las líneas temporales!"
+--	MProshlyapPrePull8	= "О, нет. Это Морхи! Что она тут делает?"
 })

@@ -128,7 +128,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 200580 then --Безумный рев
 		timerMaddeningRoarCD:Start(nil, args.sourceGUID)
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		if not UnitIsDeadOrGhost("player") and expireTime then
+		if not UnitIsDeadOrGhost("player") and expireTime and self:AntiSpam(3, "MaddeningRoar") then
 			specWarnMaddeningRoar:Show()
 			specWarnMaddeningRoar:Play("defensive")
 		end

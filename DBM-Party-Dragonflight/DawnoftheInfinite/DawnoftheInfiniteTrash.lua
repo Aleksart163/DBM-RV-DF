@@ -551,6 +551,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MProshlyapPrePull8 or msg:find(L.MProshlyapPrePull8)) then
 		DBM:Debug("MPPR8", 2)
 		self:SendSync("MPPR8") --
+	elseif (msg == L.MProshlyapPrePull7 or msg:find(L.MProshlyapPrePull7)) then
+		DBM:Debug("MPPR7", 2)
+		self:SendSync("MPPR7") --
 	elseif (msg == L.MProshlyapPrePull4 or msg:find(L.MProshlyapPrePull4)) or (msg == L.MProshlyapPrePull5 or msg:find(L.MProshlyapPrePull5)) then
 		DBM:Debug("MPPR4", 2)
 		self:SendSync("MPPR4") --
@@ -579,7 +582,9 @@ end
 function mod:OnSync(msg, targetname)
 	if msg == "MPPR8" and self:AntiSpam(15, "Morchie") then --Таймер пулла Морхи
 		timerRP:Start(37.5) --
-	elseif msg == "MPPR6" and self:AntiSpam(15, "Trash2") then --Таймер пулла треша на Гнили
+	elseif msg == "MPPR7" and self:AntiSpam(15, "ManifestedTimeways") then --Таймер пулла Оживших потоков времени
+		timerRP:Start(22) --
+	elseif msg == "MPPR6" and self:AntiSpam(15, "Trash2") then --Таймер пулла треша на Гнили 2
 		timerRP:Start(16.5) --
 	elseif msg == "MPPR4" and self:AntiSpam(15, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
 		if self:IsMythicPlus() then
@@ -601,13 +606,13 @@ function mod:OnSync(msg, targetname)
 		end
 	elseif msg == "MPPR1" and self:AntiSpam(15, "Blight1") then --Таймер пула после Гнили 1
 		if self:IsMythicPlus() then
-			timerRP:Start(34.5) --
+			timerRP:Start(33.5) --
 		else
 			timerRP:Start(73.5) --
 		end
 	elseif msg == "MPPR0" and self:AntiSpam(15, "Trash1") then --Таймер пула перед 1-ым боссом
 		if self:IsMythicPlus() then
-			timerRP:Start(12)
+			timerRP:Start(7) --До открытия дверей
 		else
 			timerRP:Start(21) --21 до исчезания лужи и 24 до открытия двери (возможно можно и на 21 пройти через дверь)
 			timerTimelessCurseCD:Start(12)

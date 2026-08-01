@@ -22,10 +22,6 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_MISSED"
 )
 
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
-)
-
 --[[
 (ability.id = 405696 or ability.id = 405431 or ability.id = 414303 or ability.id = 414307) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
@@ -44,7 +40,6 @@ local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil
 local timerChronofadedCD							= mod:NewCDCountTimer(30.3, 405696, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Временное затухание
 local timerFragmentsofTimeCD						= mod:NewCDCountTimer(30.3, 405431, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Фрагменты времени
 local timerUnwindCD									= mod:NewCDTimer(30, 414303, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil) --Обращение вспять (Фронталка)
-local timerRP										= mod:NewRPTimer(22)
 
 local yellUnwind									= mod:NewYell(414303, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Обращение вспять (Фронталка)
 local yellChronofaded								= mod:NewShortPosYell(405696, nil, nil, nil, "YELL") --Временное затухание
@@ -136,15 +131,3 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
-
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.PrePullMTRP or msg:find(L.PrePullMTRP)) then
-		self:SendSync("MTRP")--Syncing to help unlocalized clients
-	end
-end
-
-function mod:OnSync(msg)
-	if msg == "MTRP" and self:AntiSpam(10, 2) then
-		timerRP:Start()
-	end
-end
