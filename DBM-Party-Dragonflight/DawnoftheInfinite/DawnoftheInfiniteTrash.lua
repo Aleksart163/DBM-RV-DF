@@ -14,7 +14,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 411994 412012 412129",
 	"SPELL_AURA_APPLIED 412063 415554 415437 413547 419517 407205",
 --	"SPELL_AURA_APPLIED_DOSE",
---	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_REMOVED 407205 415769",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_SAY",
 	"CHAT_MSG_MONSTER_YELL",
@@ -444,6 +444,19 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVolatileMortar:Show()
 			specWarnVolatileMortar:Play("watchstep")
 			warnVolatileMortar:Show(args.destName)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 407205 then
+		if args:IsPlayer() then
+			yellVolatileMortarFades:Cancel()
+		end
+	elseif spellId == 415769 then
+		if args:IsPlayer() then
+			yellChronoburstFades:Cancel()
 		end
 	end
 end
