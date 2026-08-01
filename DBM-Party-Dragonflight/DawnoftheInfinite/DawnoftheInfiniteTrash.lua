@@ -583,7 +583,11 @@ function mod:OnSync(msg, targetname)
 	if msg == "MPPR8" and self:AntiSpam(15, "Morchie") then --Таймер пулла Морхи
 		timerRP:Start(37.5) --
 	elseif msg == "MPPR7" and self:AntiSpam(15, "ManifestedTimeways") then --Таймер пулла Оживших потоков времени
-		timerRP:Start(22) --
+		if self:IsMythicPlus() then
+			timerRP:Start(12) --
+		else
+			timerRP:Start(22) --
+		end
 	elseif msg == "MPPR6" and self:AntiSpam(15, "Trash2") then --Таймер пулла треша на Гнили 2
 		timerRP:Start(16.5) --
 	elseif msg == "MPPR4" and self:AntiSpam(15, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
