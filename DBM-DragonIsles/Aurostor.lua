@@ -53,20 +53,27 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 421059 then
 		self.vb.tantrumCount = self.vb.tantrumCount + 1
 		warnCrankyTantrum:Show(self.vb.tantrumCount)
-		if self.vb.tantrumCount == 1 then
+		local amount = self.vb.tantrumCount
+		if amount % 2 == 1 then
 			specWarnCrankyTantrum:Show()
 			specWarnCrankyTantrum:Play("watchstep")
+		end
+		if self.vb.tantrumCount == 1 then
+			timerCrankyTantrumCD:Start(38.7) --норм от 9 до 13 каста
+		elseif self.vb.tantrumCount == 4 then
+			self.vb.tantrumCount = 0
 		end
 	end
 end
 
-function mod:SPELL_CAST_SUCCESS(args)
+--[[
+function mod:SPELL_CAST_SUCCESS(args) --Сломано на стороне сервера
 	local spellId = args.spellId
 	if spellId == 421006 then
 		self.vb.tantrumCount = 0
 		timerCrankyTantrumCD:Start()
 	end
-end
+end]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId

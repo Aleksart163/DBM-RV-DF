@@ -584,7 +584,7 @@ function mod:OnSync(msg, targetname)
 		timerRP:Start(37.5) --
 	elseif msg == "MPPR7" and self:AntiSpam(15, "ManifestedTimeways") then --Таймер пулла Оживших потоков времени
 		if self:IsMythicPlus() then
-			timerRP:Start(12) --
+			timerRP:Start(13) --
 		else
 			timerRP:Start(22) --
 		end
