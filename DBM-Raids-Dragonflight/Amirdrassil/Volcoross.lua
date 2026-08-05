@@ -86,7 +86,7 @@ local allTimers = {
 	--Вулканическое извержение
 	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0},
 	--Удар жгучехвоста (Нормальные под героик)
-	[420421] = {20, 19.9, 20, 31.2, 10, 8.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
+	[420421] = {19.9, 19.9, 20, 31.2, 10, 8.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
 }
 
 function mod:DisgorgeTarget(targetname, uId)
@@ -110,7 +110,7 @@ function mod:OnCombatStart(delay)
 	playerStacks = 0
 	timerCataclysmJawsCD:Start(4.8-delay, 1)
 	timerSerpentsFuryCD:Start(9.8-delay, 1)
-	timerScorchtailCrashCD:Start(20-delay, 1)
+	timerScorchtailCrashCD:Start(19.9-delay, 1)
 	timerVolcanicDisgorgeCD:Start(29.8-delay, 1)
 	timerFloodoftheFirelandsCD:Start(69.8-delay, 1)
 end
