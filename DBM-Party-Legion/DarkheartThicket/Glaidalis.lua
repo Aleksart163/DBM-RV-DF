@@ -33,7 +33,7 @@ ability.id = 198379 and type = "begincast"
 local warnLeap					= mod:NewTargetNoFilterAnnounce(196354, 4, nil, nil, 47482) --Мучительный прыжок (Прыжок)
 local warnNightFall				= mod:NewCountAnnounce(212464, 2) --Сумерки
 
-local specWarnLeap				= mod:NewSpecialWarningDefensive(196354, nil, 47482, nil, 2, 4) --Мучительный прыжок (Прыжок)
+local specWarnLeap				= mod:NewSpecialWarningDefensive(196354, nil, 47482, nil, 1, 4) --Мучительный прыжок (Прыжок)
 local specWarnNightfall			= mod:NewSpecialWarningMove(212464, nil, nil, nil, 1, 2) --Сумерки
 local specWarnRampage			= mod:NewSpecialWarningDefensive(198379, nil, nil, nil, 3, 2) --Первобытная ярость
 local specWarnRampage2			= mod:NewSpecialWarningDodge(198379, nil, nil, nil, 2, 2) --Первобытная ярость
@@ -170,7 +170,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, 20)
 		end
 	elseif spellId == 196376 then --Мучительный прыжок
-		warnLeap:CombinedShow(0.7, args.destName)
+		warnLeap:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnLeap:Show()
 			specWarnLeap:Play("defensive")

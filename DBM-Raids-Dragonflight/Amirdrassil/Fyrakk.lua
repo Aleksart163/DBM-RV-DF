@@ -15,9 +15,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 419506 420422 417455 417431 412761 428963 428400 428971 428968 428965 419123 422837 410223 425492 422518 419144",
 	"SPELL_CAST_SUCCESS 430441 422935 422524 426368",
-	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906",
+	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922",
 	"SPELL_AURA_APPLIED_DOSE 417807 417443 429866 425494",
-	"SPELL_AURA_REMOVED 419144",
+	"SPELL_AURA_REMOVED 419144 421922",
 	"SPELL_PERIODIC_DAMAGE 419504 425483",
 	"SPELL_PERIODIC_MISSED 419504 425483",
 	"CHAT_MSG_MONSTER_YELL",
@@ -41,7 +41,7 @@ local specWarnGTFO									= mod:NewSpecialWarningGTFO(419504, nil, nil, nil, 1,
 
 local timerPhaseCD									= mod:NewStageTimer(60, 408330)
 --local berserkTimer								= mod:NewBerserkTimer(600)
---Stage One: The Dream Render
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26666))
 local warnDarkflameShades							= mod:NewCountAnnounce(430441, 2, nil, false)
 local warnDarkflameCleave							= mod:NewCountAnnounce(426368, 4, nil, nil, 845)
@@ -68,7 +68,7 @@ local timerFyralathsBiteCD							= mod:NewCDCountTimer(49, 417431, DBM_COMMON_L.
 mod:AddPrivateAuraSoundOption(419060, true, 419506, 1)--Firestorm
 mod:AddPrivateAuraSoundOption(426370, true, 426370, 1)--Darkflame Cleave
 mod:AddPrivateAuraSoundOption(414187, true, 414186, 1)--Blaze
---Intermission: Amirdrassil in Peril
+--Переходка
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26667))
 local warnShadowflameOrbs							= mod:NewCountAnnounce(421937, 2)
 local warnShadowflameEruption						= mod:NewCountAnnounce(429866, 4, nil, false, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(429866))--Player
@@ -78,15 +78,17 @@ local specWarnShadowflameBreath						= mod:NewSpecialWarningDodgeCount(410223, n
 local specWarnFlamebound							= mod:NewSpecialWarningYou(429903, nil, nil, nil, 1, 15, 4)
 local specWarnShadowbound							= mod:NewSpecialWarningYou(429906, nil, nil, nil, 1, 15, 4)
 
-local timerCorrupt									= mod:NewCastTimer(13, 419144, nil, nil, nil, 6)
+local timerCorruptCast								= mod:NewCastTimer(33, 419144, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Заражение порчей
+local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5)
 local timerShadowflameOrbsCD						= mod:NewCDCountTimer(49, 421937, nil, nil, nil, 5)
 local timerIncarnateCD								= mod:NewCDCountTimer(8.5, 412761, 374763, nil, nil, 6)--Short name "Lift off"
 --local timerIncarnate								= mod:NewCastTimer(8.5, 412761, 374763, nil, nil, 2)
 local timerShadowflameBreathCD						= mod:NewCDCountTimer(49, 410223, 17088, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
+mod:AddInfoFrameOption(419144, true) --Точнее 421922
 --mod:AddPrivateAuraSoundOption(429903, true, 429903, 1)--Flamebound
 --mod:AddPrivateAuraSoundOption(429906, true, 429906, 1)--Shadowbound
---Stage Two: Children of the Stars
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26668))
 local warnSpirits									= mod:NewCountAnnounce(422032, 3, nil, nil, 263222)
 local warnGreaterFirestorm							= mod:NewCountAnnounce(422518, 3)
@@ -111,7 +113,7 @@ local timerShadowflameDevastationCD					= mod:NewCDCountTimer(49, 422524, 406227
 mod:AddPrivateAuraSoundOption(422520, true, 422518, 1)--Greater Firestorm
 mod:AddPrivateAuraSoundOption(428988, true, 428971, 1)--Molten Eruption
 mod:AddPrivateAuraSoundOption(428970, true, 428968, 1)--Shadow Cage
---Stage Three: Shadowflame Incarnate
+--Фаза 3
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26670))
 local warnBloom										= mod:NewYouAnnounce(423717, 1)
 local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer")
@@ -122,7 +124,8 @@ local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 1404
 local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2)
 local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, nil, nil, 1, 2)
 
-local timerApocalypseroarCD							= mod:NewCDCountTimer(49, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerApocalypseroarCD							= mod:NewCDCountTimer(49, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
+local timerApocalypseroar							= mod:NewCastTimer(4.8, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
 local timerInfernalMawCD							= mod:NewCDCountTimer(49, 425492, nil, "Tank|healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 419506, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
 local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 143413, nil, nil, 3)--short name "Swirl"
@@ -305,6 +308,12 @@ function mod:OnCombatStart(delay)
 	end
 end
 
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 419506 then
@@ -350,6 +359,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 419144 then--Corrupt
 		timerShadowflameOrbsCD:Start(3.5, 1)
+		timerCorruptCast:Start()
 		self:Schedule(3.5, orbsLoop, self)
 	elseif spellId == 412761 then
 		self.vb.incarnCount = self.vb.incarnCount + 1
@@ -370,7 +380,7 @@ function mod:SPELL_CAST_START(args)
 			self:Unschedule(blazeLoop)
 			timerDarkflameShadesCD:Stop()--Mythic Only
 			timerDarkflameCleaveCD:Stop()--Mythic Only
-			timerCorrupt:Start(13)
+			timerIntermission:Start(13)
 			if self:IsMythic() then
 				timerBlazeCD:Start(28, 1)--Mythic only
 				self:Schedule(28, blazeLoop, self)
@@ -425,6 +435,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnApocalypseRoar:Show(self.vb.roarCount)
 		specWarnApocalypseRoar:Play("pushbackincoming")
 		timerApocalypseroarCD:Start(self:IsMythic() and 46 or 40.9, self.vb.roarCount+1)
+		timerApocalypseroar:Start()
 		if self:IsMythic() then
 			timerCorruptedSeedsCD:Start(18, self.vb.roarCount)
 		end
@@ -585,6 +596,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 429906 and args:IsPlayer() then
 		specWarnShadowbound:Show()
 		specWarnShadowbound:Play("shadowyou")
+	elseif spellId == 421922 then --Заражение порчей
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(366548)) --(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
+		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -617,6 +634,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerBlazeCD:Start(20.7, 1)--Heroic/Mythic only
 			self:Schedule(20.7, blazeLoop, self)
 		end
+	elseif spellId == 421922 then --Заражение порчей
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
+		end
+		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
 	end
 end
 --mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED

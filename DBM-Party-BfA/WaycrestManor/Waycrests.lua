@@ -30,15 +30,15 @@ mod:RegisterEventsInCombat(
 local warnVirulentPathogen			= mod:NewTargetNoFilterAnnounce(261440, 3) --Смертоносный патоген
 local warnVitalityTransfer			= mod:NewCountAnnounce(261446, 2) --Передача жизненной силы
 
-local specWarnWrackingChord			= mod:NewSpecialWarningInterruptCount(268278, "HasInterrupt", nil, nil, 1, 2) --Сокрушающий аккорд
+local specWarnWrackingChord			= mod:NewSpecialWarningInterruptCount(268278, "HasInterrupt", 85544, nil, 1, 2) --Сокрушающий аккорд (Стрела тьмы)
 local specWarnDiscordantCadenza		= mod:NewSpecialWarningDodge(268306, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Нестройная каденция (Обстрел)
 local specWarnVirulentPathogen		= mod:NewSpecialWarningMoveAway(261440, nil, nil, nil, 4, 2) --Смертоносный патоген
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 local timerWastingStrikeCD			= mod:NewCDCountTimer(16, 261438, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3) --Изнуряющий удар 16.5-17.1
-local timerVirulentPathogenCD		= mod:NewCDCountTimer(15.4, 261440, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON) --Смертоносный патоген 15.4-17
+local timerVirulentPathogenCD		= mod:NewCDCountTimer(15.1, 261440, nil, nil, nil, 3, nil, DBM_COMMON_L.DISEASE_ICON) --Смертоносный патоген 15.4-17
 local timerDiscordantCadenzaCD		= mod:NewCDCountTimer(23.5, 268306, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестройная каденция (Обстрел) Casting transfer can delay it further since that triggers a 3 second spell lockout+cast time
-local timerWrackingChordCD			= mod:NewCDCountTimer(7.3, 268278, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Сокрушающий аккорд
+local timerWrackingChordCD			= mod:NewCDCountTimer(7.3, 268278, 85544, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Сокрушающий аккорд (Стрела тьмы)
 
 local yellVirulentPathogen			= mod:NewYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
 local yellVirulentPathogenFades		= mod:NewShortFadesYell(261440, nil, nil, nil, "YELL") --Смертоносный патоген
@@ -59,9 +59,9 @@ local function scanBosses(self, delay)
 			local bossGUID = UnitGUID(unitID)
 			if cid == 131527 then--Lord waycrest
 				timerWastingStrikeCD:Start(5-delay, 1, bossGUID)
-				timerVirulentPathogenCD:Start(9.5-delay, 1, bossGUID)
+				timerVirulentPathogenCD:Start(9.5-delay, 1, bossGUID) --
 			else
-				timerDiscordantCadenzaCD:Start(13-delay, 1, bossGUID)
+				timerDiscordantCadenzaCD:Start(15.8-delay, 1, bossGUID) --
 			end
 		end
 	end
@@ -93,8 +93,8 @@ function mod:SPELL_CAST_START(args)
 		specWarnDiscordantCadenza:Play("watchstep")
 	elseif spellId == 261440 then
 		self.vb.virulentCount = self.vb.virulentCount + 1
-		timerVirulentPathogenCD:Start(15.7, self.vb.virulentCount+1, args.sourceGUID)
-	elseif spellId == 268278 and self:GetStage(2) then --Сокрушающий аккорд
+		timerVirulentPathogenCD:Start(nil, self.vb.virulentCount+1, args.sourceGUID)
+	elseif spellId == 268278 and self:GetStage(2) then --Сокрушающий аккорд (Стрела тьмы)
 		self.vb.interruptCount = self.vb.interruptCount + 1
 		self.vb.discordCount = self.vb.discordCount + 1--Reused since not needed anymore otherwise
 		local kickCount = self.vb.interruptCount
@@ -103,11 +103,10 @@ function mod:SPELL_CAST_START(args)
 			specWarnWrackingChord:Play("kick1r")
 		elseif kickCount == 2 then
 			specWarnWrackingChord:Play("kick2r")
-		--пока на 2 каста, дальше глянем--
-	--	elseif kickCount == 3 then
-	--		specWarnSoulBolt:Play("kick3r")
+		elseif kickCount == 3 then
+			specWarnWrackingChord:Play("kick3r")
 		end
-		if self.vb.interruptCount == 2 then
+		if self.vb.interruptCount == 3 then
 			self.vb.interruptCount = 0
 		end
 		timerWrackingChordCD:Start(nil, self.vb.discordCount+1, args.sourceGUID)--8

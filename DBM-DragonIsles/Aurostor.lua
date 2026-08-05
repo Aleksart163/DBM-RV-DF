@@ -29,11 +29,24 @@ local specWarnRoarDebuff				= mod:NewSpecialWarningJump(421260, nil, nil, nil, 1
 local timerGroggyBashCD					= mod:NewCDTimer(32.7, 420895, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Неуверенный замах
 --local timerPulverizingOutburstCD		= mod:NewAITimer(15.7, 420925, nil, nil, nil, 3)--15-59 is too much variation, would need spell queuing and cast priority to be sorted out
 local timerSlumberingRoarCD				= mod:NewCDTimer(70.9, 421260, nil, nil, nil, 2) --Дремотный рев Small sample
-local timerCrankyTantrumCD				= mod:NewCDTimer(27.9, 421059, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Приступ раздражения 27.9-43.8
+local timerCrankyTantrumCD				= mod:NewCDTimer(27.9, 421059, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Приступ раздражения (Фронталка) 27.9-43.8
 
 local yellGroggyBash					= mod:NewYell(420895, nil, nil, nil, "YELL") --Неуверенный замах
 
+mod.vb.frontalCount = 0
 mod.vb.tantrumCount = 0
+
+local proshlyapationTimers = {21.9, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5, 38.5, 33.5}
+
+function mod:OnCombatStart(delay, yellTriggered)
+	self.vb.frontalCount = 0
+	self.vb.tantrumCount = 0
+	timerCrankyTantrumCD:Start(21.9)
+end
+--[[
+function mod:OnCombatEnd()
+
+end]]
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -58,8 +71,16 @@ function mod:SPELL_CAST_START(args)
 			specWarnCrankyTantrum:Show()
 			specWarnCrankyTantrum:Play("watchstep")
 		end
+--[[		if self.vb.tantrumCount == 1 then --Хороший вариант, но пока попробуем другой
+			timerCrankyTantrumCD:Start(38.5) --33.5, 38.5
+		elseif self.vb.tantrumCount == 4 then
+			self.vb.tantrumCount = 0
+		end]]
 		if self.vb.tantrumCount == 1 then
-			timerCrankyTantrumCD:Start(38.7) --норм от 9 до 13 каста
+			self.vb.frontalCount = self.vb.frontalCount + 1
+			local timer
+			timer = proshlyapationTimers[self.vb.frontalCount+1]
+			timerCrankyTantrumCD:Start(timer, self.vb.frontalCount+1)
 		elseif self.vb.tantrumCount == 4 then
 			self.vb.tantrumCount = 0
 		end

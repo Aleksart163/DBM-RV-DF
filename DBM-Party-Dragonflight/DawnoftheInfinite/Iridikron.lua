@@ -54,7 +54,7 @@ local yellExtinctionBlastFades					= mod:NewShortFadesYell(409261, nil, nil, nil
 local yellPulverizingCreations					= mod:NewYell(409879, DBM_COMMON_L.ADD, nil, nil, "YELL") --Крушащие творения (Адд)
 local yellPulverizingCreationsFades				= mod:NewShortFadesYell(409879, nil, nil, nil, "YELL") --Крушащие творения (Адд)
 
-mod:AddInfoFrameOption(410719, true)
+mod:AddInfoFrameOption(409456, true)
 mod:AddSetIconOption("SetIconOnExtinctionBlast", 409261, true, 0, {8}) --Истребляющий взрыв (Бомба)
 
 mod.vb.surgeCount = 0
@@ -120,8 +120,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnCataclysmicObliteration:Play("findshelter")
 	elseif spellId == 409456 then --Земляной импульс
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(366548))
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 2 на боссе)", 2)
 	elseif spellId == 410719 then --Земляной импульс (аура щитов)
@@ -136,13 +136,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnTimelineTranscendence:Play("dpsmore")
 		end
 	elseif spellId == 409879 then --Крушащие творения (Адд)
+		warnPulverizingCreations:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnPulverizingCreations:Show()
 			specWarnPulverizingCreations:Play("targetyou")
 			yellPulverizingCreations:Yell()
 			yellPulverizingCreationsFades:Countdown(spellId)
-		else
-			warnPulverizingCreations:CombinedShow(0.3, args.destName)
 		end
 	end
 end

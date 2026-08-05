@@ -82,6 +82,7 @@ local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_
 local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Боевой крик 2 варианта
 
 local yellBladestorm								= mod:NewYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
+local yellBladestormFades							= mod:NewShortFadesYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 
 --Write the custom WA keys into the spell headers
 mod:JustSetCustomKeys(rallySpellId, L.customWAMessage:format(418047, 418046))
@@ -249,6 +250,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBladestorm2:Show()
 			specWarnBladestorm2:Play("justrun")
 			yellBladestorm:Yell()
+			yellBladestormFades:Countdown(spellId)
 		end
 	end
 end

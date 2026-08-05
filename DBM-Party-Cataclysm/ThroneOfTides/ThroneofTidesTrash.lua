@@ -67,6 +67,7 @@ local yellHex						= mod:NewYell(76820, nil, nil, nil, "YELL") --Сглаз
 local yellHexFades					= mod:NewShortFadesYell(76820, nil, nil, nil, "YELL") --Сглаз
 local yellLightningSurge			= mod:NewYell(75992, nil, nil, nil, "YELL") --Выброс тока
 local yellLightningSurgeFades		= mod:NewShortFadesYell(75992, nil, nil, nil, "YELL") --Выброс тока
+local yellCrushingDepths			= mod:NewYell(428542, nil, nil, nil, "YELL") --Морская пучина
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
 function mod:SPELL_CAST_START(args)
@@ -180,8 +181,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnHex:Show(args.destName)
 			specWarnHex:Play("helpdispel")
 		end
-	elseif spellId == 428542 and (args:IsPlayer() or self:IsHealer()) then
+	elseif spellId == 428542 and args:IsDestTypePlayer() then
 		warnCrushingDepths:CombinedShow(0.5, args.destName)
+		if args:IsPlayer() then
+			yellCrushingDepths:Yell()
+		end
 	elseif spellId == 426618 and self:AntiSpam(3, 5) then
 		warnSlitheringAssault:Show(args.destName)
 	elseif spellId == 426659 and args:IsDestTypePlayer() then

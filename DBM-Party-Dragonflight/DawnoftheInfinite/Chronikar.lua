@@ -51,13 +51,15 @@ mod.vb.shatterSet = 0
 mod.vb.shearCount = 0
 mod.vb.stompCount = 0
 
+local proshlyaptionSandStompTimers = {7.1, 33.4, 17, 31.2, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17} --Первые 5 таймеров точные
+
 function mod:OnCombatStart(delay)
 	self.vb.shatterCount = 0
 	self.vb.shatterSet = 0
 	self.vb.shearCount = 0
 	self.vb.stompCount = 0
-	timerSandStompCD:Start(7.2-delay, 1) --7.2
-	timerEonShatterCD:Start(18-delay) --19.5
+	timerSandStompCD:Start(7.1-delay, 1) --7.1
+	timerEonShatterCD:Start(17.9-delay) --17.9
 	timerChronoShearCD:Start(49, 1) --Было отличное кд
 end
 
@@ -68,7 +70,8 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(15, 1) then
 			self.vb.shatterSet = self.vb.shatterSet + 1
 			self.vb.shatterCount = 0
-			timerEonShatterCD:Start(52, self.vb.shatterSet+1)
+			--17.9, 48.3, 47.3
+			timerEonShatterCD:Start(47.3, self.vb.shatterSet+1) --По инфе с офы 52
 		end
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		if self:IsMythic() then
@@ -92,17 +95,19 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerChronoShearCD:Start(47, self.vb.shearCount+1)
 		DBM:Debug("Murchal proshlyap (каст танковского удара)", 2)
-	elseif spellId == 401421 then
-		--7.2, 37.5, 17
+	elseif spellId == 401421 then --7.2, 37.5, 17
 		self.vb.stompCount = self.vb.stompCount + 1
 		specWarnSandStomp:Show(self.vb.stompCount)
 		specWarnSandStomp:Play("scatter")
-		if self.vb.stompCount % 2 == 0 then
-			timerSandStompCD:Start(17, self.vb.stompCount+1) --(3,5,7)
-		else--Eon Shatter causes delay
-			timerSandStompCD:Start(36.5, self.vb.stompCount+1) --(2,4,6)
-		end
+		local timer
+		timer = proshlyaptionSandStompTimers[self.vb.stompCount+1]
+		timerSandStompCD:Start(timer, self.vb.stompCount+1)
 		timerSandStompCast:Start()
+--[[		if self.vb.stompCount % 2 == 0 then --Прошлая версия с слегка кривыми таймерами
+			timerSandStompCD:Start(17, self.vb.stompCount+1) --(3,5,7)
+		else --2 каст на 4.1 сек раньше
+			timerSandStompCD:Start(36.5, self.vb.stompCount+1) --(2,4,6)
+		end]]
 	end
 end
 

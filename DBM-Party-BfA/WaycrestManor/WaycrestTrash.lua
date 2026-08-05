@@ -11,8 +11,8 @@ mod.isTrashModBossFightAllowed = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 263959 265881 265876 265368 266036 278551 265759 264038 263905 265407 263961 267824 265372 265371 426541 264390 260699 264050 265352 264150 265760 278444 263943 271174 265346 264407 278504",
 	"SPELL_CAST_SUCCESS 264556 271175 264105 265880",--257260
-	"SPELL_AURA_APPLIED 265880 264105 265368 264390 257260 263943",
-	"SPELL_AURA_REMOVED 265880 264105",
+	"SPELL_AURA_APPLIED 265880 264105 265368 264390 257260 263943 264407",
+	"SPELL_AURA_REMOVED 265880 264105 264407",
 	"UNIT_DIED"
 )
 
@@ -46,7 +46,7 @@ local specWarnWardingCandle			= mod:NewSpecialWarningMove(263961, "Tank", nil, n
 local specWarnDreadMark				= mod:NewSpecialWarningMoveAway(265880, nil, 49685, nil, 1, 2) --Жуткая метка (Бомба)
 local specWarnRunicMark				= mod:NewSpecialWarningMoveAway(264105, nil, 49685, nil, 1, 2) --Руническая метка (Бомба)
 local specWarnAscensionRitual		= mod:NewSpecialWarningInterrupt(278504, "HasInterrupt", nil, nil, 1, 2) --Ритуал вознесения
-local specWarnSoulVolley			= mod:NewSpecialWarningInterrupt(263959, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Залп душ
+local specWarnSoulVolley			= mod:NewSpecialWarningInterrupt(263959, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Залп душ (Обстрел)
 local specWarnRuinousVolley			= mod:NewSpecialWarningInterrupt(265876, "HasInterrupt", nil, DBM_COMMON_L.BOMBING, 1, 2) --Губительный залп
 local specWarnSpiritedDefense		= mod:NewSpecialWarningInterrupt(265368, "HasInterrupt", nil, nil, 1, 2) --Защита духов
 local specWarnDrainEssence			= mod:NewSpecialWarningInterrupt(266036, "HasInterrupt", nil, nil, 1, 2) --Вытягивание сущности
@@ -60,30 +60,30 @@ local specWarnSoulBolt				= mod:NewSpecialWarningInterrupt(260699, false, nil, n
 local specWarnInfest				= mod:NewSpecialWarningInterrupt(278444, "HasInterrupt", nil, nil, 1, 2) --Заражение
 local specWarnRetch					= mod:NewSpecialWarningInterrupt(271174, "HasInterrupt", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Тошнота
 local specWarnPallidGlare			= mod:NewSpecialWarningInterrupt(265346, "HasInterrupt", 242085, nil, 1, 2) --Мертвенный взгляд (Дезориентация)
-local specWarnHorrificVisage		= mod:NewSpecialWarningInterrupt(264407, "HasInterrupt", nil, nil, 1, 2) --Ужасающий лик
+local specWarnHorrificVisage		= mod:NewSpecialWarningInterrupt(264407, "HasInterrupt", 68950, nil, 1, 2) --Ужасающий лик (Страх)
 local specWarnDecayingTouch			= mod:NewSpecialWarningDefensive(265881, nil, nil, nil, 1, 2)
 local specWarnThornedBarrage		= mod:NewSpecialWarningDefensive(265760, nil, nil, nil, 1, 2)
 local specWarnSpiritedDefenseDispel	= mod:NewSpecialWarningDispel(265368, "MagicDispeller", nil, nil, 1, 2) --Защита духов
 local specWarnRunicMarkDispel		= mod:NewSpecialWarningDispel(264105, "RemoveCurse", 49685, nil, 1, 2) --Руническая метка (Бомба)
 local specWarnEnrage				= mod:NewSpecialWarningDispel(257260, "RemoveEnrage", nil, nil, 1, 2)
 
-local timerScarSoulCD				= mod:NewCDNPTimer(12.2, 267824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оставить шрам на душе Needs more data
+local timerScarSoulCD				= mod:NewCDNPTimer(4.2, 267824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оставить шрам на душе 12.2
 local timerFocusedStrikeCD			= mod:NewCDNPTimer(8.4, 265371, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Сосредоточенный удар
 local timerTearingStrikeCD			= mod:NewCDNPTimer(10.9, 264556, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разрывающий плоть удар
-local timerShadowCleaveCD			= mod:NewCDNPTimer(12.1, 265372, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Теневой рассекающий удар (Фронталка)
-local timerSpiritedDefenseCD		= mod:NewCDNPTimer(23, 265368, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Защита духов
+local timerShadowCleaveCD			= mod:NewCDNPTimer(8, 265372, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Теневой рассекающий удар (Фронталка) 12.1
+local timerSpiritedDefenseCD		= mod:NewCDNPTimer(18, 265368, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Защита духов 23
 local timerRunicMarkCD				= mod:NewCDNPTimer(12.1, 264105, 167180, nil, nil, 3) --Руническая метка (Бомбы)
-local timerEtchCD					= mod:NewCDNPTimer(12.1, 263943, nil, nil, nil, 3) --Гравировка
+local timerEtchCD					= mod:NewCDNPTimer(11.5, 263943, nil, nil, nil, 3) --Гравировка 12.1
 local timerInfectedThornsCD			= mod:NewCDNPTimer(8.5, 264050, nil, nil, nil, 3) --Зараженный шип
 local timerDrainEssenceCD			= mod:NewCDNPTimer(15.7, 266036, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Вытягивание сущности
-local timerUprootCD					= mod:NewCDNPTimer(15.2, 264038, nil, nil, nil, 3) --Прорастание
-local timerSplinterSpikeCD			= mod:NewCDNPTimer(15.7, 265759, nil, nil, nil, 3) --Расколотые шипы
+local timerUprootCD					= mod:NewCDNPTimer(14, 264038, nil, nil, nil, 3) --Прорастание 15.2
+local timerSplinterSpikeCD			= mod:NewCDNPTimer(15, 265759, nil, nil, nil, 3) --Расколотые шипы 15.7
 local timerThornedBarrageCD			= mod:NewCDNPTimer(11.7, 265760, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerRavagingLeapCD			= mod:NewCDNPTimer(8.5, 271175, nil, nil, nil, 3)
-local timerRetchCD					= mod:NewCDNPTimer(20.2, 271174, DBM_COMMON_L.FRONTAL, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Тошнота
-local timerDinnerBellCD				= mod:NewCDNPTimer(16.6, 265407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Звонок к обеду
+local timerRetchCD					= mod:NewCDNPTimer(13.9, 271174, DBM_COMMON_L.FRONTAL, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Тошнота 20.2
+local timerDinnerBellCD				= mod:NewCDNPTimer(16, 265407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Звонок к обеду 16.6
 local timerSpellbindCD				= mod:NewCDNPTimer(19.2, 264390, 329903, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оковы чар (Немота)
-local timerSoulVolleyCD				= mod:NewCDNPTimer(17.7, 263959, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerSoulVolleyCD				= mod:NewCDNPTimer(11, 263959, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп душ (Обстрел) 17.7
 local timerWardingCandleCD			= mod:NewCDNPTimer(18.2, 263961, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Защитные свечи
 local timerRuinousoVolleyCD			= mod:NewCDNPTimer(17, 265876, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerDreadMarkCD				= mod:NewCDNPTimer(18.2, 265880, 167180, nil, nil, 3) --Жуткая метка (Бомбы)
@@ -93,6 +93,8 @@ local yellDreadMark					= mod:NewYell(265880, 49685, nil, nil, "YELL") --Жут�
 local yellDreadMarkFades			= mod:NewShortFadesYell(265880, nil, nil, nil, "YELL") --Жуткая метка (Бомба)
 local yellRunicMark					= mod:NewYell(264105, 49685, nil, nil, "YELL") --Руническая метка (Бомба)
 local yellRunicMarkFades			= mod:NewShortFadesYell(264105, nil, nil, nil, "YELL") --Руническая метка (Бомба)
+local yellHorrificVisage			= mod:NewYell(264407, 68950, nil, nil, "YELL") --Ужасающий лик (Страх)
+local yellHorrificVisageFades		= mod:NewShortFadesYell(264407, nil, nil, nil, "YELL") --Ужасающий лик (Страх)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
 
@@ -313,6 +315,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEtch:Show(args.destName)
 		end
+	elseif spellId == 264407 and args:IsDestTypePlayer() then --Ужасающий лик
+		if args:IsPlayer() then
+			yellHorrificVisage:Yell()
+			yellHorrificVisageFades:Countdown(spellId)
+		end
 	end
 end
 
@@ -323,6 +330,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		yellDreadMarkFades:Cancel()
 	elseif spellId == 264105 and args:IsPlayer() then
 		yellRunicMarkFades:Cancel()
+	elseif spellId == 264407 and args:IsPlayer() then --Ужасающий лик
+		yellHorrificVisageFades:Cancel()
 	end
 end
 
@@ -344,7 +353,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 135474 then--thistle-acolyte
 		timerDrainEssenceCD:Stop(args.destGUID)
 		timerInfectedThornsCD:Stop(args.destGUID)
---	elseif cid == 131666 then--coven-thornshaper
+	elseif cid == 131666 then --Заклинательница шипов из ковена
 		--Infected Thorn (2) (CD too short on these mobs)
 		timerUprootCD:Stop(args.destGUID)
 	elseif cid == 131858 then--thornguard
@@ -357,7 +366,7 @@ function mod:UNIT_DIED(args)
 		timerRavagingLeapCD:Stop(args.destGUID)
 		timerRetchCD:Stop(args.destGUID)
 	elseif cid == 131586 then--banquet-steward
-		timerDinnerBellCD:Start(args.destGUID)
+		timerDinnerBellCD:Stop(args.destGUID)
 --	elseif cid == 134024 then--devouring-maggot
 		--Infest
 	elseif cid == 131677 then--heartsbane-runeweaver

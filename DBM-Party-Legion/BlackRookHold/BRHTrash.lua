@@ -25,54 +25,55 @@ mod:RegisterEvents(
 --TODO, can't find spellId for Priceless artifact puddles. when found, add GTFO
 --TODO, despite what two guides say, fel frenzy doesn't exist in any M+ logs at all
 --NOTE, trash uses 194966 just like boss, the expression will pick up both
-local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
-local warnSacrificeSoul				= mod:NewTargetNoFilterAnnounce(200105, 2)
-local warnSicBats					= mod:NewTargetNoFilterAnnounce(203163, 2)
-local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, "-Healer", 2, nil, nil, 3)
-local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, "-Healer", 2, nil, nil, 3)
-local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, "-Healer", 2, nil, nil, 3)
-local warnBloodthirstyLeap			= mod:NewSpellAnnounce(225962, 2, nil, false)--Instant cast, announcing it already happened doesn't affect much agency to player
-local warnGlaiveToss				= mod:NewCastAnnounce(196916, 3)
-local warnPhasedExplosion			= mod:NewCastAnnounce(200256, 3, nil, nil, false)--They basically spam cast it, so off by default
-local warnFelFrenzy					= mod:NewCastAnnounce(227913, 4)--High prio off internet
-local warnSoulVenom					= mod:NewStackAnnounce(225909, 2)
+local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2) --Эхо души
+local warnSacrificeSoul				= mod:NewTargetNoFilterAnnounce(200105, 2) --Жертвоприношение души
+local warnSicBats					= mod:NewTargetNoFilterAnnounce(203163, 2) --Натравить нетопырей!
+local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, "-Healer", 2, nil, nil, 3) --Залп стрел
+local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, "-Healer", 2, nil, nil, 3) --Танец с кинжалами
+local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, "-Healer", 2, nil, nil, 3) --"Выпить" древнее зелье
+local warnBloodthirstyLeap			= mod:NewSpellAnnounce(225962, 2, nil, false) --Кровожадный прыжок Instant cast, announcing it already happened doesn't affect much agency to player
+local warnGlaiveToss				= mod:NewCastAnnounce(196916, 3) --Бросок глефы
+local warnPhasedExplosion			= mod:NewCastAnnounce(200256, 3, nil, nil, false) --Фазовый взрыв They basically spam cast it, so off by default
+local warnFelFrenzy					= mod:NewCastAnnounce(227913, 4, nil, nil, nil, 193396) --Неистовство Скверны (Демоническое усиление) High prio off internet
+local warnDarkMending				= mod:NewCastAnnounce(225573, 3) --Исцеление тьмой
+local warnSoulVenom					= mod:NewStackAnnounce(225909, 2) --Отравленная душа
 
-local specWarnSicBats				= mod:NewSpecialWarningYou(203163, nil, nil, nil, 1, 2)
-local specWarnStrikeDown			= mod:NewSpecialWarningDefensive(225732, nil, nil, nil, 1, 2)
-local specWarnCoupdeGrace			= mod:NewSpecialWarningDefensive(214003, nil, nil, nil, 1, 2)
-local specWarnBrutalAssault			= mod:NewSpecialWarningDefensive(201139, nil, nil, nil, 1, 2)
-local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(200261, nil, nil, nil, 2, 2)--Even tank can side step it, but tank can also aim it away from others
-local specWarnWhirlOfFlame			= mod:NewSpecialWarningDodge(221634, nil, nil, nil, 2, 2)
-local specWarnIndigestion			= mod:NewSpecialWarningDodge(200913, nil, nil, nil, 2, 2)
-local specWarnThrowArtifact			= mod:NewSpecialWarningDodge(201176, nil, nil, nil, 2, 2)
-local specWarnRavensDive			= mod:NewSpecialWarningDodge(214001, nil, nil, nil, 2, 2)
-local specWarnOverDetonation		= mod:NewSpecialWarningRun(221688, nil, nil, nil, 4, 2)
-local specWarnSoulEchos				= mod:NewSpecialWarningMoveAway(194966, nil, nil, nil, 1, 2)
-local specWarnSpiritBlast			= mod:NewSpecialWarningInterrupt(196883, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDarkMending			= mod:NewSpecialWarningInterrupt(225573, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSoulBlast				= mod:NewSpecialWarningInterrupt(199663, "HasInterrupt", nil, nil, 1, 2)
-local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(200248, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFelFrenzy				= mod:NewSpecialWarningInterrupt(227913, "HasInterrupt", nil, nil, 1, 2)--High Priority
-local specWarnSoulBlade				= mod:NewSpecialWarningDispel(200084, "RemoveMagic", nil, nil, 1, 2)
-local specWarnDrainLife				= mod:NewSpecialWarningDispel(204896, "RemoveMagic", nil, nil, 1, 2)
-local specWarnEnrage				= mod:NewSpecialWarningDispel(8599, "RemoveEnrage", nil, 2, 1, 2)
+local specWarnSicBats				= mod:NewSpecialWarningYou(203163, nil, nil, nil, 1, 2) --Натравить нетопырей!
+local specWarnStrikeDown			= mod:NewSpecialWarningDefensive(225732, nil, nil, nil, 1, 2) --Разящий удар
+local specWarnCoupdeGrace			= mod:NewSpecialWarningDefensive(214003, nil, nil, nil, 1, 2) --Удар милосердия
+local specWarnBrutalAssault			= mod:NewSpecialWarningDefensive(201139, nil, nil, nil, 1, 2) --Грубое нападение
+local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(200261, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Костедробильный удар (Фронталка) Even tank can side step it, but tank can also aim it away from others
+local specWarnWhirlOfFlame			= mod:NewSpecialWarningDodge(221634, nil, nil, nil, 2, 2) --Вихрь пламени
+local specWarnIndigestion			= mod:NewSpecialWarningDodge(200913, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Несварение (Фронталка)
+local specWarnThrowArtifact			= mod:NewSpecialWarningDodge(201176, nil, 148358, nil, 2, 2) --Бросить бесценный артефакт (Бросок ящика)
+local specWarnRavensDive			= mod:NewSpecialWarningDodge(214001, nil, 47482, nil, 2, 2) --Пикирующий ворон (Прыжок)
+local specWarnOverDetonation		= mod:NewSpecialWarningRun(221688, nil, 363533, nil, 4, 2) --Мощная детонация (Мощный взрыв)
+local specWarnSoulEchos				= mod:NewSpecialWarningMoveAway(194966, nil, nil, nil, 1, 2) --Эхо души
+local specWarnSpiritBlast			= mod:NewSpecialWarningInterrupt(196883, "HasInterrupt", nil, nil, 1, 2) --Призрачный взрыв
+local specWarnDarkMending			= mod:NewSpecialWarningInterrupt(225573, "HasInterrupt", nil, nil, 1, 2) --Исцеление тьмой
+local specWarnSoulBlast				= mod:NewSpecialWarningInterrupt(199663, "HasInterrupt", nil, nil, 1, 2) --Взрыв души
+local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(200248, "HasInterrupt", nil, nil, 1, 2) --Чародейская бомбардировка
+local specWarnFelFrenzy				= mod:NewSpecialWarningInterrupt(227913, "HasInterrupt", 193396, nil, 1, 2) --Неистовство Скверны (Демоническое усиление)
+local specWarnSoulBlade				= mod:NewSpecialWarningDispel(200084, "RemoveMagic", nil, nil, 1, 2) --Клинок души
+local specWarnDrainLife				= mod:NewSpecialWarningDispel(204896, "RemoveMagic", nil, nil, 1, 2) --Похищение жизни
+local specWarnEnrage				= mod:NewSpecialWarningDispel(8599, "RemoveEnrage", nil, 2, 1, 2) --Исступление
 
 local timerRP						= mod:NewRPTimer(68)
-local timerSacrificeSoulCD			= mod:NewCDNPTimer(21.8, 200105, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerGlaiveTossCD				= mod:NewCDNPTimer(14.5, 196916, nil, nil, nil, 3)
-local timerStrikeDownCD				= mod:NewCDNPTimer(9.7, 225732, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21, 200261, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerKnifeDanceCD				= mod:NewCDNPTimer(18.1, 200291, nil, nil, nil, 2)
-local timerArrowBarrageCD			= mod:NewCDNPTimer(20.6, 200343, nil, nil, nil, 3)--20.7-23
-local timerBloodthirstyLeapCD		= mod:NewCDNPTimer(14.5, 225962, nil, nil, nil, 3)
-local timerDrainLifeCD				= mod:NewCDNPTimer(16.8, 204896, nil, nil, nil, 3)--16.8-19
-local timerBrutalAssaultCD			= mod:NewCDNPTimer(20.6, 201139, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerDrinkPotionCD			= mod:NewCDNPTimer(21.8, 200784, nil, nil, nil, 5)
-local timerSicBatsCD				= mod:NewCDNPTimer(21.8, 203163, nil, nil, nil, 5)
-local timerCoupdeGraceCD			= mod:NewCDNPTimer(8.4, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerRavensDiveCD				= mod:NewCDNPTimer(16, 214001, nil, nil, nil, 3)
+local timerSacrificeSoulCD			= mod:NewCDNPTimer(21.8, 200105, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Жертвоприношение души
+local timerGlaiveTossCD				= mod:NewCDNPTimer(14.5, 196916, nil, nil, nil, 3) --Бросок глефы
+local timerStrikeDownCD				= mod:NewCDNPTimer(9.7, 225732, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разящий удар
+local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(16, 200261, DBM_COMMON_L.FRONTAL, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Костедробильный удар (Фронталка) 21
+local timerKnifeDanceCD				= mod:NewCDNPTimer(15.6, 200291, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Танец с кинжалами 18.1
+local timerArrowBarrageCD			= mod:NewCDNPTimer(20.6, 200343, nil, nil, nil, 3) --Залп стрел 20.7-23
+local timerBloodthirstyLeapCD		= mod:NewCDNPTimer(14.5, 225962, nil, nil, nil, 3) --Кровожадный прыжок
+local timerDrainLifeCD				= mod:NewCDNPTimer(12, 204896, nil, nil, nil, 3) --Похищение жизни 16.8
+local timerBrutalAssaultCD			= mod:NewCDNPTimer(20.6, 201139, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Грубое нападение
+local timerDrinkPotionCD			= mod:NewCDNPTimer(21.8, 200784, nil, nil, nil, 5) --"Выпить" древнее зелье
+local timerSicBatsCD				= mod:NewCDNPTimer(21.8, 203163, nil, nil, nil, 5) --Натравить нетопырей!
+local timerCoupdeGraceCD			= mod:NewCDNPTimer(8.4, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Удар милосердия
+local timerRavensDiveCD				= mod:NewCDNPTimer(11, 214001, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пикирующий ворон (Прыжок) 16
 
-local yellArrowBarrage				= mod:NewYell(200343, nil, nil, nil, "YELL")
+local yellArrowBarrage				= mod:NewYell(200343, nil, nil, nil, "YELL") --Залп стрел
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
@@ -85,7 +86,7 @@ local blitzStacks = {}
 --"<29.29 23:11:07> [CHAT_MSG_MONSTER_SAY] I... understand now. You... you must find Kur'talos. You must put a stop to this.#Lord Etheldrin Ravencrest###Darksøl##0#0##0#2110#nil#0#false#false#false#false", -- [39]
 --"<39.20 23:11:17> [ZONE_CHANGED_INDOORS] Black Rook Hold#Black Rook Hold#Hidden Passageway", -- [41]
 function mod:StartFirstRP()
-	timerRP:Start(17)--Adjusted based on twitch streams
+	timerRP:Start(17.5)--Adjusted based on twitch streams
 end
 
 function mod:SPELL_CAST_START(args)
@@ -124,6 +125,8 @@ function mod:SPELL_CAST_START(args)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDarkMending:Show(args.sourceName)
 			specWarnDarkMending:Play("kickcast")
+		elseif self:AntiSpam(2, "DarkMending") then
+			warnDarkMending:Show()
 		end
 	elseif spellId == 182118 or spellId == 227913 then
 		if self.Options.SpecWarn227913interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then

@@ -9,12 +9,12 @@ mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 200630 200580 200642 200658 200768 198904 201226 201399 201839 225562",
+	"SPELL_CAST_START 200630 200580 200642 200658 200768 198904 201226 201399 201839 225562 225568",
 	"SPELL_CAST_SUCCESS 218755 204243 201272 201129 201361 201399",
 	"SPELL_SUMMON 198910",
-	"SPELL_AURA_APPLIED 225484 198904 204246 201839 201365 200684 200642",
+	"SPELL_AURA_APPLIED 225484 198904 204246 201839 201365 200684 200642 225568",
 	"SPELL_AURA_APPLIED_DOSE 200642",
-	"SPELL_AURA_REMOVED 201839 200684",
+	"SPELL_AURA_REMOVED 201839 200684 225568",
 	"SPELL_PERIODIC_DAMAGE 198408 200822",
 	"SPELL_PERIODIC_MISSED 198408 200822",
 	"UNIT_DIED",
@@ -37,18 +37,18 @@ local warnGrievousRip				= mod:NewTargetNoFilterAnnounce(225484, 4, nil, false) 
 local warnUnnervingScreech			= mod:NewCastAnnounce(200630, 4) --Ошеломляющий визг High prio off internet
 local warnTormentingEye				= mod:NewCastAnnounce(204243, 4, 4.5) --Истязающий глаз High prio off internet
 local warnBloodMeta					= mod:NewCastAnnounce(225562, 4) --Кровавая метаморфоза High prio off internet
-local warnDreadInferno				= mod:NewCastAnnounce(201399, 4) --Жуткое пекло High prio off internet
+local warnDreadInferno				= mod:NewCastAnnounce(201399, 4, nil, nil, 174716) --Жуткое пекло (Бомба)
 
 local specWarnDespair2				= mod:NewSpecialWarningStack(200642, nil, 4, nil, nil, 1, 2) --Отчаяние
 local specWarnRottingEarth			= mod:NewSpecialWarningMove(200822, nil, nil, nil, 1, 2) --Гниющая земля
 local specWarnNightfall				= mod:NewSpecialWarningMove(198408, nil, nil, nil, 1, 2) --Сумерки
 local specWarnNightmareToxin		= mod:NewSpecialWarningMoveAway(200684, nil, nil, nil, 3, 4) --Ядовитый кошмар
 local specWarnMaddeningRoar			= mod:NewSpecialWarningDefensive(200580, nil, nil, nil, 3, 4) --Безумный рев (АоЕ)
-local specWarnCurseofIsolation2		= mod:NewSpecialWarningMoveAway(201839, nil, nil, nil, 4, 2) --Проклятие уединения
+local specWarnCurseofIsolation2		= mod:NewSpecialWarningMoveAway(225568, nil, nil, nil, 4, 2) --Проклятие уединения
 local specWarnPropellingCharge		= mod:NewSpecialWarningDodge(200768, nil, nil, nil, 2, 2) --Рывок вперед
 local specWarnRootBurst				= mod:NewSpecialWarningDodge(201129, nil, nil, nil, 2, 2) --Рост корней
 local specWarnVileMushroom			= mod:NewSpecialWarningDodge(198910, nil, nil, nil, 2, 2) --Злогриб
-local specWarnDreadInfernoFailed	= mod:NewSpecialWarningMoveAway(201399, nil, nil, nil, 1, 2) --Жуткое пекло
+local specWarnDreadInfernoFailed	= mod:NewSpecialWarningMoveAway(201399, nil, 174716, nil, 1, 2) --Жуткое пекло (Бомба)
 local specWarnBloodAssault			= mod:NewSpecialWarningDefensive(201226, nil, 260292, nil, 3, 2) --Кровавая атака (Рывок)
 local specWarnBloodAssault2			= mod:NewSpecialWarningDodge(201226, nil, 260292, nil, 2, 2) --Кровавая атака (Рывок)
 local specWarnStarShower			= mod:NewSpecialWarningInterrupt(200658, "HasInterrupt", nil, nil, 1, 2) --Звездный дождь
@@ -56,38 +56,39 @@ local specWarnUnnervingScreech		= mod:NewSpecialWarningInterrupt(200630, "HasInt
 local specWarnDespair				= mod:NewSpecialWarningInterrupt(200642, "HasInterrupt", nil, nil, 1, 2) --Отчаяние
 local specWarnTormentingEye			= mod:NewSpecialWarningInterrupt(204243, "HasInterrupt", nil, nil, 1, 2) --Истязающий глаз High Priority
 local specWarnBloodMeta				= mod:NewSpecialWarningInterrupt(225562, "HasInterrupt", nil, nil, 1, 2) --Кровавая метаморфоза High Priority
-local specWarnDreadInferno			= mod:NewSpecialWarningInterrupt(201399, "HasInterrupt", nil, nil, 1, 2) --Жуткое пекло High Priority
-local specWarnCurseofIsolation		= mod:NewSpecialWarningInterrupt(201839, "HasInterrupt", nil, nil, 1, 2) --Проклятие уединения
+local specWarnDreadInferno			= mod:NewSpecialWarningInterrupt(201399, "HasInterrupt", 174716, nil, 1, 2) --Жуткое пекло (Бомба)
+local specWarnCurseofIsolation		= mod:NewSpecialWarningInterrupt(225568, "HasInterrupt", nil, nil, 1, 2) --Проклятие уединения
 local specWarnPoisonSpear			= mod:NewSpecialWarningDispel(198904, "RemovePoison", nil, nil, 1, 2) --Отравленное копье
 local specWarnTormentingFear		= mod:NewSpecialWarningDispel(204246, "RemoveMagic", nil, nil, 1, 2) --Истязающий страх Missed eye interrupt
-local specWarnCurseofIsoDispel		= mod:NewSpecialWarningDispel(201839, "RemoveCurse", nil, nil, 1, 2) --Проклятие уединения Missed Taintheart interrupt
+local specWarnCurseofIsoDispel		= mod:NewSpecialWarningDispel(225568, "RemoveCurse", nil, nil, 1, 2) --Проклятие уединения Missed Taintheart interrupt
 local specWarnDarksoulDrain			= mod:NewSpecialWarningDispel(201365, "RemoveDisease", nil, nil, 1, 2) --Опустошение темного духа
 
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(201123, nil, nil, nil, 1, 8)
 
 local timerRP						= mod:NewRPTimer(68)
-local timerGrievousRipCD			= mod:NewCDNPTimer(18, 225484, nil, nil, nil, 3) --Мучительный разрыв Kind of imprecise without an actual cast event, but should be a good approx
+local timerGrievousRipCD			= mod:NewCDNPTimer(13, 225484, nil, nil, nil, 3) --Мучительный разрыв 18Kind of imprecise without an actual cast event, but should be a good approx
 local timerUnnervingScreechCD		= mod:NewCDNPTimer(10.4, 200630, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ошеломляющий визг
-local timerSpewCorruptionCD			= mod:NewCDNPTimer(30.3, 218755, nil, nil, nil, 3) --Выброс порчи + треш
-local timerMaddeningRoarCD			= mod:NewCDNPTimer(22.6, 200580, nil, nil, nil, 2) --Безумный рев (АоЕ)
-local timerStarShowerCD				= mod:NewCDNPTimer(20.7, 200658, nil, nil, nil, 2) --Звездный дождь
-local timerPropellingChargeCD		= mod:NewCDNPTimer(18.2, 200768, nil, nil, nil, 3) --Рывок вперед
+local timerSpewCorruptionCD			= mod:NewCDNPTimer(24.5, 218755, nil, nil, nil, 3) --Выброс порчи + треш 30.3
+local timerMaddeningRoarCD			= mod:NewCDNPTimer(15, 200580, nil, nil, nil, 2) --Безумный рев (АоЕ) 22.6
+local timerStarShowerCD				= mod:NewCDNPTimer(15.6, 200658, nil, nil, nil, 2) --Звездный дождь 20.7
+local timerPropellingChargeCD		= mod:NewCDNPTimer(14.4, 200768, nil, nil, nil, 3) --Рывок вперед 18.2
 local timerPoisonSpearCD			= mod:NewCDNPTimer(18.2, 198904, nil, nil, nil, 3) --Отравленное копье 18.2-22
 local timerTormentingEyeCD			= mod:NewCDNPTimer(5.2, 204243, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Истязающий глаз
-local timerBloodBombCD				= mod:NewCDNPTimer(15.7, 201272, nil, nil, nil, 2) --Кровавая бомба
+local timerBloodBombCD				= mod:NewCDNPTimer(15.2, 201272, nil, nil, nil, 2) --Кровавая бомба 15.7
 local timerBloodAssaultCD			= mod:NewCDNPTimer(22.6, 201226, 260292, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Кровавая атака (Рывок)
 local timerBloodMetaCD				= mod:NewCDNPTimer(10.9, 225562, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровавая метаморфоза
-local timerDreadInfernoCD			= mod:NewCDNPTimer(15.8, 201399, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Жуткое пекло
-local timerCurseofIsolationCD		= mod:NewCDNPTimer(15.8, 201839, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Проклятие уединения
+local timerDreadInfernoCD			= mod:NewCDNPTimer(12, 201399, 174716, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Жуткое пекло (Бомба) 15.8
+local timerCurseofIsolationCD		= mod:NewCDNPTimer(15.8, 225568, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Проклятие уединения
 local timerRootBurstCD				= mod:NewCDNPTimer(16.2, 201129, nil, nil, nil, 3) --Рост корней
 local timerVileMushroomCD			= mod:NewCDNPTimer(17, 198910, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Злогриб
 local timerDarksoulBiteCD			= mod:NewCDNPTimer(12.1, 201361, nil, nil, nil, 5) --Укус темного духа 12.1-18.2
 
 local yellNightmareToxin			= mod:NewYell(200684, nil, nil, nil, "YELL") --Ядовитый кошмар
 local yellNightmareToxin2			= mod:NewShortFadesYell(200684, nil, nil, nil, "YELL") --Ядовитый кошмар
-local yellCurseofIsolation			= mod:NewYell(201839, nil, nil, nil, "YELL") --Проклятие уединения
-local yellCurseofIsolation2			= mod:NewShortFadesYell(201839, nil, nil, nil, "YELL") --Проклятие уединения
-local yellDreadInferno				= mod:NewYell(201399, nil, nil, nil, "YELL") --Жуткое пекло
+local yellCurseofIsolation			= mod:NewYell(225568, nil, nil, nil, "YELL") --Проклятие уединения
+local yellCurseofIsolation2			= mod:NewShortFadesYell(225568, nil, nil, nil, "YELL") --Проклятие уединения
+local yellDreadInferno				= mod:NewYell(201399, 174716, nil, nil, "YELL") --Жуткое пекло (Бомба)
+local yellDreadInfernoFades			= mod:NewShortFadesYell(201399, nil, nil, nil, "YELL") --Жуткое пекло (Бомба)
 
 mod.vb.trashRemaining = 5
 
@@ -165,7 +166,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnBloodAssault2:Show()
 			specWarnBloodAssault2:Play("watchstep")
 		end
-	elseif spellId == 201839 then
+	elseif spellId == 201839 or spellId == 225568 then --Проклятие уединения
 		timerCurseofIsolationCD:Start(nil, args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnCurseofIsolation:Show(args.sourceName)
@@ -199,6 +200,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnDreadInfernoFailed:Show()
 		specWarnDreadInfernoFailed:Play("runout")
 		yellDreadInferno:Yell()
+		yellDreadInfernoFades:Countdown(2.5)
 	elseif spellId == 201129 then
 		timerRootBurstCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
@@ -240,7 +242,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnTormentingFear:Show(args.destName)
 			specWarnTormentingFear:Play("helpdispel")
 		end
-	elseif spellId == 201839 then
+	elseif spellId == 201839 or spellId == 225568 then --Проклятие уединения
 		if args:IsPlayer() then
 			specWarnCurseofIsolation2:Show()
 			specWarnCurseofIsolation2:Play("runout")
@@ -279,7 +281,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 201839 then
+	if spellId == 201839 or spellId == 225568 then
 		if args:IsPlayer() then
 			yellCurseofIsolation2:Cancel()
 		end

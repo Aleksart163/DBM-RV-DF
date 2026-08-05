@@ -36,36 +36,38 @@ mod:RegisterEventsInCombat(
 --TODO, work out right taunt timing, just swap for each jaws or on venom stacks?
 --TODO, add obvious https://www.wowhead.com/ptr-2/spell=424218/combusting-rage if tanks aren't in range?
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(22309))
-local warnSperentsFury								= mod:NewCountAnnounce(421672, 3)
-local warnMoltenVenom								= mod:NewStackAnnounce(419054, 2, nil, "Tank|Healer")
-local warnSerpentsWrath								= mod:NewSpellAnnounce(421703, 4)
-local warnVolcanicDisgorge							= mod:NewTargetCountAnnounce(421616, 3, nil, nil, nil, nil, nil, nil, true)
+local warnMoltenVenom								= mod:NewStackAnnounce(419054, 2, nil, "Tank|Healer") --Раскаленный яд
+local warnSerpentsWrath								= mod:NewSpellAnnounce(421703, 4) --Змеиный гнев
+local warnVolcanicDisgorge							= mod:NewTargetCountAnnounce(421616, 3, nil, nil, nil, nil, nil, nil, true) --Вулканическое извержение
 
-local specWarnCoilingFlames							= mod:NewSpecialWarningYou(421207, nil, 7897, nil, 1, 2)
-local specWarnCoilingEruption						= mod:NewSpecialWarningYou(427201, nil, nil, nil, 1, 2)
+local specWarnCoilingFlames							= mod:NewSpecialWarningYou(421207, nil, 7897, nil, 1, 2) --Вьющийся пламень (Пламя)
+local specWarnCoilingEruption						= mod:NewSpecialWarningYou(427201, nil, nil, nil, 1, 2) --Вьющееся извержение
 
+local specWarnSperentsFury							= mod:NewSpecialWarningCount(421672, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Змеиное неистовство (АоЕ)
+local specWarnFloodoftheFirleands					= mod:NewSpecialWarningCount(420933, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Поток Огненных Просторов (Разделение урона)
+local specWarnVolcanicDisgorge						= mod:NewSpecialWarningYou(421616, nil, nil, DBM_COMMON_L.POOL, 2, 2) --Вулканическое извержение
+local specWarnScorchtailCrash						= mod:NewSpecialWarningDodgeCount(420415, nil, 307974, nil, 3, 2) --Удар жгучехвоста (Удар хвостом)
+local specWarnCataclysmJaws							= mod:NewSpecialWarningDefensive(423117, nil, nil, nil, 3, 2) --Пасть Катаклизма
+local specWarnCataclysmJawsTaunt					= mod:NewSpecialWarningTaunt(423117, nil, nil, nil, 1, 2) --Пасть Катаклизма
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(421082, nil, nil, nil, 1, 8) --Кипение Преисподней
 --local specWarnMoltenVenom							= mod:NewSpecialWarningStack(419054, nil, 6, nil, nil, 1, 6)
 --local specWarnMoltenVenomSwap						= mod:NewSpecialWarningTaunt(419054, nil, nil, nil, 1, 2)--Need to evaulate whether tanks swap for this or jaws. double tank mechanic fights are redundant
-local specWarnFloodoftheFirleands					= mod:NewSpecialWarningSoakCount(420933, nil, nil, nil, 2, 2)
-local specWarnVolcanicDisgorge						= mod:NewSpecialWarningYou(421616, nil, nil, nil, 2, 2)
-local specWarnScorchtailCrash						= mod:NewSpecialWarningDodgeCount(420415, nil, 136870, nil, 3, 2)
-local specWarnCataclysmJaws							= mod:NewSpecialWarningDefensive(423117, nil, nil, nil, 1, 2)
-local specWarnCataclysmJawsTaunt					= mod:NewSpecialWarningTaunt(423117, nil, nil, nil, 1, 2)
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(421082, nil, nil, nil, 1, 8)
 
-local timerSerpentsFuryCD							= mod:NewNextCountTimer(70, 421672, 7897, nil, nil, 3)--Shortname "Flames"
-local timerCoilingFlames							= mod:NewCastTimer(7.5, 421672, 7897, nil, nil, 5)
-local timerCoilingEruption							= mod:NewCastTimer(16, 427201, L.DebuffSoaks, nil, nil, 5)
-local timerFloodoftheFirelandsCD					= mod:NewNextCountTimer(70, 420933, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5)
-local timerVolcanicDisgorgeCD						= mod:NewNextCountTimer(10, 421616, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3)
-local timerScorchtailCrashCD						= mod:NewCDCountTimer(20, 420415, 136870, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--Short name "Tail Slam"
-local timerCataclysmJawsCD							= mod:NewNextCountTimer(10, 423117, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSerpentsFuryCD							= mod:NewNextCountTimer(70, 421672, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Змеиное неистовство (АоЕ)
+local timerCoilingFlames							= mod:NewCastTimer(7.5, 421672, DBM_COMMON_L.AOEDAMAGE, nil, nil, 5) --Змеиное неистовство (АоЕ)
+local timerCoilingEruption							= mod:NewCastTimer(16, 427201, L.DebuffSoaks, nil, nil, 5) --Вьющееся извержение
+local timerFloodoftheFirelandsCD					= mod:NewNextCountTimer(69.8, 420933, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Поток Огненных Просторов (Разделение урона)
+local timerFloodoftheFirelands						= mod:NewCastTimer(6, 420933, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Поток Огненных Просторов (Разделение урона)
+local timerVolcanicDisgorgeCD						= mod:NewNextCountTimer(10, 421616, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Вулканическое извержение
+local timerScorchtailCrashCD						= mod:NewCDCountTimer(20, 420415, 307974, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар жгучехвоста (Удар хвостом)
+local timerCataclysmJawsCD							= mod:NewNextCountTimer(10, 423117, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пасть Катаклизма
 --local berserkTimer								= mod:NewBerserkTimer(600)
-local yellCoilingFlames								= mod:NewShortYell(421207, 7897, nil, nil, "YELL")--Shortname Flames
-local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207, nil, nil, nil, "YELL")
-local yellCoilingEruption							= mod:NewShortYell(427201, DBM_COMMON_L.GROUPSOAK, nil, nil, "YELL")--NewShortPosYell
-local yellCoilingEruptionFades						= mod:NewShortFadesYell(427201, nil, nil, nil, "YELL")--NewIconFadesYell
-local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS, nil, nil, "YELL")
+
+local yellCoilingFlames								= mod:NewShortYell(421207, 7897, nil, nil, "YELL") --Вьющийся пламень (Пламя)
+local yellCoilingFlamesFades						= mod:NewShortFadesYell(421207, nil, nil, nil, "YELL") --Вьющийся пламень (Пламя)
+local yellCoilingEruption							= mod:NewShortYell(427201, DBM_COMMON_L.GROUPSOAK, nil, nil, "YELL") --Вьющееся извержение
+local yellCoilingEruptionFades						= mod:NewShortFadesYell(427201, nil, nil, nil, "YELL") --Вьющееся извержение
+local yellVolcanicDisgorge							= mod:NewShortYell(421616, DBM_COMMON_L.POOLS, nil, nil, "YELL") --Вулканическое извержение
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnCoilingFlames", 421207, false, 0, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnCoilingEruption", 427201, false, 0, {1, 2, 3, 4})--Off by default since other mods don't use icons at all
@@ -79,12 +81,12 @@ mod.vb.jawsCount = 0
 local playerStacks = 0
 
 local allTimers = {
-	--Cata Jaws
+	--Пасть Катаклизма
 	[423117] = {4.8, 30.0, 30.0, 40.0, 30.0, 40.0, 30.0, 25.0, 25.0, 20.0},
-	--Volcanic Disgorge
+	--Вулканическое извержение
 	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0},
-	--Scorchtail Crash
-	[420421] = {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
+	--Удар жгучехвоста (Нормальные под героик)
+	[420421] = {20, 19.9, 20, 31.2, 10, 8.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
 }
 
 function mod:DisgorgeTarget(targetname, uId)
@@ -118,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 421672 then
 		self.vb.furyCount = self.vb.furyCount + 1
 		self.vb.flamesIcon = 1
-		warnSperentsFury:Show(self.vb.furyCount)
+		specWarnSperentsFury:Show(self.vb.furyCount)
 		timerSerpentsFuryCD:Start(nil, self.vb.furyCount+1)
 		timerCoilingFlames:Start(7.5)
 	elseif spellId == 420933 then
@@ -126,6 +128,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFloodoftheFirleands:Show(self.vb.floodCount)
 		specWarnFloodoftheFirleands:Play("helpsoak")
 		timerFloodoftheFirelandsCD:Start(nil, self.vb.floodCount+1)
+		timerFloodoftheFirelands:Start()
 	elseif spellId == 421616 then
 		self.vb.volcanicCount = self.vb.volcanicCount + 1
 --		self:BossTargetScanner(args.sourceGUID, "DisgorgeTarget", 0.1, 8, true)
@@ -151,6 +154,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerCataclysmJawsCD:Start(timer, self.vb.jawsCount+1)
 		end
+		DBM:Debug("Check Murchal proshlyap (Начался каст Пасть Катаклизма)", 2)
 	elseif spellId == 421703 then
 		warnSerpentsWrath:Show()
 	end

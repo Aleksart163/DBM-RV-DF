@@ -48,7 +48,7 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(169495, nil, 6726, nil, 1,
 
 local timerRP									= mod:NewRPTimer(68)
 local timerEnragedGrowthCD						= mod:NewCDNPTimer(12.8, 165213, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Яростный рост CD from success or interrupt
-local timerChokingVinesCD						= mod:NewCDNPTimer(20.4, 164965, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Удушающие лианы
+local timerChokingVinesCD						= mod:NewCDNPTimer(20, 164965, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Удушающие лианы 20.4
 local timerBoundingWhirlCD						= mod:NewCDNPTimer(16.5, 172578, 410234, nil, nil, 3) --Сдерживающий вихрь (Вихрь клинков)
 local timerPoisonousClawsCD						= mod:NewCDNPTimer(16.5, 169657, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Ядовитые когти
 local timerVenomBurstCD							= mod:NewCDNPTimer(10.6, 165123, nil, nil, nil, 3) --Взрыв яда
@@ -56,7 +56,7 @@ local timerHealingWatersCD						= mod:NewCDNPTimer(19.4, 164887, nil, nil, nil, 
 local timerLivingLeavesCD						= mod:NewCDNPTimer(18.1, 169495, nil, nil, nil, 3) --Живые листья (Безмолвие)
 local timerGnarledRootsCD						= mod:NewCDNPTimer(18.1, 426500, nil, nil, nil, 3) --Корявые корни
 local timerPyroblastCD							= mod:NewCDNPTimer(8, 169839, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная глыба 8-13 window, quite large
-local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18.2, 427223, nil, nil, nil, 2) --Залп тлеющих стрел
+local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18, 427223, nil, nil, nil, 2) --Залп тлеющих стрел
 local timerFrostboltCD							= mod:NewCDNPTimer(6, 169840, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная стрела
 local timerColdfusionCD							= mod:NewCDNPTimer(21.8, 426845, 63912, nil, nil, 3) --Холодный синтез (Кольцо льда) 21.8-25, maybe shorter
 local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, nil, nil, nil, 3) --Разрыв пространства

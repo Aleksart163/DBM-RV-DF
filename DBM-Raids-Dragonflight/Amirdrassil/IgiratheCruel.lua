@@ -35,7 +35,6 @@ mod:RegisterEventsInCombat(
 --https://www.warcraftlogs.com/reports/N2k1xpg9rVqRDyQZ#fight=11&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20414425%20or%20ability.id%20%3D%20416996%20or%20ability.id%20%3D%20422776%20or%20ability.id%20%3D%20419048%20or%20ability.id%20%3D%20416048%20or%20ability.id%20%3D%20418531%20or%20ability.id%20%3D%20415624)%20and%20type%20%3D%20%22begincast%22%0A%20or%20ability.id%20%3D%20424456%20and%20type%20%3D%20%22cast%22%0A%20or%20ability.id%20%3D%20415020%20or%20ability.id%20%3D%20415094%20or%20ability.id%20%3D%20415090%20or%20ability.id%20%3D%20425282%20or%20ability.id%20%3D%20425283%20or%20ability.id%20%3D%20414357%0A%20or%20ability.name%20%3D%20%22Heart%20Stopper%22&view=events
 local warnDrenchedBlades							= mod:NewStackAnnounce(414340, 2, nil, "Tank|Healer") --Промокшие клинки
 local warnBlisteringSpear							= mod:NewTargetCountAnnounce(414888, 3, nil, nil, 282481, nil, nil, nil, true) --Обжигающее копье (Копья)
-local warnMarkedforTorment							= mod:NewCountAnnounce(422776, 3, nil, nil, 234406) --Метка мучений (Мучения)
 local warnGatheringTorment							= mod:NewYouAnnounce(414367, 4) --Сбор мучений
 --Torments
 local warnSmashingVisceraSoon						= mod:NewSoonAnnounce(424456, 2, nil, nil, 47482) --Крушащие внутренности (Прыжок) Sword Stance
@@ -154,7 +153,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 422776 then
 		self.vb.tormentCount = self.vb.tormentCount + 1
 		self.vb.useHeartStopperBackup = false
-		warnMarkedforTorment:Show(self.vb.tormentCount)
 		self:SetStage(self.vb.tormentCount)--Matching BW behavior which is kinda meh, but WA parity is needed
 	elseif spellId == 419048 then
 		specWarnRuinousEnd:Show()
@@ -334,7 +332,7 @@ end
 function mod:UNIT_POWER_UPDATE()
 	local bossPower = UnitPower("boss1")
 	if bossPower == 100 and self:AntiSpam(10, "FullPower") then
-		specWarnMarkedforTorment:Show(self.vb.tormentCount+1)
+		specWarnMarkedforTorment:Show(self.vb.tormentCount)
 		specWarnMarkedforTorment:Play("specialsoon")
 	end
 end

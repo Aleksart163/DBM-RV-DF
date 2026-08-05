@@ -37,19 +37,19 @@ ability.id = 164357 and type = "begincast"
  or (source.type = "NPC" and source.firstSeen = timestamp) or (target.type = "NPC" and target.firstSeen = timestamp)
 --]]
 --NOTE: Mod is just using 10.2 values, since fight wasn't reworked i'm not making a hybrid mod for timers that have slight differences
-local warnBrittleBark				= mod:NewSpellAnnounce(164275, 1)
-local warnBrittleBarkOver			= mod:NewEndAnnounce(164275, 2)
-local warnUncheckedGrowth			= mod:NewTargetAnnounce(164294, 2)
-local warnUncheckedGrowthSpawn		= mod:NewSpellAnnounce(164556, 3)--Add Spawn
+local warnBrittleBarkOver			= mod:NewEndAnnounce(164275, 2) --Хрупкая кора
+local warnUncheckedGrowth			= mod:NewTargetAnnounce(164294, 2) --Запущенная поросль
+local warnUncheckedGrowthSpawn		= mod:NewSpellAnnounce(164556, 3) --Запущенная поросль Add Spawn
 
-local specWarnUncheckedGrowthYou	= mod:NewSpecialWarningYou(164294, nil, nil, nil, 1, 2)--The add fixate is on you
-local specWarnUncheckedGrowth		= mod:NewSpecialWarningGTFO(164294, nil, nil, nil, 1, 8)--GTFO
-local specWarnUncheckedGrowthAdd	= mod:NewSpecialWarningSwitch(164556, false, nil, nil, 1, 2)--Spawn
+local specWarnBrittleBark			= mod:NewSpecialWarningSpell(164275, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Хрупкая кора (Повышенный урон)
+local specWarnUncheckedGrowthYou	= mod:NewSpecialWarningYou(164294, nil, nil, nil, 1, 2) --Запущенная поросль The add fixate is on you
+local specWarnUncheckedGrowth		= mod:NewSpecialWarningGTFO(164294, nil, nil, nil, 1, 8) --Запущенная поросль GTFO
+local specWarnUncheckedGrowthAdd	= mod:NewSpecialWarningSwitch(164556, false, nil, nil, 1, 2) --Запущенная поросль Spawn
 local specWarnParchedGrasp			= mod:NewSpecialWarningSpell(164357, "Tank", nil, nil, 1, 2)
 
 local timerParchedGrasp				= mod:NewCDTimer(16, 164357, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBrittleBarkCD			= mod:NewCDTimer(40, 164275, nil, nil, nil, 6)--30 seconds pre 10.2 https://www.warcraftlogs.com/reports/y2cYmZVWKqGkAHbn#fight=last&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20164275%20or%20ability.id%20%3D%20164556&view=events&translate=true
-local timerUncheckedGrowthCD		= mod:NewCDTimer(12, 164294, nil, nil, nil, 3)--LW uses spellid and not joural ID for timer, so we have to match it for WAs
+local timerBrittleBarkCD			= mod:NewCDTimer(40, 164275, DBM_COMMON_L.DAMAGEUP, nil, nil, 6) --Хрупкая кора 30 seconds pre 10.2 https://www.warcraftlogs.com/reports/y2cYmZVWKqGkAHbn#fight=last&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20164275%20or%20ability.id%20%3D%20164556&view=events&translate=true
+local timerUncheckedGrowthCD		= mod:NewCDTimer(12, 164294, nil, nil, nil, 3) --Запущенная поросль LW uses spellid and not joural ID for timer, so we have to match it for WAs
 
 --mod:GroupSpells(164294, -10098)--No longer combined since each needs a diff WA key in UI now
 
@@ -102,7 +102,8 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 164275 then
-		warnBrittleBark:Show()
+		specWarnBrittleBark:Show()
+		specWarnBrittleBark:Play("dpsmore")
 		timerParchedGrasp:Cancel()
 		if self:IsNormal() then--Heroic and above CD continues without reset
 			timerUncheckedGrowthCD:Stop()

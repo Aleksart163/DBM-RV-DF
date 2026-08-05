@@ -13,7 +13,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 199389 199345",
+	"SPELL_CAST_START 199389 199345 191325",
+	"SPELL_CAST_SUCCESS 199329",
 	"SPELL_PERIODIC_DAMAGE 199460",
 	"SPELL_PERIODIC_MISSED 199460",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
@@ -32,7 +33,7 @@ local specWarnFallingRocks			= mod:NewSpecialWarningGTFO(199460, nil, nil, nil, 
 
 local timerBreathCD					= mod:NewCDCountTimer(22, 191325, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание порчи (Фронталка) 22/30 alternating? need more logs to confirm
 local timerEarthShakerCD			= mod:NewCDCountTimer(30.3, 199389, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сотрясающий землю рык OLD: 21
-local timerDownDraftCD				= mod:NewCDCountTimer(30.3, 199345, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий поток (Отталкивание) OLD: 30-42 (health based or varaible?)
+local timerDownDraftCD				= mod:NewCDCountTimer(31.2, 199345, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий поток (Отталкивание) OLD: 30-42 (health based or varaible?)
 local timerDownDraft				= mod:NewCastTimer(9, 199345, DBM_COMMON_L.PUSHBACK, nil, nil, 7, nil, nil, nil, 1, 3) --Нисходящий поток (Отталкивание)
 
 --local yellBreath					= mod:NewYell(199332)
@@ -45,9 +46,12 @@ function mod:OnCombatStart(delay)
 	self.vb.breathCount = 0
 	self.vb.earthCount = 0
 	self.vb.draftCount = 0
-	timerBreathCD:Start(13.3-delay, 1)--13.3-15.4
-	timerDownDraftCD:Start(19.4-delay, 1)--19.4-22.7
-	timerEarthShakerCD:Start(31.6-delay, 1)--31.6-34.8
+--	timerBreathCD:Start(13.3-delay, 1)--13.3-15.4
+--	timerDownDraftCD:Start(19.4-delay, 1)--19.4-22.7
+--	timerEarthShakerCD:Start(31.6-delay, 1)--31.6-34.8
+	timerBreathCD:Start(7.3-delay, 1) --
+	timerDownDraftCD:Start(11.2-delay, 1) --
+	timerEarthShakerCD:Start(35.3-delay, 1) --
 end
 
 function mod:SPELL_CAST_START(args)
@@ -60,9 +64,10 @@ function mod:SPELL_CAST_START(args)
 		self.vb.draftCount = self.vb.draftCount + 1
 		specWarnDownDraft:Show(DBM_COMMON_L.BOSS)
 		specWarnDownDraft:Play("movetoboss")
-		timerDownDraftCD:Start(nil, self.vb.draftCount+1)
+		timerDownDraftCD:Start(nil, self.vb.draftCount+1) --31.2 От 1 каста до 2
 		timerDownDraft:Start()
---	elseif spellId == 191325 then--If they ever enable it in combat log, it'll be this ID
+	elseif spellId == 191325 then--If they ever enable it in combat log, it'll be this ID
+		DBM:Debug("Check Murchal proshlyap (Начался каст дыхания)", 2)
 --		self.vb.breathCount = self.vb.breathCount + 1
 --		specWarnBreath:Show(self.vb.breathCount)
 --		specWarnBreath:Play("breathsoon")
@@ -72,6 +77,13 @@ function mod:SPELL_CAST_START(args)
 --		else
 --			timerBreathCD:Start(22, self.vb.breathCount+1)
 --		end
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args) --Сломано на стороне сервера
+	local spellId = args.spellId
+	if spellId == 199329 then
+		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 1)", 2)
 	end
 end
 
@@ -101,5 +113,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		else
 			timerBreathCD:Start(22, self.vb.breathCount+1)
 		end
+		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 2)", 2)
 	end
 end

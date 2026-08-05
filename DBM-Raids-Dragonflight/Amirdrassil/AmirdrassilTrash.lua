@@ -7,32 +7,36 @@ mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 425062 425149 425995",
-	"SPELL_AURA_APPLIED 428765 425300 425388 425381",
+	"SPELL_AURA_APPLIED 428765 425300 425388 425381 428077",
 --	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 428765 425300 425388",
+	"SPELL_AURA_REMOVED 428765 425300 425388 428077",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
 
 --TODO, kick blazing pulse
 --TODO, inferno heart spread
+local warnDreamWalk							= mod:NewTargetNoFilterAnnounce(428077, 2) --Хождение во сне
 local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, nil, 167180) --Бомба пламени Тьмы (Бомбы)
 local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
 local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee") --Заряженный Тьмой удар
 
+local specWarnDreamWalk						= mod:NewSpecialWarningDispel(428077, "RemoveMagic", nil, nil, 1, 2) --Хождение во сне
 local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2) --Сердце Преисподней
 local specWarnInfernoHeartDispel			= mod:NewSpecialWarningDispel(425388, "RemoveCurse", nil, nil, 1, 2) --Сердце Преисподней
 local specWarnShadowflameBomb				= mod:NewSpecialWarningMoveAway(425300, nil, 174716, nil, 1, 2) --Бомба пламени Тьмы (Бомба)
-local specWarnChargedStomp					= mod:NewSpecialWarningRun(425149, "Melee", 185824, nil, 4, 2) --Заряженная поступь (Взрыв)
-local specWarnChargedStomp2					= mod:NewSpecialWarningDodge(425149, "-Melee", 185824, nil, 2, 2) --Заряженная поступь (Взрыв)
+local specWarnChargedStomp					= mod:NewSpecialWarningRun(425149, "Melee", 363533, nil, 4, 2) --Заряженная поступь (Мощный взрыв)
+local specWarnChargedStomp2					= mod:NewSpecialWarningDodge(425149, "-Melee", 363533, nil, 2, 2) --Заряженная поступь (Мощный взрыв)
 local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Перьевая бомба (Обстрел)
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
-local timerChargedStompCD					= mod:NewCDNPTimer(29.2, 425149, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Взрыв)
+local timerChargedStompCD					= mod:NewCDNPTimer(14.6, 425149, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Мощный взрыв) 29.2
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3) --Перьевая бомба (Обстрел) CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewBuffActiveTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5) --Перьевая бомба (Обстрел) How long it's active and when not to come up
 
+local yellDreamWalk							= mod:NewYell(428077, nil, nil, nil, "YELL") --Хождение во сне
+local yellDreamWalkFades					= mod:NewShortFadesYell(428077, nil, nil, nil, "YELL") --Хождение во сне
 local yellShadowflameBomb					= mod:NewShortYell(425300, 174716, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
 local yellShadowflameBombFades				= mod:NewShortFadesYell(425300, nil, nil, nil, "YELL") --Бомба пламени Тьмы (Бомба)
 local yellInfernoHeart						= mod:NewShortYell(425388, nil, nil, nil, "YELL") --Сердце Преисподней
@@ -91,6 +95,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 425381 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBlazingPulse:Show(args.destName)
 		specWarnBlazingPulse:Play("kickcast")
+	elseif spellId == 428077 and args:IsDestTypePlayer() then
+		warnDreamWalk:CombinedShow(0.5, args.destName)
+		if args:IsPlayer() then
+			yellDreamWalk:Yell()
+			yellDreamWalkFades:Countdown(spellId)
+		elseif self:CheckDispelFilter("magic") then
+			specWarnDreamWalk:CombinedShow(0.5, args.destName)
+			specWarnDreamWalk:Play("helpdispel")
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -106,6 +119,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 425388 then
 		if args:IsPlayer() then
 			yellInfernoHeartFades:Cancel()
+		end
+	elseif spellId == 428077 then
+		if args:IsPlayer() then
+			yellDreamWalkFades:Cancel()
 		end
 	end
 end

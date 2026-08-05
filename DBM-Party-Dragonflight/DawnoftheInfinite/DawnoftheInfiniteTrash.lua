@@ -121,9 +121,9 @@ local timerBombingRunCD						= mod:NewCDNPTimer(17, 412156, nil, nil, nil, 3)
 local timerTimeBeamCD						= mod:NewCDNPTimer(7.2, 413427, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerVolatileMortarCD					= mod:NewCDNPTimer(28, 407205, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Нестабильное орудие (Обстрел)
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
-local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.8, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Бронзовый выдох (Фронталка)
+local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.6, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Бронзовый выдох (Фронталка)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(8, 411300, DBM_COMMON_L.AOEDAMAGE, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Рыбный залп (АоЕ)
-local timerRP								= mod:NewRPTimer(30)
+local timerRP								= mod:NewRPTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5)
 
 local yellVolatileMortar					= mod:NewYell(407205, DBM_COMMON_L.BOMBING, nil, nil, "YELL") --Нестабильное орудие (Обстрел)
 local yellVolatileMortarFades				= mod:NewShortFadesYell(407205, nil, nil, nil, "YELL") --Нестабильное орудие (Обстрел)
@@ -526,6 +526,7 @@ function mod:UNIT_DIED(args)
 		timerTimelessCurseCD:Stop(args.destGUID)
 		timerInfiniteFuryCD:Stop(args.destGUID)
 	elseif cid == 206230 then --Диверсант из рода Бесконечности
+		timerInfiniteFuryCD:Stop(args.destGUID)
 		timerTimelessCurseCD:Stop(args.destGUID)
 		timerBronzeExhalationCD:Stop(args.destGUID)
 	elseif cid == 208438 then --Саботажник из рода Бесконечности
@@ -546,7 +547,7 @@ function mod:GOSSIP_SHOW()
 		end
 	end
 end
---Новые эвенты, т.к. есть люди, что используют старую версию и не обновляются, но при этом мы получаем от них старую инфу
+
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.MProshlyapPrePull8 or msg:find(L.MProshlyapPrePull8)) then
 		DBM:Debug("MPPR8", 2)
@@ -581,7 +582,11 @@ end
 
 function mod:OnSync(msg, targetname)
 	if msg == "MPPR8" and self:AntiSpam(15, "Morchie") then --Таймер пулла Морхи
-		timerRP:Start(37.5) --
+		if self:IsMythicPlus() then
+			timerRP:Start(28.5) --37.5 (То 28.5, то 37.5, возможно разрабы в шляпе там)
+		else
+			timerRP:Start(37.5)
+		end
 	elseif msg == "MPPR7" and self:AntiSpam(15, "ManifestedTimeways") then --Таймер пулла Оживших потоков времени
 		if self:IsMythicPlus() then
 			timerRP:Start(13) --
@@ -589,7 +594,9 @@ function mod:OnSync(msg, targetname)
 			timerRP:Start(22) --
 		end
 	elseif msg == "MPPR6" and self:AntiSpam(15, "Trash2") then --Таймер пулла треша на Гнили 2
-		timerRP:Start(16.5) --
+		if not self:IsMythicPlus() then
+			timerRP:Start(16.5) --
+		end
 	elseif msg == "MPPR4" and self:AntiSpam(15, "Battlefield") then --Таймер пулла Андуина или Гарроша (У Гарроша возможно отличается)
 		if self:IsMythicPlus() then
 			timerRP:Start(5.5) --

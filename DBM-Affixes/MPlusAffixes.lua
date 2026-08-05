@@ -11,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 240446 409492 408805",
 	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364",
 	"SPELL_AURA_APPLIED_DOSE 240559 209858 240443",
-	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364",
+	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805",
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
@@ -30,6 +30,7 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
+local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -56,8 +57,8 @@ local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Heal
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 local timerQuakingCD						= mod:NewCDTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, 269678, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, nil, nil, nil, true) --Запутывание (Оплетение)
-local timerAfflictedCD						= mod:NewCDTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, mod:IsHealer() and 3 or nil, 3) --Крик изнемогающей души (Призыв духов)
-local timerIncorporealCD					= mod:NewCDTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 3) --Дестабилизация (Призыв духов)
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, mod:IsHealer() and 3 or nil, 5) --Крик изнемогающей души (Призыв духов)
+local timerIncorporealCD					= mod:NewCDTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Дестабилизация (Призыв духов)
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
@@ -164,7 +165,7 @@ local function checkForCombat(self)
 			if incorpRemaining and incorpRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
 				self:Unschedule(checkIncorp)
 				self:Schedule(incorpRemaining+10, checkIncorp, self)
-				DBM:Debug("Experimental reschedule of checkIncorp running")
+				DBM:Debug("Экспериментальное изменение графика запуска проверки на призыв духов 1")
 			end
 		elseif not combatFound and incorporealCounting then
 			incorporealCounting = false
@@ -180,7 +181,7 @@ local function checkForCombat(self)
 			if afflictRemaining and afflictRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
 				self:Unschedule(checkAfflicted)
 				self:Schedule(afflictRemaining+10, checkAfflicted, self)
-				DBM:Debug("Experimental reschedule of checkAfflicted running")
+				DBM:Debug("Экспериментальное изменение графика запуска проверки на призыв духов 2")
 			end
 		elseif not combatFound and afflictedCounting then
 			afflictedCounting = false
@@ -196,7 +197,7 @@ local function checkForCombat(self)
 			if entangledRemaining and entangledRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
 				self:Unschedule(checkEntangled)
 				self:Schedule(entangledRemaining+10, checkEntangled, self)
-				DBM:Debug("Experimental reschedule of checkEntangled running")
+				DBM:Debug("Экспериментальное изменение графика запуска проверки на оплетение")
 			end
 		elseif not combatFound and entangledCounting then
 			entangledCounting = false
@@ -412,6 +413,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if self.vb.murchalsProshlyapCount == 1 then
 			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
+		end
+	elseif spellId == 408805 then
+		if args:IsPlayer() then
+			warnDestabalizeEnd:Show()
 		end
 	end
 end
