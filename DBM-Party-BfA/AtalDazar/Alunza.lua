@@ -33,14 +33,14 @@ local specWarnMoltenGold			= mod:NewSpecialWarningYou(255582, nil, nil, nil, 2, 
 local specWarnMoltenGold2			= mod:NewSpecialWarningDispel(255582, "RemoveMagic", nil, nil, 3, 2) --Расплавленное золото
 local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(255577, nil, nil, nil, 3, 2) --Переливание
 local specWarnClaws					= mod:NewSpecialWarningDefensive(255579, "Tank", nil, nil, 3, 2) --Золоченые когти
-local specWarnClawsDispel			= mod:NewSpecialWarningDispel(255579, "MagicDispeller", nil, nil, 3, 2) --Золоченые когти
+local specWarnClawsDispel			= mod:NewSpecialWarningDispel(255579, "MagicDispeller", nil, nil, 1, 2) --Золоченые когти
 local specWarnSpiritofGold			= mod:NewSpecialWarningSwitch(259205, "Dps", nil, DBM_COMMON_L.BIG_ADD, 2, 3) --Дух золота
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(277072, nil, nil, nil, 1, 8)--Unclear, it seems from logs once you step in it, you don't lose debuff moving out of it
 
-local timerTransfusionCD			= mod:NewCDCountTimer(34, 255577, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Переливание
+local timerTransfusionCD			= mod:NewCDCountTimer(31, 255577, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Переливание 34
 local timerGildedClawsCD			= mod:NewCDCountTimer(34, 255579, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Золоченые когти
 local timerMoltenGoldCD				= mod:NewCDCountTimer(8.1, 255582, nil, nil, nil, 3) --Расплавленное золото 8.1, but reset by transfusion 99% of time
-local timerSpiritofGoldCD			= mod:NewCDCountTimer(34, 259205, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Дух золота
+local timerSpiritofGoldCD			= mod:NewCDCountTimer(31, 259205, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Дух золота 34
 
 local yellMoltenGold				= mod:NewYell(255582, nil, nil, nil, "YELL") --Расплавленное золото
 
@@ -60,7 +60,7 @@ function mod:OnCombatStart(delay)
 	self.vb.spiritCount = 0
 	timerGildedClawsCD:Start(10.5-delay, 1)
 	timerMoltenGoldCD:Start(16.5-delay, 1)
-	timerTransfusionCD:Start(25-delay, 1)
+	timerTransfusionCD:Start(22-delay, 1)
 	if not self:IsNormal() then
 		timerSpiritofGoldCD:Start(9.1-delay, 1)
 	end
@@ -71,6 +71,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 255577 then
 		self.vb.transCount = self.vb.transCount + 1
 		timerTransfusionCD:Start(nil, self.vb.transCount+1)
+		--22, 31
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", taintedBlood)
 		local remaining
 		if expireTime then
@@ -98,6 +99,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnClaws:Play("defensive")
 		end
 		timerGildedClawsCD:Start(nil, self.vb.clawsCount+1)
+		DBM:Debug("Check Murchal proshlyap (Случился каст Золоченые когти)", 2)
 	elseif spellId == 255591 then
 		self.vb.goldCount = self.vb.goldCount + 1
 		timerMoltenGoldCD:Start(nil, self.vb.goldCount+1)
@@ -112,6 +114,7 @@ function mod:SPELL_SUMMON(args)
 		specWarnSpiritofGold:Show()
 		specWarnSpiritofGold:Play("killmob")
 		timerSpiritofGoldCD:Start(nil, self.vb.spiritCount+1)
+		--9.5, 31
 		if self.Options.SetIconOnSpirit then
 			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "SetIconOnSpirit")
 		end

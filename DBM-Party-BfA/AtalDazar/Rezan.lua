@@ -81,9 +81,11 @@ function mod:OnCombatStart(delay)
 	self.vb.teethCount = 0
 	self.vb.fearCount = 0
 	self.vb.pursuitCount = 0
-	timerTeethCD:Start(6-delay, 1)--8.1
-	timerFearCD:Start(11.7-delay, 1)
-	timerPursuitCD:Start(21.7-delay, 1)
+	timerTeethCD:Start(6-delay, 1)
+	timerFearCD:Start(13.9-delay, 1) --
+	timerPursuitCD:Start(21.9-delay, 1)
+	--34.6 от 1 страха до 2
+	--34.5 от 1 преследования до 2
 end
 
 function mod:SPELL_CAST_START(args)
@@ -115,6 +117,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		timerTeethCD:Start(nil, self.vb.teethCount+1)
 		updateAllTimers(self, 3.5)
+		DBM:Debug("Check Murchal proshlyap (Случился каст Отточенные зубы)", 2)
 	end
 end
 
@@ -125,7 +128,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPursuit:Show()
 			specWarnPursuit:Play("justrun")
 			yellPursuit:Yell()
-			yellPursuitFades:Countdown(15)
+			yellPursuitFades:Countdown(spellId)
 			DBM:Debug("Преследование 1 на игроке", 2)
 		else
 			warnPursuit:Show(args.destName)
@@ -147,7 +150,7 @@ function mod:RAID_BOSS_WHISPER(msg)
 		specWarnPursuit:Show()
 		specWarnPursuit:Play("justrun")
 		yellPursuit:Yell()
-		yellPursuitFades:Countdown(15)
+		yellPursuitFades:Countdown(spellId)
 		DBM:Debug("Преследование 2 на игроке", 2)
 	end
 end
@@ -169,7 +172,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetName)
 				specWarnPursuit:Show()
 				specWarnPursuit:Play("justrun")
 				yellPursuit:Yell()
-				yellPursuitFades:Countdown(15)
+				yellPursuitFades:Countdown(spellId)
 				DBM:Debug("Преследование 3 на игроке", 2)
 			else
 				warnPursuit:Show(targetName)
