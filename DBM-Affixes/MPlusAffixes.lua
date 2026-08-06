@@ -11,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 240446 409492 408805",
 	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364",
 	"SPELL_AURA_APPLIED_DOSE 240559 209858 240443",
-	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805",
+	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556",
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
@@ -63,6 +63,7 @@ local timerIncorporealCD					= mod:NewCDTimer(45, 408805, 173254, nil, nil, 5, n
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
 local yellMarkWind							= mod:NewFadesYell(396364, nil, nil, nil, "YELL") --Метка ветра
+local yellEntangledFades					= mod:NewShortFadesYell(408556, nil, nil, nil, "YELL") --Запутывание (Оплетение)
 
 mod:AddBoolOption("MurchalOchkenProshlyapen", true)
 mod:AddNamePlateOption("NPSanguine", 226510, "Tank")
@@ -352,6 +353,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnEntangled:Show()
 			specWarnEntangled:Play("breakvine")--breakvine
+			yellEntangledFades:Countdown(spellId)
 		end
 	elseif spellId == 408801 and self:AntiSpam(25, "aff7") then --Бесплотность
 		if not incorpDetected then
@@ -417,6 +419,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 408805 then
 		if args:IsPlayer() then
 			warnDestabalizeEnd:Show()
+		end
+	elseif spellId == 408556 then --Запутывание (Гнев деревьев)
+		if args:IsPlayer() then
+			yellEntangledFades:Cancel()
 		end
 	end
 end

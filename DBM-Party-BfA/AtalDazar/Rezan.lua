@@ -128,7 +128,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPursuit:Show()
 			specWarnPursuit:Play("justrun")
 			yellPursuit:Yell()
-			yellPursuitFades:Countdown(15)
+			yellPursuitFades:Countdown(spellId)
 			DBM:Debug("Преследование 1 на игроке", 2)
 		else
 			warnPursuit:Show(args.destName)
