@@ -51,7 +51,7 @@ mod.vb.shatterSet = 0
 mod.vb.shearCount = 0
 mod.vb.stompCount = 0
 
-local proshlyaptionSandStompTimers = {7.1, 33.4, 17, 31.2, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17} --Первые 5 таймеров точные
+local proshlyaptionSandStompTimers = {7.1, 32.4, 17, 31.2, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17} --Первые 5 таймеров точные
 
 function mod:OnCombatStart(delay)
 	self.vb.shatterCount = 0
