@@ -24,7 +24,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, longer pulls to detect more variations in Rotten casts
-local warnRottenExpulsion			= mod:NewTargetNoFilterAnnounce(264694, 3) --Волна гнили (Обстрел)
+local warnRottenExpulsion			= mod:NewTargetNoFilterAnnounce(264694, 3, nil, nil, 168929) --Волна гнили (Обстрел)
 local warnTenderize					= mod:NewCountAnnounce(264923, 2) --Отбивка
 
 local specWarnConsumeAll			= mod:NewSpecialWarningMoveTo(264734, "Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Поглощение (АоЕ)
@@ -39,7 +39,7 @@ local timerServantCD				= mod:NewCDCountTimer(42, 264931, DBM_COMMON_L.ADDS.." (
 local timerTenderizeCD				= mod:NewCDCountTimer(41.9, 264923, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Отбивка (Фронталка) 43.7
 local timerRottenExpulsionCD		= mod:NewCDCountTimer(20.2, 264694, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Волна гнили (Обстрел) 14.6--26 (health based?)
 
-local yellRottenExpulsion			= mod:NewYell(264694, DBM_COMMON_L.BOMBING, nil, nil, "YELL") --Волна гнили (Обстрел)
+local yellRottenExpulsion			= mod:NewYell(264694, 168929, nil, nil, "YELL") --Волна гнили (Обстрел)
 
 mod:AddSetIconOption("SetIconOnRottenExpulsion", 264694, true, 5, {8}) --Волна гнили (Обстрел)
 
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnTenderize:Show()
 			specWarnTenderize:Play("shockwave")
 			timerTenderizeCD:Start(nil, self.vb.tenderizeCount+1) --41.9 норм от 1 комбо фронталок до 2
-			if timerRottenExpulsionCD:GetTime() < 12 then
+			if timerRottenExpulsionCD:GetRemaining(args.sourceGUID) < 12 then
 				timerRottenExpulsionCD:AddTime(3, self.vb.rottenCount+1)
 			end
 		end
