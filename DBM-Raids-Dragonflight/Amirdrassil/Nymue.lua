@@ -64,10 +64,10 @@ local warnFullBloom									= mod:NewCountAnnounce(426855, 2)
 local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false)
 local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35)
 
-local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, nil, 2, 2)
+local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 
 local timerFullBloomCD								= mod:NewCDCountTimer(49, 426855, nil, nil, nil, 6)
-local timerLumberingSlamCD							= mod:NewCDNPTimer(18.2, 429108, nil, nil, nil, 3)--No reason to CL it, it's a nameplate only timer
+local timerLumberingSlamCD							= mod:NewCDNPTimer(18.2, 429108, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--No reason to CL it, it's a nameplate only timer
 local timerRadialFlourishCD							= mod:NewCDNPTimer(5.5, 422721, nil, false, nil, 3)--5-12 so kinda fickle, off by default
 local timerWakingDecimation							= mod:NewCastTimer(36, 428471, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--1sec delay before energy starts + 30 + 5 second cast
 

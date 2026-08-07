@@ -66,9 +66,9 @@ local specWarnDarksoulDrain			= mod:NewSpecialWarningDispel(201365, "RemoveDisea
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(201123, nil, nil, nil, 1, 8)
 
 local timerRP						= mod:NewRPTimer(68)
-local timerGrievousRipCD			= mod:NewCDNPTimer(13, 225484, nil, nil, nil, 3) --Мучительный разрыв 18Kind of imprecise without an actual cast event, but should be a good approx
+local timerGrievousRipCD			= mod:NewCDNPTimer(8, 225484, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Мучительный разрыв 18Kind of imprecise without an actual cast event, but should be a good approx
 local timerUnnervingScreechCD		= mod:NewCDNPTimer(10.4, 200630, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ошеломляющий визг
-local timerSpewCorruptionCD			= mod:NewCDNPTimer(24.5, 218755, nil, nil, nil, 3) --Выброс порчи + треш 30.3
+local timerSpewCorruptionCD			= mod:NewCDNPTimer(23.8, 218755, nil, nil, nil, 3) --Выброс порчи + треш 30.3
 local timerMaddeningRoarCD			= mod:NewCDNPTimer(15, 200580, nil, nil, nil, 2) --Безумный рев (АоЕ) 22.6
 local timerStarShowerCD				= mod:NewCDNPTimer(15.6, 200658, nil, nil, nil, 2) --Звездный дождь 20.7
 local timerPropellingChargeCD		= mod:NewCDNPTimer(14.4, 200768, nil, nil, nil, 3) --Рывок вперед 18.2

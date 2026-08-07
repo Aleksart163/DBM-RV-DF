@@ -33,7 +33,7 @@ local specWarnFallingRocks			= mod:NewSpecialWarningGTFO(199460, nil, nil, nil, 
 
 local timerBreathCD					= mod:NewCDCountTimer(22, 191325, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Дыхание порчи (Фронталка) 22/30 alternating? need more logs to confirm
 local timerEarthShakerCD			= mod:NewCDCountTimer(30.3, 199389, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Сотрясающий землю рык OLD: 21
-local timerDownDraftCD				= mod:NewCDCountTimer(31.2, 199345, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий поток (Отталкивание) OLD: 30-42 (health based or varaible?)
+local timerDownDraftCD				= mod:NewCDCountTimer(31.2, 199345, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Нисходящий поток (Отталкивание) 31.2
 local timerDownDraft				= mod:NewCastTimer(9, 199345, DBM_COMMON_L.PUSHBACK, nil, nil, 7, nil, nil, nil, 1, 3) --Нисходящий поток (Отталкивание)
 
 --local yellBreath					= mod:NewYell(199332)
@@ -41,6 +41,8 @@ local timerDownDraft				= mod:NewCastTimer(9, 199345, DBM_COMMON_L.PUSHBACK, nil
 mod.vb.breathCount = 0
 mod.vb.earthCount = 0
 mod.vb.draftCount = 0
+
+local proshlyapationDownDraftTimers = {11.2, 31.2, 30.3, 30.3, 30.3}
 
 function mod:OnCombatStart(delay)
 	self.vb.breathCount = 0
@@ -51,7 +53,7 @@ function mod:OnCombatStart(delay)
 --	timerEarthShakerCD:Start(31.6-delay, 1)--31.6-34.8
 	timerBreathCD:Start(7.3-delay, 1) --
 	timerDownDraftCD:Start(11.2-delay, 1) --
-	timerEarthShakerCD:Start(35.3-delay, 1) --
+	timerEarthShakerCD:Start(34.3-delay, 1) --
 end
 
 function mod:SPELL_CAST_START(args)
@@ -64,7 +66,9 @@ function mod:SPELL_CAST_START(args)
 		self.vb.draftCount = self.vb.draftCount + 1
 		specWarnDownDraft:Show(DBM_COMMON_L.BOSS)
 		specWarnDownDraft:Play("movetoboss")
-		timerDownDraftCD:Start(nil, self.vb.draftCount+1) --31.2 От 1 каста до 2
+		local timer
+		timer = proshlyapationDownDraftTimers[self.vb.draftCount+1] or 31.2
+		timerDownDraftCD:Start(timer, self.vb.draftCount+1)
 		timerDownDraft:Start()
 	elseif spellId == 191325 then--If they ever enable it in combat log, it'll be this ID
 		DBM:Debug("Check Murchal proshlyap (Начался каст дыхания)", 2)

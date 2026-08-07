@@ -55,7 +55,7 @@ if (wowToc >= 100200) then
 
 	local specWarnTerrifyingVision						= mod:NewSpecialWarningMoveTo(429172, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 13) --Ужасающее видение (АоЕ)
 
-	local timerTerrifyingVisionCD						= mod:NewCDTimer(30, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
+	local timerTerrifyingVisionCD						= mod:NewCDTimer(23, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
 	local timerTerrifyingVision							= mod:NewCastTimer(5, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
 
 	mod.vb.totemCount = 0

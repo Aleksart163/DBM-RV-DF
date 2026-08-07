@@ -6,7 +6,8 @@ mod:SetRevision("20260630000000")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 425062 425149 425995",
+	"SPELL_CAST_START 425062 425149 425995 429180",
+	"SPELL_CAST_SUCCESS 429180",
 	"SPELL_AURA_APPLIED 428765 425300 425388 425381 428077",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 428765 425300 425388 428077",
@@ -21,6 +22,7 @@ local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, ni
 local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
 local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee") --Заряженный Тьмой удар
 
+local specWarnLumberingSlam					= mod:NewSpecialWarningDodge(429180, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 local specWarnDreamWalk						= mod:NewSpecialWarningDispel(428077, "RemoveMagic", nil, nil, 1, 2) --Хождение во сне
 local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2) --Сердце Преисподней
 local specWarnInfernoHeartDispel			= mod:NewSpecialWarningDispel(425388, "RemoveCurse", nil, nil, 1, 2) --Сердце Преисподней
@@ -31,6 +33,7 @@ local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
+local timerLumberingSlamCD					= mod:NewCDNPTimer(20, 429180, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerChargedStompCD					= mod:NewCDNPTimer(14.6, 425149, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Мощный взрыв) 29.2
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewCastTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) How long it's active and when not to come up
@@ -63,6 +66,18 @@ function mod:SPELL_CAST_START(args)
 				specWarnChargedStomp2:Play("watchstep")
 			end
 		end
+	elseif spellId == 429180 then
+		if self:AntiSpam(4, 5) then
+			specWarnLumberingSlam:Show()
+			specWarnLumberingSlam:Play("shockwave")
+		end
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 429180 then
+		timerLumberingSlamCD:Start(nil, args.sourceGUID)
 	end
 end
 

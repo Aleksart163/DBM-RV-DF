@@ -37,17 +37,21 @@ local specWarnNoxiousStench			= mod:NewSpecialWarningInterrupt(259572, "HasInter
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(250585, nil, nil, nil, 1, 8) --Ядовитая лужа
 
 local timerReanimate				= mod:NewCDNPTimer(7, 259531, nil, nil, nil, 7) --Оживление
-local timerLeapCD					= mod:NewCDTimer(5.3, 250258, 47482, nil, nil, 3) --Токсичный прыжок (Прыжок) 6 uness delayed by stentch, then 8
+local timerLeapCD					= mod:NewCDCountTimer(5.3, 250258, 47482, nil, nil, 3) --Токсичный прыжок (Прыжок) 6 uness delayed by stentch, then 8
 local timerNoxiousStenchCD			= mod:NewCDCountTimer(18.2, 259572, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DISEASE_ICON) --Токсичное зловоние
 
+mod.vb.leapCount = 0
 mod.vb.totemRemaining = 3
 mod.vb.stenchCount = 0
 
+local proshlyapationLeapTimers = {2, 5.3, 4}
+
 function mod:OnCombatStart(delay)
+	self.vb.leapCount = 0
 	self.vb.totemRemaining = 3
 	self.vb.stenchCount = 0
 	self:SetStage(1)
-	timerLeapCD:Start(2-delay)
+	timerLeapCD:Start(2-delay, 1)
 	timerNoxiousStenchCD:Start(5.7-delay, 1)
 end
 
@@ -62,9 +66,12 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 250258 then
+		self.vb.leapCount = self.vb.leapCount + 1
 		specWarnLeap:Show()
 		specWarnLeap:Play("watchstep")
-		timerLeapCD:Start()
+		local timer
+		timer = proshlyapationLeapTimers[self.vb.leapCount+1] or 5.3
+		timerLeapCD:Start(timer, self.vb.leapCount+1)
 	elseif spellId == 259531 then --Оживление
 		timerReanimate:Start(nil, args.sourceGUID)
 		if self:AntiSpam(1, "Reanimate") then
@@ -85,7 +92,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerNoxiousStenchCD:Start(18.2, self.vb.stenchCount+1)
 		else
 			timerNoxiousStenchCD:Start(19.5, self.vb.stenchCount+1)
-			timerLeapCD:AddTime(2)--Consistent with early alpha, might use more complex code if this becomes inconsistent
+			timerLeapCD:AddTime(2, self.vb.leapCount+1)--Consistent with early alpha, might use more complex code if this becomes inconsistent
 		end
 	elseif spellId == 250241 then --Стремительное разложение (Фаза 2)
 		self:SetStage(2)
