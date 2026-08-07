@@ -24,14 +24,15 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, longer pulls to detect more variations in Rotten casts
+local warnRottenExpulsion			= mod:NewTargetNoFilterAnnounce(264694, 3) --Волна гнили (Обстрел)
 local warnTenderize					= mod:NewCountAnnounce(264923, 2) --Отбивка
 
 local specWarnConsumeAll			= mod:NewSpecialWarningMoveTo(264734, "Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Поглощение (АоЕ)
 local specWarnConsumeAll2			= mod:NewSpecialWarningDefensive(264734, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Поглощение (АоЕ)
 local specWarnServant				= mod:NewSpecialWarningSwitch(264931, "Dps", nil, DBM_COMMON_L.ADDS, 1, 2) --Призыв слуг
 local specWarnTenderize				= mod:NewSpecialWarningDodge(264923, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Отбивка (Фронталка)
-local specWarnRottenExpulsion		= mod:NewSpecialWarningTarget(264694, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Волна гнили (Обстрел)
-local specWarnRottenExpulsion2		= mod:NewSpecialWarningMoveAway(264694, nil, nil, DBM_COMMON_L.BOMBING, 4, 2) --Волна гнили (Обстрел)
+local specWarnRottenExpulsion		= mod:NewSpecialWarningMoveAway(264694, nil, nil, DBM_COMMON_L.BOMBING, 4, 2) --Волна гнили (Обстрел)
+local specWarnRottenExpulsion2		= mod:NewSpecialWarningDodge(264694, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Волна гнили (Обстрел)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(264712, nil, nil, nil, 1, 8) --Волна гнили
 
 local timerServantCD				= mod:NewCDCountTimer(42, 264931, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 2, 5) --Призыв слуг 42.5
@@ -60,12 +61,13 @@ end
 function mod:RottenExpulsionTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		specWarnRottenExpulsion2:Show()
-		specWarnRottenExpulsion2:Play("runout")
+		specWarnRottenExpulsion:Show()
+		specWarnRottenExpulsion:Play("runout")
 		yellRottenExpulsion:Yell()
 	else
-		specWarnRottenExpulsion:Show(targetname)
-		specWarnRottenExpulsion:Play("watchstep")
+		specWarnRottenExpulsion2:Show()
+		specWarnRottenExpulsion2:Play("watchstep")
+		warnRottenExpulsion:Show(targetname)
 	end
 	if self.Options.SetIconOnRottenExpulsion then
 		self:SetIcon(targetname, 8, 5)

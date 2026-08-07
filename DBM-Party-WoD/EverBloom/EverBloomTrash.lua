@@ -74,7 +74,7 @@ local yellVenomBurst							= mod:NewYell(165123, nil, nil, nil, "YELL") --Взр
 --"<38.77 00:48:18> [CLEU] SPELL_CAST_SUCCESS#Creature-0-4210-1279-28404-85496-000003D0DD#Undermage Kesalon##nil#170741#Pyroblast#nil#nil", -- [56]
 --"<40.01 00:48:19> [CHAT_MSG_MONSTER_SAY] If that beast crosses through, the unchecked growth will choke the whole of Azeroth! Hurry!#Undermage Kesalon###Omegal##0#0##0#382#nil#0#false#false#false#false", -- [58]
 function mod:PortalRP()
-	timerRP:Start(34.3)--Approx, just using yell + 1
+	timerRP:Start(29)--Approx, just using yell + 1
 end
 
 function mod:SPELL_CAST_START(args)
