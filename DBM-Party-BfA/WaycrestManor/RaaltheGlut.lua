@@ -70,7 +70,7 @@ function mod:RottenExpulsionTarget(targetname)
 		warnRottenExpulsion:Show(targetname)
 	end
 	if self.Options.SetIconOnRottenExpulsion then
-		self:SetIcon(targetname, 8, 5)
+		self:SetIcon(targetname, 8, 3)
 	end
 end
 
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnTenderize:Show()
 			specWarnTenderize:Play("shockwave")
 			timerTenderizeCD:Start(nil, self.vb.tenderizeCount+1) --41.9 норм от 1 комбо фронталок до 2
-			if timerRottenExpulsionCD:GetRemaining(args.sourceGUID) < 12 then
+			if timerRottenExpulsionCD:GetRemaining(self.vb.rottenCount+1) < 12 then
 				timerRottenExpulsionCD:AddTime(3, self.vb.rottenCount+1)
 			end
 		end
