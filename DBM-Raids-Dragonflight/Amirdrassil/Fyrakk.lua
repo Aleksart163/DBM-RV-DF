@@ -250,6 +250,38 @@ local function orbsLoop(self)
 	end
 end
 
+local function startPhase3(self)
+	if self:GetStage(3, 1) then
+		self:SetStage(3)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Play("pthree")
+		self.vb.firestormCount = 0
+		self.vb.blazeCount = 0
+		self.vb.tankCount = 0
+		self.vb.shadowflameBreathCount = 0
+		timerSpiritsCD:Stop()
+		timerGreaterFirestormCD:Stop()
+		timerFlamefallCD:Stop()
+		timerShadowflameDevastationCD:Stop()
+		timerFyralathsBiteCD:Stop()
+		timerBlazeCD:Stop()
+		self:Unschedule(blazeLoop)
+		timerInfernalMawCD:Start(4.9, 1)
+		timerShadowflameBreathCD:Start(10, 1)
+		timerEternalFirestormCD:Start(18, 1)
+		self:Schedule(18, eternalFireLoop, self)
+		timerApocalypseroarCD:Start(34, 1)
+		if self:IsHard() then
+			timerBlazeCD:Start(12, 1)--Heroic/Mythic only
+			self:Schedule(12, blazeLoop, self)
+			if self:IsMythic() then
+				timerEternalFirestormCD:Start(3.8, 1)
+				self:Schedule(3.8, eternalFireSwirlLoop, self)
+			end
+		end
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.darkflameCleaveCount = 0
@@ -312,6 +344,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
+	self:Unschedule(startPhase3)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -485,8 +518,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDarkflameCleave:Show(self.vb.darkflameCleaveCount)
 		timerDarkflameCleave:Start(4, self.vb.darkflameCleaveCount)
 		timerDarkflameCleaveCD:Start(61, self.vb.darkflameCleaveCount+1)
-	elseif spellId == 422935 then--Eternal Firestorm
-		if self:GetStage(3, 1) then
+	elseif spellId == 422935 then --Вечная огненная буря (Сломана на сервере)
+		DBM:Debug("Murchal proshlyap (Разрабы починили спелл, нихуя себе)", 2)
+--[[		if self:GetStage(3, 1) then
 			self:SetStage(3)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 			warnPhase:Play("pthree")
@@ -514,7 +548,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 					self:Schedule(3.8, eternalFireSwirlLoop, self)
 				end
 			end
-		end
+		end]]
 	end
 end
 
@@ -608,7 +642,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 419144 and self:GetStage(2, 1) then--Corrupt ending, also appies 426815 when this ends
+	if spellId == 419144 and self:GetStage(2, 1) then --Заражение порчей (Начало фазы 2)
 		self:SetStage(2)
 		timerBlazeCD:Stop()
 		self:Unschedule(blazeLoop)
@@ -622,7 +656,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.incarnCount = 0
 		self.vb.aflameCount = 0
 		timerFlamefallCD:Start(5.8, 1)
-
 		timerFyralathsBiteCD:Start(17.9, 1)
 		timerSpiritsCD:Start(19.1, 1)
 		timeAFlameCD:Start(27.1, 1)
@@ -634,6 +667,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerBlazeCD:Start(20.7, 1)--Heroic/Mythic only
 			self:Schedule(20.7, blazeLoop, self)
 		end
+		self:Schedule(215, startPhase3, self)
 	elseif spellId == 421922 then --Заражение порчей
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()

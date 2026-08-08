@@ -28,17 +28,17 @@ mod:RegisterEventsInCombat(
  or (ability.id = 200182 or ability.id = 200238) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+local warnNightmareBolt				= mod:NewTargetNoFilterAnnounce(200185, 3) --Кошмарная стрела
 local warnWakingNightmare			= mod:NewTargetAnnounce(200243, 3, nil, nil, 193069) --Кошмар наяву (Кошмары)
 local warnParanoia					= mod:NewTargetNoFilterAnnounce(200289, 3, nil, nil, 315927) --Усугубляющаяся паранойя (Паранойя)
 local warnFeedOnTheWeak				= mod:NewTargetNoFilterAnnounce(200238, 3) --Пожирание слабых
-local warnNightmareBolt				= mod:NewTargetNoFilterAnnounce(200185, 3) --Кошмарная стрела
 
-local specWarnApocNightmare			= mod:NewSpecialWarningDefensive(200050, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Апокалиптический Кошмар
+local specWarnApocNightmare			= mod:NewSpecialWarningDefensive(200050, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Апокалиптический Кошмар
 local specWarnNightmareBolt			= mod:NewSpecialWarningDefensive(200185, nil, nil, nil, 3, 2) --Кошмарная стрела
 local specWarnFeedOnTheWeak			= mod:NewSpecialWarningDefensive(200238, nil, nil, nil, 3, 2) --Пожирание слабых
 local specWarnFesteringRip			= mod:NewSpecialWarningYou(200182, nil, nil, nil, 1, 2) --Гноящаяся рана
 local specWarnFesteringRip2			= mod:NewSpecialWarningDispel(200182, "RemoveMagic", nil, 2, 1, 2) --Гноящаяся рана
-local specWarnWakingNightmare		= mod:NewSpecialWarningMoveTo(200243, nil, 193069, nil, 4, 2) --Кошмар наяву (Кошмары)
+local specWarnWakingNightmare		= mod:NewSpecialWarningMoveTo(200243, nil, 193069, nil, 1, 2) --Кошмар наяву (Кошмары)
 local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289, nil, 315927, nil, 4, 2) --Усугубляющаяся паранойя (Паранойя)
 
 local timerApocNightmare			= mod:NewCastTimer(5, 200050, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Апокалиптический Кошмар
@@ -52,7 +52,6 @@ local yellWakingNightmare			= mod:NewYell(200243, 193069, nil, nil, "YELL") --К
 local yellParanoia					= mod:NewYell(200289, 315927, nil, nil, "YELL") --Усугубляющаяся паранойя (Паранойя)
 
 mod:AddSetIconOption("SetIconOnNightmare", 200243, true, 0, {7}) --Кошмар наяву
-mod:AddSetIconOption("SetIconOnNightmareBolt", 200185, true, 0, {7}) --Кошмарная стрела
 mod:AddSetIconOption("SetIconOnParanoia", 200289, true, 0, {8}) --Усугубляющаяся паранойя
 
 mod.vb.festerCount = 0
@@ -69,7 +68,7 @@ function mod:ParanoiaTarget(targetname)
 		warnParanoia:Show(targetname)
 	end
 	if self.Options.SetIconOnParanoia then
-		self:SetIcon(targetname, 8, 2.5)
+		self:SetIcon(targetname, 8, 2)
 	end
 end
 
@@ -81,7 +80,7 @@ function mod:NightmareBoltTarget(targetname)
 	else
 		warnNightmareBolt:Show(targetname)
 	end
-	if self.Options.SetIconOnNightmareBolt then
+	if self.Options.SetIconOnNightmare then
 		self:SetIcon(targetname, 7, 2)
 	end
 end
