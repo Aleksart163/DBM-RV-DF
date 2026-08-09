@@ -108,7 +108,7 @@ if (wowToc >= 100200) then
 		if spellId == 429048 then
 			timerFlameShockCD:Start()
 		elseif spellId == 429037 then
-[			self.vb.totemCount = self.vb.totemCount + 1
+		self.vb.totemCount = self.vb.totemCount + 1
 			if self:IsTank() then
 				specWarnStormflurryTotem2:Show()
 				specWarnStormflurryTotem2:Play("defensive")
