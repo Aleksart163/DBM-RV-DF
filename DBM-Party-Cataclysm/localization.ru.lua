@@ -378,6 +378,10 @@ L= DBM:GetModLocalization(102)
 -------------------------
 L= DBM:GetModLocalization(103)
 
+L:SetMiscLocalization({ 
+	MProshlyap	= "Надо найти нового слугу."
+})
+
 ------------
 -- Ozumat --
 ------------

@@ -22,8 +22,9 @@ if (wowToc >= 100200) then
 	--Patch 10.2 or later
 	mod:RegisterEventsInCombat(
 		"SPELL_CAST_START 429051 429037 429172",
-		"SPELL_CAST_SUCCESS 429173 429048",
-		"SPELL_AURA_APPLIED 429048"
+		"SPELL_CAST_SUCCESS 429173 429048 429037",
+		"SPELL_AURA_APPLIED 429048",
+		"CHAT_MSG_MONSTER_YELL"
 	--	"UNIT_SPELLCAST_SUCCEEDED boss1"
 	)
 
@@ -83,8 +84,9 @@ if (wowToc >= 100200) then
 			specWarnEarthfury:Schedule(2)--2.5 second cast, I want alert at 2 so it is just slightly faster than using success
 			specWarnEarthfury:ScheduleVoice(2, "keepmove")
 			timerEarthfuryCD:Start(nil, self.vb.earthfuryCount+1)
-		elseif spellId == 429037 then
-			self.vb.totemCount = self.vb.totemCount + 1
+		elseif spellId == 429037 then --Всё сломано и не работает
+			DBM:Debug("Murchal proshlyap (Разрабы починили спелл призыва тотема, нихуя себе)", 2)
+--[[			self.vb.totemCount = self.vb.totemCount + 1
 			if self:IsTank() then
 				specWarnStormflurryTotem2:Show()
 				specWarnStormflurryTotem2:Play("defensive")
@@ -92,7 +94,7 @@ if (wowToc >= 100200) then
 				specWarnStormflurryTotem:Show()
 				specWarnStormflurryTotem:Play("attacktotem")
 			end
-			timerStormflurryTotemCD:Start(nil, self.vb.totemCount+1)
+			timerStormflurryTotemCD:Start(nil, self.vb.totemCount+1)]]
 		elseif spellId == 429172 then
 			specWarnTerrifyingVision:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnTerrifyingVision:Play("breaklos")
@@ -103,7 +105,19 @@ if (wowToc >= 100200) then
 
 	function mod:SPELL_CAST_SUCCESS(args)
 		local spellId = args.spellId
-		if spellId == 429173 and self:GetStage(1) then --Гниение разума (Начало фазы 2)
+		if spellId == 429048 then
+			timerFlameShockCD:Start()
+		elseif spellId == 429037 then
+[			self.vb.totemCount = self.vb.totemCount + 1
+			if self:IsTank() then
+				specWarnStormflurryTotem2:Show()
+				specWarnStormflurryTotem2:Play("defensive")
+			else
+				specWarnStormflurryTotem:Show()
+				specWarnStormflurryTotem:Play("attacktotem")
+			end
+			timerStormflurryTotemCD:Start(nil, self.vb.totemCount+1)
+--[[		elseif spellId == 429173 and self:GetStage(1) then --Гниение разума (Начало фазы 2) Работает криво
 			self:SetStage(2)
 			timerEarthfuryCD:Stop()
 			timerStormflurryTotemCD:Stop()
@@ -112,9 +126,7 @@ if (wowToc >= 100200) then
 			specWarnEarthfury:CancelVoice()
 			warnPhase2:Show()
 			warnPhase2:Play("ptwo")
-			timerTerrifyingVisionCD:Start(2.8) --уже подправлено
-		elseif spellId == 429048 then
-			timerFlameShockCD:Start()
+			timerTerrifyingVisionCD:Start(2.8) --уже подправлено]]
 		end
 	end
 
@@ -137,6 +149,21 @@ if (wowToc >= 100200) then
 		end
 	end
 	--]]
+	
+	function mod:CHAT_MSG_MONSTER_YELL(msg)
+		if (msg == L.MProshlyap or msg:find(L.MProshlyap)) then
+			DBM:Debug("Proshlyap (Запуск 2 фазы)", 2)
+			self:SetStage(2)
+			warnPhase2:Show()
+			warnPhase2:Play("ptwo")
+			timerEarthfuryCD:Stop()
+			timerStormflurryTotemCD:Stop()
+			timerFlameShockCD:Stop()
+			specWarnEarthfury:Cancel()
+			specWarnEarthfury:CancelVoice()
+			timerTerrifyingVisionCD:Start(2.8)
+		end
+	end
 else
 	--10.1.7 on retail, and Cataclysm classic if it happens (if it doesn't happen old version of mod will be retired)
 	mod:RegisterEventsInCombat(
