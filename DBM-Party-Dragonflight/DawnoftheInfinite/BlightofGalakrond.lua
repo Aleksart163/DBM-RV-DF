@@ -44,16 +44,16 @@ local warnCorruptedMind						= mod:NewTargetNoFilterAnnounce(418346, 4, nil, nil
 local specWarnCorrosiveInfusion				= mod:NewSpecialWarningDodgeCount(406886, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Разъедающее насыщение (Обстрел)
 local specWarnCorrosion						= mod:NewSpecialWarningYou(407406, nil, nil, nil, 3, 2) --Коррозия
 local specWarnCorrosionClear				= mod:NewSpecialWarningMoveTo(407406, nil, nil, nil, 4, 2) --Коррозия
-local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Возвращение гнили
+local specWarnReclamation					= mod:NewSpecialWarningCount(407159, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Возвращение гнили (Фронталка) 1
 local specWarnNecroticWinds					= mod:NewSpecialWarningDodge(407978, nil, nil, DBM_COMMON_L.PUSHBACK, 1, 2) --Некротические ветра (Отталкивание)
 local specWarnNecrofrost					= mod:NewSpecialWarningSwitch(408029, "Dps", nil, DBM_COMMON_L.ADD, 1, 2) --Некрохлад
-local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodge(408141, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Испепеляющее гнилостное дыхание (Фронталка)
+local specWarnIncinBlightBreath				= mod:NewSpecialWarningDodge(408141, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Испепеляющее гнилостное дыхание (Фронталка) 2
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8) --Просачивающаяся гниль
 
 local timerCorrosiveInfusionCD				= mod:NewCDCountTimer(19.4, 406886, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Разъедающее насыщение (Обстрел)
 local timerBlightReclamationCD				= mod:NewCDCountTimer(19.4, 407159, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Возвращение гнили
 local timerNecroticWindsCD					= mod:NewCDCountTimer(31.5, 407978, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Некротические ветра (Отталкивание)
-local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, DBM_COMMON_L.ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад
+local timerNecrofrostCD						= mod:NewCDCountTimer(19.4, 408029, DBM_COMMON_L.ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON) --Некрохлад (Адд)
 local timerIncineratingBlightbreathCD		= mod:NewCDCountTimer(15.8, 408141, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Испепеляющее гнилостное дыхание (Фронталка)
 
 local yellCorrosion							= mod:NewYell(407406, nil, nil, nil, "YELL") --Коррозия
@@ -134,7 +134,7 @@ function mod:SPELL_CAST_START(args)
 		if self:GetStage(1) then
 			timer = 17
 		elseif self:GetStage(2) then
-			timer = 31.5
+			timer = 26.1 --В действительности, а на офе было 31.5
 			--rule only applies to stage 2. If time left on corrosive is less than 5.2, it's extended. this is what causes it to be 34 instead of 31.5 sometimes
 			if timerIncineratingBlightbreathCD:GetRemaining(self.vb.corrosiveCount+1) < 5.2 then
 				local elapsed, total = timerIncineratingBlightbreathCD:GetTime(self.vb.corrosiveCount+1)
@@ -143,7 +143,9 @@ function mod:SPELL_CAST_START(args)
 				timerIncineratingBlightbreathCD:Update(elapsed, total+extend, self.vb.corrosiveCount+1)
 			end
 		else
-			timer = 61.9
+			timer = 16.9 --В действительности, а на офе было 61.9
+			--от 1 до 2 17.3
+			--от 2 до 3 16.9
 		end
 		timerBlightReclamationCD:Start(timer, self.vb.reclaimCount+1)
 	elseif spellId == 408029 then
@@ -155,7 +157,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnIncinBlightBreath:Show()
 		specWarnIncinBlightBreath:Play("breathsoon")
 		--The timers that are delayed will be auto corrected by Corrosive cast
-		timerIncineratingBlightbreathCD:Start(15.8, self.vb.fireBreathCount+1)
+		timerIncineratingBlightbreathCD:Start(16.5, self.vb.fireBreathCount+1) --было 15.8
 	end
 end
 
@@ -237,7 +239,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Starting timers here better
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
-		timerNecrofrostCD:Start(30, 1) --было 31.4 
+		timerNecrofrostCD:Start(29.5, 1) --было 31.4 
 		timerBlightReclamationCD:Start(20.9, 1) --Выглядит норм (Было 64)
 		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end

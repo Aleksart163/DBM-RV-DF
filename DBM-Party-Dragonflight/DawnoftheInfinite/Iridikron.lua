@@ -39,8 +39,8 @@ local specWarnPulverizingCreations				= mod:NewSpecialWarningYou(409879, nil, ni
 local specWarnTimelineTranscendence				= mod:NewSpecialWarningSpell(414178, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Трансцендентность временной линии (Повышенный урон)
 local specWarnCataclysmicObliteration			= mod:NewSpecialWarningMoveTo(414184, nil, nil, nil, 4, 2) --Катастрофическое истребление
 local specWarnExtinctionBlast					= mod:NewSpecialWarningMoveTo(409261, nil, 174716, nil, 3, 4) --Истребляющий взрыв (Бомба)
-local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSoak(414535, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 2) --Камнекрушащий шквал
-local specWarnPulvBreath						= mod:NewSpecialWarningDodge(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох
+local specWarnStonecrackerBarrage				= mod:NewSpecialWarningSpell(414535, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Камнекрушащий шквал (Разделение урона)
+local specWarnPulvBreath						= mod:NewSpecialWarningDodge(409635, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дробящий выдох (Фронталка)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
 local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв (Бомба)

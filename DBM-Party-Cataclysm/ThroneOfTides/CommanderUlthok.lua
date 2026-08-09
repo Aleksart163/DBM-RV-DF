@@ -30,17 +30,18 @@ if (wowToc >= 100200) then
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 	--]]
 	--TODO, more timer data needed (longer pulls)
-	local warnAwakenOoze								= mod:NewCountAnnounce(427456, 3)
+	local warnAwakenOoze								= mod:NewCountAnnounce(427456, 2) --Пробуждение жижи
 
-	local specWarnBubblingFissure						= mod:NewSpecialWarningDodge(427672, nil, nil, nil, 2, 2)
-	local specWarnFesteringShockwave					= mod:NewSpecialWarningCount(427668, nil, nil, nil, 2, 2)
-	local specWarnCrushingClaw							= mod:NewSpecialWarningDefensive(427670, nil, nil, nil, 1, 2)
-	local specWarnGTFO									= mod:NewSpecialWarningGTFO(427559, nil, nil, nil, 1, 8)
+	local specWarnAwakenOoze							= mod:NewSpecialWarningSwitch(427456, "Dps", nil, nil, 1, 2) --Пробуждение жижи
+	local specWarnBubblingFissure						= mod:NewSpecialWarningDodge(427672, nil, nil, nil, 2, 2) --Бурлящая расщелина
+	local specWarnFesteringShockwave					= mod:NewSpecialWarningDefensive(427668, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Гнойная ударная волна (Отталкивание)
+	local specWarnCrushingClaw							= mod:NewSpecialWarningDefensive(427670, nil, nil, nil, 3, 2) --Сокрушающий коготь
+	local specWarnGTFO									= mod:NewSpecialWarningGTFO(427559, nil, nil, nil, 1, 8) --Бурлящая жижа
 
-	local timerBubblingFissureCD						= mod:NewCDTimer(32.3, 427672, nil, nil, nil, 3)--32-34
-	local timerAwakenOozeCD								= mod:NewCDCountTimer(48.5, 427456, nil, nil, nil, 1)
-	local timerFesteringShockwaveCD						= mod:NewCDCountTimer(32.7, 427668, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-	local timerCrushingClawCD							= mod:NewCDCountTimer(26.7, 427670, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+	local timerBubblingFissureCD						= mod:NewCDTimer(32.3, 427672, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Бурлящая расщелина 32-34
+	local timerAwakenOozeCD								= mod:NewCDCountTimer(48.5, 427456, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Пробуждение жижи
+	local timerFesteringShockwaveCD						= mod:NewCDCountTimer(32.7, 427668, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Гнойная ударная волна (Отталкивание)
+	local timerCrushingClawCD							= mod:NewCDCountTimer(26.7, 427670, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Сокрушающий коготь
 
 	mod.vb.oozeCount = 0
 	mod.vb.festeringCount = 0
@@ -69,6 +70,8 @@ if (wowToc >= 100200) then
 		elseif spellId == 427456 then
 			self.vb.oozeCount = self.vb.oozeCount + 1
 			warnAwakenOoze:Show(self.vb.oozeCount)
+			specWarnAwakenOoze:Show()
+			specWarnAwakenOoze:Play("changetarget")
 			timerAwakenOozeCD:Start(nil, self.vb.oozeCount+1)
 		elseif spellId == 427668 then
 			self.vb.festeringCount = self.vb.festeringCount + 1
@@ -83,6 +86,7 @@ if (wowToc >= 100200) then
 			end
 			local timer = clawTimers[self.vb.clawCount+1] or 26.7
 			timerCrushingClawCD:Start(timer, self.vb.clawCount+1)
+			DBM:Debug("Murchal proshlyap (Старт каста Сокрушающий коготь)", 2)
 		end
 	end
 
