@@ -65,6 +65,8 @@ mod.vb.reclaimCount = 0
 mod.vb.windsCount = 0--Reused for necrofrost
 mod.vb.fireBreathCount = 0
 
+local proshlyaptionNecrofrostTimers = {29, 41.7, 19.4, 42.5} --Первые 3 таймеров точные
+
 function mod:OnCombatStart(delay)
 	self.vb.corrosiveCount = 0
 	self.vb.reclaimCount = 0
@@ -134,7 +136,8 @@ function mod:SPELL_CAST_START(args)
 		if self:GetStage(1) then
 			timer = 17
 		elseif self:GetStage(2) then
-			timer = 26.1 --В действительности, а на офе было 31.5
+			timer = 24.6 --В действительности, а на офе было 31.5
+			--2-ой каст 24.6, 3ий 24.8
 			--rule only applies to stage 2. If time left on corrosive is less than 5.2, it's extended. this is what causes it to be 34 instead of 31.5 sometimes
 			if timerIncineratingBlightbreathCD:GetRemaining(self.vb.corrosiveCount+1) < 5.2 then
 				local elapsed, total = timerIncineratingBlightbreathCD:GetTime(self.vb.corrosiveCount+1)
@@ -144,14 +147,15 @@ function mod:SPELL_CAST_START(args)
 			end
 		else
 			timer = 16.9 --В действительности, а на офе было 61.9
-			--от 1 до 2 17.3
-			--от 2 до 3 16.9
+			--2-ой каст 17.3, 3-ий каст 16.9
 		end
 		timerBlightReclamationCD:Start(timer, self.vb.reclaimCount+1)
 	elseif spellId == 408029 then
 		self.vb.windsCount = self.vb.windsCount + 1
 		--The timers that are delayed will be auto corrected by Corrosive cast
-		timerNecrofrostCD:Start(19.4, self.vb.windsCount+1)
+		local timer
+		timer = proshlyaptionNecrofrostTimers[self.vb.windsCount+1] or 19.4
+		timerNecrofrostCD:Start(timer, self.vb.windsCount+1) --По инфе с офы было 19.4, а потом 41.7, 19.4, 42.5
 	elseif spellId == 408141 then
 		self.vb.fireBreathCount = self.vb.fireBreathCount + 1
 		specWarnIncinBlightBreath:Show()
@@ -239,7 +243,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Starting timers here better
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
-		timerNecrofrostCD:Start(29.5, 1) --было 31.4 
+		timerNecrofrostCD:Start(29, 1) --было 31.4 
 		timerBlightReclamationCD:Start(20.9, 1) --Выглядит норм (Было 64)
 		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end

@@ -49,7 +49,9 @@ local timerFeedOnTheWeakCD			= mod:NewCDCountTimer(18.2, 200238, nil, nil, nil, 
 
 local yellFesteringRip				= mod:NewYell(200182, nil, nil, nil, "YELL") --Гноящаяся рана
 local yellWakingNightmare			= mod:NewYell(200243, 193069, nil, nil, "YELL") --Кошмар наяву (Кошмары)
+local yellWakingNightmareFades		= mod:NewShortFadesYell(200243, nil, nil, nil, "YELL") --Кошмар наяву (Кошмары)
 local yellParanoia					= mod:NewYell(200289, 315927, nil, nil, "YELL") --Усугубляющаяся паранойя (Паранойя)
+local yellParanoiaFades				= mod:NewShortFadesYell(200289, nil, nil, nil, "YELL") --Усугубляющаяся паранойя (Паранойя)
 
 mod:AddSetIconOption("SetIconOnNightmare", 200243, true, 0, {7}) --Кошмар наяву
 mod:AddSetIconOption("SetIconOnParanoia", 200289, true, 0, {8}) --Усугубляющаяся паранойя
@@ -81,7 +83,7 @@ function mod:NightmareBoltTarget(targetname)
 		warnNightmareBolt:Show(targetname)
 	end
 	if self.Options.SetIconOnNightmare then
-		self:SetIcon(targetname, 7, 2)
+		self:SetIcon(targetname, 7, 1)
 	end
 end
 
@@ -123,10 +125,10 @@ function mod:OnCombatStart(delay)
 	self.vb.nightmareCount = 0
 	self.vb.feedCount = 0
 	self.vb.paranoiaCount = 0
-	timerFesteringRipCD:Start(3.2-delay, 1)
-	timerNightmareBoltCD:Start(6-delay, 1)
-	timerFeedOnTheWeakCD:Start(15.7-delay, 1)
-	timerParanoiaCD:Start(20.4-delay, 1)
+	timerFesteringRipCD:Start(3.2-delay, 1) --3.2 (по инфе с офы, ниже тоже)
+	timerNightmareBoltCD:Start(9-delay, 1) --6
+	timerFeedOnTheWeakCD:Start(14-delay, 1) --15.7
+	timerParanoiaCD:Start(19.1-delay, 1) --20.4
 end
 
 --<1631.04 22:47:56> [CLEU] SPELL_CAST_START#Creature-0-5770-1466-11160-99192-000021BD9C#Shade of Xavius(78.8%-100.0%)##nil#200289#Growing Paranoia#nil#nil", -- [20172]
@@ -193,6 +195,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnWakingNightmare:Show(DBM_COMMON_L.ALLY)
 			specWarnWakingNightmare:Play("gathershare")
 			yellWakingNightmare:Yell()
+			yellWakingNightmareFades:Countdown(spellId)
 		else
 			warnWakingNightmare:Show(args.destName)
 		end
@@ -205,6 +208,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnParanoia:Show()
 			specWarnParanoia:Play("scatter")
 			yellParanoia:Yell()
+			yellParanoiaFades:Countdown(spellId)
 		end
 		--CD increased in 10.2, no longer needs to use two icons
 		if self.Options.SetIconOnParanoia then
@@ -223,10 +227,16 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 200243 then
+		if args:IsPlayer() then
+			yellWakingNightmareFades:Cancel()
+		end
 		if self.Options.SetIconOnNightmare then
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 200289 then
+		if args:IsPlayer() then
+			yellParanoiaFades:Cancel()
+		end
 		if self.Options.SetIconOnParanoia then
 			self:SetIcon(args.destName, 0)
 		end
