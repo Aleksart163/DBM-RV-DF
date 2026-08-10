@@ -516,7 +516,7 @@ function mod:UNIT_DIED(args)
 		timerFishBoltVolleyCD:Stop(args.destGUID)
 	elseif cid == 208698 then--Infinite Riftmage
 		timerInfiniteBurnCD:Stop(args.destGUID)
-	elseif (cid == 203861 or cid == 208208) then --Эсминец орды/Альянса
+	elseif cid == 203861 or cid == 208208 then --Эсминец орды/Альянса
 		timerVolatileMortarCD:Stop(args.destGUID)
 		timerDeployGoblinSappersCD:Stop(args.destGUID)
 	elseif cid == 207177 then --Караульный из рода Бесконечности
