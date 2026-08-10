@@ -37,6 +37,7 @@ local specWarnGTFO									= mod:NewSpecialWarningGTFO(421532, nil, nil, nil, 1,
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27637))
+local warnBrandofDamnation							= mod:NewCountAnnounce(421343, 2) --Клеймо проклятия
 local warnCauterizingWound							= mod:NewYouAnnounce(421656, 3) --Прижигающая рана
 local warnCauterizingWoundOver						= mod:NewFadesAnnounce(421656, 1) --Прижигающая рана
 local warnSearingAftermath							= mod:NewTargetNoFilterAnnounce(422577, 2, nil, "Healer", 174716) --Пылающий ожог (Бомба)
@@ -44,6 +45,7 @@ local warnSeekingInferno							= mod:NewIncomingCountAnnounce(425885, 2) --Ищ�
 --local warnOverheated								= mod:NewTargetCountAnnounce(421455, 3, nil, nil, nil, nil, nil, nil, true) --Перегрев
 
 local specWarnBrandofDamnation						= mod:NewSpecialWarningCount(421343, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Клеймо проклятия (Разделение урона)
+local specWarnBrandofDamnation2						= mod:NewSpecialWarningDefensive(421343, nil, nil, nil, 3, 2) --Клеймо проклятия (Разделение урона)
 local specWarnAftermathTaunt						= mod:NewSpecialWarningTaunt(422577, nil, 174716, nil, 3, 2) --Пылающий ожог (Бомба)
 local specWarnSearingAftermath						= mod:NewSpecialWarningMoveAway(422577, nil, 174716, nil, 4, 2) --Пылающий ожог (Бомба)
 local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, 244473, nil, 1, 2) --Перегрев (Возгорание)
@@ -78,6 +80,8 @@ local yellOverheatedFades							= mod:NewShortFadesYell(421455, nil, nil, nil, "
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})
 
+local overheated = DBM:GetSpellName(421455) --Перегрев (Возгорание)
+
 mod.vb.worldCount = 0
 mod.vb.brandCount = 0
 mod.vb.overheatedCount = 0
@@ -111,14 +115,18 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 421343 then
 		self.vb.brandCount = self.vb.brandCount + 1
+		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", overheated)
 		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnBrandofDamnation:Show(self.vb.brandCount)
-			specWarnBrandofDamnation:Play("targetyou")
+			warnBrandofDamnation:Show(self.vb.brandCount)
+			specWarnBrandofDamnation2:Show()
+			specWarnBrandofDamnation2:Play("defensive")
 			yellBrandofDamnation:Yell()
 			yellBrandofDamnationFades:Countdown(self:IsEasy() and 4 or 3)
-		else
+		elseif not expireTime then
 			specWarnBrandofDamnation:Show(self.vb.brandCount)
 			specWarnBrandofDamnation:Play("specialsoon")
+		else
+			warnBrandofDamnation:Show(self.vb.brandCount)
 		end
 		if self.vb.brandCount < 8 and self.vb.brandCount % 2 == 1 then--Other timers started in phase change event
 			timerBrandofDamnationCD:Start(nil, self.vb.brandCount+1)--29.9
