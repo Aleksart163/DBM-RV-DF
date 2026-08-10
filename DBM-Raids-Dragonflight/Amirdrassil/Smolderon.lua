@@ -32,53 +32,53 @@ mod:RegisterEventsInCombat(
 --general
 local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(421532, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(421532, nil, nil, nil, 1, 8) --Обжигающая земля
 
-local timerPhaseCD									= mod:NewStageTimer(60, 422172)
 --local berserkTimer								= mod:NewBerserkTimer(600)
---Stage One: The Firelord's Fury
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27637))
-local warnCauterizingWound							= mod:NewYouAnnounce(421656, 3)
-local warnCauterizingWoundOver						= mod:NewFadesAnnounce(421656, 1)
-local warnSearingAftermath							= mod:NewTargetNoFilterAnnounce(422577, 2, nil, "Healer")
-local warnOverheated								= mod:NewTargetCountAnnounce(421455, 3, nil, nil, nil, nil, nil, nil, true)
-local warnSeekingInferno							= mod:NewIncomingCountAnnounce(425885, 2)
+local warnCauterizingWound							= mod:NewYouAnnounce(421656, 3) --Прижигающая рана
+local warnCauterizingWoundOver						= mod:NewFadesAnnounce(421656, 1) --Прижигающая рана
+local warnSearingAftermath							= mod:NewTargetNoFilterAnnounce(422577, 2, nil, "Healer", 174716) --Пылающий ожог (Бомба)
+local warnSeekingInferno							= mod:NewIncomingCountAnnounce(425885, 2) --Ищущее адское пламя
+--local warnOverheated								= mod:NewTargetCountAnnounce(421455, 3, nil, nil, nil, nil, nil, nil, true) --Перегрев
 
-local specWarnBrandofDamnation						= mod:NewSpecialWarningCount(421343, nil, nil, nil, 2, 2)
-local specWarnAftermathTaunt						= mod:NewSpecialWarningTaunt(422577, nil, nil, nil, 1, 2)
-local specWarnSearingAftermath						= mod:NewSpecialWarningMoveAway(422577, nil, nil, nil, 1, 2)
-local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, nil, nil, 1, 2)
-local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, nil, nil, 1, 2)
-local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, nil, 2, 2)
+local specWarnBrandofDamnation						= mod:NewSpecialWarningCount(421343, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Клеймо проклятия (Разделение урона)
+local specWarnAftermathTaunt						= mod:NewSpecialWarningTaunt(422577, nil, 174716, nil, 3, 2) --Пылающий ожог (Бомба)
+local specWarnSearingAftermath						= mod:NewSpecialWarningMoveAway(422577, nil, 174716, nil, 4, 2) --Пылающий ожог (Бомба)
+local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, 244473, nil, 1, 2) --Перегрев (Возгорание)
+local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, 244473, nil, 1, 2) --Перегрев (Возгорание)
+local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Лавовые гейзеры (Лужи)
 
-local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, nil, nil, nil, 5)
-local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, 37859, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, nil, nil, nil, 3)
-local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, nil, nil, nil, 3)
-local timerSeekingInfernoCD							= mod:NewCDCountTimer(21.9, 425885, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
+local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, DBM_COMMON_L.GROUPSOAK, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Клеймо проклятия (Разделение урона)
+local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, 174716, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пылающий ожог (Бомба)
+local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, 244473, nil, nil, 3) --Перегрев (Возгорание)
+local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, DBM_COMMON_L.POOLS, nil, nil, 3) --Лавовые гейзеры (Лужи)
+local timerSeekingInfernoCD							= mod:NewCDCountTimer(21.9, 425885, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Ищущее адское пламя
 
 mod:AddPrivateAuraSoundOption(426010, true, 425885, 4)--Seeking Inferno
---Stage Two: World In Flames
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27649))
-local warnDevourEssence								= mod:NewCountAnnounce(422277, 3)
+local warnDevourEssence								= mod:NewCountAnnounce(422277, 3) --Пожирание сущности
 
-local specWarnEncroachingDestruction				= mod:NewSpecialWarningSpell(426725, nil, nil, nil, 3, 2)
+local specWarnEncroachingDestruction				= mod:NewSpecialWarningSpell(426725, nil, 26662, nil, 3, 4) --Надвигающееся разрушение (Берсерк)
+local specWarnWorldinFlames							= mod:NewSpecialWarningDodgeCount(422172, nil, nil, nil, 2, 2) --Мир в огне
 
-local timerEncroachingDestructionCD					= mod:NewNextTimer(395, 426725, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--basically soft berserk timer
-local specWarnWorldinFlames							= mod:NewSpecialWarningDodgeCount(422172, nil, nil, nil, 2, 2)
+local timerEncroachingDestructionCD					= mod:NewNextTimer(395, 426725, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Надвигающееся разрушение (Берсерк) basically soft berserk timer
+local timerDevourEssenceCD							= mod:NewCDCountTimer(49, 422277, nil, nil, nil, 3) --Пожирание сущности
+local timerWorldinFlames							= mod:NewCastTimer(32, 422172, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Мир в огне
+local timerWorldinFlamesCD							= mod:NewCDCountTimer(60, 422172, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Мир в огне
 
-local timerDevourEssenceCD							= mod:NewCDCountTimer(49, 422277, nil, nil, nil, 3)
---local timerWorldinFlamesCD							= mod:NewAITimer(49, 422172, nil, nil, nil, 3)
-
-local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL")
-local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL")
-local yellSearingAftermath							= mod:NewShortYell(422577, 37859, nil, nil, "YELL")
-local yellSearingAftermathFades						= mod:NewShortFadesYell(422577, nil, nil, nil, "YELL")
-local yellOverheatedFades							= mod:NewShortFadesYell(421455, nil, nil, nil, "YELL")
+local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL") --Клеймо проклятия
+local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL") --Клеймо проклятия
+local yellSearingAftermath							= mod:NewShortYell(422577, 174716, nil, nil, "YELL") --Пылающий ожог (Бомба)
+local yellSearingAftermathFades						= mod:NewShortFadesYell(422577, nil, nil, nil, "YELL") --Пылающий ожог (Бомба)
+local yellOverheatedFades							= mod:NewShortFadesYell(421455, nil, nil, nil, "YELL") --Перегрев
 --local yellOverheated								= mod:NewShortYell(421455, nil, nil, nil, "YELL")
 --mod:AddInfoFrameOption(407919, true)
 --mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})
 
+mod.vb.worldCount = 0
 mod.vb.brandCount = 0
 mod.vb.overheatedCount = 0
 mod.vb.geyserCount = 0
@@ -89,6 +89,7 @@ local playerWasFirstBrand = false
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
+	self.vb.worldCount = 0
 	self.vb.brandCount = 0
 	self.vb.overheatedCount = 0
 	self.vb.geyserCount = 0
@@ -99,7 +100,7 @@ function mod:OnCombatStart(delay)
 	timerOverheatedCD:Start(10-delay, 1)
 	timerBrandofDamnationCD:Start(12.9-delay, 1)
 	timerLavaGeysersCD:Start(self:IsMythic() and 24 or 26.9-delay, 1)
-	timerPhaseCD:Start(62.7-delay, 2)--62-64.9. Basically phase/world in flames timer
+	timerWorldinFlamesCD:Start(62.7-delay, 1)
 	if self:IsMythic() then
 		self:EnablePrivateAuraSound(426010, "justrun", 2)
 		timerSeekingInfernoCD:Start(26-delay, 1)
@@ -137,8 +138,10 @@ function mod:SPELL_CAST_START(args)
 		specWarnEncroachingDestruction:Show()
 		specWarnEncroachingDestruction:Play("stilldanger")
 	elseif spellId == 422172 and not self.vb.encroached then
-		specWarnWorldinFlames:Show(self.vb.geyserCount)
+		self.vb.worldCount = self.vb.worldCount + 1
+		specWarnWorldinFlames:Show(self.vb.worldCount)
 		specWarnWorldinFlames:Play("watchstep")
+		timerWorldinFlames:Start() --в гере 32 сек (30+2)
 --	elseif spellId == 425885 then--Seeking Inferno
 
 	end
@@ -175,7 +178,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnSearingAftermath:Show(args.destName)
 		end
 	elseif spellId == 421455 then
-		warnOverheated:CombinedShow(0.3, self.vb.overheatedCount, args.destName)
+	--	warnOverheated:CombinedShow(0.3, self.vb.overheatedCount, args.destName)
 		if args:IsPlayer() then
 			specWarnOverheated:Show()
 			specWarnOverheated:Play("targetyou")
@@ -200,7 +203,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerOverheatedCD:Stop()
 		timerLavaGeysersCD:Stop()
 		timerSeekingInfernoCD:Stop()
-		timerPhaseCD:Stop()
+		timerWorldinFlamesCD:Stop()
 		timerDevourEssenceCD:Start(3.7, self.vb.cycleCount+1)
 	end
 end
@@ -222,16 +225,19 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SetStage(1)
 		playerWasFirstBrand = false
 		self.vb.cycleCount = self.vb.cycleCount + 1
+		self.vb.overheatedCount = 0
+		self.vb.brandCount = 0
+		self.vb.geyserCount = 0
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
 		warnPhase:Play("phasechange")
 		timerEncroachingDestructionCD:Stop()
 		timerDevourEssenceCD:Stop()
-		timerOverheatedCD:Start(10, self.vb.overheatedCount+1)
-		timerBrandofDamnationCD:Start(13, self.vb.brandCount+1)
-		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 27, self.vb.geyserCount+1)
-		timerPhaseCD:Start(63.8, 2)
+		timerOverheatedCD:Start(10, 1) --self.vb.overheatedCount+1
+		timerBrandofDamnationCD:Start(13, 1) --self.vb.brandCount+1
+		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 27, 1) --self.vb.geyserCount+1
+		timerWorldinFlamesCD:Start(63.8, self.vb.worldCount+1)
 		if self:IsMythic() then
-			timerSeekingInfernoCD:Start(26, self.vb.infernoCount+1)
+			timerSeekingInfernoCD:Start(26, self.vb.cycleCount+1)
 		end
 		if self.vb.cycleCount == 3 then
 			timerEncroachingDestructionCD:Start(100)

@@ -146,6 +146,8 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 210172 then --Закали-исполин
 		timerChargedStompCD:Stop(args.destGUID)
+	elseif cid == 210518 or cid == 210518 then --Хранитель круговорота
+		timerLumberingSlamCD:Stop(args.destGUID)
 	end
 end
 

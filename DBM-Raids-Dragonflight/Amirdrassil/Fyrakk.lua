@@ -39,7 +39,7 @@ local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, 
 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(419504, nil, nil, nil, 1, 8)
 
-local timerPhaseCD									= mod:NewStageTimer(60, 408330)
+local timerPhaseCD									= mod:NewStageTimer(60, 408330, nil, nil, nil, 6, nil, nil, nil, 2, 5)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26666))
