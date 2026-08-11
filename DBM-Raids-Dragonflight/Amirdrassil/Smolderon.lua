@@ -141,7 +141,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.geyserCount < 8 and self.vb.geyserCount % 2 == 1 then--Other timers started in phase change event
 			timerLavaGeysersCD:Start(self:IsMythic() and 25 or 26, self.vb.geyserCount+1)--25.9
 		end
-	elseif spellId == 426725 then
+	elseif spellId == 426725 then --Надвигающееся разрушение (Берсерк)
 		self.vb.encroached = true
 		specWarnEncroachingDestruction:Show()
 		specWarnEncroachingDestruction:Play("stilldanger")
@@ -233,16 +233,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SetStage(1)
 		playerWasFirstBrand = false
 		self.vb.cycleCount = self.vb.cycleCount + 1
-		self.vb.overheatedCount = 0
-		self.vb.brandCount = 0
-		self.vb.geyserCount = 0
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
 		warnPhase:Play("phasechange")
 		timerEncroachingDestructionCD:Stop()
 		timerDevourEssenceCD:Stop()
-		timerOverheatedCD:Start(10, 1) --self.vb.overheatedCount+1
-		timerBrandofDamnationCD:Start(13, 1) --self.vb.brandCount+1
-		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 27, 1) --self.vb.geyserCount+1
+		timerOverheatedCD:Start(10, self.vb.overheatedCount+1)
+		timerBrandofDamnationCD:Start(13, self.vb.brandCount+1)
+		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 27, self.vb.geyserCount+1)
 		timerWorldinFlamesCD:Start(63.8, self.vb.worldCount+1)
 		if self:IsMythic() then
 			timerSeekingInfernoCD:Start(26, self.vb.cycleCount+1)
