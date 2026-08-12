@@ -243,7 +243,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Starting timers here better
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
-		timerNecrofrostCD:Start(29, 1) --было 31.4 
+		timerNecrofrostCD:Start(28.5, 1) --было 31.4 
 		timerBlightReclamationCD:Start(20.9, 1) --Выглядит норм (Было 64)
 		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end
