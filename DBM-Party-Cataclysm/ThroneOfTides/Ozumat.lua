@@ -25,7 +25,7 @@ if (wowToc >= 100200) then
 	mod:RegisterEventsInCombat(
 		"SPELL_CAST_START 428401 428868 428530 428889 428526",
 		"SPELL_CAST_SUCCESS 428674 428594",
-		"SPELL_AURA_APPLIED 428407 428668",
+		"SPELL_AURA_APPLIED 428407 428668 431368",
 		"UNIT_DIED"
 	)
 	mod:RegisterEvents(
@@ -42,43 +42,48 @@ if (wowToc >= 100200) then
 	local warnPhase2									= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 	--Ink of Ozumat
 	mod:AddTimerLine(DBM:EJ_GetSectionInfo(28235))
-	local warnBlottingBarrage							= mod:NewTargetAnnounce(428407, 3)
-	local warnFoulBolt									= mod:NewSpellAnnounce(428889, 3, nil, "Tank")
+	local warnBlottingBarrage							= mod:NewTargetAnnounce(428407, 3) --Обстрел чернилами
+	local warnFoulBolt									= mod:NewSpellAnnounce(428889, 3, nil, "Tank") --Мерзкая стрела
 
 
-	local specWarnBlottingBarrage						= mod:NewSpecialWarningYou(428407, nil, nil, nil, 1, 2)
-	local specWarnPutridRoar							= mod:NewSpecialWarningCount(428868, nil, nil, nil, 2, 2)
-	local specWarnMurkSpew								= mod:NewSpecialWarningDefensive(428530, nil, nil, nil, 1, 2)
+	local specWarnBlottingBarrage						= mod:NewSpecialWarningYou(428407, nil, nil, nil, 1, 2) --Обстрел чернилами
+	local specWarnPutridRoar							= mod:NewSpecialWarningCount(428868, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Смрадный рык (АоЕ)
+	local specWarnMurkSpew								= mod:NewSpecialWarningDefensive(428530, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Мутный поток (Фронталка)
+	local specWarnMurkSpew2								= mod:NewSpecialWarningDodge(428530, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Мутный поток (Фронталка)
 	--local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
 	local timerRP										= mod:NewRPTimer(68)
-	local timerBlottingBarrageCD						= mod:NewCDCountTimer(30.3, 428407, nil, nil, nil, 3)
-	local timerPutridRoarCD								= mod:NewCDCountTimer(30.3, 428868, nil, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON)
-	local timerMurkSpewCD								= mod:NewCDCountTimer(32.7, 428530, nil, nil, nil, 2, nil, DBM_COMMON_L.TANK_ICON)
+	local timerBlottingBarrageCD						= mod:NewCDCountTimer(30.3, 428407, nil, nil, nil, 3) --Обстрел чернилами
+	local timerPutridRoarCD								= mod:NewCDCountTimer(30.3, 428868, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON) --Смрадный рык
+	local timerMurkSpewCD								= mod:NewCDCountTimer(32.7, 428530, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Мутный поток (Фронталка)
 	--Neptulon
 	mod:AddTimerLine(DBM:EJ_GetSectionInfo(28246))
-	local warnCleansingFlux								= mod:NewTargetNoFilterAnnounce(428668, 1)
+	local warnCleansingFlux								= mod:NewTargetNoFilterAnnounce(428668, 1) --Очищающее течение
 
-	local specWarnCleansingFlux							= mod:NewSpecialWarningMoveTo(428668, nil, nil, nil, 1, 15)
+	local specWarnCleansingFlux							= mod:NewSpecialWarningMoveTo(428668, nil, nil, nil, 1, 15) --Очищающее течение
 
-	local timerCleansingFluxCD							= mod:NewNextTimer(30.3, 428668, nil, nil, nil, 5)
+	local timerCleansingFluxCD							= mod:NewNextTimer(30.3, 428668, nil, nil, nil, 5) --Очищающее течение
 	--Ozumat
 	mod:AddTimerLine(DBM:EJ_GetSectionInfo(28238))
-	local warnDelugeofFilth								= mod:NewCountAnnounce(428594, 3)
+	local specWarnDelugeofFilth							= mod:NewSpecialWarningSwitch(428594, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 2) --Поток грязи (Адды)
+	local specWarnInkBlast								= mod:NewSpecialWarningInterrupt(428526, "HasInterrupt", nil, nil, 1, 2) --Чернильный взрыв
 
-	local specWarnInkBlast								= mod:NewSpecialWarningInterrupt(428526, "HasInterrupt", nil, nil, 1, 2)
+	local timerDelugeofFilthCD							= mod:NewCDCountTimer(30.3, 428594, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --Поток грязи (Адды) 30-31.5
+	local timerInkBlastCD								= mod:NewCDNPTimer(3.9, 428526, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чернильный взрыв 4.2-4.9 CD, nameplate only bar
 
-	local timerDelugeofFilthCD							= mod:NewCDCountTimer(30.3, 428594, nil, nil, nil, 1)--30-31.5
-	local timerInkBlastCD								= mod:NewCDNPTimer(4.2, 428526, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--4.2-4.9 CD, nameplate only bar
-
-	local yellBlottingBarrage							= mod:NewYell(428407, nil, nil, nil, "YELL")
-	local yellCleansingFlux								= mod:NewYell(428668, nil, nil, nil, "YELL")
+	local yellMurkSpew									= mod:NewYell(428530, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Мутный поток (Фронталка)
+	local yellBlottingBarrage							= mod:NewYell(428407, nil, nil, nil, "YELL") --Обстрел чернилами
+	local yellCleansingFlux								= mod:NewYell(428668, nil, nil, nil, "YELL") --Очищающее течение
 		
 	mod.vb.barrageCount = 0
 	mod.vb.putridCount = 0
 	mod.vb.murkCount = 0
 	mod.vb.delugeCount = 0
 
+	local proshlyapationPutridRoarTimers = {18.2, 35.2, 36.2, 36.3} --Первые 4 таймеров точные
+	local proshlyapationBlottingBarrageTimers = {5.6, 34.2, 35.2, 35.2} --Первые 4 таймеров точные
+	local proshlyapationDelugeofFilthTimers = {20.6, 35.2, 34.2} --Первые 3 таймеров точные
+	
 	function mod:OnCombatStart(delay)
 		self:SetStage(1)
 		self.vb.barrageCount = 0
@@ -96,17 +101,25 @@ if (wowToc >= 100200) then
 		local spellId = args.spellId
 		if spellId == 428401 then
 			self.vb.barrageCount = self.vb.barrageCount + 1
-			timerBlottingBarrageCD:Start(nil, self.vb.barrageCount+1)
+			local timer
+			timer = proshlyapationBlottingBarrageTimers[self.vb.barrageCount+1] or 35.2
+			timerBlottingBarrageCD:Start(timer, self.vb.barrageCount+1)
 		elseif spellId == 428868 then
 			self.vb.putridCount = self.vb.putridCount + 1
 			specWarnPutridRoar:Show(self.vb.putridCount)
 			specWarnPutridRoar:Play("aesoon")
-			timerPutridRoarCD:Start(nil, self.vb.putridCount+1)
+			local timer
+			timer = proshlyapationPutridRoarTimers[self.vb.putridCount+1] or 36.3
+			timerPutridRoarCD:Start(timer, self.vb.putridCount+1)
 		elseif spellId == 428530 then
 			self.vb.murkCount = self.vb.murkCount + 1
 			if self:IsTanking("player", nil, nil, true, args.sourceGUID) then--GUID used to scan all potential boss unitids
 				specWarnMurkSpew:Show()
 				specWarnMurkSpew:Play("defensive")
+				yellMurkSpew:Yell()
+			else
+				specWarnMurkSpew2:Show()
+				specWarnMurkSpew2:Play("watchstep")
 			end
 			timerMurkSpewCD:Start(nil, self.vb.murkCount+1)
 		elseif spellId == 428889 then
@@ -126,25 +139,30 @@ if (wowToc >= 100200) then
 			timerCleansingFluxCD:Start()
 		elseif spellId == 428594 then
 			self.vb.delugeCount = self.vb.delugeCount + 1
-			warnDelugeofFilth:Show(self.vb.delugeCount)
-			timerDelugeofFilthCD:Start(nil, self.vb.delugeCount+1)
+			specWarnDelugeofFilth:Show()
+			specWarnDelugeofFilth:Play("changetarget")
+			local timer
+			timer = proshlyapationDelugeofFilthTimers[self.vb.delugeCount+1] or 35.2
+			timerDelugeofFilthCD:Start(timer, self.vb.delugeCount+1)
 		end
 	end
 
 	function mod:SPELL_AURA_APPLIED(args)
 		local spellId = args.spellId
 		if spellId == 428407 then
-			warnBlottingBarrage:PreciseShow(3, args.destName)
+			warnBlottingBarrage:CombinedShow(0.3, args.destName)
 			if args:IsPlayer() then
 				specWarnBlottingBarrage:Show()
 				specWarnBlottingBarrage:Play("targetyou")
 				yellBlottingBarrage:Yell()
 			end
-		elseif spellId == 428668 then
-			warnCleansingFlux:PreciseShow(2, args.destName)
+		elseif spellId == 431368 then --428668
+		--	warnCleansingFlux:PreciseShow(2, args.destName)
+			warnCleansingFlux:CombinedShow(0.3, args.destName)
 			if args:IsPlayer() then
 				specWarnCleansingFlux:Show(DBM_COMMON_L.POOL)
 				specWarnCleansingFlux:Play("movetopool")
+				yellCleansingFlux:Yell()
 			end
 		end
 	end

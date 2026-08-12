@@ -52,10 +52,10 @@ local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, 2444
 local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, 244473, nil, 1, 2) --Перегрев (Возгорание)
 local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Лавовые гейзеры (Лужи)
 
-local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, DBM_COMMON_L.GROUPSOAK, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Клеймо проклятия (Разделение урона)
+local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Клеймо проклятия (Разделение урона)
 local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, 174716, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пылающий ожог (Бомба)
 local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, 244473, nil, nil, 3) --Перегрев (Возгорание)
-local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, DBM_COMMON_L.POOLS, nil, nil, 3) --Лавовые гейзеры (Лужи)
+local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3, nil, nil, nil, 2, 5) --Лавовые гейзеры (Лужи)
 local timerSeekingInfernoCD							= mod:NewCDCountTimer(21.9, 425885, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Ищущее адское пламя
 
 mod:AddPrivateAuraSoundOption(426010, true, 425885, 4)--Seeking Inferno
@@ -66,10 +66,10 @@ local warnDevourEssence								= mod:NewCountAnnounce(422277, 3) --Пожира�
 local specWarnEncroachingDestruction				= mod:NewSpecialWarningSpell(426725, nil, 26662, nil, 3, 4) --Надвигающееся разрушение (Берсерк)
 local specWarnWorldinFlames							= mod:NewSpecialWarningDodgeCount(422172, nil, nil, nil, 2, 2) --Мир в огне
 
-local timerEncroachingDestructionCD					= mod:NewNextTimer(395, 426725, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Надвигающееся разрушение (Берсерк) basically soft berserk timer
+local timerEncroachingDestructionCD					= mod:NewNextTimer(395, 426725, 26662, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Надвигающееся разрушение (Берсерк) basically soft berserk timer
 local timerDevourEssenceCD							= mod:NewCDCountTimer(49, 422277, nil, nil, nil, 3) --Пожирание сущности
-local timerWorldinFlames							= mod:NewCastTimer(32, 422172, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Мир в огне
-local timerWorldinFlamesCD							= mod:NewCDCountTimer(60, 422172, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Мир в огне
+local timerWorldinFlames							= mod:NewCastTimer(32, 422172, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Мир в огне
+local timerWorldinFlamesCD							= mod:NewCDCountTimer(60, 422172, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Мир в огне
 
 local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL") --Клеймо проклятия
 local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL") --Клеймо проклятия

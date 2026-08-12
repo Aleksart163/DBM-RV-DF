@@ -632,7 +632,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnShadowbound:Play("shadowyou")
 	elseif spellId == 421922 then --Заражение порчей
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(366548)) --(args.spellName)
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(366548))
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)

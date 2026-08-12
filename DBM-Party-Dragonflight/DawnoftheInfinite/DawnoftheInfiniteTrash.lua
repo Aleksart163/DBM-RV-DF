@@ -36,18 +36,18 @@ local warnDeployGoblinSappers				= mod:NewCastAnnounce(407535, 3, nil, nil, nil,
 local warnTripleStrike						= mod:NewCastAnnounce(413487, 3, nil, nil, "Tank")
 local warnRendingCleave						= mod:NewCastAnnounce(412505, 3, nil, nil, "Tank")--High Prio
 local warnTitanicBulwark					= mod:NewCastAnnounce(413024, 3, nil, nil, "Tank") --Бастион титанов
-local warnStatickyPunch						= mod:NewCastAnnounce(412262, 3, nil, nil, "Tank")
+local warnStatickyPunch						= mod:NewCastAnnounce(412262, 3, nil, nil, "Tank") --Статический удар
 local warnBloom								= mod:NewCastAnnounce(413544, 3) --Цветение
 local warnCorrodingVolley					= mod:NewCastAnnounce(413607, 4)--Разъедающий залп High Prio Off Interrupt
-local warnEnervateKick						= mod:NewCastAnnounce(415437, 4)--High Prio Off Interrupt
+local warnEnervateKick						= mod:NewCastAnnounce(415437, 4) --Лишение сил
 local warnInfiniteBoltVolley				= mod:NewCastAnnounce(415770, 4)--High Prio Off Interrupt
 local warnDisplacedChronosequence			= mod:NewCastAnnounce(417481, 4, nil, nil, 366548) --Перемещающая хронопоследовательность (Щиты)
 local warnInfiniteBurn						= mod:NewCastAnnounce(418200, 4) --Пламя Бесконечности High Prio Off Interrupt
 local warnFishBoltVolley					= mod:NewCastAnnounce(411300, 4) --Рыбный залп High Prio Off Interrupt
 local warnDizzyingSands						= mod:NewCastAnnounce(412378, 4)--High Prio Off Interrupt
-local warnRocketBoltVolley					= mod:NewCastAnnounce(412233, 4)--High Prio Off Interrupt
+local warnRocketBoltVolley					= mod:NewCastAnnounce(412233, 4) --Залп роборакет
 local warnHealingWave						= mod:NewCastAnnounce(407891, 4)--High Prio Off Interrupt
-local warnEnervate							= mod:NewTargetAnnounce(415437, 3)
+local warnEnervate							= mod:NewTargetAnnounce(415437, 3) --Лишение сил
 local warnChronoburst						= mod:NewTargetNoFilterAnnounce(415769, 3, nil, nil, 167180) --Темпоральный взрыв (Бомбы)
 local warnVolatileMortar					= mod:NewTargetNoFilterAnnounce(407205, 4) --Нестабильное орудие (Обстрел)
 
@@ -66,22 +66,22 @@ local specWarnBronzeExhalation				= mod:NewSpecialWarningDefensive(419351, nil, 
 local specWarnBronzeExhalation2				= mod:NewSpecialWarningDodge(419351, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Бронзовый выдох (Фронталка)
 local specWarnShroudingSandstorm			= mod:NewSpecialWarningDodge(412215, nil, nil, nil, 2, 2)--High Prio
 local specWarnBombingRun					= mod:NewSpecialWarningDodge(412156, nil, nil, nil, 2, 2)
-local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2)
+local specWarnEnervateYou					= mod:NewSpecialWarningMoveAway(415437, nil, nil, nil, 1, 2) --Лишение сил
 --local yellAstralBombFades					= mod:NewShortFadesYell(387843)
 local specWarnChronoburst					= mod:NewSpecialWarningDispel(415769, "RemoveMagic", nil, nil, 1, 2) --Темпоральный взрыв
-local specWarnEnervateDispel				= mod:NewSpecialWarningDispel(415437, "RemoveMagic", nil, nil, 1, 2)
+local specWarnEnervateDispel				= mod:NewSpecialWarningDispel(415437, "RemoveMagic", nil, nil, 1, 2) --Лишение сил
 local specWarnBloom							= mod:NewSpecialWarningDispel(413544, "RemoveMagic", nil, nil, 1, 2) --Цветение
 local specWarnInfiniteBoltVolley			= mod:NewSpecialWarningInterrupt(415770, "HasInterrupt", nil, nil, 1, 2)--High Prio
 local specWarnChronomelt					= mod:NewSpecialWarningInterrupt(411994, "HasInterrupt", nil, nil, 1, 2)
 local specWarnInfiniteBolt					= mod:NewSpecialWarningInterrupt(415435, "HasInterrupt", nil, nil, 1, 2)
-local specWarnEnervate						= mod:NewSpecialWarningInterrupt(415437, "HasInterrupt", nil, nil, 1, 2)--High Prio
+local specWarnEnervate						= mod:NewSpecialWarningInterrupt(415437, "HasInterrupt", nil, nil, 1, 2) --Лишение сил
 local specWarnStonebolt						= mod:NewSpecialWarningInterrupt(411958, "HasInterrupt", nil, nil, 1, 2) --Каменная стрела
 local specWarnCorrodingVolley				= mod:NewSpecialWarningInterrupt(413607, "HasInterrupt", nil, nil, 1, 2) --Разъедающий залп
 local specWarnEpochBolt						= mod:NewSpecialWarningInterrupt(400165, false, nil, 2, 1, 2)--Lower prio over Corroding Volley
 local specWarnBindingGrasp					= mod:NewSpecialWarningInterrupt(412922, "HasInterrupt", nil, nil, 1, 2) --Сковывающая хватка
 local specWarnDisplacedChronosequence		= mod:NewSpecialWarningInterrupt(417481, "HasInterrupt", nil, nil, 1, 2) --Перемещающая хронопоследовательность (Щиты)
 local specWarnDizzyingSands					= mod:NewSpecialWarningInterrupt(412378, "HasInterrupt", nil, nil, 1, 2)--High Prio
-local specWarnRocketBoltVolley				= mod:NewSpecialWarningInterrupt(412233, "HasInterrupt", nil, nil, 1, 2)--High Prio
+local specWarnRocketBoltVolley				= mod:NewSpecialWarningInterrupt(412233, "HasInterrupt", nil, nil, 1, 2) --Залп роборакет
 local specWarnInfiniteBurn					= mod:NewSpecialWarningInterrupt(418200, "HasInterrupt", nil, nil, 1, 2) --Пламя Бесконечности High Prio
 local specWarnFishBoltVolley				= mod:NewSpecialWarningInterrupt(411300, "HasInterrupt", nil, DBM_COMMON_L.AOEDAMAGE, 1, 2) --Рыбный залп (АоЕ) High Prio
 local specWarnHealingWave					= mod:NewSpecialWarningInterrupt(407891, "HasInterrupt", nil, nil, 1, 2)--High Prio
@@ -94,7 +94,7 @@ local timerChronoBurstCD					= mod:NewCDNPTimer(20.6, 415769, 167180, nil, nil, 
 local timerInfiniteBoltVolleyCD				= mod:NewCDNPTimer(13.3, 415770, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerTripleStrikeCD					= mod:NewCDNPTimer(12.1, 413487, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerTaintedSandsCD					= mod:NewCDNPTimer(13.3, 415436, nil, nil, nil, 3)
-local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerEnervateCD						= mod:NewCDNPTimer(13.3, 415437, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Лишение сил
 local timerBloomCD							= mod:NewCDNPTimer(16.7, 413544, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON) --Цветение
 local timerUntwistCD						= mod:NewCDNPTimer(13.3, 413529, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Распутывание (Фронталка)
 local timerTimelessCurseCD					= mod:NewCDNPTimer(14.6, 413621, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Вневременное проклятие (Обстрел)
@@ -113,8 +113,8 @@ local timerBindingGraspCD					= mod:NewCDNPTimer(23, 412922, nil, nil, nil, 3) -
 local timerDisplacedChronosequenceCD		= mod:NewCDNPTimer(14.4, 417481, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Перемещающая хронопоследовательность
 local timerInfiniteSchismCD					= mod:NewCDNPTimer(26.7, 419327, nil, nil, nil, 5)
 local timerDizzyingSandsCD					= mod:NewCDNPTimer(16.1, 412378, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerStatickyPunchCD					= mod:NewCDNPTimer(12.1, 412262, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerRocketBoltVolleyCD				= mod:NewCDNPTimer(19.5, 412233, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Subpar data
+local timerStatickyPunchCD					= mod:NewCDNPTimer(11.2, 412262, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Статический удар
+local timerRocketBoltVolleyCD				= mod:NewCDNPTimer(16.5, 412233, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп роборакет Subpar data
 local timerInfiniteBurnCD					= mod:NewCDNPTimer(12.6, 418200, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Пламя Бесконечности
 --local timerElectroJuicedGigablastCD		= mod:NewCDNPTimer(26.7, 412200, nil, nil, nil, 5)--Insuffiicent Data, NYI
 local timerBombingRunCD						= mod:NewCDNPTimer(17, 412156, nil, nil, nil, 3)
@@ -129,7 +129,7 @@ local yellVolatileMortar					= mod:NewYell(407205, DBM_COMMON_L.BOMBING, nil, ni
 local yellVolatileMortarFades				= mod:NewShortFadesYell(407205, nil, nil, nil, "YELL") --Нестабильное орудие (Обстрел)
 local yellChronalEruption					= mod:NewYell(419517, nil, nil, nil, "YELL") --Темпоральное извержение
 local yellOrbofContemplation				= mod:NewYell(412129, nil, nil, nil, "YELL") --Сфера раздумий targets off a player, but everyone needs to dodge the orb
-local yellEnervate							= mod:NewYell(415437, nil, nil, nil, "YELL")
+local yellEnervate							= mod:NewYell(415437, nil, nil, nil, "YELL") --Лишение сил
 local yellChronoburst						= mod:NewYell(415769, 49685, nil, nil, "YELL") --Темпоральный взрыв (Бомба)
 local yellChronoburstFades					= mod:NewShortFadesYell(415769, nil, nil, nil, "YELL") --Темпоральный взрыв
 local yellUntwist							= mod:NewYell(413529, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Распутывание (Фронталка)
@@ -419,7 +419,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SpecWarn415437dispel and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
 			specWarnEnervateDispel:Show(args.destName)
 			specWarnEnervateDispel:Play("helpdispel")
-		elseif args:IsPlayer() then
+		elseif args:IsPlayer() and self:AntiSpam(3, 3) then
 			specWarnEnervateYou:Show()
 			specWarnEnervateYou:Play("targetyou")
 			yellEnervate:Yell()
@@ -516,7 +516,10 @@ function mod:UNIT_DIED(args)
 		timerFishBoltVolleyCD:Stop(args.destGUID)
 	elseif cid == 208698 then--Infinite Riftmage
 		timerInfiniteBurnCD:Stop(args.destGUID)
-	elseif cid == 203861 or cid == 208208 then --Эсминец орды/Альянса
+	elseif cid == 208208 then --Эсминец Альянса (Очень странно, не логируется смерть)
+		timerVolatileMortarCD:Stop(args.destGUID)
+		timerDeployGoblinSappersCD:Stop(args.destGUID)
+	elseif cid == 203861 then --Эсминец орды
 		timerVolatileMortarCD:Stop(args.destGUID)
 		timerDeployGoblinSappersCD:Stop(args.destGUID)
 	elseif cid == 207177 then --Караульный из рода Бесконечности
@@ -582,7 +585,11 @@ end
 
 function mod:OnSync(msg, targetname)
 	if msg == "MPPR8" and self:AntiSpam(15, "Morchie") then --Таймер пулла Морхи
-		timerRP:Start(37.5) --37.5 (То 28.5, то 37.5, возможно разрабы в шляпе там)
+		if self:IsMythic() then
+			timerRP:Start(37.5) --37.5 (То 28.5, то 37.5, возможно разрабы в шляпе там)
+		else
+			timerRP:Start(28.5)
+		end
 	elseif msg == "MPPR7" and self:AntiSpam(15, "ManifestedTimeways") then --Таймер пулла Оживших потоков времени
 		if self:IsMythicPlus() then
 			timerRP:Start(13) --

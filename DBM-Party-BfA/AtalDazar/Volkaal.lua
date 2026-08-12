@@ -44,7 +44,7 @@ mod.vb.leapCount = 0
 mod.vb.totemRemaining = 3
 mod.vb.stenchCount = 0
 
-local proshlyapationLeapTimers = {2, 5.3, 4}
+local proshlyapationLeapTimers = {2, 4, 4}
 
 function mod:OnCombatStart(delay)
 	self.vb.leapCount = 0

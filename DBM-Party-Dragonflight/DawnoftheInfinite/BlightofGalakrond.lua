@@ -65,7 +65,7 @@ mod.vb.reclaimCount = 0
 mod.vb.windsCount = 0--Reused for necrofrost
 mod.vb.fireBreathCount = 0
 
-local proshlyaptionNecrofrostTimers = {29, 41.7, 19.4, 42.5} --Первые 3 таймеров точные
+local proshlyapationNecrofrostTimers = {29, 41.7, 19.4, 42.5} --Первые 3 таймеров точные
 
 function mod:OnCombatStart(delay)
 	self.vb.corrosiveCount = 0
@@ -154,7 +154,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.windsCount = self.vb.windsCount + 1
 		--The timers that are delayed will be auto corrected by Corrosive cast
 		local timer
-		timer = proshlyaptionNecrofrostTimers[self.vb.windsCount+1] or 19.4
+		timer = proshlyapationNecrofrostTimers[self.vb.windsCount+1] or 19.4
 		timerNecrofrostCD:Start(timer, self.vb.windsCount+1) --По инфе с офы было 19.4, а потом 41.7, 19.4, 42.5
 	elseif spellId == 408141 then
 		self.vb.fireBreathCount = self.vb.fireBreathCount + 1
