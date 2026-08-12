@@ -205,8 +205,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 200289 then
 		if args:IsPlayer() then
-			specWarnParanoia:Show()
-			specWarnParanoia:Play("scatter")
+		--	specWarnParanoia:Show()
+		--	specWarnParanoia:Play("scatter")
 			yellParanoia:Yell()
 			yellParanoiaFades:Countdown(spellId)
 		end
