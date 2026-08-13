@@ -229,7 +229,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellOverheatedFades:Cancel()
 		end
-	elseif spellId == 422067 then
+	elseif spellId == 422067 then --Горящая душа (Фаза 1, Мир в огне кончился)
 		self:SetStage(1)
 		playerWasFirstBrand = false
 		self.vb.cycleCount = self.vb.cycleCount + 1
@@ -238,8 +238,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerEncroachingDestructionCD:Stop()
 		timerDevourEssenceCD:Stop()
 		timerOverheatedCD:Start(10, self.vb.overheatedCount+1)
-		timerBrandofDamnationCD:Start(13, self.vb.brandCount+1)
-		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 27, self.vb.geyserCount+1)
+		timerBrandofDamnationCD:Start(12.8, self.vb.brandCount+1)
+		timerLavaGeysersCD:Start(self:IsMythic() and 24 or 26.7, self.vb.geyserCount+1) --24 or 27, в героике 5 лужи на 0.3 сек раньше
 		timerWorldinFlamesCD:Start(63.8, self.vb.worldCount+1)
 		if self:IsMythic() then
 			timerSeekingInfernoCD:Start(26, self.vb.cycleCount+1)
