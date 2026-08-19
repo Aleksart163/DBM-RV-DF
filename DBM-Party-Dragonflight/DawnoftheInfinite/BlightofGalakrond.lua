@@ -65,7 +65,7 @@ mod.vb.reclaimCount = 0
 mod.vb.windsCount = 0--Reused for necrofrost
 mod.vb.fireBreathCount = 0
 
-local proshlyapationNecrofrostTimers = {29, 41.7, 19.4, 42.5} --Первые 3 таймеров точные
+local proshlyapationNecrofrostTimers = {29, 40, 17, 42.5} --Первые 3 таймеров точные
 
 function mod:OnCombatStart(delay)
 	self.vb.corrosiveCount = 0
@@ -112,7 +112,7 @@ function mod:SPELL_CAST_START(args)
 		elseif self:GetStage(2) then
 			timer = 31.5
 		else--Stage 3
-			timer = 61.9
+			timer = 61.3 --61.9
 			--Update min timers on abilities affected by this
 			if timerIncineratingBlightbreathCD:GetRemaining(self.vb.fireBreathCount+1) < 8 then
 				local elapsed, total = timerIncineratingBlightbreathCD:GetTime(self.vb.fireBreathCount+1)

@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 425889 426524 422614 418637 426206 417634 427252 427343 429973 421325",
-	"SPELL_CAST_SUCCESS 417653 419485 427299",
+	"SPELL_CAST_SUCCESS 417653 419485 427299 417634",
 	"SPELL_AURA_APPLIED 425888 425468 420544 426387 423719 426249 426256 421316 427299 427306 421594 418520 429032",-- 428946 421407
 	"SPELL_AURA_APPLIED_DOSE 426249 426256 418520 429032",-- 428946 421407
 	"SPELL_AURA_REMOVED 421316 427299 421594",
@@ -40,15 +40,15 @@ mod:RegisterEventsInCombat(
 --General
 local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(417632, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(417632, nil, nil, nil, 1, 8) --Горящая земля
 
 --local berserkTimer								= mod:NewBerserkTimer(600)
---Stage One: The Cycle of Flame
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27241))
-local warnForces									= mod:NewCountAnnounce(417653, 3)
-local warnBlisteringSplinters						= mod:NewCountAnnounce(418520, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(418520))--Player
+local warnForces									= mod:NewCountAnnounce(417653, 3) --Огненная сила природы
+local warnBlisteringSplinters						= mod:NewCountAnnounce(418520, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(418520)) --Жгучие щепки Player
 --local warnDreamBlossom							= mod:NewTargetNoFilterAnnounce(425468, 2, nil, false)--non filtered, but off by default
-local warnScorchingRoots							= mod:NewCountAnnounce(422614, 3)
+local warnScorchingRoots							= mod:NewCountAnnounce(422614, 3) --Опаляющие корни
 local warnCharredTreant								= mod:NewSpellAnnounce(417667, 2, nil, "Healer")
 local warnRenewedTreant								= mod:NewSpellAnnounce(417668, 1)
 local warnScorchingBramblethorn						= mod:NewTargetNoFilterAnnounce(426387, 2, nil, false)--Hella spammy. not to be defaulted
@@ -72,30 +72,34 @@ local specWarnFuriousChargePreTaunt					= mod:NewSpecialWarningTaunt(418637, nil
 local specWarnNaturesFury							= mod:NewSpecialWarningTaunt(423719, nil, nil, nil, 1, 2)--Yell to taunt again if you didn't taunt in pre cast
 local specWarnBlazingThornsAvoid					= mod:NewSpecialWarningDodgeCount(426206, "-Healer", nil, nil, 1, 2)--Initial cast to dodge
 local specWarnBlazingThornsSoak						= mod:NewSpecialWarningSoakCount(426249, "-Healer", nil, nil, 1, 2)--Follow up orbs to soak
-local specWarnRagingInferno							= mod:NewSpecialWarningMoveTo(417634, nil, 37625, nil, 3, 2)--Shortname Inferno
+local specWarnRagingInferno							= mod:NewSpecialWarningMoveTo(417634, nil, 185794, nil, 3, 4) --Бушующее адское пламя (Адское пламя)
+local specWarnRagingInferno2						= mod:NewSpecialWarningCount(417634, nil, 185794, nil, 2, 2) --Бушующее адское пламя (Адское пламя)
 
 local timerIgnitingGrowthCD							= mod:NewCDCountTimer(49, 425889, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerFieryForceofNatureCD						= mod:NewCDCountTimer(11.8, 417653, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1)
-local timerFieryFlourishCD							= mod:NewCDNPTimer(9.7, 426524, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Nameplate only timer
-local timerScorchingRootsCD							= mod:NewCDCountTimer(49, 422614, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3)
+local timerFieryForceofNatureCD						= mod:NewCDCountTimer(11.8, 417653, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --Огненная сила природы
+local timerFieryFlourishCD							= mod:NewCDNPTimer(9.7, 426524, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненный росчерк Nameplate only timer
+local timerScorchingRootsCD							= mod:NewCDCountTimer(49, 422614, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3) --Опаляющие корни
 local timerFuriousChargeCD							= mod:NewCDCountTimer(22.5, 418637, 100, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--SN "Charge"
 local timerBlazingThornsCD							= mod:NewCDCountTimer(49, 426206, DBM_COMMON_L.DODGES.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerBlazingThornsSoak						= mod:NewCastTimer(5, 426249, DBM_COMMON_L.ORBS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON)
-local timerRagingInfernoCD							= mod:NewCDCountTimer(49, 417634, 37625, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--SN "Inferno"
+local timerRagingInfernoCD							= mod:NewCDCountTimer(49, 417634, 185794, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Бушующее адское пламя (Адское пламя)
+local timerRagingInfernoCast						= mod:NewCastTimer(10, 417634, 185794, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Бушующее адское пламя (Адское пламя)
 
 mod:AddPrivateAuraSoundOption(425888, true, 425889, 1)--Igniting Growth
 mod:AddPrivateAuraSoundOption(425468, true, 425468, 1)--Dream Blossom
 mod:AddPrivateAuraSoundOption(420544, true, 420544, 4)--Scorching Pursuit
-mod:AddSetIconOption("SetIconOnForces", 417653, true, 5, {8, 7, 6})
+mod:AddSetIconOption("SetIconOnForces", 417653, true, 5, {8, 7, 6}) --Огненная сила природы
 
 mod:JustSetCustomKeys(426256, "|cff69ccf0426256|r (" .. DBM_COMMON_L.BOSS .. ")")
 mod:JustSetCustomKeys(426249, "|cff69ccf0426249|r (" .. PLAYER .. ")")
 --Intermission: Unreborn Again
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27242))
-local warnConsumingFlame							= mod:NewTargetNoFilterAnnounce(421316, 2)
+local warnConsumingFlame							= mod:NewTargetNoFilterAnnounce(421316, 2) --Всепожирающее пламя
 
-local timerConsumingFlame							= mod:NewBuffActiveTimer(16, 421316, nil, nil, nil, 6)
---Stage Two: Avatar of Ash
+local specWarnConsumingFlame						= mod:NewSpecialWarningDefensive(421316, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Всепожирающее пламя
+
+local timerConsumingFlame							= mod:NewCastTimer(16, 421316, DBM_COMMON_L.AOEDAMAGE, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Всепожирающее пламя
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27243))
 local warnFlashFire									= mod:NewTargetNoFilterAnnounce(427299, 3, nil, "Healer")
 local warnEncasedInAsh								= mod:NewTargetNoFilterAnnounce(427306, 4, nil, "RemoveMagic")
@@ -360,6 +364,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnRagingInferno:Show(DBM_COMMON_L.SHIELD)
 		specWarnRagingInferno:Play("findshield")
 		timerRagingInfernoCD:Start(101, self.vb.infernoCount+1)
+		timerRagingInfernoCast:Start()
 		--Charge timer correction
 		if timerFuriousChargeCD:GetRemaining(self.vb.furiousChargeCount+1) < 13 then
 			local elapsed, total = timerFuriousChargeCD:GetTime(self.vb.furiousChargeCount+1)
@@ -425,6 +430,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if timer then
 			timerFlashFireCD:Start(timer, self.vb.thornsCount+1)
 		end
+	elseif spellId == 417634 then
+		specWarnRagingInferno2:Show()
+		specWarnRagingInferno2:Play("defensive")
 --	elseif spellId == 428901 and self:AntiSpam(5, 2) then
 --		self.vb.ignitingCount = self.vb.ignitingCount + 1
 --		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
@@ -537,6 +545,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerRagingInfernoCD:Stop()
 		timerIgnitingGrowthCD:Stop()
 		warnConsumingFlame:Show(args.destName)
+		specWarnConsumingFlame:Show()
+		specWarnConsumingFlame:Play("defensive")
 		timerConsumingFlame:Start()
 	end
 end

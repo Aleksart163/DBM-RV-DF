@@ -77,22 +77,22 @@ mod.vb.proshlyapBombCount = 0
 
 local murchalProshlyapStacks = {}
 local castsPerGUID = {}
-local proshlyaptionMythicTimers = {34, 30.5, 30} --Первые 3 точно
-local proshlyaptionHeroicTimers = {35, 30.5, 30, 30, 30, 30, 30} --Первые 7 точно
-local proshlyaptionNormalTimers = {46, 31, 34, 31, 31, 31, 31, 31, 31} --Должно быть точно
-local proshlyaptionDestructionMythicTimers = {31, 73.5, 75} --Первые 3 точно, дальше на проверке
-local proshlyaptionDestructionNormalTimers = {71.5, 71.5, 73.4} --Первые 3 точно, дальше хз
+local proshlyapationMythicTimers = {34, 30.5, 30} --Первые 3 точно
+local proshlyapationHeroicTimers = {35, 30.5, 30, 30, 30, 30, 30} --Первые 7 точно
+local proshlyapationNormalTimers = {46, 31, 34, 31, 31, 31, 31, 31, 31} --Должно быть точно
+local proshlyapationDestructionMythicTimers = {31, 73.5, 75} --Первые 3 точно, дальше на проверке
+local proshlyapationDestructionNormalTimers = {71.5, 71.5, 73.4} --Первые 3 точно, дальше хз
 
 local function checkBombProshlyap(self)
 	self.vb.proshlyapBombCount = self.vb.proshlyapBombCount + 1
 	self.vb.shrapnalSoakCount = 0
 	local timer
 	if self:IsMythic() then
-		timer = proshlyaptionMythicTimers[self.vb.proshlyapBombCount+1] or 30
+		timer = proshlyapationMythicTimers[self.vb.proshlyapBombCount+1] or 30
 	elseif self:IsHeroic() then
-		timer = proshlyaptionHeroicTimers[self.vb.proshlyapBombCount+1] or 30
+		timer = proshlyapationHeroicTimers[self.vb.proshlyapBombCount+1] or 30
 	elseif self:IsNormal() then
-		timer = proshlyaptionNormalTimers[self.vb.proshlyapBombCount+1] or 31
+		timer = proshlyapationNormalTimers[self.vb.proshlyapBombCount+1] or 31
 	end
 	warnScatterTraps:Show(self.vb.proshlyapBombCount)
 	timerShrapnalBombCD:Start(timer, self.vb.proshlyapBombCount+1)
@@ -165,9 +165,9 @@ function mod:SPELL_CAST_START(args)
 		specWarnTacticalDestruction:Play("watchstep")
 		local timer
 		if self:IsMythic() then
-			timer = proshlyaptionDestructionMythicTimers[self.vb.destructionCount+1] or 75
+			timer = proshlyapationDestructionMythicTimers[self.vb.destructionCount+1] or 75
 		elseif self:IsNormal() then
-			timer = proshlyaptionDestructionNormalTimers[self.vb.destructionCount+1] or 71.6
+			timer = proshlyapationDestructionNormalTimers[self.vb.destructionCount+1] or 71.6
 		else
 			timer = 71.6 --По старой информации в героике, обычке и лфр
 		end

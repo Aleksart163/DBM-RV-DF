@@ -56,7 +56,7 @@ if (wowToc >= 100200) then
 
 	local specWarnTerrifyingVision						= mod:NewSpecialWarningMoveTo(429172, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 13) --Ужасающее видение (АоЕ)
 
-	local timerTerrifyingVisionCD						= mod:NewCDTimer(23, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
+	local timerTerrifyingVisionCD						= mod:NewCDComboTimer(23, 429172, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Ужасающее видение (АоЕ + Страх)
 	local timerTerrifyingVision							= mod:NewCastTimer(5, 429172, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ужасающее видение (АоЕ)
 
 	mod.vb.totemCount = 0
@@ -99,7 +99,7 @@ if (wowToc >= 100200) then
 			specWarnTerrifyingVision:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnTerrifyingVision:Play("breaklos")
 			timerTerrifyingVision:Start()
-			timerTerrifyingVisionCD:Start()
+			timerTerrifyingVisionCD:Start(nil, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.FEAR)
 		end
 	end
 
@@ -126,7 +126,7 @@ if (wowToc >= 100200) then
 			specWarnEarthfury:CancelVoice()
 			warnPhase2:Show()
 			warnPhase2:Play("ptwo")
-			timerTerrifyingVisionCD:Start(2.8) --уже подправлено]]
+			timerTerrifyingVisionCD:Start(2.8) --Кривая версия из-за разработчиков]]
 		end
 	end
 
@@ -161,7 +161,7 @@ if (wowToc >= 100200) then
 			timerFlameShockCD:Stop()
 			specWarnEarthfury:Cancel()
 			specWarnEarthfury:CancelVoice()
-			timerTerrifyingVisionCD:Start(2.8)
+			timerTerrifyingVisionCD:Start(2.8, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.FEAR)
 		end
 	end
 else

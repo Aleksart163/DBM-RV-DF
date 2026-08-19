@@ -24,7 +24,7 @@ if (wowToc >= 100200) then
 	--Patch 10.2 or later
 	mod:RegisterEventsInCombat(
 		"SPELL_CAST_START 428401 428868 428530 428889 428526",
-		"SPELL_CAST_SUCCESS 428674 428594",
+		"SPELL_CAST_SUCCESS 428674 428594 428668",
 		"SPELL_AURA_APPLIED 428407 428668 431368",
 		"UNIT_DIED"
 	)
@@ -135,7 +135,7 @@ if (wowToc >= 100200) then
 
 	function mod:SPELL_CAST_SUCCESS(args)
 		local spellId = args.spellId
-		if spellId == 428674 then
+		if spellId == 428668 then --428674
 			timerCleansingFluxCD:Start()
 		elseif spellId == 428594 then
 			self.vb.delugeCount = self.vb.delugeCount + 1
@@ -156,7 +156,7 @@ if (wowToc >= 100200) then
 				specWarnBlottingBarrage:Play("targetyou")
 				yellBlottingBarrage:Yell()
 			end
-		elseif spellId == 431368 then --428668
+		elseif spellId == 431368 or spellId == 428668 then --428668
 		--	warnCleansingFlux:PreciseShow(2, args.destName)
 			warnCleansingFlux:CombinedShow(0.3, args.destName)
 			if args:IsPlayer() then

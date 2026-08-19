@@ -19,7 +19,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 197478",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --[[
@@ -38,33 +39,36 @@ mod:RegisterEventsInCombat(
 --TODO, initial bonebreaking strike nameplate CD?
 --Stage One: Vengeance
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12277))
-local warnBrutalGlaive				= mod:NewTargetAnnounce(197546, 2)
-local warnDarkRush					= mod:NewTargetAnnounce(197478, 3)
+local warnPhase						= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
+local warnBrutalGlaive				= mod:NewTargetAnnounce(197546, 2) --Жуткая глефа
+local warnDarkRush					= mod:NewTargetAnnounce(197478, 3) --Темный рывок
 
-local specWarnBrutalGlaive			= mod:NewSpecialWarningMoveAway(197546, nil, nil, nil, 1, 2)
-local specWarnVengefulShear			= mod:NewSpecialWarningDefensive(197418, nil, nil, nil, 3, 2)
-local specWarnDarkRush				= mod:NewSpecialWarningYou(197478, nil, nil, nil, 1, 2)
+local specWarnBrutalGlaive			= mod:NewSpecialWarningMoveAway(197546, nil, nil, nil, 1, 2) --Жуткая глефа
+local specWarnVengefulShear			= mod:NewSpecialWarningDefensive(197418, nil, nil, nil, 3, 2) --Мстительное рассечение
+local specWarnDarkRush				= mod:NewSpecialWarningMoveTo(197478, nil, nil, nil, 3, 2) --Темный рывок
 
-local timerBrutalGlaiveCD			= mod:NewCDCountTimer(15.7, 197546, nil, nil, nil, 3)--15 before
-local timerVengefulShearCD			= mod:NewCDCountTimer(11, 197418, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--11-16, delayed by dark rush
-local timerDarkRushCD				= mod:NewCDCountTimer(31, 197478, nil, nil, nil, 3)--30 before
-local timerLeapCD					= mod:NewStageContextTimer(100, -12281, nil, nil, nil, 6, 197622)
+local timerBrutalGlaiveCD			= mod:NewCDCountTimer(15.7, 197546, nil, nil, nil, 3) --Жуткая глефа 15 before
+local timerVengefulShearCD			= mod:NewCDCountTimer(11, 197418, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мстительное рассечение 11-16, delayed by dark rush
+local timerDarkRushCD				= mod:NewCDCountTimer(31, 197478, nil, nil, nil, 3) --Темный рывок 30 before
+local timerLeapCD					= mod:NewStageCountTimer(100, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5) --Прыжок -12281
 
-mod:AddSetIconOption("SetIconOnDarkRush", 197478, true, 6, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnDarkRush", 197478, true, 6, {1, 2, 3}) --Темный рывок
 --Stage Two: Fury
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12281))
-local warnEyeBeam					= mod:NewTargetNoFilterAnnounce(197696, 2)
+local warnEyeBeam					= mod:NewTargetNoFilterAnnounce(197696, 2) --Пронзающий взгляд
 
-local specWarnEyeBeam				= mod:NewSpecialWarningRunCount(197696, nil, nil, nil, 4, 2)
+local specWarnEyeBeam				= mod:NewSpecialWarningRunCount(197696, nil, nil, nil, 4, 2) --Пронзающий взгляд
 local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(197974, "Tank", nil, nil, 1, 2)
 local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(197797, "HasInterrupt", nil, nil, 1, 2)
 
-local timerEyeBeamCD				= mod:NewCDCountTimer(13.5, 197696, nil, nil, nil, 3)
+local timerEyeBeamCD				= mod:NewCDCountTimer(12, 197696, nil, nil, nil, 3) --Пронзающий взгляд 13.5
 local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 197974, nil, nil, nil, 3)
 local timerGroundedCD				= mod:NewStageContextTimer(44.8, -12277, nil, nil, nil, 6, 197394)
 
-local yellBrutalGlaive				= mod:NewYell(197546, nil, nil, nil, "YELL")
-local yellEyeBeam					= mod:NewYell(197696, nil, nil, nil, "YELL")
+local yellDarkRush					= mod:NewYell(197478, nil, nil, nil, "YELL") --Темный рывок
+local yellBrutalGlaive				= mod:NewYell(197546, nil, nil, nil, "YELL") --Жуткая глефа
+local yellEyeBeam					= mod:NewYell(197696, nil, nil, nil, "YELL") --Пронзающий взгляд
+local yellEyeBeamFades				= mod:NewShortFadesYell(197696, nil, nil, nil, "YELL") --Пронзающий взгляд
 
 --mod:AddRangeFrameOption(5, 197546)--Range not given for Brutal Glaive
 
@@ -88,14 +92,15 @@ function mod:BrutalGlaiveTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	self.vb.glaiveCount = 0
 	self.vb.shearCount = 0
 	self.vb.rushCount = 0
 	self.vb.eyeCount = 0
 	timerBrutalGlaiveCD:Start(5.5-delay, 1)
 	timerVengefulShearCD:Start(8-delay, 1)
-	timerDarkRushCD:Start(10.8-delay, 1)
-	timerLeapCD:Start(33.9)--33.9-35.2 (they changed his starting energy from Legion)
+	timerDarkRushCD:Start(11-delay, 1)
+	timerLeapCD:Start(35, 2)--33.9-35.2 (they changed his starting energy from Legion)
 end
 
 --function mod:OnCombatEnd()
@@ -135,8 +140,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerEyeBeamCD:Start(nil, self.vb.eyeCount+1)
 		if args:IsPlayer() then
 			specWarnEyeBeam:Show(self.vb.eyeCount)
-			yellEyeBeam:Yell()
 			specWarnEyeBeam:Play("laserrun")
+			yellEyeBeam:Yell()
+			yellEyeBeamFades:Countdown(12, 5)
 		else
 			warnEyeBeam:Show(args.destName)
 		end
@@ -161,7 +167,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerBrutalGlaiveCD:Start(6, 1)
 		timerDarkRushCD:Start(12, 1)
 		timerVengefulShearCD:Start(13, 1)
-		timerLeapCD:Start(93.4)--Same as it was back then. yay for consistency
+		timerLeapCD:Start(93.4, 2)--Same as it was back then. yay for consistency
 	end
 end
 
@@ -170,8 +176,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 197478 then
 		warnDarkRush:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
-			specWarnDarkRush:Show()
-			specWarnDarkRush:Play("targetyou")
+			specWarnDarkRush:Show(DBM_COMMON_L.BOSS)
+			specWarnDarkRush:Play("movetoboss")
+			yellDarkRush:Yell()
 		end
 		if self.Options.SetIconOnDarkRush then
 			self:SetAlphaIcon(0.5, args.destName, 3)
@@ -198,5 +205,20 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 100485 then--Soul-torn Vanguard
 		timerBonebreakingStrikeCD:Stop(args.destGUID)
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+	if spellId == 197622 then --Прыжок на фазу 2
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("phasechange")
+		timerBrutalGlaiveCD:Stop()
+		timerVengefulShearCD:Stop()
+		timerDarkRushCD:Stop()
+		DBM:Debug("Check Murchal proshlyap (Случился прыжок на 2 фазу)", 2)
+	elseif spellId == 197394 then --реген энергии
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
+		warnPhase:Play("phasechange")
+		DBM:Debug("Check Murchal proshlyap (Начался реген энергии)", 2)
 	end
 end

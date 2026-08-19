@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 419506 420422 417455 417431 412761 428963 428400 428971 428968 428965 419123 422837 410223 425492 422518 419144",
-	"SPELL_CAST_SUCCESS 430441 422935 422524 426368",
+	"SPELL_CAST_SUCCESS 430441 422935 422524 426368 417455",
 	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922",
 	"SPELL_AURA_APPLIED_DOSE 417807 417443 429866 425494",
 	"SPELL_AURA_REMOVED 419144 421922",
@@ -37,78 +37,84 @@ mod:RegisterEventsInCombat(
 --General
 local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(419504, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(419504, nil, nil, nil, 1, 8) --Яростное пламя
 
-local timerPhaseCD									= mod:NewStageTimer(60, 408330, nil, nil, nil, 6, nil, nil, nil, 2, 5)
+local timerPhaseCD									= mod:NewStageCountTimer(60, 408330, nil, nil, nil, 6, nil, nil, nil, 3, 5)
+local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26666))
-local warnDarkflameShades							= mod:NewCountAnnounce(430441, 2, nil, false)
-local warnDarkflameCleave							= mod:NewCountAnnounce(426368, 4, nil, nil, 845)
-local warnFirestorm									= mod:NewCountAnnounce(419506, 4, nil, nil, nil, nil, nil, 2)--icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter
-local warnBlaze										= mod:NewCountAnnounce(414186, 3, nil, nil, nil, nil, nil, 2)
-local warnAflame									= mod:NewCountAnnounce(417807, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(417807))--Player
-local warnFyralathsMark								= mod:NewStackAnnounce(417443, 3, nil, "Tank|Healer")
+local warnDarkflameShades							= mod:NewCountAnnounce(430441, 2, nil, false) --Тени пламени Тьмы
+local warnDarkflameCleave							= mod:NewCountAnnounce(426368, 4, nil, nil, 845) --Рассечение темного пламени (Рассекающий удар)
+local warnFirestorm									= mod:NewCountAnnounce(419506, 4, nil, nil, nil, nil, nil, 2) --Огненная буря icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter
+local warnBlaze										= mod:NewCountAnnounce(414186, 3, nil, nil, nil, nil, nil, 2) --Вспышка
+local warnAflame									= mod:NewCountAnnounce(417807, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(417807)) --В огне Player
+local warnFyralathsMark								= mod:NewStackAnnounce(417443, 3, nil, "Tank|Healer") --Метка Фир'алата
 
-local specWarnWildFire								= mod:NewSpecialWarningCount(420422, nil, nil, nil, 2, 2)
-local specWarnDreamRend								= mod:NewSpecialWarningRunCount(417455, nil, nil, nil, 4, 2)
-local specWarnFyralathsBite							= mod:NewSpecialWarningDefensive(417431, nil, nil, nil, 1, 2)
-local specWarnFyralathsMark							= mod:NewSpecialWarningTaunt(417443, nil, 37454, nil, 1, 2)
+local specWarnWildFire								= mod:NewSpecialWarningCount(420422, nil, nil, nil, 2, 2) --Дикий огонь
+local specWarnDreamRend								= mod:NewSpecialWarningRunCount(417455, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 2) --Воздаяние Снов (Притягивание)
+local specWarnDreamRend2							= mod:NewSpecialWarningCount(417455, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Воздаяние Снов (АоЕ)
+local specWarnFyralathsBite							= mod:NewSpecialWarningDefensive(417431, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Укус Фир'алата (Фронталка)
+local specWarnFyralathsBite2						= mod:NewSpecialWarningDodge(417431, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Укус Фир'алата (Фронталка)
+local specWarnFyralathsMark							= mod:NewSpecialWarningTaunt(417443, nil, 37454, nil, 1, 2) --Метка Фир'алата (Укус)
 
-local timerDarkflameShadesCD						= mod:NewCDCountTimer(49, 430441, nil, false, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerDarkflameCleaveCD						= mod:NewCDCountTimer(49, 426368, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--Shortname "Soaks"
-local timerDarkflameCleave							= mod:NewCastCountTimer(4, 426368, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerFirestormCD								= mod:NewCDCountTimer(49, 419506, nil, nil, nil, 3)
-local timerWildFireCD								= mod:NewCDCountTimer(49, 420422, nil, nil, nil, 2)
-local timerDreamRendCD								= mod:NewCDCountTimer(49, 417455, nil, nil, nil, 3)--"Pull" short text. MIght change to "Pull in" though if it's unclear to users
-local timerBlazeCD									= mod:NewCDCountTimer(49, 414186, nil, nil, nil, 3)
-local timeAFlameCD									= mod:NewCDCountTimer(49, 417807, nil, "RemoveMagic", 2, 5, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerFyralathsBiteCD							= mod:NewCDCountTimer(49, 417431, DBM_COMMON_L.FRONTAL.." (%s)", nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerDarkflameShadesCD						= mod:NewCDCountTimer(49, 430441, nil, false, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Тени пламени Тьмы
+local timerDarkflameCleaveCD						= mod:NewCDCountTimer(49, 426368, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Рассечение темного пламени (Рассекающий удар)
+local timerDarkflameCleave							= mod:NewCastCountTimer(4, 426368, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Рассечение темного пламени (Рассекающий удар)
+local timerFirestormCD								= mod:NewCDCountTimer(49, 419506, nil, nil, nil, 3) --Огненная буря
+local timerWildFireCD								= mod:NewCDCountTimer(49, 420422, nil, nil, nil, 2) --Дикий огонь
+local timerDreamRendCD								= mod:NewCDCountTimer(49, 417455, DBM_COMMON_L.ATTRACTION.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Воздаяние Снов (Притягивание) "Pull" short text. MIght change to "Pull in" though if it's unclear to users
+local timerDreamRend								= mod:NewCastTimer(12.1, 417455, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Воздаяние Снов (АоЕ)
+local timerBlazeCD									= mod:NewCDCountTimer(49, 414186, nil, nil, nil, 3) --Вспышка
+local timeAFlameCD									= mod:NewCDCountTimer(49, 417807, nil, "RemoveMagic", 2, 5, nil, DBM_COMMON_L.MAGIC_ICON) --В огне
+local timerFyralathsBiteCD							= mod:NewCDCountTimer(49, 417431, DBM_COMMON_L.FRONTAL.." (%s)", nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON) --Укус Фир'алата
 
-mod:AddPrivateAuraSoundOption(419060, true, 419506, 1)--Firestorm
+mod:AddPrivateAuraSoundOption(419060, true, 419506, 4) --Огненная буря
 mod:AddPrivateAuraSoundOption(426370, true, 426370, 1)--Darkflame Cleave
-mod:AddPrivateAuraSoundOption(414187, true, 414186, 1)--Blaze
+mod:AddPrivateAuraSoundOption(414187, true, 414186, 1) --Вспышка
 --Переходка
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26667))
-local warnShadowflameOrbs							= mod:NewCountAnnounce(421937, 2)
-local warnShadowflameEruption						= mod:NewCountAnnounce(429866, 4, nil, false, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(429866))--Player
+local warnShadowflameOrbs							= mod:NewCountAnnounce(421937, 2) --Сферы пламени Тьмы
+local warnShadowflameEruption						= mod:NewCountAnnounce(429866, 4, nil, false, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(429866)) --Извержение пламени Тьмы
 
-local specWarnIncarnate								= mod:NewSpecialWarningDodgeCount(412761, nil, 374763, nil, 2, 2)
-local specWarnShadowflameBreath						= mod:NewSpecialWarningDodgeCount(410223, nil, 17088, nil, 2, 2)
-local specWarnFlamebound							= mod:NewSpecialWarningYou(429903, nil, nil, nil, 1, 15, 4)
-local specWarnShadowbound							= mod:NewSpecialWarningYou(429906, nil, nil, nil, 1, 15, 4)
+local specWarnIncarnate								= mod:NewSpecialWarningDodgeCount(412761, nil, 374763, nil, 2, 2) --Воплощение (Взлет)
+local specWarnShadowflameBreath						= mod:NewSpecialWarningDodgeCount(410223, nil, 17088, nil, 2, 2) --Дыхание пламени Тьмы (Дыхание)
+local specWarnFlamebound							= mod:NewSpecialWarningYou(429903, nil, nil, nil, 1, 15, 4) --Связь пламени
+local specWarnShadowbound							= mod:NewSpecialWarningYou(429906, nil, nil, nil, 1, 15, 4) --Связь Тьмы
 
-local timerCorruptCast								= mod:NewCastTimer(33, 419144, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Заражение порчей
-local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5)
-local timerShadowflameOrbsCD						= mod:NewCDCountTimer(49, 421937, nil, nil, nil, 5)
-local timerIncarnateCD								= mod:NewCDCountTimer(8.5, 412761, 374763, nil, nil, 6)--Short name "Lift off"
+local timerCorruptCast								= mod:NewCastTimer(33, 419144, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Заражение порчей
+local timerShadowflameOrbsCD						= mod:NewCDCountTimer(49, 421937, nil, nil, nil, 5) --Сферы пламени Тьмы
+local timerIncarnateCD								= mod:NewCDCountTimer(8.5, 412761, 374763, nil, nil, 6) --Воплощение (Взлет)
 --local timerIncarnate								= mod:NewCastTimer(8.5, 412761, 374763, nil, nil, 2)
-local timerShadowflameBreathCD						= mod:NewCDCountTimer(49, 410223, 17088, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerShadowflameBreathCD						= mod:NewCDCountTimer(49, 410223, 17088, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание пламени Тьмы (Дыхание)
 
 mod:AddInfoFrameOption(419144, true) --Точнее 421922
 --mod:AddPrivateAuraSoundOption(429903, true, 429903, 1)--Flamebound
 --mod:AddPrivateAuraSoundOption(429906, true, 429906, 1)--Shadowbound
 --Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26668))
-local warnSpirits									= mod:NewCountAnnounce(422032, 3, nil, nil, 263222)
-local warnGreaterFirestorm							= mod:NewCountAnnounce(422518, 3)
-local warnExplodingCore								= mod:NewCastAnnounce(428400, 4)
+local warnSpirits									= mod:NewCountAnnounce(422032, 3, nil, nil, 263222) --Духи калдорай (Духи)
+local warnGreaterFirestorm							= mod:NewCountAnnounce(422518, 3) --Великая огненная буря
+local warnExplodingCore								= mod:NewCastAnnounce(428400, 4) --Взрывающийся сердечник
 local warnMythicDebuffs								= mod:NewAnnounce("warnMythicDebuffs", 3, 428970, nil, nil, nil, 428970)
 
-local specWarnMoltenGauntlet						= mod:NewSpecialWarningDefensive(428963, nil, nil, nil, 1, 2)
+local specWarnExplodingCore							= mod:NewSpecialWarningSpell(428400, nil, 363533, nil, 3, 4) --Взрывающийся сердечник (Мощный взрыв)
+local specWarnMoltenGauntlet						= mod:NewSpecialWarningDefensive(428963, nil, nil, nil, 1, 2) --Раскаленная рукавица
 local specWarnShadowGauntlet						= mod:NewSpecialWarningDefensive(428965, nil, nil, nil, 1, 2)
-local specWarnFlamefall								= mod:NewSpecialWarningRunCount(419123, nil, nil, nil, 4, 2)
-local specWarnShadowflameDevastation				= mod:NewSpecialWarningDodgeCount(422524, nil, 406227, nil, 2, 2)--Short name "Deep Breath"
+local specWarnFlamefall								= mod:NewSpecialWarningRunCount(419123, nil, nil, nil, 4, 2) --Пламенное падение
+local specWarnShadowflameDevastation				= mod:NewSpecialWarningDodgeCount(422524, nil, 406227, nil, 2, 2) --Опустошение пламенем Тьмы (Глубокий вдох)
 
-local timerSpiritsCD								= mod:NewCDCountTimer(49, 422032, 263222, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Shortname "Spirits"
-local timerGreaterFirestormCD						= mod:NewCDCountTimer(49, 422518, 419506, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
-local timerMoltenGauntletCD							= mod:NewCDNPTimer(11.7, 428963, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerExplodingCoreCD							= mod:NewCDCountTimer(54, 428400, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Взрывающийся сердечник (Мощный взрыв)
+local timerSpiritsCD								= mod:NewCDCountTimer(49, 422032, 263222, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Духи калдорай (Духи)
+local timerGreaterFirestormCD						= mod:NewCDCountTimer(49, 422518, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Великая огненная буря (Большой адд)
+local timerMoltenGauntletCD							= mod:NewCDNPTimer(11.7, 428963, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Раскаленная рукавица
 --local timerMoltenEruptionCD							= mod:NewCDNPTimer(23, 428971, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerShadowGauntletCD							= mod:NewCDNPTimer(11.7, 428965, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local timerShadowCageCD								= mod:NewCDNPTimer(23, 428968, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerMythicDebuffs							= mod:NewTimer(45, "timerMythicDebuffs", 428970, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 428970)--Key matched to BW
-local timerFlamefallCD								= mod:NewCDCountTimer(49, 419123, nil, nil, nil, 2)
-local timerShadowflameDevastationCD					= mod:NewCDCountTimer(49, 422524, 406227, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerFlamefallCD								= mod:NewCDCountTimer(49, 419123, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Пламенное падение
+local timerFlamefallCast							= mod:NewCastTimer(5, 419123, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Пламенное падение
+local timerShadowflameDevastationCD					= mod:NewCDCountTimer(49, 422524, 406227, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Опустошение пламенем Тьмы (Глубокий вдох)
 
 mod:AddPrivateAuraSoundOption(422520, true, 422518, 1)--Greater Firestorm
 mod:AddPrivateAuraSoundOption(428988, true, 428971, 1)--Molten Eruption
@@ -116,24 +122,24 @@ mod:AddPrivateAuraSoundOption(428970, true, 428968, 1)--Shadow Cage
 --Фаза 3
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26670))
 local warnBloom										= mod:NewYouAnnounce(423717, 1)
-local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer")
-local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4)
+local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer") --Пасть Преисподней
+local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4) --Вечная огненная буря (Огненная буря)
 local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)--Short name "Swirl" 143413
 
-local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13)
-local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2)
-local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, nil, nil, 1, 2)
+local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
+local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
+local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
 
 local timerApocalypseroarCD							= mod:NewCDCountTimer(49, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
 local timerApocalypseroar							= mod:NewCastTimer(4.8, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
-local timerInfernalMawCD							= mod:NewCDCountTimer(49, 425492, nil, "Tank|healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 419506, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
-local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 143413, nil, nil, 3)--short name "Swirl"
+local timerInfernalMawCD							= mod:NewCDCountTimer(49, 425492, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пасть Преисподней
+local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 419506, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Вечная огненная буря (Огненная буря)
+local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 37641, nil, nil, 3) --Парящие угли (Вихрь)
 local timerCorruptedSeedsCD							= mod:NewCDCountTimer(41, 430048, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 
-mod:AddPrivateAuraSoundOption(423601, true, 423601, 1)--Seed of Amirdrassil
-mod:AddPrivateAuraSoundOption(430048, true, 430048, 1)--Corrupted Seed
-mod:AddPrivateAuraSoundOption(425525, true, 422935, 1)--Eternal Firestorm
+mod:AddPrivateAuraSoundOption(423601, true, 423601, 1) --Семя Амирдрассила
+mod:AddPrivateAuraSoundOption(430048, true, 430048, 1) --Оскверненное семя
+mod:AddPrivateAuraSoundOption(425525, true, 422935, 4) --Вечная огненная буря
 
 mod.vb.darkflameCleaveCount = 0
 mod.vb.firestormCount = 0--reused for empowered version
@@ -156,27 +162,34 @@ mod.vb.addsAlive = 0
 mod.vb.roarCount = 0
 mod.vb.swirlCount = 0
 
+local proshlyapationSpiritsHeroicTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4} --Хорошие таймеры для героика (Разрабы задумали 8 каст вообще убрать?)
+local proshlyapationSpiritsNormalTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 36.5} --Хорошие таймеры для обычки (8 таймера так же нету)
+
 local allTimers = {
 	[1.5] = {
-		--Blaze (Mythic Only intermission Blaze)
+		--Вспышка (Mythic Only intermission Blaze)
 		[4141862] = {28, 8},
 		--Shadowflame Orbs
 		[421937] = {3.5, 6, 6},
 	},
 	[2] = {--Same in all difficulties, minus Aflame
-		--Flamefall
-		[420422] = {5.8, 75, 79.9},
+		--Пламенное падение
+		[419123] = {4.8, 74.9, 79.9}, --Ещё 1 прошляп очка дурачков на Александриксе, Герое и т.д., т.к. спелл был неверным в версии с офы и таймер не работал
 		--Fyr'alath's Bite
 		[417431] = {17.9, 11.0, 60.0, 11.0, 11.0, 58.0, 11.0, 11.0},
-		--Greater Firestorm
-		[422518] = {35.8, 79.9, 80.0},
+		--Великая огненная буря
+		[422518] = {35.8, 79.9}, --Лишь 2 таймера, не 3
+	--	[422518] = {35.8, 79.9, 80.0},
 		--Shadowflame Devastation
 		[422524] = {58.8, 80},
-		--Spirits of the Kaldorai
-		[422032] = {20, 20, 20, 25, 26, 25, 25, 25},
-		--Blaze (Heroic+ only)
+		--Духи калдорай
+	--	[422032] = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4}, --Хорошие таймеры для героика (Разрабы задумали 8 каст вообще убрать)
+	--	[422032] = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 36.5},  --Хорошие таймеры для обычки (8 таймер не сработал)
+		--Духи калдорай (По инфе с офы)
+	--	[422032] = {20, 20, 20, 25, 26, 25, 25, 25},
+		--Вспышка (Heroic+ only)
 		[414186] = {20, 14.9, 25, 30, 26.9, 23, 30, 25},
-		--Blaze (Mythic only)
+		--Вспышка (Mythic only)
 		[4141862] = {20, 14.9, 25, 33.9, 22.9, 23, 33.9, 21},
 		--Incarnate
 		[412761] = {44.6, 80.0, 79.5},
@@ -207,6 +220,7 @@ local function blazeLoop(self)
 		timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, self:IsMythic() and 4141862 or 414186, self.vb.blazeCount+1)
 	else--Stage 3
 		timer = self:IsMythic() and (self.vb.blazeCount % 2 == 0 and 33 or 13) or (self.vb.blazeCount % 2 == 0 and 28 or 13)
+		--Героик 11.5, 13, 28
 	end
 	if timer then
 		timerBlazeCD:Start(timer, self.vb.blazeCount+1)
@@ -267,15 +281,15 @@ local function startPhase3(self)
 		timerBlazeCD:Stop()
 		self:Unschedule(blazeLoop)
 		timerInfernalMawCD:Start(4.9, 1)
-		timerShadowflameBreathCD:Start(10, 1)
-		timerEternalFirestormCD:Start(18, 1)
-		self:Schedule(18, eternalFireLoop, self)
-		timerApocalypseroarCD:Start(34, 1)
+		timerShadowflameBreathCD:Start(9.4, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 10
+		timerApocalypseroarCD:Start(33.4, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 34
+		timerEternalFirestormCD:Start(15, 1) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
+		self:Schedule(15, eternalFireLoop, self) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
 		if self:IsHard() then
-			timerBlazeCD:Start(12, 1)--Heroic/Mythic only
-			self:Schedule(12, blazeLoop, self)
+			timerBlazeCD:Start(11.5, 1) --Heroic/Mythic only 12
+			self:Schedule(11.5, blazeLoop, self)
 			if self:IsMythic() then
-				timerEternalFirestormCD:Start(3.8, 1)
+				timerEternalFirestormSwirlCD:Start(3.8, 1)
 				self:Schedule(3.8, eternalFireSwirlLoop, self)
 			end
 		end
@@ -311,7 +325,7 @@ function mod:OnCombatStart(delay)
 	self:EnablePrivateAuraSound(422520, "runout", 2)--Greater Firestorm
 	self:EnablePrivateAuraSound(423601, "seedyou", 15)--Seed of Amirdrassil
 	self:EnablePrivateAuraSound(430048, "seedyou", 15)--Corrupted Seed
-	self:EnablePrivateAuraSound(425525, "runout", 2)--Eternal Firestorm
+	self:EnablePrivateAuraSound(425525, "runout", 4)--Eternal Firestorm
 	if self:IsMythic() then
 		self:EnablePrivateAuraSound(426370, "gathershare", 2)--Darkflame Cleave
 --		self:EnablePrivateAuraSound(429903, "flameyou", 15)--Flamebound
@@ -375,6 +389,9 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then--Boss1 isn't certainty, could be tree, GUID matching used
 			specWarnFyralathsBite:Show()
 			specWarnFyralathsBite:Play("defensive")
+		else
+			specWarnFyralathsBite2:Show()
+			specWarnFyralathsBite2:Play("watchstep")
 		end
 		local timer
 		if self:GetStage(2) then
@@ -394,7 +411,7 @@ function mod:SPELL_CAST_START(args)
 		timerShadowflameOrbsCD:Start(3.5, 1)
 		timerCorruptCast:Start()
 		self:Schedule(3.5, orbsLoop, self)
-	elseif spellId == 412761 then
+	elseif spellId == 412761 then --Воплощение (Взлет)
 		self.vb.incarnCount = self.vb.incarnCount + 1
 		specWarnIncarnate:Show(self.vb.incarnCount)
 		if self:GetStage(1) then
@@ -409,6 +426,7 @@ function mod:SPELL_CAST_START(args)
 			timerWildFireCD:Stop()
 			timerDreamRendCD:Stop()
 			timerFyralathsBiteCD:Stop()
+			timerDreamRend:Stop()
 			timerBlazeCD:Stop()--Heroic/Mythic only
 			self:Unschedule(blazeLoop)
 			timerDarkflameShadesCD:Stop()--Mythic Only
@@ -428,6 +446,7 @@ function mod:SPELL_CAST_START(args)
 			if timer then
 				timerIncarnateCD:Start(timer, self.vb.incarnCount+1)
 			end
+			timerExplodingCoreCD:Start(nil, self.vb.incarnCount+1)
 		end
 	elseif spellId == 422518 then
 		self.vb.firestormCount = self.vb.firestormCount + 1
@@ -451,6 +470,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 428400 and self:AntiSpam(5, 1) then--Not verified yet
 		warnExplodingCore:Show()
+		specWarnExplodingCore:Show()
+		specWarnExplodingCore:Play("defensive")
 --	elseif spellId == 428971 then--Not verified yet
 		--timerMoltenEruptionCD:Start(nil, args.sourceGUID)
 --	elseif spellId == 428968 then--Not verified yet
@@ -463,6 +484,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerFlamefallCD:Start(timer, self.vb.flameFallCount+1)
 		end
+		timerFlamefallCast:Start()
 	elseif spellId == 422837 then
 		self.vb.roarCount = self.vb.roarCount + 1
 		specWarnApocalypseRoar:Show(self.vb.roarCount)
@@ -477,7 +499,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShadowflameBreath:Show(self.vb.shadowflameBreathCount)
 		specWarnShadowflameBreath:Play("breathsoon")
 		timerShadowflameBreathCD:Start(self:IsMythic() and 46 or 40.9, self.vb.shadowflameBreathCount+1)
-	elseif spellId == 425492 then
+	elseif spellId == 425492 then --Пасть Преисподней
 		self.vb.tankCount = self.vb.tankCount + 1
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then--Boss1 isn't certainty, could be tree, GUID matching used
 			specWarnInfernalMaw:Show()
@@ -494,6 +516,7 @@ function mod:SPELL_CAST_START(args)
 			timer = 3
 		end
 		timerInfernalMawCD:Start(timer, self.vb.tankCount+1)
+		DBM:Debug("Murchal proshlyap (Старт каста Пасть Преисподней)", 2)
 	end
 end
 
@@ -505,6 +528,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if timer then
 			timerDarkflameShadesCD:Start(timer, self.vb.tankCount+2)
 		end
+		DBM:Debug("Murchal proshlyap (Случился каст Тени пламени Тьмы)", 2)
 	elseif spellId == 422524 then
 		self.vb.shadowflameDevastation = self.vb.shadowflameDevastation + 1
 		specWarnShadowflameDevastation:Show(self.vb.shadowflameDevastation)
@@ -518,6 +542,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDarkflameCleave:Show(self.vb.darkflameCleaveCount)
 		timerDarkflameCleave:Start(4, self.vb.darkflameCleaveCount)
 		timerDarkflameCleaveCD:Start(61, self.vb.darkflameCleaveCount+1)
+	elseif spellId == 417455 then
+		specWarnDreamRend2:Show(self.vb.dreamRendCount)
+		specWarnDreamRend2:Play("aesoon")
+		timerDreamRend:Start()
 	elseif spellId == 422935 then --Вечная огненная буря (Сломана на сервере)
 		DBM:Debug("Murchal proshlyap (Разрабы починили спелл, нихуя себе)", 2)
 --[[		if self:GetStage(3, 1) then
@@ -655,13 +683,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.tankCount = 0
 		self.vb.incarnCount = 0
 		self.vb.aflameCount = 0
-		timerFlamefallCD:Start(5.8, 1)
+		timerCorruptCast:Stop()
+		timerFlamefallCD:Start(4.8, 1)
 		timerFyralathsBiteCD:Start(17.9, 1)
 		timerSpiritsCD:Start(19.1, 1)
 		timeAFlameCD:Start(27.1, 1)
 		timerGreaterFirestormCD:Start(34.9, 1)
-		timerIncarnateCD:Start(43.4, 1)
-		timerShadowflameDevastationCD:Start(57.9, 1)
+		timerIncarnateCD:Start(43, 1) --Взлет (Точно под обычку и героик) Раньше было 43.4
+		timerShadowflameDevastationCD:Start(57.5, 1) --Глубокий вдох (Точно под обычку) Раньше было 57.9
 		timerPhaseCD:Start(215, 3)
 		if self:IsHard() then
 			timerBlazeCD:Start(20.7, 1)--Heroic/Mythic only
@@ -694,10 +723,18 @@ do
 		if mob == spiritsName then--Spirits yell when they spawn, no other time, so match action name with auto localized name, no localizing required
 			self.vb.spiritsCount = self.vb.spiritsCount + 1
 			warnSpirits:Show(self.vb.spiritsCount)
-			local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 422032, self.vb.spiritsCount+1)
+			local timer
+			if self:IsHard() then
+				timer = proshlyapationSpiritsHeroicTimers[self.vb.spiritsCount+1]
+			else
+				timer = proshlyapationSpiritsNormalTimers[self.vb.spiritsCount+1]
+			end
+			timerSpiritsCD:Start(timer, self.vb.spiritsCount+1)
+			--Вернуть старую версию, если будут проблемы
+	--[[		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 422032, self.vb.spiritsCount+1)
 			if timer then
 				timerSpiritsCD:Start(timer, self.vb.spiritsCount+1)
-			end
+			end]]
 		end
 	end
 end
@@ -706,21 +743,23 @@ end
 --https://www.wowhead.com/ptr-2/npc=207800/spirit-of-the-kaldorei
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 212422 then--Darkflame Shade
+	if cid == 212422 then --Тень пламени Тьмы
 		--timerFyralathsFlameCD:Stop(args.destGUID)
-	elseif cid == 207796 then--Burning Colossus
+	elseif cid == 207796 then --Пылающий колосс
 		self.vb.addsAlive = self.vb.addsAlive - 1
 		timerMoltenGauntletCD:Stop(args.destGUID)
 		--timerMoltenEruptionCD:Stop(args.destGUID)
 		if self.vb.addsAlive == 0 then
+			timerExplodingCoreCD:Stop()
 			timerMythicDebuffs:Stop()
 			self:Unschedule(mythicDebuffs)
 		end
-	elseif cid == 214012 then--Dark Colossus
+	elseif cid == 214012 then --Темный колосс
 		self.vb.addsAlive = self.vb.addsAlive - 1
 		timerShadowGauntletCD:Stop(args.destGUID)
 		--timerShadowCageCD:Stop(args.destGUID)
 		if self.vb.addsAlive == 0 then
+			timerExplodingCoreCD:Stop()
 			timerMythicDebuffs:Stop()
 			self:Unschedule(mythicDebuffs)
 		end

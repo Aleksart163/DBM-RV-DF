@@ -36,16 +36,17 @@ if (wowToc >= 100200) then
 	--TODO, visit warning types for each type, just to avoid double special alerts for overlaps which basically
 	--TODO, target scan who the boss is targetting during arcane to see who furthest distance is?
 	--]]
-	local warnCinderboltStorm							= mod:NewSpellAnnounce(427899, 4)
+--	local warnCinderboltStorm							= mod:NewSpellAnnounce(427899, 4) --Шквал тлеющих стрел
 
-	local specWarnGlacialFusion							= mod:NewSpecialWarningDodge(428082, nil, nil, nil, 2, 2)
-	local specWarnSpetialCompression					= mod:NewSpecialWarningCount(428139, nil, nil, nil, 2, 13)
-	local specWarnFrostbolt								= mod:NewSpecialWarningInterrupt(427863, "HasInterrupt", nil, nil, 1, 2)--Prio frostbolt interrupts over other two, because of slow
-	local specWarnGTFO									= mod:NewSpecialWarningGTFO(426991, nil, nil, nil, 1, 8)
+	local specWarnCinderboltStorm						= mod:NewSpecialWarningDodge(427899, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Шквал тлеющих стрел (АоЕ + Обстрел)
+	local specWarnGlacialFusion							= mod:NewSpecialWarningDodge(428082, nil, 63912, nil, 2, 2) --Ледовое слияние (Кольцо льда)
+	local specWarnSpetialCompression					= mod:NewSpecialWarningCount(428139, nil, nil, DBM_COMMON_L.ATTRACTION, 2, 13) --Сжатие пространства (Притягивание + Бомба)
+	local specWarnGTFO									= mod:NewSpecialWarningGTFO(426991, nil, nil, nil, 1, 8) --Горящие искры
+--	local specWarnFrostbolt								= mod:NewSpecialWarningInterrupt(427863, "HasInterrupt", nil, nil, 1, 2) --Ледяная стрела Prio frostbolt interrupts over other two, because of slow
 
-	local timerCinderboltStormCD						= mod:NewCDTimer(60, 427899, nil, nil, nil, 2)
-	local timerGlacialFusionCD							= mod:NewCDTimer(60, 428082, nil, nil, nil, 3)
-	local timerSpetialCompressionCD						= mod:NewCDTimer(60, 428139, nil, nil, nil, 5)
+	local timerCinderboltStormCD						= mod:NewCDComboTimer(60, 427899, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Шквал тлеющих стрел (АоЕ + Обстрел)
+	local timerGlacialFusionCD							= mod:NewCDTimer(60, 428082, 63912, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Ледовое слияние (Кольцо льда)
+	local timerSpetialCompressionCD						= mod:NewCDComboTimer(60, 428139, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Сжатие пространства (Притягивание + Бомба)
 --	local timerComboCD									= mod:NewCDComboTimer(20)--Use on mythic instead?
 
 	mod.vb.pullCount = 0
@@ -62,21 +63,21 @@ if (wowToc >= 100200) then
 		self.vb.comboCount = self.vb.comboCount + 1
 		--Fire alone first time (fire + arcane for 4)
 		if self.vb.comboCount % 3 == 1 then
-			--So next is Frost + Fire
-			timerGlacialFusionCD:Start(18.4)
-			timerCinderboltStormCD:Start(18.4)
+			--Правильные тайминги Фаер + Фрост
+			timerGlacialFusionCD:Start(22.7) --Фрост
+			timerCinderboltStormCD:Start(21.8, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING) --Фаер
 			--timerComboCD:Start(DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.ORBS)
 		--Frost + Previous (fire)
 		elseif self.vb.comboCount % 3 == 2 then
-			--So next is Arcane + Frost
-			timerSpetialCompressionCD:Start(18.4)
-			timerGlacialFusionCD:Start(18.4)
+			--Правильные тайминги Аркан + Фрост
+			timerSpetialCompressionCD:Start(18.1, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB) --Аркан
+			timerGlacialFusionCD:Start(19) --Фрост
 			--timerComboCD:Start(grip, DBM_COMMON_L.ORBS)
 		--Arcane + Previous (frost)
 		else
-			--So next is fire + arcane
-			timerCinderboltStormCD:Start(19.4)
-			timerSpetialCompressionCD:Start(19.4)
+			--Правильные тайминги Фаер + Аркан
+			timerCinderboltStormCD:Start(19.9, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING) --Фаер
+			timerSpetialCompressionCD:Start(19.9, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB) --Аркан
 			--timerComboCD:Start(DBM_COMMON_L.AOEDAMAGE, grip)
 		end
 	end
@@ -84,10 +85,10 @@ if (wowToc >= 100200) then
 	function mod:OnCombatStart(delay)
 		self.vb.pullCount = 0
 		self.vb.comboCount = 0
-		timerCinderboltStormCD:Start(3)
+		timerCinderboltStormCD:Start(3, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING)
 		if not self:IsMythic() then--Mythic schedulers timers differently
 			timerGlacialFusionCD:Start(24.1)
-			timerSpetialCompressionCD:Start(43.7)
+			timerSpetialCompressionCD:Start(43.7, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB)
 		end
 		--Haven't seen bug in a while, guess print did it's job. Will remove if no one reports further problems with this boss for a while.
 		--DBM:AddMsg("This boss is very buggy and blizzard has ignored bug reports on the bugs. Sol sometimes resets her rotation back to cinder at random. Now, I've decided to reinstate showing what next rotation is SUPPOSED TO BE but if it's wrong don't complain to me, complain to blizzard for not fixing rotation bug")
@@ -127,26 +128,28 @@ if (wowToc >= 100200) then
 					comboHandler(self)
 				end
 			else
-				timerSpetialCompressionCD:Start(60)
+				timerSpetialCompressionCD:Start(60, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB)
 			end
-		elseif spellId == 427863 then
+	--[[	elseif spellId == 427863 then --Сломано разрабами, либо не имеет смысла
 			if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 				specWarnFrostbolt:Show(args.sourceName)
 				specWarnFrostbolt:Play("kickcast")
-			end
+			end]]
 		end
 	end
 
 	function mod:SPELL_AURA_APPLIED(args)
 		local spellId = args.spellId
 		if spellId == 427899 then
-			warnCinderboltStorm:Show()
+		--	warnCinderboltStorm:Show()
+			specWarnCinderboltStorm:Show()
+			specWarnCinderboltStorm:Play("watchstep")
 			if self:IsMythic() then
 				if args:GetSrcCreatureID() == 82682 then--Source is Boss
 					comboHandler(self)
 				end
 			else
-				timerCinderboltStormCD:Start(60)
+				timerCinderboltStormCD:Start(60, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING)
 			end
 		elseif spellId == 428082 then
 			specWarnGlacialFusion:Show()

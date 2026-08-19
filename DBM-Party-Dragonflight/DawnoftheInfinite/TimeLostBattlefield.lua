@@ -15,7 +15,7 @@ mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2672)
---mod:SetUsedIcons(1, 2, 3)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 --mod.respawnTime = 29
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 417018 407122 410234 418059 410254 418056 408228 418047 418046",
 	"SPELL_AURA_APPLIED 417030 407121 410235",
 --	"SPELL_AURA_APPLIED_DOSE",
---	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_REMOVED 410235",
 	"SPELL_DAMAGE 418052 410496",
 	"SPELL_MISSED 418052 410496",
 	"UNIT_DIED"
@@ -77,12 +77,15 @@ local specWarnShockwave								= mod:NewSpecialWarningDodge(shockwaveSpellId, ni
 local timerRP										= mod:NewRPTimer(8)
 local timerBladestormCD								= mod:NewCDCountTimer(35.1, 410235, nil, nil, nil, 3) --Вихрь клинков
 local timerTankBusterCD								= mod:NewCDCountTimer(19.6, tankSpellId, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Смертельные удары, Обезглавливание
-local timerShockwaveCD								= mod:NewCDCountTimer(35.1, shockwaveSpellId, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Ударная волна 2 варианта
+local timerShockwaveCD								= mod:NewCDCountTimer(34, shockwaveSpellId, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3) --Ударная волна 2 варианта --35.1
 local timerRallyCD									= mod:NewCDCountTimer(20.8, rallySpellId, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --ЗА АЛЬЯНС!, ЗА ОРДУ!
 local timerCryCD									= mod:NewCDCountTimer(10, crySpellId, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2) --Боевой крик 2 варианта
 
+local yellTankBuster								= mod:NewYell(tankSpellId, nil, nil, nil, "YELL") --Смертельные удары, Обезглавливание
 local yellBladestorm								= mod:NewYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
 local yellBladestormFades							= mod:NewShortFadesYell(410235, nil, nil, nil, "YELL") --Вихрь клинков
+
+mod:AddSetIconOption("SetIconOnBladestorm", 410235, true, 0, {8}) --Вихрь клинков
 
 --Write the custom WA keys into the spell headers
 mod:JustSetCustomKeys(rallySpellId, L.customWAMessage:format(418047, 418046))
@@ -126,6 +129,8 @@ local function checkWhichBoss(self)
 			timerRallyCD:UpdateKey(rallySpellId, 1)
 			timerCryCD:UpdateKey(crySpellId, 1)
 			timerAddAoECD:UpdateKey(addAOESpellId)
+			
+			yellTankBuster:UpdateKey(tankSpellId)
 		end
 	end
 end
@@ -199,21 +204,21 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnTankBuster:Show()
 			specWarnTankBuster:Play("defensive")
+			yellTankBuster:Yell()
 		end
 		timerTankBusterCD:Start(nil, self.vb.tankBusterCount+1)
 	elseif spellId == 418056 or spellId == 408228 then--Shockwave / Shockwave (formerly Death Wish)
 		self.vb.shockwaveCount = self.vb.shockwaveCount + 1
+		warnShockwave:Show(self.vb.shockwaveCount)
 		if self.vb.shockwaveCount == 1 then
 			self.vb.shockwaveSet = self.vb.shockwaveSet + 1
-			specWarnShockwave:Show(self.vb.shockwaveSet)
+			specWarnShockwave:Show()
 			specWarnShockwave:Play("shockwave")
-		else
-			warnShockwave:Show(self.vb.shockwaveSet)
-			if self.vb.shockwaveCount == 3 then
-				--Timer moved to other event
---				timerShockwaveCD:Start(nil, self.vb.shockwaveSet+1)
-				self.vb.shockwaveCount = 0
-			end
+			timerShockwaveCD:Start(nil, self.vb.shockwaveSet+1)
+			updateAllTimers(self, 10.2, false)
+		end
+		if self.vb.shockwaveCount == 3 then
+			self.vb.shockwaveCount = 0
 		end
 	elseif spellId == 418047 or spellId == 418046 then--For the alliance, for the horde
 		self.vb.rallyCount = self.vb.rallyCount + 1
@@ -229,15 +234,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 419602 or spellId == 419609 then
 		timerRP:Start(6)
-	elseif spellId == 418054 or spellId == 408227 then
+--[[	elseif spellId == 418054 or spellId == 408227 then
 		--Timer now started here now that it's being used as an update timer method earlier
 		timerShockwaveCD:Start(nil, self.vb.shockwaveSet+1)
-		updateAllTimers(self, 10.2, false)
+		updateAllTimers(self, 10.2, false)]]
 	elseif spellId == 418062 or spellId == 410496 then--Battle Cry, War Cry
-		DBM:Debug("Murchal proshlyap (Случился каст Крика)", 2)
---		self.vb.cryCount = self.vb.cryCount + 1
---		warnCry:Show(self.vb.cryCount)
---		timerCryCD:Start(nil, self.vb.cryCount+1)
+		DBM:Debug("(Случился каст Крика)", 2)
+		self.vb.cryCount = self.vb.cryCount + 1
+		warnCry:Show(self.vb.cryCount)
+		timerCryCD:Start(nil, self.vb.cryCount+1)
 	end
 end
 
@@ -252,14 +257,29 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellBladestorm:Yell()
 			yellBladestormFades:Countdown(spellId)
 		end
+		if self.Options.SetIconOnBladestorm then
+			self:SetIcon(args.destName, 8)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 410235 then
+		if args:IsPlayer() then
+			yellBladestormFades:Cancel()
+		end
+		if self.Options.SetIconOnBladestorm then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if (spellId == 418052 or spellId == 410496) and self:AntiSpam(5, 1) then--BattleCry Buff, Warcry Buff
 		self.vb.cryCount = self.vb.cryCount + 1
-		warnCry:Show(self.vb.cryCount)
-		timerCryCD:Start(nil, self.vb.cryCount+1)
+	--	warnCry:Show(self.vb.cryCount)
+	--	timerCryCD:Start(nil, self.vb.cryCount+1)
 		DBM:Debug("Murchal proshlyap (Получен урон от Крика)", 2)
 --	elseif spellId == 386201 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 --		specWarnGTFO:Show(spellName)

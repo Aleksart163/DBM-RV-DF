@@ -32,7 +32,7 @@
 ## X-DBM-Mod-Name-ptBR: Masmorras (Cataclysm)
 ## X-DBM-Mod-Sort: 802
 ## X-DBM-Mod-MapID: 755,645,36,670,644,33,643,725,657,309,859,568,938,940,939,646
-## X-DBM-Mod-MinCoreRevision: 20260630000000
+## X-DBM-Mod-MinCoreRevision: 20260812000000
 ## X-DBM-Mod-MinExpansion: 3
 ## X-WoWI-ID: 24904
 ## Version: r142

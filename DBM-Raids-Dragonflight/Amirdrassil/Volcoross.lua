@@ -54,10 +54,10 @@ local specWarnGTFO									= mod:NewSpecialWarningGTFO(421082, nil, nil, nil, 1,
 --local specWarnMoltenVenomSwap						= mod:NewSpecialWarningTaunt(419054, nil, nil, nil, 1, 2)--Need to evaulate whether tanks swap for this or jaws. double tank mechanic fights are redundant
 
 local timerSerpentsFuryCD							= mod:NewNextCountTimer(70, 421672, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Змеиное неистовство (АоЕ)
-local timerCoilingFlames							= mod:NewCastTimer(7.5, 421672, DBM_COMMON_L.AOEDAMAGE, nil, nil, 5) --Змеиное неистовство (АоЕ)
+local timerSerpentsFuryCast							= mod:NewCastTimer(7.5, 421672, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Змеиное неистовство (АоЕ)
 local timerCoilingEruption							= mod:NewCastTimer(16, 427201, L.DebuffSoaks, nil, nil, 5) --Вьющееся извержение
 local timerFloodoftheFirelandsCD					= mod:NewNextCountTimer(69.8, 420933, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Поток Огненных Просторов (Разделение урона)
-local timerFloodoftheFirelands						= mod:NewCastTimer(6, 420933, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Поток Огненных Просторов (Разделение урона)
+local timerFloodoftheFirelands						= mod:NewCastTimer(6, 420933, DBM_COMMON_L.GROUPSOAK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Поток Огненных Просторов (Разделение урона)
 local timerVolcanicDisgorgeCD						= mod:NewNextCountTimer(10, 421616, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Вулканическое извержение
 local timerScorchtailCrashCD						= mod:NewCDCountTimer(20, 420415, 307974, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар жгучехвоста (Удар хвостом)
 local timerCataclysmJawsCD							= mod:NewNextCountTimer(10, 423117, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пасть Катаклизма
@@ -84,10 +84,11 @@ local allTimers = {
 	--Пасть Катаклизма
 	[423117] = {4.8, 30.0, 30.0, 40.0, 30.0, 40.0, 30.0, 25.0, 25.0, 20.0},
 	--Вулканическое извержение
-	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0},
-	--Удар жгучехвоста (Нормальные под героик)
-	[420421] = {19.9, 19.9, 20, 31.2, 10, 8.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
+	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0}
 }
+
+local proshlyapationScorchtailCrashHeroicTimers = {20, 19.9, 20, 32.2, 10, 7.3, 7.3, 7.3, 32.2, 7.3, 8, 9.9, 7.3, 26.9, 17.3, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
+local proshlyapationScorchtailCrashNormalTimers = {19.9, 19.9, 20, 31.2, 10, 7.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20}
 
 function mod:DisgorgeTarget(targetname, uId)
 	if not targetname then return end
@@ -122,7 +123,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.flamesIcon = 1
 		specWarnSperentsFury:Show(self.vb.furyCount)
 		timerSerpentsFuryCD:Start(nil, self.vb.furyCount+1)
-		timerCoilingFlames:Start(7.5)
+		timerSerpentsFuryCast:Start(7.5)
 	elseif spellId == 420933 then
 		self.vb.floodCount = self.vb.floodCount + 1
 		specWarnFloodoftheFirleands:Show(self.vb.floodCount)
@@ -166,10 +167,13 @@ function mod:SPELL_SUMMON(args)
 		self.vb.tailCount = self.vb.tailCount + 1
 		specWarnScorchtailCrash:Show(self.vb.tailCount)
 		specWarnScorchtailCrash:Play("watchstep")
-		local timer = self:GetFromTimersTable(allTimers, false, false, spellId, self.vb.tailCount+1)
-		if timer then
-			timerScorchtailCrashCD:Start(timer, self.vb.tailCount+1)
+		local timer
+		if self:IsHard() then
+			timer = proshlyapationScorchtailCrashHeroicTimers[self.vb.tailCount+1]
+		else
+			timer = proshlyapationScorchtailCrashNormalTimers[self.vb.tailCount+1]
 		end
+		timerScorchtailCrashCD:Start(timer, self.vb.tailCount+1)
 	end
 end
 

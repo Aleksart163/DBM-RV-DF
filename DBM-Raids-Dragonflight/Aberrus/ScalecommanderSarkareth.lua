@@ -129,7 +129,7 @@ local specWarnCosmicAscension					= mod:NewSpecialWarningDodgeCount(403741, nil,
 local specWarnHurtlingBarrage					= mod:NewSpecialWarningYou(405486, nil, nil, nil, 1, 2) --Опасный шквал
 local specWarnScouringEternity					= mod:NewSpecialWarningMoveTo(403625, nil, 99112, nil, 3, 4) --В поисках вечности (Сверхновая)
 local specWarnEmbraceofNothingness				= mod:NewSpecialWarningMoveTo(403520, nil, 229042, nil, 3, 2) --Объятия пустоты (Черная дыра)
-local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Рассечение Бездны
+local specWarnVoidSlash							= mod:NewSpecialWarningDefensive(408429, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Рассечение Бездны (Фронталка)
 local specWarnVoidSlashOut						= mod:NewSpecialWarningMoveAway(408429, nil, nil, nil, 4, 4) --Рассечение Бездны
 local specWarnVoidSlashTaunt					= mod:NewSpecialWarningTaunt(408429, nil, nil, nil, 1, 2) --Рассечение Бездны
 
@@ -139,12 +139,12 @@ local timerHurtlingBarrageCD					= mod:NewCDCountTimer(29.9, 405486, nil, nil, n
 local timerScouringEternityCD					= mod:NewCDCountTimer(29.9, 403625, 99112, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerScouringEternity						= mod:NewCastTimer(6.5, 403625, 99112, nil, nil, 7, nil, nil, nil, 1, 5) --В поисках вечности (Сверхновая)
 local timerEmbraceofNothingnessCD				= mod:NewCDCountTimer(29.9, 403520, 229042, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Объятия пустоты (Черная дыра)
-local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, DBM_COMMON_L.FRONTAL, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны
+local timerVoidSlashCD							= mod:NewCDTimer(29.9, 408429, DBM_COMMON_L.FRONTAL, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 3 or nil, 5) --Рассечение Бездны (Фронталка)
 local timerVoidSlash							= mod:NewTargetTimer(18, 408429, nil, "Tank|Healer", nil, 2, nil, DBM_COMMON_L.TANK_ICON) --Рассечение Бездны AOE damage from expiring
 
 local yellVoidClaws								= mod:NewShortYell(411241, nil, nil, nil, "YELL") --Когти пустоты (Дебафф с 2 фазы)
 local yellVoidClawsFades						= mod:NewShortFadesYell(411241, nil, nil, nil, "YELL") --Когти пустоты (Дебафф с 2 фазы) For Void Blast (411238) effect
-local yellVoidSlash								= mod:NewShortYell(408429, nil, nil, nil, "YELL") --Рассечение Бездны
+local yellVoidSlash								= mod:NewShortYell(408429, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Рассечение Бездны (Фронталка)
 local yellVoidBomb								= mod:NewShortYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 --local yellVoidFractureFades						= mod:NewShortFadesYell(404027, nil, nil, nil, "YELL") --Бомба Бездны
 local yellMassDisintegrate						= mod:NewShortPosYell(401680, nil, nil, nil, "YELL") --Массовая дезинтеграция (Дезинтеграция)

@@ -56,7 +56,7 @@ if (wowToc >= 100200) then
 		self.vb.festeringCount = 0
 		self.vb.clawCount = 0
 		timerCrushingClawCD:Start(8.2-delay, 1)
-		timerBubblingFissureCD:Start(15.5-delay)
+		timerBubblingFissureCD:Start(16-delay)
 		timerFesteringShockwaveCD:Start(25-delay, 1) --25.2
 		timerAwakenOozeCD:Start(30.1-delay, 1)
 	end

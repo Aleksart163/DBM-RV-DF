@@ -42,16 +42,16 @@ local warnTimeStasis								= mod:NewTargetNoFilterAnnounce(401667, 4) --Вре�
 
 local specWarnSandBlast								= mod:NewSpecialWarningDefensive(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
 local specWarnSandBlast2							= mod:NewSpecialWarningDodge(404916, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Песчаный вихрь (Фронталка)
-local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, nil, nil, 3, 4) --Новые проблемы!
-local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, DBM_COMMON_L.FRONTAL, 4, 4) --Дыхание дракона (Дыхание)
+local specWarnMoreProblems							= mod:NewSpecialWarningSpell(403891, nil, 336499, nil, 3, 4) --Новые проблемы! (Угадайка)
+local specWarnDragonBreath							= mod:NewSpecialWarningRun(404364, nil, nil, DBM_COMMON_L.FRONTAL, 4, 4) --Дыхание дракона (Фронталка)
 local specWarnTimeTraps								= mod:NewSpecialWarningDodge(406481, nil, nil, nil, 2, 2) --Временные ловушки
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(412769, nil, nil, nil, 1, 8) --Безвременное разложение
 
 local timerSandBlastCD								= mod:NewCDCountTimer(21.8, 404916, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Песчаный вихрь (Фронталка) 21.8-38.8
-local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, nil, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Новые проблемы!
+local timerMoreProblemsCD							= mod:NewCDCountTimer(39.7, 403891, 336499, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Новые проблемы! (Угадайка)
 local timerFamiliarFacesCD							= mod:NewCDCountTimer(23, 405279, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, nil, nil, 2, 5) --Знакомые лица
 local timerTimeTrapsCD								= mod:NewCDCountTimer(50.9, 406481, nil, nil, nil, 3) --Временные ловушки
-local timerDragonBreath								= mod:NewCastTimer(8, 404364, DBM_COMMON_L.FRONTAL, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Дыхание)
+local timerDragonBreath								= mod:NewCastTimer(8, 404364, DBM_COMMON_L.FRONTAL, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Дыхание дракона (Фронталка)
 
 local yellTimeStasis								= mod:NewYell(401667, nil, nil, nil, "YELL") --Временной стазис
 local yellSandBlast									= mod:NewYell(404916, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Песчаный вихрь (Фронталка)

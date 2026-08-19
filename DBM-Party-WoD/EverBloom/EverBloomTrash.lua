@@ -22,7 +22,7 @@ mod:RegisterEvents(
  or (ability.id = 165213 or ability.id = 172578 or ability.id = 165123 or ability.id = 426500 or ability.id = 427223) and type = "cast"
 --]]
 local warnPoisonousClaws						= mod:NewSpellAnnounce(169657, 3, nil, "Tank") --Ядовитые когти
-local warnSpatialDisruption						= mod:NewSpellAnnounce(426974, 2) --Разрыв пространства
+local warnSpatialDisruption						= mod:NewSpellAnnounce(426974, 2, nil, nil, 174716) --Разрыв пространства (Бомба)
 local warnEnragedGrowth							= mod:NewCastAnnounce(165213, 4) --Яростный рост
 local warnChokingVines							= mod:NewCastAnnounce(164965, 3) --Удушающие лианы
 local warnNoxiousEruption						= mod:NewCastAnnounce(169445, 3) --Ядовитое извержение
@@ -31,7 +31,7 @@ local warnVenomBurst							= mod:NewTargetNoFilterAnnounce(165123, 4) --Взры
 local warnGnarledroots							= mod:NewTargetNoFilterAnnounce(426500, 3) --Корявые корни
 
 local specWarnBoundingWhirl						= mod:NewSpecialWarningSpell(172578, "Melee", 410234, nil, 4, 2) --Сдерживающий вихрь (Вихрь клинков)
-local specWarnCinderboltSalvo					= mod:NewSpecialWarningSpell(427223, nil, nil, nil, 2, 2) --Залп тлеющих стрел
+local specWarnCinderboltSalvo					= mod:NewSpecialWarningSpell(427223, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Залп тлеющих стрел (АоЕ)
 --local specWarnSpatialDisruption					= mod:NewSpecialWarningSpell(426974, nil, nil, nil, 2, 13)
 local specWarnColdFusion						= mod:NewSpecialWarningDodge(426845, nil, 63912, nil, 2, 2) --Холодный синтез (Кольцо льда)
 local specWarnVenomBurst						= mod:NewSpecialWarningMoveAway(165123, nil, nil, nil, 1, 2) --Взрыв яда
@@ -56,10 +56,10 @@ local timerHealingWatersCD						= mod:NewCDNPTimer(19.4, 164887, nil, nil, nil, 
 local timerLivingLeavesCD						= mod:NewCDNPTimer(18.1, 169495, nil, nil, nil, 3) --Живые листья (Безмолвие)
 local timerGnarledRootsCD						= mod:NewCDNPTimer(18.1, 426500, nil, nil, nil, 3) --Корявые корни
 local timerPyroblastCD							= mod:NewCDNPTimer(8, 169839, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная глыба 8-13 window, quite large
-local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18, 427223, nil, nil, nil, 2) --Залп тлеющих стрел
+local timerCinderboltSalvoCD					= mod:NewCDNPTimer(18, 427223, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Залп тлеющих стрел (АоЕ)
 local timerFrostboltCD							= mod:NewCDNPTimer(6, 169840, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная стрела
 local timerColdfusionCD							= mod:NewCDNPTimer(21.8, 426845, 63912, nil, nil, 3) --Холодный синтез (Кольцо льда) 21.8-25, maybe shorter
-local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, nil, nil, nil, 3) --Разрыв пространства
+local timerSpatialDisruptionCD					= mod:NewCDNPTimer(19.5, 426974, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Разрыв пространства (Бомба)
 
 local yellChokingVines							= mod:NewYell(164965, 9179, nil, nil, "YELL") --Удушающие лианы (Оглушение)
 local yellVenomBurst							= mod:NewYell(165123, nil, nil, nil, "YELL") --Взрыв яда

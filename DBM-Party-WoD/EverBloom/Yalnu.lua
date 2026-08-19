@@ -37,22 +37,22 @@ if (wowToc >= 100200) then
 	 or type = "dungeonencounterstart" or type = "dungeonencounterend"
 	 --]]
 	 --NOTE: This mod was made from old log, people apparently suck at everbloom and aren't getting to last boss this most recent test weekend
-	local warnBrushfire									= mod:NewTargetNoFilterAnnounce(428746, 1)
+	local warnBrushfire									= mod:NewTargetNoFilterAnnounce(428746, 1) --Локальное возгорание
 
-	local specWarnColossalBlow							= mod:NewSpecialWarningDodge(169179, nil, nil, nil, 2, 2)--Still random direction or now only toward tank?
-	local specWarnVerdantEruption						= mod:NewSpecialWarningSwitchCount(428823, "-Healer", nil, nil, 1, 2)
-	local specWarnLumberingSwipe						= mod:NewSpecialWarningDodge(169929, nil, nil, nil, 2, 2)
-	local specWarnGenesis								= mod:NewSpecialWarningCount(169613, nil, nil, nil, 1, 12)
-	local specWarnLasherVenom							= mod:NewSpecialWarningInterrupt(173563, "HasInterrupt", nil, nil, 1, 2)
+	local specWarnColossalBlow							= mod:NewSpecialWarningDodge(169179, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Колоссальный удар (Фронталка)
+	local specWarnVerdantEruption						= mod:NewSpecialWarningSwitchCount(428823, "-Healer", nil, DBM_COMMON_L.BIG_ADD, 3, 2) --Изумрудное извержение (Большой моб)
+	local specWarnLumberingSwipe						= mod:NewSpecialWarningDodge(169929, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Удар деревьев (Фронталка)
+	local specWarnGenesis								= mod:NewSpecialWarningSwitchCount(169613, nil, nil, DBM_COMMON_L.ADDS, 1, 12) --Сотворение (Адды)
+	local specWarnLasherVenom							= mod:NewSpecialWarningInterrupt(173563, "HasInterrupt", nil, nil, 1, 2) --Яд плеточника
 	--local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
 	local timerCombatStart								= mod:NewCombatTimer(7.9)
-	local timerBrushfireCD								= mod:NewNextTimer(15.4, 428746, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)--For buff going back up on boss, DPS can time burst CDs
-	local timerColossalBlowCD							= mod:NewCDTimer(15.3, 169179, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON)
-	local timerVerdantEruptionCD						= mod:NewCDCountTimer(53.1, 428823, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-	local timerLumberingSwipeCD							= mod:NewCDNPTimer(11.8, 169929, nil, nil, nil, 3)
-	local timerGenesis									= mod:NewCastTimer(14, 169613, nil, nil, nil, 5)
-	local timerGenesisCD								= mod:NewCDCountTimer(53.1, 169613, nil, nil, nil, 6)
+	local timerBrushfireCD								= mod:NewNextTimer(13, 428746, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Локальное возгорание 15.4 For buff going back up on boss, DPS can time burst CDs
+	local timerColossalBlowCD							= mod:NewCDTimer(15.3, 169179, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Колоссальный удар (Фронталка)
+	local timerVerdantEruptionCD						= mod:NewCDCountTimer(54.5, 428823, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Изумрудное извержение (Большой моб)
+	local timerLumberingSwipeCD							= mod:NewCDNPTimer(11.8, 169929, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Удар деревьев (Фронталка)
+	local timerGenesis									= mod:NewCastTimer(14, 169613, DBM_COMMON_L.ADDS, nil, nil, 1) --Сотворение (Адды)
+	local timerGenesisCD								= mod:NewCDCountTimer(54.5, 169613, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 6) --Сотворение (Адды)
 
 	mod:AddSetIconOption("SetIconOnAncient", -10537, true, 5, {8})
 
@@ -76,12 +76,15 @@ if (wowToc >= 100200) then
 				specWarnColossalBlow:Play("shockwave")
 			end
 			timerColossalBlowCD:Start()
-		elseif spellId == 169613 then
+		elseif spellId == 169613 then --Сотворение (Адды)
 			self.vb.GenesisCount = self.vb.GenesisCount + 1
 			specWarnGenesis:Show(self.vb.GenesisCount)
 			specWarnGenesis:Play("runoverflowers")
 			timerGenesis:Start()
 			timerGenesisCD:Start(nil, self.vb.GenesisCount+1)
+			if timerColossalBlowCD:GetRemaining() < 10 then
+				timerColossalBlowCD:AddTime(4.5, self.vb.rottenCount+1)
+			end
 		elseif spellId == 428823 then
 			self.vb.eruptionCount = self.vb.eruptionCount + 1
 			specWarnVerdantEruption:Show(self.vb.eruptionCount)

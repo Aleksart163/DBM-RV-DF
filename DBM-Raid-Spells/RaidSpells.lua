@@ -7,7 +7,7 @@ mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 391776 31821 61994 381301 391054 272678 57724 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 391776 31821 61994 381301 391054 272678 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399 256153",
@@ -52,13 +52,13 @@ local warnFeralHideDrums			= mod:NewTargetSourceAnnounce2(381301, 1) --Бара�
 local warnHysteria					= mod:NewSpellAnnounce(90355, 1) --Древняя истерия
 local warnNetherwinds				= mod:NewSpellAnnounce(160452, 1) --Ветер пустоты
 local warnPrimalRage				= mod:NewSpellAnnounce(264667, 1) --Исступление
-local warnSated						= mod:NewSpellAnnounce(57724, 1) --Пресыщение
 local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступление
 --бр
 local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрождение
 --local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
 --другое
 local warnRitualofSummoning			= mod:NewTargetSourceAnnounce2(698, 1) --Ритуал призыва
+local warnCreateSoulwell			= mod:NewTargetSourceAnnounce2(29893, 1, nil, nil, 58275) --Создание источника душ (Источник душ)
 local warnEndlessCloaks				= mod:NewTargetSourceAnnounce2(391789, 1) --Шкафчик с множеством плащей
 local warnRearranger				= mod:NewTargetSourceAnnounce2(256155, 1) --Портативный трансмогрификатор
 
@@ -119,6 +119,7 @@ local yellBloodlust					= mod:NewShortYell(2825, nil, nil, nil, "YELL") --Кро
 local yellFeralHideDrums			= mod:NewShortYell(381301, nil, nil, nil, "YELL") --Барабаны из дикой шкуры
 local yellAuraMastery				= mod:NewShortYell(31821, nil, nil, nil, "YELL") --Владение аурами
 local yellRitualSummoning			= mod:NewShortYell(698, nil, nil, nil, "YELL") --Ритуал призыва
+local yellCreateSoulwell			= mod:NewShortYell(29893, nil, nil, nil, "YELL") --Создание источника душ
 local yellRewind					= mod:NewShortYell(363534, nil, nil, nil, "YELL") --Перемотка
 local yellDivineHymn				= mod:NewShortYell(64843, nil, nil, nil, "YELL") --Божественный гимн
 local yellTranquility				= mod:NewShortYell(740, nil, nil, nil, "YELL") --Спокойствие
@@ -478,32 +479,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage2)", 2)]]
 		end
 		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
-	elseif spellId == 57724 then --Пресыщение
---[[		if self:AntiSpam(5, "bloodlust") then
-			warnSated:Show(sourceName)
-		end
-		if self.Options.YellOnHeroism then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-			prepareMessage(self, "premsg_Spells_sated", spellId, sourceName)
-		end]]
-	--	specWarnPrimalRage:Show()
-		if args:IsPetSource() then
-			local playerClass = select(2, UnitClass("player"))
-			if playerClass == "HUNTER" then
-				local player = GetUnitName("player")
-			end
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_sated", spellId, player)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal1 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		else
-		--[[	if self.Options.YellOnHeroism then
-		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_sated", spellId, sourceName)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal2 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 90355 then --Древняя истерия (пет ханта)
 --[[		if self:AntiSpam(5, "bloodlust") then
 			warnHysteria:Show(sourceName)
@@ -633,11 +608,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 			prepareMessage(self, "premsg_Spells_dalaran2", spellId, sourceName)
 		end]]
 	elseif spellId == 29893 and self:AntiSpam(10, "soulwell") then --Источник душ
+		if args:IsPlayerSource() then
+			yellCreateSoulwell:Yell(SpellLinks(spellId))
+		else
+			warnCreateSoulwell:Show(sourceName, spellName)
+		end
 	--[[	if self.Options.YellOnSoulwell then
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSoulwell then
 			prepareMessage(self, "premsg_Spells_soulwell", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
+	--	DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 83958 and self:AntiSpam(5, "bank") then --Мобильный банк
 		if args:IsPlayerSource() then
 			yellMobileBanking:Yell(SpellLinks(spellId))
@@ -943,7 +923,7 @@ function mod:SPELL_CREATE(args)
 	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnRitualofSummoning then
 			prepareMessage(self, "premsg_Spells_summoning", spellId, sourceName)
 		end]]
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
+	--	DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 --[[	elseif spellId == 188036 and self:AntiSpam(10, "cauldron") then --Котел духов
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnSpiritCauldron then
 			prepareMessage(self, "premsg_Spells_cauldron_rw", spellId, sourceName)

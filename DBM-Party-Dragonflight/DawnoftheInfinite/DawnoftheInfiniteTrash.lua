@@ -627,11 +627,16 @@ function mod:OnSync(msg, targetname)
 	elseif msg == "MPPR0" and self:AntiSpam(15, "Trash1") then --Таймер пула перед 1-ым боссом
 		if self:IsMythicPlus() then
 			timerRP:Start(7) --До открытия дверей
-		else
+		elseif self:IsMythic() then
 			timerRP:Start(21) --21 до исчезания лужи и 24 до открытия двери (возможно можно и на 21 пройти через дверь)
 			timerTimelessCurseCD:Start(12)
 			specWarnTimelessCurse:Schedule(12)
 			specWarnTimelessCurse:ScheduleVoice(12, "watchstep")
+		else --Героик и обычка
+			timerRP:Start(17)
+			timerTimelessCurseCD:Start(7)
+			specWarnTimelessCurse:Schedule(7)
+			specWarnTimelessCurse:ScheduleVoice(7, "watchstep")
 		end
 	end
 end

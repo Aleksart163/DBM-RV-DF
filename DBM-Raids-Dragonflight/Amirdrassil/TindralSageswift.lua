@@ -34,7 +34,7 @@ local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, 
 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(423649, nil, nil, nil, 1, 8)
 
-local timerPhaseCD									= mod:NewPhaseTimer(60, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
+local timerPhaseCD									= mod:NewStageCountTimer(60, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Stage One: Moonkin of the Flame
@@ -50,12 +50,12 @@ local warnIncarnationOwl							= mod:NewCountAnnounce(425576, 4)
 local specWarnSearingWrath							= mod:NewSpecialWarningTaunt(422000, nil, nil, nil, 1, 2)
 local specWarnFieryGrowth							= mod:NewSpecialWarningMoveAway(424581, nil, nil, nil, 1, 2)
 local specWarnFallingStars							= mod:NewSpecialWarningCount(420236, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Падающая звезда (Обстрел)
-local specWarnMassEntanglement						= mod:NewSpecialWarningYou(424495, nil, nil, nil, 1, 2)
+local specWarnMassEntanglement						= mod:NewSpecialWarningYou(424495, nil, 269678, nil, 1, 2) --Массовое оплетение (Оплетение)
 
 local timerBlazingMushroomCD						= mod:NewNextCountTimer(49, 423260, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFieryGrowthCD							= mod:NewNextCountTimer(49, 424581, DBM_COMMON_L.DISPELS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerFallingStarsCD							= mod:NewNextCountTimer(49, 420236, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Падающая звезда (Обстрел)
-local timerMassEntanglementCD						= mod:NewNextCountTimer(49, 424495, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3)
+local timerMassEntanglementCD						= mod:NewNextCountTimer(49, 424495, 269678, nil, nil, 3) --Массовое оплетение (Оплетение)
 local timerOwlCD									= mod:NewNextCountTimer(20, 425576, L.Feathers.." (%s)", nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Short name "Feathers"
 
 mod:AddSetIconOption("SetIconOnFieryGrowth", 424581, true, 0, {1, 2, 3, 4})
@@ -94,6 +94,7 @@ local timerFlamingGerminationCD						= mod:NewNextCountTimer(20, 423265, 99727, 
 local timerSuperNovaCD								= mod:NewNextTimer(20, 424140, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Сверхновая
 
 local yellFieryGrowth								= mod:NewShortPosYell(424581, nil, false, 2, "YELL")
+local yellMassEntanglementFades						= mod:NewShortFadesYell(424495, nil, nil, nil, "YELL") --Массовое оплетение (Оплетение)
 
 --base abilities
 mod.vb.shroomCount = 0
@@ -297,7 +298,7 @@ function mod:OnCombatStart(delay)
 		timerFieryGrowthCD:Start(25.1-delay, 1)
 		timerMoonkinCD:Start(28.1-delay, 1)
 		timerFirebeamCD:Start(34.0, 1)
-		timerIntermission:Start(80.1-delay, 1.5)--Cast start
+		timerIntermission:Start(80-delay, 1.5)--Cast start
 	else--Normal and LFR are the same
 		difficultyName = "normal"
 		timerMassEntanglementCD:Start(6.0-delay, 1)
@@ -306,7 +307,7 @@ function mod:OnCombatStart(delay)
 		timerFallingStarsCD:Start(24.0-delay, 1)
 		timerMoonkinCD:Start(29.1-delay, 1)
 		timerFirebeamCD:Start(34.1, 1)
-		timerIntermission:Start(79.1-delay, 1.5)--Applied (cast start not in combat log on normal)
+		timerIntermission:Start(79-delay, 1.5)--Applied (cast start not in combat log on normal)
 	end
 end
 
@@ -420,6 +421,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnMassEntanglement:Show()
 			specWarnMassEntanglement:Play("targetyou")
+			yellMassEntanglementFades:Countdown(spellId)
 		end
 	elseif spellId == 420540 then--Moonkin Form starting
 		self.vb.moonkinCount = self.vb.moonkinCount + 1
@@ -462,12 +464,22 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetStage(1.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 			warnPhase:Play("phasechange")
-			timerPhaseCD:Start(48, 2) --47.2
+			timerIntermission:Stop()
+			if self:IsNormal() then
+				timerPhaseCD:Start(46, 2) --47.2
+			else
+				timerPhaseCD:Start(43.3, 2) --Хороший таймер под героик 47.2
+			end
 		else
 			self:SetStage(2.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2.5))
 			warnPhase:Play("phasechange")
-			timerPhaseCD:Start(29.7, 3) --28.1
+			timerIntermission:Stop()
+			if self:IsNormal() then
+				timerPhaseCD:Start(32.7, 3) --28.1
+			else
+				timerPhaseCD:Start(30, 3) -- +-Хороший таймер под героик 28.1
+			end
 		end
 	elseif spellId == 424180 or spellId == 424140 then --Сверхновая 424140 intermission, 424180 unknown 
 		timerSupernova:Start()
@@ -505,7 +517,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerFieryGrowthCD:Start(42, 1)
 				timerTreeofFlameCD:Start(46, 1)
 				timerFlamingGerminationCD:Start(55, 1)
-				timerIntermission:Start(107.2)
+				timerIntermission:Start(120) --Хороший таймер под героик
 				--timerPhaseCD:Start(100, 2.5)
 			elseif self:IsNormal() then--Live Vetted
 				timerMassEntanglementCD:Start(26, 1)
@@ -514,6 +526,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerFieryGrowthCD:Start(50, 1)
 				timerTreeofFlameCD:Start(53, 1)
 				timerFlamingGerminationCD:Start(57, 1)
+				timerIntermission:Start(110) --Пока тестовое время, надо найти точное
 			else--LFR unknown again, normal placeholders
 				timerMassEntanglementCD:Start(26, 1)
 				timerFallingStarsCD:Start(36, 1)

@@ -6,7 +6,7 @@ mod:SetRevision("20260630000000")
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 425062 425149 425995 429180",
+	"SPELL_CAST_START 425062 425149 425995 429180 428023",
 	"SPELL_CAST_SUCCESS 429180",
 	"SPELL_AURA_APPLIED 428765 425300 425388 425381 428077",
 --	"SPELL_AURA_APPLIED_DOSE",
@@ -22,6 +22,7 @@ local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, ni
 local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
 local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee") --Заряженный Тьмой удар
 
+local specWarnDreamsWrath					= mod:NewSpecialWarningDodge(428023, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Гнев Сна (Фронталка)
 local specWarnLumberingSlam					= mod:NewSpecialWarningDodge(429180, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 local specWarnDreamWalk						= mod:NewSpecialWarningDispel(428077, "RemoveMagic", nil, nil, 1, 2) --Хождение во сне
 local specWarnInfernoHeart					= mod:NewSpecialWarningMoveAway(425388, nil, nil, nil, 1, 2) --Сердце Преисподней
@@ -70,6 +71,11 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(4, 5) then
 			specWarnLumberingSlam:Show()
 			specWarnLumberingSlam:Play("shockwave")
+		end
+	elseif spellId == 428023 then
+		if self:AntiSpam(4, 5) then
+			specWarnDreamsWrath:Show()
+			specWarnDreamsWrath:Play("shockwave")
 		end
 	end
 end
