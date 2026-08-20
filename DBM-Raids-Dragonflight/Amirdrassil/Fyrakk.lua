@@ -123,7 +123,7 @@ mod:AddPrivateAuraSoundOption(428970, true, 428968, 1)--Shadow Cage
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26670))
 local warnBloom										= mod:NewYouAnnounce(423717, 1)
 local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer") --Пасть Преисподней
-local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4) --Вечная огненная буря (Огненная буря)
+local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 80066) --Вечная огненная буря (Торнадо)
 local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)--Short name "Swirl" 143413
 
 local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
@@ -133,7 +133,7 @@ local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, ni
 local timerApocalypseroarCD							= mod:NewCDCountTimer(49, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
 local timerApocalypseroar							= mod:NewCastTimer(4.8, 422837, 140459, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Апокалиптический рык (Рык)
 local timerInfernalMawCD							= mod:NewCDCountTimer(49, 425492, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пасть Преисподней
-local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 419506, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Вечная огненная буря (Огненная буря)
+local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 80066, nil, nil, 7, nil, DBM_COMMON_L.HEALER_ICON, nil, 3, 5) --Вечная огненная буря (Торнадо)
 local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 37641, nil, nil, 3) --Парящие угли (Вихрь)
 local timerCorruptedSeedsCD							= mod:NewCDCountTimer(41, 430048, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 
