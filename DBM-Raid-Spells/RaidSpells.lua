@@ -419,8 +419,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		elseif self:AntiSpam(5, "bloodlust") then
 			warnPrimalRage:Show(sourceName, spellName)
 		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellId))
---[[	elseif spellId == 90355 or spellId == 160452 then --Все варианты геры ханта
+	--	DBM:AddMsg(L.SpellFound:format(sourceName, spellId))
+	elseif spellId == 90355 or spellId == 160452 then --Все варианты геры ханта
 	
 		local petName = args.sourceName
 		if not petName then return end
@@ -439,7 +439,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			DBM:Debug('Checking proshlyap of Murchal spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(playerName) .. ' ', 2)
 			DBM:Debug('Checking proshlyap of Murchal spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
 			DBM:AddMsg(L.SpellFound:format(playerName, spellId))
-		end]]
+		end
 --[[	elseif spellId == 10059 then --Штормград
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnPortal then
 			prepareMessage(self, "premsg_Spells_stormwind", spellId, sourceName)

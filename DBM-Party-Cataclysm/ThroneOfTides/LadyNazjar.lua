@@ -74,7 +74,7 @@ if (wowToc >= 100200) then
 	function mod:OnCombatStart(delay)
 		self:SetStage(1)
 		self.vb.tempestCount = 0
-		timerFocusedTempestCD:Start(7.2-delay)
+		timerFocusedTempestCD:Start(7-delay) --7.2
 		timerGeyserCD:Start(16.1-delay)
 		timerShockBlastCD:Start(19.7-delay)
 	end

@@ -83,7 +83,7 @@ if (wowToc >= 100200) then
 			timerGenesis:Start()
 			timerGenesisCD:Start(nil, self.vb.GenesisCount+1)
 			if timerColossalBlowCD:GetRemaining() < 10 then
-				timerColossalBlowCD:AddTime(4.5, self.vb.rottenCount+1)
+				timerColossalBlowCD:AddTime(4.5, self.vb.GenesisCount+1)
 			end
 		elseif spellId == 428823 then
 			self.vb.eruptionCount = self.vb.eruptionCount + 1

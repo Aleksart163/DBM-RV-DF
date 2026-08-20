@@ -137,6 +137,7 @@ local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 80066, nil,
 local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 37641, nil, nil, 3) --Парящие угли (Вихрь)
 local timerCorruptedSeedsCD							= mod:NewCDCountTimer(41, 430048, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 
+mod:AddInfoFrameOption(423601, true) --Семя Амирдрассила
 mod:AddPrivateAuraSoundOption(423601, true, 423601, 1) --Семя Амирдрассила
 mod:AddPrivateAuraSoundOption(430048, true, 430048, 1) --Оскверненное семя
 mod:AddPrivateAuraSoundOption(425525, true, 422935, 4) --Вечная огненная буря
@@ -162,8 +163,9 @@ mod.vb.addsAlive = 0
 mod.vb.roarCount = 0
 mod.vb.swirlCount = 0
 
+local seedOfAmirdrassil = DBM:GetSpellName(423601)
 local proshlyapationSpiritsHeroicTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4} --Хорошие таймеры для героика (Разрабы задумали 8 каст вообще убрать?)
-local proshlyapationSpiritsNormalTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 36.5} --Хорошие таймеры для обычки (8 таймера так же нету)
+local proshlyapationSpiritsNormalTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24, 36.5} --Хорошие таймеры для обычки (8 таймера так же нету)
 
 local allTimers = {
 	[1.5] = {
@@ -292,6 +294,10 @@ local function startPhase3(self)
 				timerEternalFirestormSwirlCD:Start(3.8, 1)
 				self:Schedule(3.8, eternalFireSwirlLoop, self)
 			end
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(423601))
+			DBM.InfoFrame:Show(6, "playergooddebuff", seedOfAmirdrassil)
 		end
 	end
 end

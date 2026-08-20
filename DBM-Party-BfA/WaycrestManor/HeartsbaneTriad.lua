@@ -28,7 +28,7 @@ mod:RegisterEventsInCombat(
 --TODO, outlier timer for killing solena last and actually seeing a second soul manipulation before iris ends
 --Сестра Брайар
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17738))
-local specWarnBrambleBolt			= mod:NewSpecialWarningInterruptCount(260701, "HasInterrupt", nil, nil, 1, 2) --Колючая стрела
+local specWarnBrambleBolt			= mod:NewSpecialWarningInterrupt(260701, "HasInterrupt", nil, nil, 1, 2) --Колючая стрела
 local specWarnJaggedNettles			= mod:NewSpecialWarningTarget(260741, "Healer", nil, 2, 1, 2) --Зазубренные стебли
 local specWarnJaggedNettles2		= mod:NewSpecialWarningYou(260741, nil, nil, nil, 3, 4) --Зазубренные стебли
 
@@ -38,7 +38,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(17739))
 local warnUnstableMark				= mod:NewTargetAnnounce(260703, 2, nil, nil, 167180) --Нестабильная руническая метка (Бомбы)
 local warnAuraofDreadOver			= mod:NewEndAnnounce(268086, 1) --Аура ужаса
 
-local specWarnRuinousBolt			= mod:NewSpecialWarningInterruptCount(260700, "HasInterrupt", nil, nil, 1, 2) --Губительная стрела
+local specWarnRuinousBolt			= mod:NewSpecialWarningInterrupt(260700, "HasInterrupt", nil, nil, 1, 2) --Губительная стрела
 local specWarnUnstableMark			= mod:NewSpecialWarningMoveAway(260703, nil, 174716, nil, 1, 2) --Нестабильная руническая метка (Бомба)
 local specWarnAuraofDread			= mod:NewSpecialWarningKeepMove(268086, nil, nil, nil, 1, 2) --Аура ужаса
 
@@ -47,7 +47,7 @@ local timerUnstableRunicMarkCD		= mod:NewCDTimer(12.5, 260703, 167180, nil, nil,
 mod:AddRangeFrameOption(6, 260703)
 --Сестра Солена
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17740))
-local specWarnSoulBolt				= mod:NewSpecialWarningInterruptCount(260699, "HasInterrupt", nil, nil, 1, 2) --Стрела души
+local specWarnSoulBolt				= mod:NewSpecialWarningInterrupt(260699, "HasInterrupt", nil, nil, 1, 2) --Стрела души
 local specWarnSoulManipulation		= mod:NewSpecialWarningSwitch(260907, nil, nil, nil, 1, 2) --Управление душой
 
 local timerSoulManipulationCD		= mod:NewCDTimer(12.5, 260907, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Управление душой Always tank? if not, remove tank icon
@@ -68,8 +68,6 @@ local yellUnstableMarkFades			= mod:NewShortFadesYell(260703, 174716, nil, nil, 
 mod:AddSetIconOption("SetIconOnTriad", 260805, true, 5, {8}) --Радужный кристалл
 mod:AddInfoFrameOption(260773, true)
 
-mod.vb.interruptCount = 0
-mod.vb.queueCount = 0
 local IrisBuff = DBM:GetSpellName(260805) --Радужный кристалл
 
 function mod:NettlesTargetQuestionMark(targetname)
@@ -81,8 +79,6 @@ function mod:NettlesTargetQuestionMark(targetname)
 end
 
 function mod:OnCombatStart()
-	self.vb.interruptCount = 0
-	self.vb.queueCount = 0
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM_CORE_L.INFOFRAME_POWER)
 		DBM.InfoFrame:Show(3, "enemypower", 2)
@@ -117,56 +113,23 @@ function mod:SPELL_CAST_START(args)
 		--"<51.02 23:48:06> [CLEU] SPELL_DAMAGE#Creature-0-3882-1862-7607-131825-00007795D8#Sister Briar#Player-60-0BA0A53F#Lethorr#260741#Jagged Nettles", -- [682]
 		--I guess if it starts spitting out random wrong targets, i'll hear about it, so here is to a drycode find out! Maybe the boss looks at a 3rd target mid cast that transcritor missed?
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "NettlesTargetQuestionMark", 0.1, 7, true)
-	elseif spellId == 260699 and self.vb.queueCount == 1 then --Стрела души
-		if self.vb.interruptCount == 3 then self.vb.interruptCount = 0 end
-		self.vb.interruptCount = self.vb.interruptCount + 1
-		local kickCount = self.vb.interruptCount
-		specWarnSoulBolt:Show(args.sourceName, kickCount)
-		if kickCount == 1 then
-			specWarnSoulBolt:Play("kick1r")
-		elseif kickCount == 2 then
-			specWarnSoulBolt:Play("kick2r")
-		elseif kickCount == 3 then
-			specWarnSoulBolt:Play("kick3r")
+	elseif spellId == 260699 then --Стрела души
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnSoulBolt:Show(args.sourceName)
+			specWarnSoulBolt:Play("kickcast")
 		end
-	--	if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-	--		specWarnSoulBolt:Show(args.sourceName)
-	--		specWarnSoulBolt:Play("kickcast")
-	--	end
 		DBM:Debug("Murchal proshlyap (Каст Стрелы души)", 2)
-	elseif spellId == 260700 and self.vb.queueCount == 2 then --Губительная стрела
-		if self.vb.interruptCount == 3 then self.vb.interruptCount = 0 end
-		self.vb.interruptCount = self.vb.interruptCount + 1
-		local kickCount = self.vb.interruptCount
-		specWarnRuinousBolt:Show(args.sourceName, kickCount)
-		if kickCount == 1 then
-			specWarnRuinousBolt:Play("kick1r")
-		elseif kickCount == 2 then
-			specWarnRuinousBolt:Play("kick2r")
-		elseif kickCount == 3 then
-			specWarnRuinousBolt:Play("kick3r")
+	elseif spellId == 260700 then --Губительная стрела
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnRuinousBolt:Show(args.sourceName)
+			specWarnRuinousBolt:Play("kickcast")
 		end
-	--	if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-	--		specWarnRuinousBolt:Show(args.sourceName)
-	--		specWarnRuinousBolt:Play("kickcast")
-	--	end
 		DBM:Debug("Murchal proshlyap (Каст Губительной стрелы)", 2)
-	elseif spellId == 260701 and self.vb.queueCount == 3 then --Колючая стрела
-		if self.vb.interruptCount == 3 then self.vb.interruptCount = 0 end
-		self.vb.interruptCount = self.vb.interruptCount + 1
-		local kickCount = self.vb.interruptCount
-		specWarnBrambleBolt:Show(args.sourceName, kickCount)
-		if kickCount == 1 then
-			specWarnBrambleBolt:Play("kick1r")
-		elseif kickCount == 2 then
-			specWarnBrambleBolt:Play("kick2r")
-		elseif kickCount == 3 then
-			specWarnBrambleBolt:Play("kick3r")
+	elseif spellId == 260701 then --Колючая стрела
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnBrambleBolt:Show(args.sourceName)
+			specWarnBrambleBolt:Play("kickcast")
 		end
-	--	if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-	--		specWarnBrambleBolt:Show(args.sourceName)
-	--		specWarnBrambleBolt:Play("kickcast")
-	--	end
 		DBM:Debug("Murchal proshlyap (Каст Колючей стрелы)", 2)
 	end
 end
@@ -203,23 +166,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnActiveTriad:Show(args.destName)
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 135360 or cid == 131825 then --Сестра Брайар
-			self.vb.queueCount = 3
-			self.vb.interruptCount = 0
 			timerJaggedNettlesCD:Start(6.2, args.destGUID)--CAST START (6-9)
 		elseif cid == 135358 or cid == 131823 then --Сестра Маладия
-			self.vb.queueCount = 2
-			self.vb.interruptCount = 0
 			timerUnstableRunicMarkCD:Start(8.6, args.destGUID)--CAST SUCCESS (8-10)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(6)
 			end
 		elseif cid == 135359 or cid == 131824 then --Сестра Солена
-			self.vb.queueCount = 1
-			self.vb.interruptCount = 0
 			timerSoulManipulationCD:Start(8, args.destGUID)--CAST START (8-11)
 		end
 		if self.Options.SetIconOnTriad then
-			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 6, "SetIconOnTriad", nil, nil, nil, true)
+		--	self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 6, "SetIconOnTriad", nil, nil, nil, true)
+			--попробуем такой вариант, т.к. старый работает через раз
+			self:ScanForMobs(args.sourceGUID, 2, 8, 1, nil, 6, "SetIconOnTriad", nil, nil, nil, true)
 		end
 	elseif spellId == 260703 then
 		warnUnstableMark:CombinedShow(0.3, args.destName)

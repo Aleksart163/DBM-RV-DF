@@ -69,7 +69,7 @@ if (wowToc >= 100200) then
 	local specWarnInkBlast								= mod:NewSpecialWarningInterrupt(428526, "HasInterrupt", nil, nil, 1, 2) --Чернильный взрыв
 
 	local timerDelugeofFilthCD							= mod:NewCDCountTimer(30.3, 428594, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1) --Поток грязи (Адды) 30-31.5
-	local timerInkBlastCD								= mod:NewCDNPTimer(3.9, 428526, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чернильный взрыв 4.2-4.9 CD, nameplate only bar
+	local timerInkBlastCD								= mod:NewCDNPTimer(3, 428526, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Чернильный взрыв 4.2-4.9 CD, nameplate only bar
 
 	local yellMurkSpew									= mod:NewYell(428530, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Мутный поток (Фронталка)
 	local yellBlottingBarrage							= mod:NewYell(428407, nil, nil, nil, "YELL") --Обстрел чернилами
@@ -80,7 +80,7 @@ if (wowToc >= 100200) then
 	mod.vb.murkCount = 0
 	mod.vb.delugeCount = 0
 
-	local proshlyapationPutridRoarTimers = {18.2, 35.2, 36.2, 36.3} --Первые 4 таймеров точные
+	local proshlyapationPutridRoarTimers = {18.2, 35.2, 35.2, 36.3} --Первые 4 таймеров точные
 	local proshlyapationBlottingBarrageTimers = {5.6, 34.2, 35.2, 35.2} --Первые 4 таймеров точные
 	local proshlyapationDelugeofFilthTimers = {20.6, 35.2, 34.2} --Первые 3 таймеров точные
 	
@@ -92,7 +92,7 @@ if (wowToc >= 100200) then
 		self.vb.delugeCount = 0
 		timerBlottingBarrageCD:Start(5.6-delay, 1)
 		timerMurkSpewCD:Start(10.5-delay, 1)
-		timerCleansingFluxCD:Start(15.2-delay)--SUCCESS, no reason to warn when it starts, it's 14 second cast
+		timerCleansingFluxCD:Start(15-delay) --15.2 SUCCESS, no reason to warn when it starts, it's 14 second cast
 		timerPutridRoarCD:Start(18.2-delay, 1)
 		timerDelugeofFilthCD:Start(20.6-delay, 1)
 	end
