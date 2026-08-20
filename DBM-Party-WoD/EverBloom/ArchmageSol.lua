@@ -64,8 +64,8 @@ if (wowToc >= 100200) then
 		--Fire alone first time (fire + arcane for 4)
 		if self.vb.comboCount % 3 == 1 then
 			--Правильные тайминги Фаер + Фрост
-			timerGlacialFusionCD:Start(22.7) --Фрост
 			timerCinderboltStormCD:Start(21.8, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING) --Фаер
+			timerGlacialFusionCD:Start(21.8) --Фрост
 			--timerComboCD:Start(DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.ORBS)
 		--Frost + Previous (fire)
 		elseif self.vb.comboCount % 3 == 2 then
