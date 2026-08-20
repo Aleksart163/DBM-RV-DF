@@ -441,12 +441,12 @@ function mod:SPELL_CAST_START(args)
 				specWarnIncarnate:Play("carefly")
 			else
 				specWarnIncarnate:Play("mobsoon")--Stage 2, he's lifting off for big adds
+				timerExplodingCoreCD:Start(nil, self.vb.incarnCount+1)
 			end
 			local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.incarnCount+1)
 			if timer then
 				timerIncarnateCD:Start(timer, self.vb.incarnCount+1)
 			end
-			timerExplodingCoreCD:Start(nil, self.vb.incarnCount+1)
 		end
 	elseif spellId == 422518 then
 		self.vb.firestormCount = self.vb.firestormCount + 1

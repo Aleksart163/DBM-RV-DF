@@ -7,7 +7,7 @@ mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 61994 212040 212056 212036 212048 212051 7720 361178",
-	"SPELL_CAST_SUCCESS 391776 31821 61994 381301 391054 272678 264667 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
+	"SPELL_CAST_SUCCESS 391776 31821 61994 381301 391054 272678 385403 61999 20484 95750 161399 157757 80353 32182 90355 2825 160452 10059 11416 11419 32266 49360 11417 11418 11420 32267 49361 33691 53142 88345 88346 132620 132626 176246 176244 224871 29893 83958 21169 97462 205223 62618 64901 390386 740 64843 363534",
 	"SPELL_AURA_APPLIED 34477 57934 6940 204018 20707 33206 116849 1022 29166 64901 102342 357170 47788 10060 369459",
 	"SPELL_AURA_REMOVED 29166 64901 197908",
 	"SPELL_SUMMON 67826 199109 199115 195782 98008 207399 256153",
@@ -49,10 +49,9 @@ local warnFuryoftheAspects			= mod:NewTargetSourceAnnounce2(390386, 1) --Яро�
 local warnHeroism					= mod:NewTargetSourceAnnounce2(32182, 1) --Героизм
 local warnBloodlust					= mod:NewTargetSourceAnnounce2(2825, 1) --Кровожадность
 local warnFeralHideDrums			= mod:NewTargetSourceAnnounce2(381301, 1) --Барабаны из дикой шкуры
-local warnHysteria					= mod:NewSpellAnnounce(90355, 1) --Древняя истерия
-local warnNetherwinds				= mod:NewSpellAnnounce(160452, 1) --Ветер пустоты
-local warnPrimalRage				= mod:NewSpellAnnounce(264667, 1) --Исступление
-local warnPrimalRage2				= mod:NewSpellAnnounce(272678, 1) --Исступление
+local warnPrimalRage				= mod:NewTargetSourceAnnounce2(272678, 1) --Исступление
+local warnHysteria					= mod:NewTargetSourceAnnounce2(90355, 1) --Древняя истерия
+local warnNetherwinds				= mod:NewTargetSourceAnnounce2(160452, 1) --Ветер пустоты
 --бр
 local warnRebirth					= mod:NewAnnounce("Rebirth", 1, 20484) --Возрождение
 --local warnRebirth					= mod:NewTargetSourceAnnounce(20484, 1) --Возрождение
@@ -90,7 +89,6 @@ local specWarnSoulstone				= mod:NewSpecialWarningYou(20707, nil, nil, nil, 1, 2
 local specWarnBlessingSpellwarding	= mod:NewSpecialWarningYou(204018, nil, nil, nil, 1, 2) --Благословение защиты от заклинаний
 local specWarnBlessingSacrifice		= mod:NewSpecialWarningYou(6940, nil, nil, nil, 1, 2) --Жертвенное благословение
 local specWarnSourceofMagic			= mod:NewSpecialWarningYou(369459, nil, nil, nil, 1, 2) --Магический источник
-local specWarnPrimalRage			= mod:NewSpecialWarningYou(264667, nil, nil, nil, 1, 2) --Исступление
 local specWarnPowerInfusion			= mod:NewSpecialWarningYou(10060, nil, nil, nil, 1, 2) --Придание сил
 local specWarnGuardianSpirit		= mod:NewSpecialWarningYou(47788, nil, nil, nil, 1, 2) --Оберегающий дух
 local specWarnTimeDilation			= mod:NewSpecialWarningYou(357170, nil, nil, nil, 1, 2) --Растяжение времени
@@ -117,6 +115,7 @@ local yellFuryoftheAspects			= mod:NewShortYell(390386, nil, nil, nil, "YELL") -
 local yellHeroism					= mod:NewShortYell(32182, nil, nil, nil, "YELL") --Героизм
 local yellBloodlust					= mod:NewShortYell(2825, nil, nil, nil, "YELL") --Кровожадность
 local yellFeralHideDrums			= mod:NewShortYell(381301, nil, nil, nil, "YELL") --Барабаны из дикой шкуры
+local yellPrimalRage				= mod:NewShortYell(272678, nil, nil, nil, "YELL") --Исступление
 local yellAuraMastery				= mod:NewShortYell(31821, nil, nil, nil, "YELL") --Владение аурами
 local yellRitualSummoning			= mod:NewShortYell(698, nil, nil, nil, "YELL") --Ритуал призыва
 local yellCreateSoulwell			= mod:NewShortYell(29893, nil, nil, nil, "YELL") --Создание источника душ
@@ -154,6 +153,7 @@ mod:AddBoolOption("YellOnToys", true) --игрушки
 local Rebirth = DBM:GetSpellName(20484) 
 local typeInstance = nil
 local DbmRV = "[DBM RV] "
+local prefix = "Питомец "
 
 --local murchalOchkenProshlyapation = DBM:GetModByName("MPlusAffixes")
 
@@ -407,130 +407,39 @@ function mod:SPELL_CAST_SUCCESS(args)
 		elseif self:AntiSpam(5, "bloodlust") then
 			warnHeroism:Show(sourceName, spellName)
 		end
-	--[[	if self:AntiSpam(5, "bloodlust") then
-			warnHeroism:Show(sourceName, spellName)
-		end
-		if self.Options.YellOnHeroism then
+	--[[	if self.Options.YellOnHeroism then
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
 			prepareMessage(self, "premsg_Spells_heroism", spellId, sourceName)
 		end]]
 		DBM:Debug('Checking proshlyap of Murchal spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
 	--	DBM:AddMsg(L.SpellFound:format(sourceName, spellId))
-	elseif spellId == 264667 then --Исступление
---[[		local petGUID = UnitGUID("pet")
-		if petGUID then
-			local petOwner = nil
-			local petOwnerName = nil
-			for i = 1, GetNumBattlefieldScores() do
-				petOwner = GetBattlefieldScore(i)
-            
-				if petOwner and petOwner.guid == petGUID then
-					petOwnerName = petOwner.name
-					break
-				end
-			end
-		end
-		if self:AntiSpam(5, "bloodlust") then
-			warnPrimalRage:Show(sourceName)
-			specWarnPrimalRage:Show()
-		end
-		if self.Options.YellOnHeroism then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-		--	prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
-			prepareMessage(self, "premsg_Spells_primalRage", spellId, petOwnerName)
-		end]]
-	--	specWarnPrimalRage:Show()
-		if args:IsPetSource() then
-			local playerClass = select(2, UnitClass("player"))
-			if playerClass == "HUNTER" then
-				local player = GetUnitName("player")
-			end
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage", spellId, player)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal1 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
---[[		else
-			if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
-			end
-			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage1)", 2)]]
-		else
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage", spellId, sourceName)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal2 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 	elseif spellId == 272678 then --Исступление
-	--	specWarnPrimalRage:Show()
-		if args:IsPetSource() then
-			local playerClass = select(2, UnitClass("player"))
-			if playerClass == "HUNTER" then
-				local player = GetUnitName("player")
+		if args:IsPlayerSource() then
+			yellPrimalRage:Yell(SpellLinks(spellId))
+		elseif self:AntiSpam(5, "bloodlust") then
+			warnPrimalRage:Show(sourceName, spellName)
+		end
+		DBM:AddMsg(L.SpellFound:format(sourceName, spellId))
+--[[	elseif spellId == 90355 or spellId == 160452 then --Все варианты геры ханта
+	
+		local petName = args.sourceName
+		if not petName then return end
+		
+		local playerName = nil
+		if petName:sub(1, #prefix) == prefix then
+			playerName = petName:sub(#prefix + 1)
+		end
+		
+		if playerName then
+			if spellId == 90355 then
+				warnHysteria:Show(playerName, spellName)
+			elseif spellId == 160452 then
+				warnNetherwinds:Show(playerName, spellName)
 			end
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage2", spellId, player)
-			end]]
+			DBM:Debug('Checking proshlyap of Murchal spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(playerName) .. ' ', 2)
 			DBM:Debug('Checking proshlyap of Murchal spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
---[[		else
-			if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_primalRage2", spellId, sourceName)
-			end
-			DBM:Debug("Checking proshlyapation of Murchal2 (PrimalRage2)", 2)]]
-		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
-	elseif spellId == 90355 then --Древняя истерия (пет ханта)
---[[		if self:AntiSpam(5, "bloodlust") then
-			warnHysteria:Show(sourceName)
-		end
-		if self.Options.YellOnHeroism then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-			prepareMessage(self, "premsg_Spells_hysteria", spellId, sourceName)
+			DBM:AddMsg(L.SpellFound:format(playerName, spellId))
 		end]]
-	--	specWarnPrimalRage:Show()
-		if args:IsPetSource() then
-			local playerClass = select(2, UnitClass("player"))
-			if playerClass == "HUNTER" then
-				local player = GetUnitName("player")
-			end
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_hysteria", spellId, player)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal1 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		else
-		--[[	if self.Options.YellOnHeroism then
-		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_hysteria", spellId, sourceName)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal2 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
-	elseif spellId == 160452 then --Ветер пустоты (пет ханта)
---[[		if self:AntiSpam(5, "bloodlust") then
-			warnNetherwinds:Show(sourceName)
-		end
-		if self.Options.YellOnHeroism then
-	--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-			prepareMessage(self, "premsg_Spells_winds", spellId, sourceName)
-		end]]
-	--	specWarnPrimalRage:Show()
-		if args:IsPetSource() then
-			local playerClass = select(2, UnitClass("player"))
-			if playerClass == "HUNTER" then
-				local player = GetUnitName("player")
-			end
-		--[[	if self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_winds", spellId, player)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal1 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		else
-		--[[	if self.Options.YellOnHeroism then
-		--	if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnHeroism then
-				prepareMessage(self, "premsg_Spells_winds", spellId, sourceName)
-			end]]
-			DBM:Debug('Checking proshlyap of Murchal2 spell id: ' .. tostring(spellId) .. ', spell name: ' .. tostring(DBM:GetSpellInfo(spellId)) .. ', name: ' .. tostring(sourceName) .. ' ', 2)
-		end
-		DBM:AddMsg(L.SpellFound:format(sourceName, spellName))
 --[[	elseif spellId == 10059 then --Штормград
 		if not DBM.Options.IgnoreRaidAnnounce and self.Options.YellOnPortal then
 			prepareMessage(self, "premsg_Spells_stormwind", spellId, sourceName)
