@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 424495",
 	"SPELL_AURA_APPLIED 422000 424581 424495 420540 425582 424258 422115 424579 424665 424180 422509 424582 424140 421603",--424580 426686 420238
 	"SPELL_AURA_APPLIED_DOSE 422000 424258 424665 424582",
-	"SPELL_AURA_REMOVED 424581 421603 424180 422115 424140",--424580
+	"SPELL_AURA_REMOVED 424581 421603 424180 422115 424140 424495",--424580
 	"SPELL_PERIODIC_DAMAGE 424499 423649",
 	"SPELL_PERIODIC_MISSED 424499 423649"
 )
@@ -35,42 +35,42 @@ local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(423649, nil, nil, nil, 1, 8)
 
 local timerPhaseCD									= mod:NewStageCountTimer(60, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
-local timerIntermission								= mod:NewIntermissionTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
+local timerIntermission								= mod:NewIntermissionTimer(30, 422509, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Stage One: Moonkin of the Flame
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27488))
 ----Tindral Sageswift
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27509))
-local warnSearingWrath								= mod:NewStackAnnounce(422000, 2, nil, "Tank|Healer")
-local warnBlazingMushroom							= mod:NewCountAnnounce(423260, 3, nil, nil, nil, nil, nil, 2)
-local warnFieryGrowth								= mod:NewTargetCountAnnounce(424581, 3)
+local warnSearingWrath								= mod:NewStackAnnounce(422000, 2, nil, "Tank|Healer") --Жгучий гнев
+local warnBlazingMushroom							= mod:NewCountAnnounce(423260, 3, nil, nil, nil, nil, nil, 2) --Пылающий гриб
+local warnFieryGrowth								= mod:NewTargetCountAnnounce(424581, 3) --Огненный рост
 local warnLingeringCinder							= mod:NewCountAnnounce(424582, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424582))
-local warnIncarnationOwl							= mod:NewCountAnnounce(425576, 4)
+local warnIncarnationOwl							= mod:NewCountAnnounce(425576, 4) --Пылающая бомба (Перья)
 
-local specWarnSearingWrath							= mod:NewSpecialWarningTaunt(422000, nil, nil, nil, 1, 2)
-local specWarnFieryGrowth							= mod:NewSpecialWarningMoveAway(424581, nil, nil, nil, 1, 2)
+local specWarnSearingWrath							= mod:NewSpecialWarningTaunt(422000, nil, nil, nil, 1, 2) --Жгучий гнев
+local specWarnFieryGrowth							= mod:NewSpecialWarningMoveAway(424581, nil, nil, nil, 1, 2) --Огненный рост
 local specWarnFallingStars							= mod:NewSpecialWarningCount(420236, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Падающая звезда (Обстрел)
 local specWarnMassEntanglement						= mod:NewSpecialWarningYou(424495, nil, 269678, nil, 1, 2) --Массовое оплетение (Оплетение)
 
-local timerBlazingMushroomCD						= mod:NewNextCountTimer(49, 423260, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerFieryGrowthCD							= mod:NewNextCountTimer(49, 424581, DBM_COMMON_L.DISPELS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerBlazingMushroomCD						= mod:NewNextCountTimer(49, 423260, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пылающий гриб
+local timerFieryGrowthCD							= mod:NewNextCountTimer(49, 424581, DBM_COMMON_L.DISPELS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Огненный рост (Рассеивания)
 local timerFallingStarsCD							= mod:NewNextCountTimer(49, 420236, DBM_COMMON_L.BOMBING.." (%s)", nil, nil, 3) --Падающая звезда (Обстрел)
 local timerMassEntanglementCD						= mod:NewNextCountTimer(49, 424495, 269678, nil, nil, 3) --Массовое оплетение (Оплетение)
-local timerOwlCD									= mod:NewNextCountTimer(20, 425576, L.Feathers.." (%s)", nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Short name "Feathers"
+local timerOwlCD									= mod:NewNextCountTimer(20, 425576, L.Feathers.." (%s)", nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON) --Пылающая бомба (Перья)
 
 mod:AddSetIconOption("SetIconOnFieryGrowth", 424581, true, 0, {1, 2, 3, 4})
 ----Moonkin of the Flame
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27495))
-local warnIncarnationMoonkin						= mod:NewCountAnnounce(420540, 2)
+local warnIncarnationMoonkin						= mod:NewCountAnnounce(420540, 2) --Воплощение: лунный совух
 
-local specWarnFireBeam								= mod:NewSpecialWarningCount(421398, nil, nil, nil, 2, 2)
+local specWarnFireBeam								= mod:NewSpecialWarningCount(421398, nil, nil, nil, 2, 2) --Луч огня
 
-local timerMoonkinCD								= mod:NewNextCountTimer(20, 420540, L.MoonkinForm.." (%s)", false, nil, 6)--Kinda redundant, ability has own timer
-local timerFirebeamCD								= mod:NewNextCountTimer(49, 421398, nil, nil, nil, 3)
+local timerMoonkinCD								= mod:NewNextCountTimer(20, 420540, L.MoonkinForm.." (%s)", false, nil, 6) --Воплощение: лунный совух (Форма Лунного совуха)
+local timerFirebeamCD								= mod:NewNextCountTimer(49, 421398, nil, nil, nil, 3) --Луч огня
 --Intermission: Burning Pursuit
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27500))
-local warnEmpoweredFeather							= mod:NewYouAnnounce(422509, 1)
-local warnDreamEssence								= mod:NewCountAnnounce(424258, 1, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424258))
+local warnEmpoweredFeather							= mod:NewYouAnnounce(422509, 1) --Усиленное перо
+local warnDreamEssence								= mod:NewCountAnnounce(424258, 1, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424258)) --Сущность Сна
 local warnSuperNova									= mod:NewCastAnnounce(424140, 4) --Сверхновая
 local warnSuperNovaEnded							= mod:NewFadesAnnounce(424140, 1) --Сверхновая
 
@@ -82,18 +82,18 @@ local timerSupernova								= mod:NewCastTimer(20, 424140, nil, nil, nil, 2, nil
 mod:AddInfoFrameOption(424140, true) --Сверхновая
 --Stage Two: Tree of the Flame
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27506))
-local warnIncarnationTreeofFlame					= mod:NewCountAnnounce(422115, 2)
-local warnSupressiveEmber							= mod:NewTargetAnnounce(424579, 3, nil, false)
-local warnSeedofFlame								= mod:NewCountAnnounce(424665, 1, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424665))
+local warnIncarnationTreeofFlame					= mod:NewCountAnnounce(422115, 2) --Воплощение: древо пламени
+local warnSupressiveEmber							= mod:NewTargetAnnounce(424579, 3, nil, false) --Подавляющие угли
+local warnSeedofFlame								= mod:NewCountAnnounce(424665, 1, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424665)) --Семя пламени
 
-local specWarnSupressingEmber						= mod:NewSpecialWarningYou(424579, nil, nil, nil, 1, 2)
-local specWarnFlamingGermination					= mod:NewSpecialWarningCount(423265, nil, 99727, nil, 2, 2)
+local specWarnSupressingEmber						= mod:NewSpecialWarningYou(424579, nil, nil, nil, 1, 2) --Подавляющие угли
+local specWarnFlamingGermination					= mod:NewSpecialWarningCount(423265, nil, 99727, nil, 2, 2) --Пылающее зарождение (Огненные семена)
 
-local timerTreeofFlameCD							= mod:NewNextCountTimer(20, 422115, L.TreeForm.." (%s)", false, nil, 6)--Kinda redundant, ability has own timer
-local timerFlamingGerminationCD						= mod:NewNextCountTimer(20, 423265, 99727, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Short name "Flame Seeds"
+local timerTreeofFlameCD							= mod:NewNextCountTimer(20, 422115, L.TreeForm.." (%s)", false, nil, 6) --Воплощение: древо пламени (Форма дерева)
+local timerFlamingGerminationCD						= mod:NewNextCountTimer(20, 423265, 99727, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Пылающее зарождение (Огненные семена)
 local timerSuperNovaCD								= mod:NewNextTimer(20, 424140, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Сверхновая
 
-local yellFieryGrowth								= mod:NewShortPosYell(424581, nil, false, 2, "YELL")
+local yellFieryGrowth								= mod:NewShortPosYell(424581, nil, false, 2, "YELL") --Огненный рост
 local yellMassEntanglementFades						= mod:NewShortFadesYell(424495, nil, nil, nil, "YELL") --Массовое оплетение (Оплетение)
 
 --base abilities
@@ -455,18 +455,20 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnSeedofFlame:Schedule(1, args.amount or 1)
 		end
 	elseif spellId == 421603 then--Incarnation of Owl (Intermission version)
+		timerIntermission:Stop()
 		timerBlazingMushroomCD:Stop()
 		timerFieryGrowthCD:Stop()
 		timerFallingStarsCD:Stop()
 		timerMassEntanglementCD:Stop()
-		timerTyphoon:Start()--5.5
+		timerFlamingGerminationCD:Stop()
+		timerFirebeamCD:Stop()
 		if self:GetStage(1) then
 			self:SetStage(1.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 			warnPhase:Play("phasechange")
-			timerIntermission:Stop()
+			timerTyphoon:Start(3.3)--5.5
 			if self:IsNormal() then
-				timerPhaseCD:Start(46, 2) --47.2
+				timerPhaseCD:Start(45.2, 2) --47.2
 			else
 				timerPhaseCD:Start(43.3, 2) --Хороший таймер под героик 47.2
 			end
@@ -474,9 +476,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetStage(2.5)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2.5))
 			warnPhase:Play("phasechange")
-			timerIntermission:Stop()
+			timerTyphoon:Start(3.8)--5.5
 			if self:IsNormal() then
-				timerPhaseCD:Start(32.7, 3) --28.1
+				timerPhaseCD:Start(33, 3) --28.1
 			else
 				timerPhaseCD:Start(30, 3) -- +-Хороший таймер под героик 28.1
 			end
@@ -496,6 +498,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.treeCount = 0
 		self.vb.beamCount = 0
 		self.vb.tranqCount = 0
+		timerPhaseCD:Stop()
 		if self:GetStage(2, 1) then
 			self:SetStage(2)
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -615,6 +618,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSupernova:Stop()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
+		end
+	elseif spellId == 424495 then
+		if args:IsPlayer() then
+			yellMassEntanglementFades:Cancel()
 		end
 	end
 end

@@ -359,7 +359,7 @@ function mod:SPELL_CAST_START(args)
 		if self:IsHard() then
 			timerBlazingThornsSoak:Start(5, self.vb.thornsCount)
 		end
-	elseif spellId == 417634 then
+	elseif spellId == 417634 then --Бушующее адское пламя (Адское пламя)
 		self.vb.infernoCount = self.vb.infernoCount + 1
 		specWarnRagingInferno:Show(DBM_COMMON_L.SHIELD)
 		specWarnRagingInferno:Play("findshield")
@@ -380,7 +380,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerFallingEmbersCD:Start(timer, self.vb.scorchingRootCount+1)
 		end
-	elseif spellId == 427343 then
+	elseif spellId == 427343 then --Огневорот
 		self.vb.infernoCount = self.vb.infernoCount + 1
 		specWarnFireWhirl:Show(self.vb.infernoCount)
 		specWarnFireWhirl:Play("watchstep")
@@ -431,7 +431,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerFlashFireCD:Start(timer, self.vb.thornsCount+1)
 		end
 	elseif spellId == 417634 then
-		specWarnRagingInferno2:Show()
+		specWarnRagingInferno2:Show(self.vb.infernoCount)
 		specWarnRagingInferno2:Play("defensive")
 --	elseif spellId == 428901 and self:AntiSpam(5, 2) then
 --		self.vb.ignitingCount = self.vb.ignitingCount + 1
