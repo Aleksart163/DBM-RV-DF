@@ -15,9 +15,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 419506 420422 417455 417431 412761 428963 428400 428971 428968 428965 419123 422837 410223 425492 422518 419144",
 	"SPELL_CAST_SUCCESS 430441 422935 422524 426368 417455",
-	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922",
+	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922 423601",
 	"SPELL_AURA_APPLIED_DOSE 417807 417443 429866 425494",
-	"SPELL_AURA_REMOVED 419144 421922",
+	"SPELL_AURA_REMOVED 419144 421922 423601",
 	"SPELL_PERIODIC_DAMAGE 419504 425483",
 	"SPELL_PERIODIC_MISSED 419504 425483",
 	"CHAT_MSG_MONSTER_YELL",
@@ -123,7 +123,7 @@ mod:AddPrivateAuraSoundOption(428970, true, 428968, 1)--Shadow Cage
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26670))
 local warnBloom										= mod:NewYouAnnounce(423717, 1)
 local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer") --Пасть Преисподней
-local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 80066) --Вечная огненная буря (Торнадо)
+local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 425530) --Вечная огненная буря (Огненное торнадо)
 local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)--Short name "Swirl" 143413
 
 local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
@@ -163,9 +163,7 @@ mod.vb.addsAlive = 0
 mod.vb.roarCount = 0
 mod.vb.swirlCount = 0
 
-local seedOfAmirdrassil = DBM:GetSpellName(423601)
-local proshlyapationSpiritsHeroicTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4} --Хорошие таймеры для героика (Разрабы задумали 8 каст вообще убрать?)
-local proshlyapationSpiritsNormalTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24, 36.5} --Хорошие таймеры для обычки (8 таймера так же нету)
+local proshlyapationSpiritsTimers = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4} --Хорошие таймеры для героика и обычки, в мифе возможно отличаются (Разрабы задумали 8 каст вообще убрать?)
 
 local allTimers = {
 	[1.5] = {
@@ -176,7 +174,7 @@ local allTimers = {
 	},
 	[2] = {--Same in all difficulties, minus Aflame
 		--Пламенное падение
-		[419123] = {4.8, 74.9, 79.9}, --Ещё 1 прошляп очка дурачков на Александриксе, Герое и т.д., т.к. спелл был неверным в версии с офы и таймер не работал
+		[419123] = {4.8, 74.9, 79.9},
 		--Fyr'alath's Bite
 		[417431] = {17.9, 11.0, 60.0, 11.0, 11.0, 58.0, 11.0, 11.0},
 		--Великая огненная буря
@@ -184,11 +182,8 @@ local allTimers = {
 	--	[422518] = {35.8, 79.9, 80.0},
 		--Shadowflame Devastation
 		[422524] = {58.8, 80},
-		--Духи калдорай
-	--	[422032] = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 35.4}, --Хорошие таймеры для героика (Разрабы задумали 8 каст вообще убрать)
-	--	[422032] = {19.1, 19.9, 19.9, 24.9, 25.9, 24.9, 36.5},  --Хорошие таймеры для обычки (8 таймер не сработал)
 		--Духи калдорай (По инфе с офы)
-	--	[422032] = {20, 20, 20, 25, 26, 25, 25, 25},
+	--	[422032] = {20, 20, 20, 25, 26, 25, 25, 25}, --Старые таймеры для героика и обычки (Разрабы задумали 8 каст вообще убрать)
 		--Вспышка (Heroic+ only)
 		[414186] = {20, 14.9, 25, 30, 26.9, 23, 30, 25},
 		--Вспышка (Mythic only)
@@ -295,10 +290,36 @@ local function startPhase3(self)
 				self:Schedule(3.8, eternalFireSwirlLoop, self)
 			end
 		end
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(423601))
-			DBM.InfoFrame:Show(6, "playergooddebuff", seedOfAmirdrassil)
+	end
+end
+
+function mod:UpdateDebuffList()
+	local spellId = 423601
+	if not self.Options.InfoFrame then return end
+	
+	local playersWithDebuff = {}
+	local num = GetNumRaidMembers()
+	
+	for i = 1, num do
+		local unit = "raid" .. i
+		if UnitExists(unit) and UnitDebuff(unit, spellId) then
+			local name = UnitName(unit)
+			if name then
+				tinsert(playersWithDebuff, name)
+			end
 		end
+	end
+	
+	if #playersWithDebuff == 0 then
+		DBM.InfoFrame:Hide()
+	else
+		local namesList = ""
+		for _, name in ipairs(playersWithDebuff) do
+			namesList = namesList .. name .. "\n"
+		end
+		
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(423601))
+		DBM.InfoFrame:Show(7, "table", namesList)
 	end
 end
 
@@ -670,6 +691,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
+	elseif spellId == 423601 then
+		self:UpdateDebuffList()
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -708,6 +731,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBM.InfoFrame:Hide()
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
+	elseif spellId == 423601 then
+		self:UpdateDebuffList()
 	end
 end
 --mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
@@ -730,17 +755,8 @@ do
 			self.vb.spiritsCount = self.vb.spiritsCount + 1
 			warnSpirits:Show(self.vb.spiritsCount)
 			local timer
-			if self:IsHard() then
-				timer = proshlyapationSpiritsHeroicTimers[self.vb.spiritsCount+1]
-			else
-				timer = proshlyapationSpiritsNormalTimers[self.vb.spiritsCount+1]
-			end
+			timer = proshlyapationSpiritsTimers[self.vb.spiritsCount+1]
 			timerSpiritsCD:Start(timer, self.vb.spiritsCount+1)
-			--Вернуть старую версию, если будут проблемы
-	--[[		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 422032, self.vb.spiritsCount+1)
-			if timer then
-				timerSpiritsCD:Start(timer, self.vb.spiritsCount+1)
-			end]]
 		end
 	end
 end
