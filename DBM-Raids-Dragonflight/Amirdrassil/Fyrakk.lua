@@ -277,14 +277,14 @@ local function startPhase3(self)
 		timerFyralathsBiteCD:Stop()
 		timerBlazeCD:Stop()
 		self:Unschedule(blazeLoop)
-		timerInfernalMawCD:Start(4.9, 1)
-		timerShadowflameBreathCD:Start(9.4, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 10
-		timerApocalypseroarCD:Start(33.4, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 34
-		timerEternalFirestormCD:Start(15, 1) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
-		self:Schedule(15, eternalFireLoop, self) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
+		timerInfernalMawCD:Start(4.7, 1) --Точно под обычку и героик
+		timerShadowflameBreathCD:Start(9.9, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 10
+		timerApocalypseroarCD:Start(33.9, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 34
+		timerEternalFirestormCD:Start(15.5, 1) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
+		self:Schedule(15.5, eternalFireLoop, self) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
 		if self:IsHard() then
-			timerBlazeCD:Start(11.5, 1) --Heroic/Mythic only 12
-			self:Schedule(11.5, blazeLoop, self)
+			timerBlazeCD:Start(12, 1) --Heroic/Mythic only 12
+			self:Schedule(12, blazeLoop, self)
 			if self:IsMythic() then
 				timerEternalFirestormSwirlCD:Start(3.8, 1)
 				self:Schedule(3.8, eternalFireSwirlLoop, self)
@@ -720,12 +720,12 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerGreaterFirestormCD:Start(34.9, 1)
 		timerIncarnateCD:Start(43, 1) --Взлет (Точно под обычку и героик) Раньше было 43.4
 		timerShadowflameDevastationCD:Start(57.5, 1) --Глубокий вдох (Точно под обычку) Раньше было 57.9
-		timerPhaseCD:Start(215, 3)
+		timerPhaseCD:Start(214.5, 3)
 		if self:IsHard() then
 			timerBlazeCD:Start(20.7, 1)--Heroic/Mythic only
 			self:Schedule(20.7, blazeLoop, self)
 		end
-		self:Schedule(215, startPhase3, self)
+		self:Schedule(214.5, startPhase3, self)
 	elseif spellId == 421922 then --Заражение порчей
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
