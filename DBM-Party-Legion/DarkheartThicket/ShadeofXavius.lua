@@ -66,6 +66,7 @@ function mod:ParanoiaTarget(targetname)
 	if targetname == UnitName("player") then
 		specWarnParanoia:Show()
 		specWarnParanoia:Play("defensive")
+		yellParanoia:Yell()
 	else
 		warnParanoia:Show(targetname)
 	end
@@ -207,7 +208,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 		--	specWarnParanoia:Show()
 		--	specWarnParanoia:Play("scatter")
-			yellParanoia:Yell()
+		--	yellParanoia:Yell()
 			yellParanoiaFades:Countdown(spellId)
 		end
 		--CD increased in 10.2, no longer needs to use two icons
