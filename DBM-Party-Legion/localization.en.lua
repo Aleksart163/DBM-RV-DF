@@ -32,6 +32,10 @@ L:SetGeneralLocalization({
 	name =	"Black Rook Hold Trash"
 })
 
+L:SetMiscLocalization({
+	MProshlyapPull = "Now... now I see..."
+})
+
 -----------------------
 -- <<<Darkheart Thicket>>> --
 -----------------------

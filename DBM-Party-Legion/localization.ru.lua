@@ -33,6 +33,10 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Крепость Чёрной Ладьи"
 })
 
+L:SetMiscLocalization({ 
+	MProshlyapPull	= "Я... я все понял..."
+})
+
 -----------------------
 -- <<<Darkheart Thicket>>> --
 -----------------------

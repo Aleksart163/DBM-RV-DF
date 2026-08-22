@@ -14,7 +14,8 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 194966 200105 200248 8599 203163",
 	"SPELL_AURA_APPLIED_DOSE 200084 225909 200248",
 	"SPELL_AURA_REMOVED 200248",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"CHAT_MSG_MONSTER_SAY"
 )
 
 --[[
@@ -58,7 +59,7 @@ local specWarnSoulBlade				= mod:NewSpecialWarningDispel(200084, "RemoveMagic", 
 local specWarnDrainLife				= mod:NewSpecialWarningDispel(204896, "RemoveMagic", nil, nil, 1, 2) --Похищение жизни
 local specWarnEnrage				= mod:NewSpecialWarningDispel(8599, "RemoveEnrage", nil, 2, 1, 2) --Исступление
 
-local timerRP						= mod:NewRPTimer(68)
+local timerRP						= mod:NewRPTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5)
 local timerSacrificeSoulCD			= mod:NewCDNPTimer(21.8, 200105, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Жертвоприношение души
 local timerGlaiveTossCD				= mod:NewCDNPTimer(14.5, 196916, nil, nil, nil, 3) --Бросок глефы
 local timerStrikeDownCD				= mod:NewCDNPTimer(9.7, 225732, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Разящий удар
@@ -85,9 +86,6 @@ local blitzStacks = {}
 --"<15.93 23:10:54> [CHAT_MSG_MONSTER_YELL] You... aren't the ones who did this?#Lord Etheldrin Ravencrest###Omegal##0#0##0#2109#nil#0#false#false#false#false", -- [38]
 --"<29.29 23:11:07> [CHAT_MSG_MONSTER_SAY] I... understand now. You... you must find Kur'talos. You must put a stop to this.#Lord Etheldrin Ravencrest###Darksøl##0#0##0#2110#nil#0#false#false#false#false", -- [39]
 --"<39.20 23:11:17> [ZONE_CHANGED_INDOORS] Black Rook Hold#Black Rook Hold#Hidden Passageway", -- [41]
-function mod:StartFirstRP()
-	timerRP:Start(17.5)--Adjusted based on twitch streams
-end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -316,5 +314,18 @@ function mod:UNIT_DIED(args)
 		timerRavensDiveCD:Stop(args.destGUID)
 	elseif cid == 98813 then--Bloodscent Felhouhd
 		timerDrainLifeCD:Stop(args.destGUID)
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.MProshlyapPull or msg:find(L.MProshlyapPull)) then
+		DBM:Debug("Check Murchal proshlyap", 2)
+		self:SendSync("MPP")
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "MPP" and self:AntiSpam(10, "AmalgamSouls") then
+		timerRP:Start(17.5)
 	end
 end
