@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 421898 421971 424352 422026 422039 421013 425816 425819",
 --	"SPELL_CAST_SUCCESS",
 	"SPELL_SUMMON 425366",
-	"SPELL_AURA_APPLIED 422466 421972 426106 421038 421840 425820",
+	"SPELL_AURA_APPLIED 422466 421972 426106 421038 421840 425820 421013",
 	"SPELL_AURA_APPLIED_DOSE 422466 426106 421038",
 	"SPELL_AURA_REMOVED 421972 421840 425820",
 --	"SPELL_AURA_REMOVED_DOSE",
@@ -65,6 +65,7 @@ local warnUprootedAgonyOver							= mod:NewEndAnnounce(421840, 1) --Выкорч
 
 local specWarnUprootedAgony							= mod:NewSpecialWarningSpell(421840, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Выкорчеванная агония (Повышенный урон)
 local specWarnDoomCultivation						= mod:NewSpecialWarningDodge(421013, "Melee", nil, nil, 2, 2) --Роковой рост Prevent melee dying if they tunnel boss too long
+local specWarnDoomCultivation2						= mod:NewSpecialWarningReflect(421013, "-Healer", 263572, nil, 1, 2) --Роковой рост
 
 local timerUprootAgonyCD							= mod:NewBuffActiveTimer(20, 421840, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Выкорчеванная агония (Повышенный урон)
 local timerDoomCultivationCD						= mod:NewStageCountCycleTimer(49, 421013, nil, nil, nil, 6) --Роковой рост
@@ -347,6 +348,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFlamingSap:Yell()
 			yellFlamingSap2:Countdown(spellId)
 		end
+	elseif spellId == 421013 and self:AntiSpam(2, 4) then
+		specWarnDoomCultivation2:Show(args.destName)
+		specWarnDoomCultivation2:Play("stopattack")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
