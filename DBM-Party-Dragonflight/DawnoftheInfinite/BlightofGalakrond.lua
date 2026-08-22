@@ -74,7 +74,7 @@ function mod:OnCombatStart(delay)
 	self.vb.fireBreathCount = 0
 	self:SetStage(1)
 	timerCorrosiveInfusionCD:Start(4.5-delay, 1)
-	timerBlightReclamationCD:Start(14.2-delay, 1)
+	timerBlightReclamationCD:Start(14-delay, 1) --14.2
 end
 
 local function checkDebuffPass(self)
@@ -112,7 +112,7 @@ function mod:SPELL_CAST_START(args)
 		elseif self:GetStage(2) then
 			timer = 31.5
 		else--Stage 3
-			timer = 61.3 --61.9
+			timer = 60.8 --61.9
 			--Update min timers on abilities affected by this
 			if timerIncineratingBlightbreathCD:GetRemaining(self.vb.fireBreathCount+1) < 8 then
 				local elapsed, total = timerIncineratingBlightbreathCD:GetTime(self.vb.fireBreathCount+1)
@@ -243,8 +243,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Starting timers here better
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
-		timerNecrofrostCD:Start(28.5, 1) --было 31.4 
-		timerBlightReclamationCD:Start(20.9, 1) --Выглядит норм (Было 64)
+		timerNecrofrostCD:Start(28, 1) --было 31.4 
+		timerBlightReclamationCD:Start(20.7, 1) --Выглядит норм (Было 64)
 		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end
 end
