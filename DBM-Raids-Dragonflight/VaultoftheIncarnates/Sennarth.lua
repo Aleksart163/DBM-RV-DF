@@ -206,6 +206,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
+	self:Unschedule(startAnnounceArachnid)
 end
 
 function mod:OnTimerRecovery()

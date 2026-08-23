@@ -57,13 +57,13 @@ mod:AddSetIconOption("SetIconOnDarkRush", 197478, true, 6, {1, 2, 3}) --Темн
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12281))
 local warnEyeBeam					= mod:NewTargetNoFilterAnnounce(197696, 2) --Пронзающий взгляд
 
-local specWarnEyeBeam				= mod:NewSpecialWarningRunCount(197696, nil, nil, nil, 4, 2) --Пронзающий взгляд
-local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(197974, "Tank", nil, nil, 1, 2)
+local specWarnEyeBeam				= mod:NewSpecialWarningRun(197696, nil, nil, nil, 4, 2) --Пронзающий взгляд
+local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(197974, "Melee", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Костедробящий удар (Фронталка)
 local specWarnArcaneBlitz			= mod:NewSpecialWarningInterrupt(197797, "HasInterrupt", nil, nil, 1, 2)
 
 local timerEyeBeamCD				= mod:NewCDCountTimer(12, 197696, nil, nil, nil, 3) --Пронзающий взгляд 13.5
-local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 197974, nil, nil, nil, 3)
-local timerGroundedCD				= mod:NewStageContextTimer(44.8, -12277, nil, nil, nil, 6, 197394)
+local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 197974, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Костедробящий удар (Фронталка)
+--local timerGroundedCD				= mod:NewStageContextTimer(44.8, -12277, nil, nil, nil, 6, 197394)
 
 local yellDarkRush					= mod:NewYell(197478, nil, nil, nil, "YELL") --Темный рывок
 local yellBrutalGlaive				= mod:NewYell(197546, nil, nil, nil, "YELL") --Жуткая глефа
@@ -91,6 +91,33 @@ function mod:BrutalGlaiveTarget(targetname, uId)
 	end
 end
 
+local function startProshlyapPhase1(self)
+	self.vb.glaiveCount = 0
+	self.vb.shearCount = 0
+	self.vb.rushCount = 0
+	self.vb.eyeCount = 0
+	self:SetStage(1)
+	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
+	warnPhase:Play("phasechange")
+	timerEyeBeamCD:Stop()
+	timerBrutalGlaiveCD:Start(6, 1)
+	timerDarkRushCD:Start(12, 1)
+	timerVengefulShearCD:Start(13, 1)
+	timerLeapCD:Start(103, 2)
+end
+
+local function startProshlyapPhase2(self)
+	self.vb.eyeCount = 0
+	self:SetStage(2)
+	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+	warnPhase:Play("phasechange")
+	timerBrutalGlaiveCD:Stop()
+	timerVengefulShearCD:Stop()
+	timerDarkRushCD:Stop()
+	timerLeapCD:Start(42, 1)
+	self:Schedule(145, startProshlyapPhase2, self)
+end
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.glaiveCount = 0
@@ -100,14 +127,15 @@ function mod:OnCombatStart(delay)
 	timerBrutalGlaiveCD:Start(5.5-delay, 1)
 	timerVengefulShearCD:Start(8-delay, 1)
 	timerDarkRushCD:Start(11-delay, 1)
-	timerLeapCD:Start(35, 2)--33.9-35.2 (they changed his starting energy from Legion)
+	timerLeapCD:Start(36.5, 2)--33.9-35.2 (they changed his starting energy from Legion)
+	self:Schedule(36.5, startProshlyapPhase2, self)
+	self:Schedule(78, startProshlyapPhase1, self)
 end
 
---function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
---end
+function mod:OnCombatEnd()
+	self:Unschedule(startProshlyapPhase1)
+	self:Unschedule(startProshlyapPhase2)
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -137,9 +165,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerDarkRushCD:Start(nil, self.vb.rushCount+1)
 	elseif spellId == 197687 then--No longer fires applied event, so success has to be used, even if it misses or gets dropped off target by some kind of feign
 		self.vb.eyeCount = self.vb.eyeCount + 1
-		timerEyeBeamCD:Start(nil, self.vb.eyeCount+1)
+		if self.vb.eyeCount < 3 then
+			timerEyeBeamCD:Start(nil, self.vb.eyeCount+1)
+		end
 		if args:IsPlayer() then
-			specWarnEyeBeam:Show(self.vb.eyeCount)
+			specWarnEyeBeam:Show()
 			specWarnEyeBeam:Play("laserrun")
 			yellEyeBeam:Yell()
 			yellEyeBeamFades:Countdown(12, 5)
@@ -149,25 +179,27 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 197546 then
 		self.vb.glaiveCount = self.vb.glaiveCount + 1
 		timerBrutalGlaiveCD:Start(13.7, self.vb.glaiveCount+1)--Stutter casts, so moved to success event
-	elseif spellId == 197622 then--Leap
-		self.vb.eyeCount = 0
-		self:SetStage(2)
-		timerBrutalGlaiveCD:Stop()
-		timerVengefulShearCD:Stop()
-		timerDarkRushCD:Stop()
+	elseif spellId == 197622 then --Прыжок (Сломано разрабами)
+--		self.vb.eyeCount = 0
+--		self:SetStage(2)
+--		timerBrutalGlaiveCD:Stop()
+--		timerVengefulShearCD:Stop()
+--		timerDarkRushCD:Stop()
 --		timerEyeBeamCD:Start(4, 1)--cast 1.5 after
-		timerGroundedCD:Start()--44.8
-	elseif spellId == 197394 then--Gaining Energy
-		self.vb.glaiveCount = 0
-		self.vb.shearCount = 0
-		self.vb.rushCount = 0
-		self.vb.eyeCount = 0
-		self:SetStage(1)
-		timerEyeBeamCD:Stop()
-		timerBrutalGlaiveCD:Start(6, 1)
-		timerDarkRushCD:Start(12, 1)
-		timerVengefulShearCD:Start(13, 1)
-		timerLeapCD:Start(93.4, 2)--Same as it was back then. yay for consistency
+--		timerGroundedCD:Start(37)--44.8
+		DBM:Debug("Check Murchal proshlyap (Разрабы починили Прыжок на 2 фазу)", 2)
+	elseif spellId == 197394 then --Накопление энергии (Сломано разрабами)
+--		self.vb.glaiveCount = 0
+--		self.vb.shearCount = 0
+--		self.vb.rushCount = 0
+--		self.vb.eyeCount = 0
+--		self:SetStage(1)
+--		timerEyeBeamCD:Stop()
+--		timerBrutalGlaiveCD:Start(6, 1)
+--		timerDarkRushCD:Start(12, 1)
+--		timerVengefulShearCD:Start(13, 1)
+--		timerLeapCD:Start(93.4, 2)--Same as it was back then. yay for consistency
+		DBM:Debug("Check Murchal proshlyap (Разрабы починили Накопление энергии)", 2)
 	end
 end
 
@@ -210,15 +242,15 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 197622 then --Прыжок на фазу 2
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
-		warnPhase:Play("phasechange")
-		timerBrutalGlaiveCD:Stop()
-		timerVengefulShearCD:Stop()
-		timerDarkRushCD:Stop()
+--		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+--		warnPhase:Play("phasechange")
+--		timerBrutalGlaiveCD:Stop()
+--		timerVengefulShearCD:Stop()
+--		timerDarkRushCD:Stop()
 		DBM:Debug("Check Murchal proshlyap (Случился прыжок на 2 фазу)", 2)
 	elseif spellId == 197394 then --реген энергии
-		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
-		warnPhase:Play("phasechange")
+--		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
+--		warnPhase:Play("phasechange")
 		DBM:Debug("Check Murchal proshlyap (Начался реген энергии)", 2)
 	end
 end
