@@ -76,6 +76,7 @@ mod.vb.glaiveCount = 0
 mod.vb.shearCount = 0
 mod.vb.rushCount = 0
 mod.vb.eyeCount = 0
+local Proshlyap = nil
 
 function mod:BrutalGlaiveTarget(targetname, uId)
 	if not targetname then
@@ -102,11 +103,14 @@ local function startProshlyapPhase1(self)
 	timerEyeBeamCD:Stop()
 	timerBrutalGlaiveCD:Start(6, 1)
 	timerDarkRushCD:Start(12, 1)
-	timerVengefulShearCD:Start(13, 1)
+	timerVengefulShearCD:Start(13, 1) --
 	timerLeapCD:Start(103, 2)
 end
 
 local function startProshlyapPhase2(self)
+	if not Proshlyap then
+		Proshlyap = true
+	end
 	self.vb.eyeCount = 0
 	self:SetStage(2)
 	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -119,6 +123,7 @@ local function startProshlyapPhase2(self)
 end
 
 function mod:OnCombatStart(delay)
+	Proshlyap = false
 	self:SetStage(1)
 	self.vb.glaiveCount = 0
 	self.vb.shearCount = 0
@@ -139,13 +144,17 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 197418 then
+	if spellId == 197418 then --Мстительное рассечение
 		self.vb.shearCount = self.vb.shearCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnVengefulShear:Show()
 			specWarnVengefulShear:Play("defensive")
 		end
-		timerVengefulShearCD:Start(nil, self.vb.shearCount+1)
+		if not Proshlyap and self.vb.shearCount < 2 then
+			timerVengefulShearCD:Start(16, self.vb.shearCount+1)
+		elseif Proshlyap and self.vb.shearCount < 5 then
+			timerVengefulShearCD:Start(13, self.vb.shearCount+1)
+		end
 	elseif spellId == 197546 then
 		self:BossTargetScanner(args.sourceGUID, "BrutalGlaiveTarget", 0.1, 10, true)
 	elseif spellId == 197974 then
@@ -162,7 +171,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 197478 then
 		self.vb.rushCount = self.vb.rushCount + 1
-		timerDarkRushCD:Start(nil, self.vb.rushCount+1)
+		if Proshlyap and self.vb.rushCount < 3 then
+			timerDarkRushCD:Start(nil, self.vb.rushCount+1)
+		end
 	elseif spellId == 197687 then--No longer fires applied event, so success has to be used, even if it misses or gets dropped off target by some kind of feign
 		self.vb.eyeCount = self.vb.eyeCount + 1
 		if self.vb.eyeCount < 3 then
@@ -172,13 +183,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnEyeBeam:Show()
 			specWarnEyeBeam:Play("laserrun")
 			yellEyeBeam:Yell()
-			yellEyeBeamFades:Countdown(12, 5)
+			yellEyeBeamFades:Countdown(10, 5)
 		else
 			warnEyeBeam:Show(args.destName)
 		end
 	elseif spellId == 197546 then
 		self.vb.glaiveCount = self.vb.glaiveCount + 1
-		timerBrutalGlaiveCD:Start(13.7, self.vb.glaiveCount+1)--Stutter casts, so moved to success event
+		if not Proshlyap and self.vb.glaiveCount < 2 then
+			timerBrutalGlaiveCD:Start(13.7, self.vb.glaiveCount+1)
+		elseif Proshlyap and self.vb.glaiveCount < 6 then
+			timerBrutalGlaiveCD:Start(13.7, self.vb.glaiveCount+1)--Stutter casts, so moved to success event
+		end
 	elseif spellId == 197622 then --Прыжок (Сломано разрабами)
 --		self.vb.eyeCount = 0
 --		self:SetStage(2)
