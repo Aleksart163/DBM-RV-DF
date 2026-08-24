@@ -72,7 +72,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(27500))
 local warnEmpoweredFeather							= mod:NewYouAnnounce(422509, 1) --Усиленное перо
 local warnDreamEssence								= mod:NewCountAnnounce(424258, 1, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(424258)) --Сущность Сна
 local warnSuperNova									= mod:NewCastAnnounce(424140, 4) --Сверхновая
-local warnSuperNovaEnded							= mod:NewFadesAnnounce(424140, 1) --Сверхновая
+local warnSuperNovaEnded							= mod:NewEndAnnounce(424140, 1) --Сверхновая
 
 local specWarnTyphoon								= mod:NewSpecialWarningSpell(421636, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Тайфун (Отталкивание)
 

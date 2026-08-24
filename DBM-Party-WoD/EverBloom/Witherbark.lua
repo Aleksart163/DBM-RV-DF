@@ -37,7 +37,7 @@ ability.id = 164357 and type = "begincast"
  or (source.type = "NPC" and source.firstSeen = timestamp) or (target.type = "NPC" and target.firstSeen = timestamp)
 --]]
 --NOTE: Mod is just using 10.2 values, since fight wasn't reworked i'm not making a hybrid mod for timers that have slight differences
-local warnBrittleBarkOver			= mod:NewEndAnnounce(164275, 2) --Хрупкая кора
+local warnBrittleBarkOver			= mod:NewEndAnnounce(164275, 1) --Хрупкая кора
 local warnUncheckedGrowth			= mod:NewTargetAnnounce(164294, 2) --Запущенная поросль
 local warnUncheckedGrowthSpawn		= mod:NewSpellAnnounce(164556, 3) --Запущенная поросль Add Spawn
 
@@ -45,18 +45,27 @@ local specWarnBrittleBark			= mod:NewSpecialWarningSpell(164275, nil, nil, DBM_C
 local specWarnUncheckedGrowthYou	= mod:NewSpecialWarningYou(164294, nil, nil, nil, 1, 2) --Запущенная поросль The add fixate is on you
 local specWarnUncheckedGrowth		= mod:NewSpecialWarningGTFO(164294, nil, nil, nil, 1, 8) --Запущенная поросль GTFO
 local specWarnUncheckedGrowthAdd	= mod:NewSpecialWarningSwitch(164556, false, nil, nil, 1, 2) --Запущенная поросль Spawn
-local specWarnParchedGrasp			= mod:NewSpecialWarningSpell(164357, "Tank", nil, nil, 1, 2)
+local specWarnParchedGrasp			= mod:NewSpecialWarningDefensive(164357, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Иссушающее дыхание (Фронталка)
+local specWarnParchedGrasp2			= mod:NewSpecialWarningDodge(164357, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Иссушающее дыхание (Фронталка)
 
-local timerParchedGrasp				= mod:NewCDTimer(16, 164357, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBrittleBarkCD			= mod:NewCDTimer(40, 164275, DBM_COMMON_L.DAMAGEUP, nil, nil, 6) --Хрупкая кора 30 seconds pre 10.2 https://www.warcraftlogs.com/reports/y2cYmZVWKqGkAHbn#fight=last&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20164275%20or%20ability.id%20%3D%20164556&view=events&translate=true
+local timerParchedGrasp				= mod:NewCDTimer(16, 164357, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Иссушающее дыхание (Фронталка)
+local timerBrittleBarkCD			= mod:NewCDTimer(40, 164275, DBM_COMMON_L.DAMAGEUP, nil, nil, 6, nil, nil, nil, 1, 5) --Хрупкая кора (Повышенный урон) 30 seconds pre 10.2 https://www.warcraftlogs.com/reports/y2cYmZVWKqGkAHbn#fight=last&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20164275%20or%20ability.id%20%3D%20164556&view=events&translate=true
 local timerUncheckedGrowthCD		= mod:NewCDTimer(12, 164294, nil, nil, nil, 3) --Запущенная поросль LW uses spellid and not joural ID for timer, so we have to match it for WAs
 
 --mod:GroupSpells(164294, -10098)--No longer combined since each needs a diff WA key in UI now
 
+mod.vb.graspCount = 0
+mod.vb.growthCount = 0
+local proshlyapationGrowthTimers = {5.8, 12, 13.6}
+local Proshlyap = nil
+
 function mod:OnCombatStart(delay)
-	timerUncheckedGrowthCD:Start(6-delay)
-	timerParchedGrasp:Start(9.6-delay)
-	timerBrittleBarkCD:Start(39.9-delay)
+	Proshlyap = false
+	self.vb.graspCount = 0
+	self.vb.growthCount = 0
+	timerUncheckedGrowthCD:Start(5.8-delay) --
+	timerParchedGrasp:Start(12-delay) --
+	timerBrittleBarkCD:Start(40-delay) --
 	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 169495 164294",
@@ -71,10 +80,20 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 164357 then
-		specWarnParchedGrasp:Show()
-		specWarnParchedGrasp:Play("breathsoon")
-		timerParchedGrasp:Start()
+	if spellId == 164357 then --Иссушающее дыхание (Фронталка)
+		self.vb.graspCount = self.vb.graspCount + 1
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+			specWarnParchedGrasp:Show()
+			specWarnParchedGrasp:Play("breathsoon")
+		else
+			specWarnParchedGrasp2:Show()
+			specWarnParchedGrasp2:Play("watchstep")
+		end
+		if not Proshlyap and self.vb.graspCount < 2 then
+			timerParchedGrasp:Start(17)
+		elseif Proshlyap then
+			timerParchedGrasp:Start(17)
+		end
 	end
 end
 
@@ -101,31 +120,47 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 164275 then
+	if spellId == 164275 then --Хрупкая кора
+		self.vb.growthCount = 0
+		timerUncheckedGrowthCD:Stop()
+		timerParchedGrasp:Stop()
 		specWarnBrittleBark:Show()
 		specWarnBrittleBark:Play("dpsmore")
-		timerParchedGrasp:Cancel()
 		if self:IsNormal() then--Heroic and above CD continues without reset
 			timerUncheckedGrowthCD:Stop()
 		end
-	elseif spellId == 164302 then
+		if not Proshlyap then
+			Proshlyap = true
+		end
+	elseif spellId == 164302 then --Запущенная поросль
+		self.vb.growthCount = self.vb.growthCount + 1
 		if args:IsPlayer() then
 			specWarnUncheckedGrowthYou:Show()
 			specWarnUncheckedGrowthYou:Play("targetyou")
 		else
 			warnUncheckedGrowth:Show(args.destName)
 		end
+		local timer
+		if not Proshlyap and self.vb.growthCount < 4 then
+			timer = proshlyapationGrowthTimers[self.vb.growthCount+1]
+			timerUncheckedGrowthCD:Start(timer, self.vb.growthCount+1)
+		else
+			timer = 12
+			timerUncheckedGrowthCD:Start(timer, self.vb.growthCount+1)
+		end
+	--	timerUncheckedGrowthCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 164275 then
+	if spellId == 164275 then --Хрупкая кора
 		warnBrittleBarkOver:Show()
-		timerParchedGrasp:Start(3.6)
-		timerBrittleBarkCD:Start(39.9)
+		warnBrittleBarkOver:Play("end")
+		timerParchedGrasp:Start(3.9) --
+		timerBrittleBarkCD:Start(40.4)
 		timerUncheckedGrowthCD:Stop()
-		timerUncheckedGrowthCD:Start(3.6)--Needs more review to verify
+		timerUncheckedGrowthCD:Start(7) --
 	end
 end
 
@@ -137,11 +172,11 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+--[[function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) --Сломано разрабами сервера
 	if spellId == 164306 then
 		timerUncheckedGrowthCD:Start()
 	end
-end
+end]]
 
 --[[
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)--Message doesn't matter, it occurs only for one thing during this fight (assumption may be invalid in rework)
