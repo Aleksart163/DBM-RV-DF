@@ -4,6 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(98965, 98970)
 mod:SetEncounterID(1835)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
@@ -136,8 +137,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 199193 then --Хитроумие повелителя ужаса
 		--Seems to pause and resume timers but with an extra 3 secondcs
 		--As such, just adding 23 is cleaner than actually doing the pause + 3 seconds
-		timerCloudCD:AddTime(31.1, self.vb.cloudCount+1) --23
-		timerSwarmCD:AddTime(38.3, self.vb.swarmCount+1) --23
+		timerCloudCD:Stop()
+		timerSwarmCD:Stop()
+	--	timerCloudCD:AddTime(31.1, self.vb.cloudCount+1) --23
+	--	timerSwarmCD:AddTime(38.3, self.vb.swarmCount+1) --23
 	--	timerShadowBoltVolleyCD:AddTime(23, self.vb.shadowboltCount+1)
 		self.vb.guileCount = self.vb.guileCount + 1
 		specWarnGuile:Show()
@@ -198,8 +201,12 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 199193 then
 		specWarnGuileEnded:Show()
 		specWarnGuileEnded:Play("safenow")
-		timerGuileCD:Start(63.8, self.vb.guileCount+1) --2 примерных таймера, разрабы вполне могли их поломать
+		--2 примерных таймера, разрабы вполне могли их поломать
+		timerGuileCD:Start(63.8, self.vb.guileCount+1)
 		warnGuile:Schedule(58.8)
+		--Должны быть норм таймеры после 1 хитроумия, дальше хз
+		timerCloudCD:Start(19.4, self.vb.cloudCount+1)
+		timerSwarmCD:Start(15.5, self.vb.swarmCount+1)
 	end
 end
 
