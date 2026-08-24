@@ -28,22 +28,22 @@ mod:RegisterEventsInCombat(
  or (ability.id = 198446 or ability.id = 198079) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnHatefulGaze				= mod:NewTargetNoFilterAnnounce(198079, 4)
+local warnHatefulGaze				= mod:NewTargetNoFilterAnnounce(198079, 4) --Ненавидящий взгляд
 
 local specWarnStomp					= mod:NewSpecialWarningCount(198073, nil, nil, nil, 2, 2)
-local specWarnHatefulGaze			= mod:NewSpecialWarningDefensive(198079, nil, nil, nil, 1, 2)
+local specWarnHatefulGaze			= mod:NewSpecialWarningDefensive(198079, nil, nil, nil, 1, 2) --Ненавидящий взгляд
 local specWarnBrutalHaymakerSoon	= mod:NewSpecialWarningSoon(198245, "Tank|Healer", nil, nil, 1, 2)--Face fuck soon
 local specWarnBrutalHaymaker		= mod:NewSpecialWarningDefensive(198245, nil, nil, nil, 3, 2)--Incoming face fuck
 local specWarnFelVomit				= mod:NewSpecialWarningMoveAway(198446, nil, nil, nil, 1, 2)
 
 local timerStompCD					= mod:NewCDCountTimer(21.8, 198073, nil, nil, nil, 2)--Next timers but delayed by other casts (changed from 17 to 23 in DF)
-local timerHatefulGazeCD			= mod:NewCDCountTimer(25.4, 198079, nil, nil, nil, 3)--Next timers but delayed by other casts
+local timerHatefulGazeCD			= mod:NewCDCountTimer(25.4, 198079, nil, nil, nil, 3) --Ненавидящий взгляд Next timers but delayed by other casts
 
-local yellHatefulGaze				= mod:NewYell(198079, nil, nil, nil, "YELL")
+local yellHatefulGaze				= mod:NewYell(198079, nil, nil, nil, "YELL") --Ненавидящий взгляд
 local yellFelVomit					= mod:NewYell(198446, nil, nil, nil, "YELL")
 
 mod:AddInfoFrameOption(224188)
-mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true, 0, {1})
+mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true, 0, {1}) --Ненавидящий взгляд
 
 mod.vb.stompCount = 0
 mod.vb.gazeCount = 0

@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 198820 199143 199193 202019 198641 201733",
-	"SPELL_CAST_SUCCESS 198635 198641",
+	"SPELL_CAST_SUCCESS 198635 198641 199193",
 	"SPELL_AURA_APPLIED 201733 199368",
 	"SPELL_AURA_REMOVED 199193",
 	"UNIT_DIED"
@@ -28,17 +28,17 @@ mod:RegisterEventsInCombat(
  or target.id = 98965 and type = "death"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
---Stage One: Lord of the Keep
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12502))
 local warnWhirlingBlade				= mod:NewTargetNoFilterAnnounce(198641, 2) --Крутящийся клинок
 
 local specWarnDarkblast				= mod:NewSpecialWarningDodge(198820, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Темный взрыв (Фронталка)
 local specWarnWhirlingBlade			= mod:NewSpecialWarningMoveAway(198641, nil, nil, nil, 4, 2) --Крутящийся клинок
 
-local timerDarkBlastCD				= mod:NewCDCountTimer(18.1, 198820, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Темный взрыв (Фронталка)
-local timerWhirlingBladeCD			= mod:NewCDCountTimer(23, 198641, nil, nil, nil, 3) --Крутящийся клинок
+local timerDarkBlastCD				= mod:NewCDCountTimer(18.1, 198820, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Темный взрыв (Фронталка)
+local timerWhirlingBladeCD			= mod:NewCDCountTimer(23, 198641, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Крутящийся клинок
 local timerUnerringShearCD			= mod:NewCDCountTimer(12.1, 198635, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 4) --Неумолимый удар
---Stage Two: Vengeance of the Ancients
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(12509))
 local warnPhase						= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnCloud						= mod:NewCountAnnounce(199143, 2) --Гипнотическое облако
@@ -53,12 +53,12 @@ local specWarnGuileEnded			= mod:NewSpecialWarningEnd(199193, nil, nil, nil, 1, 
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningDefensive(202019, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Залп стрел Тьмы (АоЕ)
 local specWarnLegacyRavencrest		= mod:NewSpecialWarningYou(199368, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 2) --Наследие Гребня Ворона
 
-local timerLegacyRavencrestCD		= mod:NewCDTimer(28, 199368, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Наследие Гребня Ворона
+local timerLegacyRavencrestCD		= mod:NewCDTimer(27, 199368, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Наследие Гребня Ворона
 local timerGuileCD					= mod:NewCDCountTimer(39, 199193, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Хитроумие повелителя ужаса
-local timerGuile					= mod:NewBuffFadesTimer(20, 199193, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Хитроумие повелителя ужаса
-local timerCloudCD					= mod:NewCDCountTimer(32.7, 199143, nil, nil, nil, 3) --Гипнотическое облако
+local timerGuile					= mod:NewBuffFadesTimer(22.7, 199193, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Хитроумие повелителя ужаса 20
+local timerCloudCD					= mod:NewCDCountTimer(32.7, 199143, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Гипнотическое облако
 local timerSwarmCD					= mod:NewCDCountTimer(17, 201733, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Жалящий рой 17-21
-local timerShadowBoltVolleyCD		= mod:NewCDCountTimer(9.7, 202019, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Залп стрел Тьмы (АоЕ)
+local timerShadowBoltVolleyCD		= mod:NewCDCountTimer(9.7, 202019, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Залп стрел Тьмы (АоЕ)
 
 local yellWhirlingBlade				= mod:NewYell(198641, nil, nil, nil, "YELL") --Крутящийся клинок
 local yellSwarm						= mod:NewYell(201733, nil, nil, nil, "YELL") --Жалящий рой
@@ -117,7 +117,7 @@ function mod:OnCombatStart(delay)
 	self.vb.swarmCount = 0
 	timerUnerringShearCD:Start(5.5-delay, 1)
 	timerWhirlingBladeCD:Start(10-delay, 1)--Either whirling or dark can come first, other will be immediately after
-	timerDarkBlastCD:Start(10-delay, 1)--Either whirling or dark can come first, other will be immediately after
+	timerDarkBlastCD:Start(9.5-delay, 1)--Either whirling or dark can come first, other will be immediately after
 end
 
 function mod:SPELL_CAST_START(args)
@@ -133,12 +133,12 @@ function mod:SPELL_CAST_START(args)
 		self.vb.cloudCount = self.vb.cloudCount + 1
 		warnCloud:Show(self.vb.cloudCount)
 		timerCloudCD:Start(nil, self.vb.cloudCount+1)
-	elseif spellId == 199193 then
+	elseif spellId == 199193 then --Хитроумие повелителя ужаса
 		--Seems to pause and resume timers but with an extra 3 secondcs
 		--As such, just adding 23 is cleaner than actually doing the pause + 3 seconds
-		timerCloudCD:AddTime(23, self.vb.cloudCount+1)
-		timerSwarmCD:AddTime(23, self.vb.swarmCount+1)
-		timerShadowBoltVolleyCD:AddTime(23, self.vb.shadowboltCount+1)
+		timerCloudCD:AddTime(31.1, self.vb.cloudCount+1) --23
+		timerSwarmCD:AddTime(38.3, self.vb.swarmCount+1) --23
+	--	timerShadowBoltVolleyCD:AddTime(23, self.vb.shadowboltCount+1)
 		self.vb.guileCount = self.vb.guileCount + 1
 		specWarnGuile:Show()
 		specWarnGuile:Play("watchstep")
@@ -151,7 +151,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnShadowBoltVolley:Show()
 			specWarnShadowBoltVolley:Play("defensive")
 		end
-		timerShadowBoltVolleyCD:Start(nil, self.vb.shadowboltCount+1)
+	--	timerShadowBoltVolleyCD:Start(nil, self.vb.shadowboltCount+1)
 	elseif spellId == 198641 then
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "WhirlingBladeTarget", 0.1, 6)
 	--	warnWhirlingBlade:Show(self.vb.bladeCount+1)
@@ -170,6 +170,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 198641 then
 		self.vb.bladeCount = self.vb.bladeCount + 1
 		timerWhirlingBladeCD:Start(20.5, self.vb.bladeCount+1)--23 - 2.5
+	elseif spellId == 199193 then
+		specWarnDarkblast:Show()
+		specWarnDarkblast:Play("watchstep")
 	end
 end
 
@@ -195,7 +198,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 199193 then
 		specWarnGuileEnded:Show()
 		specWarnGuileEnded:Play("safenow")
-		timerGuileCD:Start(63.8, self.vb.guileCount+1)
+		timerGuileCD:Start(63.8, self.vb.guileCount+1) --2 примерных таймера, разрабы вполне могли их поломать
+		warnGuile:Schedule(58.8)
 	end
 end
 
@@ -205,17 +209,17 @@ function mod:UNIT_DIED(args)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
-		warnLegacyRavencrest:Schedule(23)
+		warnLegacyRavencrest:Schedule(22)
 		timerDarkBlastCD:Stop()
 		timerUnerringShearCD:Stop()
 		timerWhirlingBladeCD:Stop()
 		timerLegacyRavencrestCD:Start()
 		timerShadowBoltVolleyCD:Start(19.8, 1)
 		if not self:IsNormal() then
-			timerSwarmCD:Start(22.3, 1)
+			timerSwarmCD:Start(24, 1)
 		end
-		timerCloudCD:Start(27.2, 1)
-		timerGuileCD:Start(37.7, 1) --
-		warnGuile:Schedule(32.7) --
+		timerCloudCD:Start(14.9, 1) --27.2
+		timerGuileCD:Start(36.7, 1) --
+		warnGuile:Schedule(31.7) --
 	end
 end
