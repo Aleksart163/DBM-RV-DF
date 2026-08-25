@@ -82,7 +82,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 164357 then --Иссушающее дыхание (Фронталка)
 		self.vb.graspCount = self.vb.graspCount + 1
-		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnParchedGrasp:Show()
 			specWarnParchedGrasp:Play("breathsoon")
 		else
