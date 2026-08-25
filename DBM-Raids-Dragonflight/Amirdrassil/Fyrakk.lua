@@ -293,7 +293,7 @@ local function startPhase3(self)
 	end
 end
 
-function mod:UpdateDebuffList()
+--[[function mod:UpdateDebuffList() --Не отображает и нужны тесты, возможно сделано через другие ауры
 	local spellId = 423601
 	if not self.Options.InfoFrame then return end
 	
@@ -321,7 +321,7 @@ function mod:UpdateDebuffList()
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(423601))
 		DBM.InfoFrame:Show(7, "table", namesList)
 	end
-end
+end]]
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -692,7 +692,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
 	elseif spellId == 423601 then
-		self:UpdateDebuffList()
+	--	self:UpdateDebuffList()
+		DBM:Debug("Check Murchal proshlyap (Аура цветка на игроке)", 2)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -732,7 +733,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
 	elseif spellId == 423601 then
-		self:UpdateDebuffList()
+	--	self:UpdateDebuffList()
+		DBM:Debug("Check Murchal proshlyap (Аура цветка спала с игрока)", 2)
 	end
 end
 --mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
