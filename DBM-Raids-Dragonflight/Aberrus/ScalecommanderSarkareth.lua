@@ -84,7 +84,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26142))
 local warnInfiniteDuress						= mod:NewTargetCountAnnounce(404288, 3, nil, nil, nil, nil, nil, nil, true) --Бесконечное заключение
 local warnVoidClaws								= mod:NewStackAnnounce(411241, 2, nil, "Tank|Healer")
 
-local specWarnVoidEmpowerment					= mod:NewSpecialWarningReflect(403284, nil, 413106, nil, 3, 2) --Наделение силой Бездны (Сила Бездны)
+local specWarnVoidEmpowerment					= mod:NewSpecialWarningReflect(403284, nil, 263572, nil, 3, 2) --Наделение силой Бездны
 local specWarnAstralFlareStack					= mod:NewSpecialWarningStack(407576, nil, 6, 122149, nil, 1, 2) --Астральный огонь (Ускорение)
 local specWarnVoidBomb							= mod:NewSpecialWarningCount(404027, nil, nil, nil, 2, 2) --Бомба Бездны (Бомбы)
 local specWarnVoidFracture						= mod:NewSpecialWarningYou(404027, nil, nil, nil, 3, 6) --Бомба Бездны Maybe change to MoveTo alert to say move to emptyness?

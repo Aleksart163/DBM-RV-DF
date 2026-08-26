@@ -65,7 +65,7 @@ local warnUprootedAgonyOver							= mod:NewEndAnnounce(421840, 1) --Выкорч
 
 local specWarnUprootedAgony							= mod:NewSpecialWarningSpell(421840, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 4) --Выкорчеванная агония (Повышенный урон)
 local specWarnDoomCultivation						= mod:NewSpecialWarningDodge(421013, "Melee", nil, nil, 2, 2) --Роковой рост Prevent melee dying if they tunnel boss too long
-local specWarnDoomCultivation2						= mod:NewSpecialWarningReflect(421013, "-Healer", 263572, nil, 1, 2) --Роковой рост
+local specWarnDoomCultivation2						= mod:NewSpecialWarningReflect(421013, nil, 263572, nil, 1, 2) --Роковой рост
 
 local timerUprootAgonyCD							= mod:NewBuffActiveTimer(20, 421840, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Выкорчеванная агония (Повышенный урон)
 local timerDoomCultivationCD						= mod:NewStageCountCycleTimer(49, 421013, nil, nil, nil, 6) --Роковой рост
