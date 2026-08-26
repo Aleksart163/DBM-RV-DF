@@ -105,7 +105,7 @@ local specWarnFlamefall								= mod:NewSpecialWarningRunCount(419123, nil, nil,
 local specWarnShadowflameDevastation				= mod:NewSpecialWarningDodgeCount(422524, nil, 406227, nil, 2, 2) --Опустошение пламенем Тьмы (Глубокий вдох)
 
 local timerExplodingCoreCD							= mod:NewCDCountTimer(54, 428400, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Взрывающийся сердечник (Мощный взрыв)
-local timerSpiritsCD								= mod:NewCDCountTimer(49, 422032, 263222, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Духи калдорай (Духи)
+local timerSpiritsCD								= mod:NewCDCountTimer(60, 422032, 263222, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) --Духи калдорай (Духи)
 local timerGreaterFirestormCD						= mod:NewCDCountTimer(49, 422518, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON) --Великая огненная буря (Большой адд)
 local timerMoltenGauntletCD							= mod:NewCDNPTimer(11.7, 428963, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Раскаленная рукавица
 --local timerMoltenEruptionCD							= mod:NewCDNPTimer(23, 428971, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
@@ -124,7 +124,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(26670))
 local warnBloom										= mod:NewYouAnnounce(423717, 1)
 local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer") --Пасть Преисподней
 local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 425530) --Вечная огненная буря (Огненное торнадо)
-local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)--Short name "Swirl" 143413
+local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)
 
 local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
 local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
@@ -189,7 +189,7 @@ local allTimers = {
 		--Вспышка (Mythic only)
 		[4141862] = {20, 14.9, 25, 33.9, 22.9, 23, 33.9, 21},
 		--Incarnate
-		[412761] = {44.6, 80.0, 79.5},
+		[412761] = {44.6, 80.0, 78.8},
 		--Aflame (Heroic)
 		[4178072] = {27.1, 16.0, 58.0, 16.0, 64.1, 15.9, 13.5},
 		--Aflame (Normal)
@@ -270,7 +270,7 @@ local function startPhase3(self)
 		self.vb.blazeCount = 0
 		self.vb.tankCount = 0
 		self.vb.shadowflameBreathCount = 0
-		timerSpiritsCD:Stop()
+--		timerSpiritsCD:Stop()
 		timerGreaterFirestormCD:Stop()
 		timerFlamefallCD:Stop()
 		timerShadowflameDevastationCD:Stop()
@@ -280,8 +280,8 @@ local function startPhase3(self)
 		timerInfernalMawCD:Start(4.7, 1) --Точно под обычку и героик
 		timerShadowflameBreathCD:Start(9.9, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 10
 		timerApocalypseroarCD:Start(33.9, 1) --Точно под обычку (Возможно в других сложностях свои кд) было 34
-		timerEternalFirestormCD:Start(15.5, 1) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
-		self:Schedule(15.5, eternalFireLoop, self) --Вечная огненная буря (Огненная буря) Точно под героик и обычку (В мифике возможно другое кд)
+		timerEternalFirestormCD:Start(15.3, 1) --Вечная огненная буря (Торнадо) Точно под героик и обычку (В мифике возможно другое кд)
+		self:Schedule(15.3, eternalFireLoop, self) --Вечная огненная буря (Торнадо) Точно под героик и обычку (В мифике возможно другое кд)
 		if self:IsHard() then
 			timerBlazeCD:Start(12, 1) --Heroic/Mythic only 12
 			self:Schedule(12, blazeLoop, self)
@@ -466,6 +466,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			if self.vb.incarnCount == 3 then--only two sets of adds, 3rd one is only a knockback cause he's going dragon again
 				specWarnIncarnate:Play("carefly")
+				timerSpiritsCD:Stop()
 			else
 				specWarnIncarnate:Play("mobsoon")--Stage 2, he's lifting off for big adds
 				timerExplodingCoreCD:Start(nil, self.vb.incarnCount+1)
