@@ -45,6 +45,7 @@ local warnFleshMortification						= mod:NewYouAnnounce(419462, 4) --Омертв
 --local warnSmashingViscera							= mod:NewTargetNoFilterAnnounce(424456, 3)--Re-add if it gets put back in combat log
 
 local specWarnMarkedforTorment						= mod:NewSpecialWarningSoonCount(422776, nil, 234406, nil, 2, 2) --Метка мучений (Мучения)
+local specWarnMarkedforTorment2						= mod:NewSpecialWarningCount(422776, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Метка мучений (АоЕ)
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2) --Промокшие клинки
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
 local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2) --Обжигающие муки (Цепи)
@@ -273,6 +274,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVitalRupture:Play("targetyou")
 		end
 	elseif spellId == 422961 then--Torment Beginning
+		if self:IsMythic() then
+			specWarnMarkedforTorment2:Show()
+			specWarnMarkedforTorment2:Play("aesoon")
+		end
 		tormentOverTime = GetTime() + 20--Expected duration
 		timerIntermission:Start()
 		--Timers started in applied instead of removed, so they don't need adjusting later in LFR due to overtime
