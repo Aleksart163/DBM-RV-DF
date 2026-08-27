@@ -41,17 +41,35 @@ local timerDownDraft				= mod:NewCastTimer(9, 199345, DBM_COMMON_L.PUSHBACK, nil
 mod.vb.breathCount = 0
 mod.vb.earthCount = 0
 mod.vb.draftCount = 0
+mod.vb.proshlyapBreathCount = 0
 
-local proshlyapationDownDraftTimers = {11.2, 31.2, 30.3, 30.3, 30.3}
+local proshlyapationDownDraftTimers = {11.2, 31.2, 30.3} --Нисходящий поток (Отталкивание) 7 кастов норм
+local proshlyapationBreathTimers = {7.2, 23, 30.5, 30.3} --Дыхание порчи (Фронталка) 8 кастов норм
+
+local function checkBreathProshlyap(self)
+	self.vb.proshlyapBreathCount = self.vb.proshlyapBreathCount + 1
+	specWarnBreath:Show()
+	specWarnBreath:Play("breathsoon")
+	local timer
+	if self:IsMythic() then
+		timer = proshlyapationBreathTimers[self.vb.proshlyapBreathCount+1] or 30.3
+	end
+	timerBreathCD:Start(timer, self.vb.proshlyapBreathCount+1)
+	self:Schedule(timer, checkBreathProshlyap, self)
+	DBM:AddMsg("Запущена тестовая версия проверки таймеров на каст Дыхание порчи. Если они неточные, то необходимо связаться с разработчиком аддона.")
+--	DBM:Debug("Murchal Proshlyap (Проверка Дыхания порчи)", 2)
+end
 
 function mod:OnCombatStart(delay)
+	self.vb.proshlyapBreathCount = 0
 	self.vb.breathCount = 0
 	self.vb.earthCount = 0
 	self.vb.draftCount = 0
 --	timerBreathCD:Start(13.3-delay, 1)--13.3-15.4
 --	timerDownDraftCD:Start(19.4-delay, 1)--19.4-22.7
 --	timerEarthShakerCD:Start(31.6-delay, 1)--31.6-34.8
-	timerBreathCD:Start(7.3-delay, 1) --
+	timerBreathCD:Start(7.2-delay, 1) --
+	self:Schedule(7.2-delay, checkBreathProshlyap, self)
 	timerDownDraftCD:Start(11.2-delay, 1) --
 	timerEarthShakerCD:Start(34.3-delay, 1) --
 end
@@ -67,7 +85,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDownDraft:Show(DBM_COMMON_L.BOSS)
 		specWarnDownDraft:Play("movetoboss")
 		local timer
-		timer = proshlyapationDownDraftTimers[self.vb.draftCount+1] or 31.2
+		timer = proshlyapationDownDraftTimers[self.vb.draftCount+1] or 30.3
 		timerDownDraftCD:Start(timer, self.vb.draftCount+1)
 		timerDownDraft:Start()
 	elseif spellId == 191325 then--If they ever enable it in combat log, it'll be this ID
@@ -86,7 +104,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args) --Сломано на стороне сервера
 	local spellId = args.spellId
-	if spellId == 199329 then
+	if spellId == 199329 or spellId == 191325 then
 		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 1)", 2)
 	end
 end
@@ -106,10 +124,11 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --"<1406.30 22:44:12> [UNIT_TARGET] boss1#Dresaron#Target: ??#TargetOfTarget: ??", -- [17511]
 --"<1407.09 22:44:12> [UNIT_SPELLCAST_CHANNEL_START] Dresaron(71.2%-0.0%){Target:??} -Breath of Corruption- 2s [[boss1:nil:191325]]", -- [17524]
 --"<1407.12 22:44:12> [CLEU] SPELL_DAMAGE#Creature-0-5770-1466-11160-99200-000021BD9C#Dresaron#Player-5764-000CFD06#Fxa#191326#Breath of Corruption", -- [17526]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) --Сломано разрабами и не работает
 	if spellId == 199332 then--Target scanning not an option, boss wipes target as seen above
-		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnBreath:Show()
+	--	self.vb.breathCount = self.vb.breathCount + 1
+		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 2)", 2)
+--[[		specWarnBreath:Show()
 		specWarnBreath:Play("breathsoon")
 		--"Breath of Corruption-199332-npc:99200-000021BD9C = pull:14.6, 22.0, 30.4", -- [8]
 		if self.vb.breathCount == 2 then--TODO, longer pulls to find out if it's 30 every other one
@@ -117,6 +136,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		else
 			timerBreathCD:Start(22, self.vb.breathCount+1)
 		end
-		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 2)", 2)
+		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 2)", 2)]]
 	end
 end
