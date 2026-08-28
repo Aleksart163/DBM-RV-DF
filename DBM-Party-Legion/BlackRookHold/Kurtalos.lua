@@ -204,6 +204,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--2 примерных таймера, разрабы вполне могли их поломать
 		timerGuileCD:Start(63.8, self.vb.guileCount+1)
 		warnGuile:Schedule(58.8)
+		warnGuile:ScheduleVoice(58.8, "specialsoon")
 		--Должны быть норм таймеры после 1 хитроумия, дальше хз
 		timerCloudCD:Start(19.4, self.vb.cloudCount+1)
 		timerSwarmCD:Start(15.5, self.vb.swarmCount+1)
@@ -228,5 +229,6 @@ function mod:UNIT_DIED(args)
 		timerCloudCD:Start(14.9, 1) --27.2
 		timerGuileCD:Start(36.7, 1) --
 		warnGuile:Schedule(31.7) --
+		warnGuile:ScheduleVoice(31.7, "specialsoon")
 	end
 end

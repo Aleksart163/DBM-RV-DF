@@ -25,7 +25,8 @@ mod:RegisterEventsInCombat(
  or ability.name = "Breath of Corruption" and type = "damage"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnRoar						= mod:NewSpellAnnounce(199389, 2) --Сотрясающий землю рык
+local warnRoar						= mod:NewSpellAnnounce(199389, 2, nil, nil, 405332) --Сотрясающий землю рык (Сотрясающий рык)
+local warnRoar2						= mod:NewPreWarnAnnounce(199389, 5, 1, nil, nil, 405332) --Сотрясающий землю рык (Сотрясающий рык)
 
 local specWarnDownDraft				= mod:NewSpecialWarningMoveTo(199345, nil, nil, DBM_COMMON_L.PUSHBACK, 4, 2) --Нисходящий поток (Отталкивание)
 local specWarnBreath				= mod:NewSpecialWarningDodge(191325, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание порчи (Фронталка)
@@ -80,6 +81,8 @@ function mod:SPELL_CAST_START(args)
 		self.vb.earthCount = self.vb.earthCount + 1
 		warnRoar:Show()
 		timerEarthShakerCD:Start(nil, self.vb.earthCount+1)
+		warnRoar2:Schedule(25.3)
+		warnRoar2:ScheduleVoice(25.3, "aesoon")
 	elseif spellId == 199345 then
 		self.vb.draftCount = self.vb.draftCount + 1
 		specWarnDownDraft:Show(DBM_COMMON_L.BOSS)
@@ -129,10 +132,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) --Сломано разр
 	--	self.vb.breathCount = self.vb.breathCount + 1
 		DBM:Debug("Check Murchal proshlyap (Случился каст дыхания 2)", 2)
 --[[		specWarnBreath:Show()
+		self.vb.breathCount = self.vb.breathCount + 1
+		specWarnBreath:Show()
 		specWarnBreath:Play("breathsoon")
 		--"Breath of Corruption-199332-npc:99200-000021BD9C = pull:14.6, 22.0, 30.4", -- [8]
 		if self.vb.breathCount == 2 then--TODO, longer pulls to find out if it's 30 every other one
-			timerBreathCD:Start(30, self.vb.breathCount+1)
+
+@@ -136,6 +138,5 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId) --Сломано разр
 		else
 			timerBreathCD:Start(22, self.vb.breathCount+1)
 		end

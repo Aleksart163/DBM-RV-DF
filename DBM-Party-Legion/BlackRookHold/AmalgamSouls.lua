@@ -155,7 +155,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSoulEchos:Show()
 			specWarnSoulEchos:Play("runaway")
 			specWarnSoulEchos:ScheduleVoice(1, "keepmove")
-			yellSoulEchoesFades:Countdown(spellId)
+			yellSoulEchoesFades:Countdown(12, 5)
 		else
 			warnSoulEchoes:Show(args.destName)
 		end

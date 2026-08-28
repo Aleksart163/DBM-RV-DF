@@ -118,7 +118,7 @@ local function startProshlyapPhase2(self)
 	timerBrutalGlaiveCD:Stop()
 	timerVengefulShearCD:Stop()
 	timerDarkRushCD:Stop()
-	timerLeapCD:Start(42, 1)
+	timerLeapCD:Start(41.5, 1) --42
 	self:Schedule(145, startProshlyapPhase2, self)
 end
 
