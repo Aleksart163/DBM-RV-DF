@@ -45,7 +45,7 @@ mod.vb.draftCount = 0
 mod.vb.proshlyapBreathCount = 0
 
 local proshlyapationDownDraftTimers = {11.2, 31.2, 30.3} --Нисходящий поток (Отталкивание) 7 кастов норм
-local proshlyapationBreathTimers = {7.2, 23, 30.5, 30.3} --Дыхание порчи (Фронталка) 8 кастов норм
+local proshlyapationBreathTimers = {7.2, 23, 30.3} --Дыхание порчи (Фронталка) 8 кастов норм
 
 local function checkBreathProshlyap(self)
 	self.vb.proshlyapBreathCount = self.vb.proshlyapBreathCount + 1
