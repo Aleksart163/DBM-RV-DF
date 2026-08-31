@@ -499,7 +499,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 428400 and self:AntiSpam(5, 1) then--Not verified yet
 		warnExplodingCore:Show()
 		specWarnExplodingCore:Show()
-		specWarnExplodingCore:Play("defensive")
+		specWarnExplodingCore:Play("aesoon")
 --	elseif spellId == 428971 then--Not verified yet
 		--timerMoltenEruptionCD:Start(nil, args.sourceGUID)
 --	elseif spellId == 428968 then--Not verified yet

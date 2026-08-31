@@ -206,7 +206,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:SetStage(2)
 		self.vb.encroached = false
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
-		warnPhase:Play("phasechange")
+		warnPhase:Play("ptwo")
 		timerBrandofDamnationCD:Stop()
 		timerOverheatedCD:Stop()
 		timerLavaGeysersCD:Stop()
@@ -234,7 +234,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		playerWasFirstBrand = false
 		self.vb.cycleCount = self.vb.cycleCount + 1
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
-		warnPhase:Play("phasechange")
+		warnPhase:Play("pone")
 		timerEncroachingDestructionCD:Stop()
 		timerDevourEssenceCD:Stop()
 		timerOverheatedCD:Start(10, self.vb.overheatedCount+1)

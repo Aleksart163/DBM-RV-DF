@@ -122,6 +122,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.furyCount = self.vb.furyCount + 1
 		self.vb.flamesIcon = 1
 		specWarnSperentsFury:Show(self.vb.furyCount)
+		specWarnSperentsFury:Play("aesoon")
 		timerSerpentsFuryCD:Start(nil, self.vb.furyCount+1)
 		timerSerpentsFuryCast:Start(7.5)
 	elseif spellId == 420933 then

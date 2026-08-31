@@ -286,7 +286,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2556)
 
 L:SetMiscLocalization({
-	Threads			= "Потоки (%s)"
+	Threads			= "Нити (%s)"
 })
 
 ---------------------------

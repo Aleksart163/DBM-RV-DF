@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 420846 429108 429180 429615 426855 426519 428471",--426147
-	"SPELL_CAST_SUCCESS 420907 426519 422721 429108 429180",
+	"SPELL_CAST_SUCCESS 420907 426519 422721 429108 429180 420846 429615 426855",
 	"SPELL_SUMMON 421419 428465",
 	"SPELL_AURA_APPLIED 420554 425745 425781 423195 427722 428479 429983",
 	"SPELL_AURA_APPLIED_DOSE 420554 428479 429983",
@@ -30,48 +30,53 @@ mod:RegisterEventsInCombat(
  or ability.id = 429983 and (type = "applydebuff" or type = "applydebuffstack")
 --]]
 --TODO, Unravel stack tracking in Stage 2?
+--General
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
+
+local timerPhaseCD									= mod:NewStageCountTimer(60, 426855, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 --Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28355))
-local warnContinuum									= mod:NewCountAnnounce(420846, 2)
-local warnVerdantMatrix								= mod:NewCountAnnounce(420554, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(420554))
-local warnInflorescence								= mod:NewYouAnnounce(423195, 1, nil, false, 2)--Can be spammy depending on player movements, off by default, most might track this with WA anyways
-local warnSurgingGrowth								= mod:NewCountAnnounce(429983, 2)
-local warnWeaversBurden								= mod:NewCountAnnounce(426519, 2, nil, nil, 167180)
-local warnWeaversBurdenTargets						= mod:NewTargetCountAnnounce(426519, 2, nil, nil, 167180, nil, nil, nil, true)
-local warnEphemeralFlora							= mod:NewCountAnnounce(430563, 3)
-local warnLucidVulnerability						= mod:NewCountAnnounce(428479, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(428479))--Player
+local warnVerdantMatrix								= mod:NewCountAnnounce(420554, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(420554)) --Изумрудная матрица
+local warnInflorescence								= mod:NewYouAnnounce(423195, 1, nil, false, 2) --Соцветие Can be spammy depending on player movements, off by default, most might track this with WA anyways
+local warnSurgingGrowth								= mod:NewCountAnnounce(429983, 2) --Бушующая поросль
+local warnWeaversBurden								= mod:NewCountAnnounce(426519, 2, nil, nil, 167180) --Бремя Ткача (Бомбы)
+--local warnWeaversBurdenTargets						= mod:NewTargetCountAnnounce(426519, 2, nil, nil, 174716, nil, nil, nil, true) --Бремя Ткача (Бомба)
+local warnEphemeralFlora							= mod:NewCountAnnounce(430563, 3) --Эфемерные растения
+local warnLucidVulnerability						= mod:NewCountAnnounce(428479, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(428479)) --Уязвимость к свету Player
 
-local specWarnImpendingLoom							= mod:NewSpecialWarningDodgeCount(429615, nil, nil, nil, 2, 2)
-local specWarnEphemeralFlora						= mod:NewSpecialWarningSoakCount(430563, "Melee", nil, nil, 2, 2)
-local specWarnViridianRain							= mod:NewSpecialWarningDodgeCount(420907, nil, nil, nil, 2, 2)
-local specWarnWeaversBurden							= mod:NewSpecialWarningMoveAway(426519, nil, 37859, nil, 1, 2)
-local specWarnWeaversBurdenOther					= mod:NewSpecialWarningTaunt(426519, nil, 37859, nil, 1, 2)
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(428474, nil, nil, nil, 1, 8)
+local specWarnContinuum								= mod:NewSpecialWarningCount(420846, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Непрерывность (АоЕ)
+local specWarnImpendingLoom							= mod:NewSpecialWarningDodgeCount(429615, nil, nil, DBM_COMMON_L.LASERS, 2, 2) --Станок неизбежности
+local specWarnEphemeralFlora						= mod:NewSpecialWarningSoakCount(430563, "Melee", nil, nil, 2, 2) --Эфемерные растения
+local specWarnViridianRain							= mod:NewSpecialWarningDodgeCount(420907, nil, nil, nil, 2, 2) --Изумрудный дождь
+local specWarnWeaversBurden							= mod:NewSpecialWarningMoveAway(426519, nil, 174716, nil, 4, 2) --Бремя Ткача (Бомба)
+local specWarnWeaversBurdenOther					= mod:NewSpecialWarningTaunt(426519, nil, 174716, nil, 1, 2) --Бремя Ткача (Бомба)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(428474, nil, nil, nil, 1, 8) --Яркие миазмы
 
 local colorRed = DBM:GetSpellName(291520)
 
-local timerImpendingLoomCD							= mod:NewCDCountTimer(23.8, 429615, L.Threads, nil, nil, 3)
-local timerEphemeralFloraCD							= mod:NewCDCountTimer(49, 430563, colorRed.." "..DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerSurgingGrowthCD							= mod:NewCDCountTimer(7, 429983, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3)--5.1-9, usually 8-9
-local timerViridianRainCD							= mod:NewCDCountTimer(19.1, 420907, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 3)
-local timerWeaversBurdenCD							= mod:NewCDCountTimer(17.8, 426519, 167180, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--ST "Bombs"
+local timerContinuumCast							= mod:NewCastTimer(10, 420846, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Непрерывность (АоЕ)
+local timerImpendingLoomCD							= mod:NewCDCountTimer(23.8, 429615, DBM_COMMON_L.LASERS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Станок неизбежности (Лазеры)
+local timerEphemeralFloraCD							= mod:NewCDCountTimer(49, 430563, colorRed.." "..DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Эфемерные растения (Поглощения)
+local timerSurgingGrowthCD							= mod:NewCDCountTimer(7, 429983, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 3) --Бушующая поросль (Поглощения) 5.1-9, usually 8-9
+local timerViridianRainCD							= mod:NewCDCountTimer(19.1, 420907, DBM_COMMON_L.AOEDAMAGE.." (%s)", nil, nil, 3) --Изумрудный дождь (АоЕ)
+local timerWeaversBurdenCD							= mod:NewCDCountTimer(17.8, 426519, 167180, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Бремя Ткача (Бомбы)
 local berserkTimer									= mod:NewBerserkTimer(720)
 
-mod:AddPrivateAuraSoundOption(427722, true, 426519, 1)--Weaver's Burden
+mod:AddPrivateAuraSoundOption(427722, true, 426519, 4)--Weaver's Burden
 --Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28356))
-local warnFullBloom									= mod:NewCountAnnounce(426855, 2)
-local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false)
-local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35)
+local warnFullBloom									= mod:NewCountAnnounce(426855, 2) --Полный цвет
+local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false) --Веерное цветение
+local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35) --Пробуждающее истребление
 
+local specWarnWakingDecimation						= mod:NewSpecialWarningSpell(428471, nil, 363533, nil, 3, 4) --Пробуждающее истребление (Мощный взрыв)
 local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 
-local timerFullBloomCD								= mod:NewCDCountTimer(49, 426855, nil, nil, nil, 6)
 local timerLumberingSlamCD							= mod:NewCDNPTimer(18.2, 429108, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--No reason to CL it, it's a nameplate only timer
-local timerRadialFlourishCD							= mod:NewCDNPTimer(5.5, 422721, nil, false, nil, 3)--5-12 so kinda fickle, off by default
-local timerWakingDecimation							= mod:NewCastTimer(36, 428471, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--1sec delay before energy starts + 30 + 5 second cast
+local timerRadialFlourishCD							= mod:NewCDNPTimer(5.5, 422721, nil, false, nil, 3) --Веерное цветение 5-12 so kinda fickle, off by default
+local timerWakingDecimationCast						= mod:NewCastTimer(36, 428471, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Пробуждающее истребление (Мощный взрыв) 1sec delay before energy starts + 30 + 5 second cast
 
-local yellWeaversBurden								= mod:NewShortYell(426519, 37859, nil, nil, "YELL")--ST "Bomb"
+local yellWeaversBurden								= mod:NewShortYell(426519, 174716, nil, nil, "YELL") --Бремя Ткача (Бомба)
 --local yellWeaversBurdenFades						= mod:NewShortFadesYell(426519, nil, nil, nil, "YELL")
 
 mod:AddSetIconOption("SetIconOnWarden", -27432, true, 5, {7, 6})
@@ -117,7 +122,7 @@ function mod:OnCombatStart(delay)
 	timerWeaversBurdenCD:Start(18, 1)--Start
 	timerViridianRainCD:Start(21, 1)
 	timerImpendingLoomCD:Start(24, 1)
-	timerFullBloomCD:Start(70, 1)
+	timerPhaseCD:Start(70.9, 2) --Нормально под героик и обычку (возможно гуд будет и в мифике)
 	if self:IsMythic() then
 		timerEphemeralFloraCD:Start(28, 1)
 		self:Schedule(28, blizzardHatesCombatLogLoop, self)
@@ -138,8 +143,8 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 420846 then--Continuum
-		self:SetStage(0)
+	if spellId == 420846 then --Непрерывность
+		self:SetStage(1)
 		self.vb.contCount = self.vb.contCount + 1
 		--No count resets in BW, so no count resets in DBM
 		self.vb.loomCount = 0
@@ -147,7 +152,8 @@ function mod:SPELL_CAST_START(args)
 		self.vb.surgingCount = 0
 		self.vb.rainCount = 0
 		self.vb.floraCount = 0
-		warnContinuum:Show(self.vb.contCount)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
+		warnPhase:Play("pone")
 		--Block first surging that happens during this cast
 		self:AntiSpam(25, 2)--Block surging alert/timers initially, since 8 second loop doesn't start yet and we wanna start 28 timer
 		--"<115.76 10:52:40> [CLEU] SPELL_CAST_START#Creature-0-1471-2549-13215-206172-0000588831#Nymue(70.4%-0.0%)##nil#420846#Continuum#nil#nil",
@@ -159,7 +165,7 @@ function mod:SPELL_CAST_START(args)
 		timerWeaversBurdenCD:Start(34.7, 1)--self.vb.burdenCount+1
 		timerViridianRainCD:Start(36.7, 1)--self.vb.rainCount+1
 		timerImpendingLoomCD:Start(40.6, 1)--self.vb.loomCount+1
-		timerFullBloomCD:Start(87.2, self.vb.bloomCount+1)
+		timerPhaseCD:Start(87.3, 1)
 		if self:IsMythic() then
 			timerEphemeralFloraCD:Start(45, 1)--self.vb.floraCount+1
 			self:Schedule(45, blizzardHatesCombatLogLoop, self)
@@ -167,13 +173,10 @@ function mod:SPELL_CAST_START(args)
 		self:UnregisterShortTermEvents()
 	elseif spellId == 429615 then
 		self.vb.loomCount = self.vb.loomCount + 1
-		specWarnImpendingLoom:Show(self.vb.loomCount)
-		specWarnImpendingLoom:Play("farfromline")
 		if self.vb.loomCount % 2 == 1 then
 			timerImpendingLoomCD:Start(nil, self.vb.loomCount+1)
 		end
-	elseif spellId == 426855 then--Full Bloom
-		self:SetStage(0)
+	elseif spellId == 426855 then --Полный цвет
 		self.vb.bloomCount = self.vb.bloomCount + 1
 		warnFullBloom:Show(self.vb.bloomCount)
 		self.vb.wardenIcon = 7
@@ -213,6 +216,8 @@ function mod:SPELL_CAST_START(args)
 --		timerSurgingGrowthCD:Start(nil, self.vb.surgingCount+1)
 	elseif spellId == 428471 then
 		warnWakingDecimation:Show()
+		specWarnWakingDecimation:Show()
+		specWarnWakingDecimation:Play("aesoon")
 	end
 end
 
@@ -256,6 +261,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 --		self.vb.floraCount = self.vb.floraCount + 1
 --		warnEphemeralFlora:Show(self.vb.floraCount)
 --		timerEphemeralFloraCD:Start(nil, self.vb.floraCount+1)
+	elseif spellId == 420846 then--Continuum
+		specWarnContinuum:Show(self.vb.contCount)
+		specWarnContinuum:Play("aesoon")
+		timerContinuumCast:Start()
+	elseif spellId == 429615 then
+		specWarnImpendingLoom:Show(self.vb.loomCount)
+		specWarnImpendingLoom:Play("farfromline")
+	elseif spellId == 426855 then --Полный цвет
+		self:SetStage(2)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Play("ptwo")
 	end
 end
 
@@ -271,7 +287,7 @@ function mod:SPELL_SUMMON(args)
 		end
 	elseif spellId == 428465 then--Manifested Dream
 		if not castsPerGUID[args.destGUID] then
-			timerWakingDecimation:Start(nil, args.destGUID)
+			timerWakingDecimationCast:Start(nil, args.destGUID)
 			castsPerGUID[args.destGUID] = 0
 			if self.Options.SetIconOnManifestedDream then
 				self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "SetIconOnManifestedDream")
@@ -335,6 +351,6 @@ function mod:UNIT_DIED(args)
 		timerLumberingSlamCD:Stop(args.destGUID)
 		timerRadialFlourishCD:Stop(args.destGUID)
 	elseif cid == 213143 then--Manifested Dream
-		timerWakingDecimation:Stop(args.destGUID)
+		timerWakingDecimationCast:Stop(args.destGUID)
 	end
 end
