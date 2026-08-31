@@ -165,7 +165,7 @@ function mod:SPELL_CAST_START(args)
 		timerWeaversBurdenCD:Start(34.7, 1)--self.vb.burdenCount+1
 		timerViridianRainCD:Start(36.7, 1)--self.vb.rainCount+1
 		timerImpendingLoomCD:Start(40.6, 1)--self.vb.loomCount+1
-		timerPhaseCD:Start(87.3, 1)
+		timerPhaseCD:Start(87.3, 2)
 		if self:IsMythic() then
 			timerEphemeralFloraCD:Start(45, 1)--self.vb.floraCount+1
 			self:Schedule(45, blizzardHatesCombatLogLoop, self)
