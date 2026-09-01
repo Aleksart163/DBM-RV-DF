@@ -31,58 +31,58 @@ mod:RegisterEventsInCombat(
 --TODO, maybe do more with Polymorph Bomb stuff like slippery tracking. Again it might be infoframe stuff. But if people make WAs for it probably won't
 --TODO, GUID based timers once real timers, for full nameplate aura support
 --General
-local warnRebirth									= mod:NewCastAnnounce(418187, 4)
+local warnRebirth									= mod:NewCastAnnounce(418187, 4) --Возрождение
 
-local specWarnGTFO									= mod:NewSpecialWarningGTFO(426390, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(426390, nil, nil, nil, 1, 8) --Едкая пыльца
 
 --local berserkTimer								= mod:NewBerserkTimer(600)
 --Urctos
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27300))
-local warnAgonizingClaws							= mod:NewStackAnnounce(421022, 2, nil, "Tank|Healer")
-local warnUrsineRage								= mod:NewSpellAnnounce(425114, 4)--You done fucked up
+local warnAgonizingClaws							= mod:NewStackAnnounce(421022, 2, nil, "Tank|Healer") --Мучительные когти
 
-local specWarnBlindingRage							= mod:NewSpecialWarningCount(420525, nil, nil, nil, 2, 2)
+local specWarnUrsineRage							= mod:NewSpecialWarningSpell(425114, nil, nil, nil, 3, 4) --Медвежья ярость (Ты прошляпался)
+local specWarnBlindingRage							= mod:NewSpecialWarningCount(420525, nil, nil, nil, 2, 2) --Слепая ярость
 local specWarnBarrelingCharge						= mod:NewSpecialWarningCount(420948, nil, 100, nil, 1, 14) --Пробивной рывок (Рывок)
 local specWarnBarrelingChargeSpecial				= mod:NewSpecialWarningMoveTo(420948, nil, 100, nil, 3, 14) --Пробивной рывок (Рывок)
-local specWarnAgonizingClaws						= mod:NewSpecialWarningTaunt(421022, nil, nil, 2, 1, 2)
+local specWarnAgonizingClaws						= mod:NewSpecialWarningTaunt(421022, nil, nil, 2, 1, 2) --Мучительные когти
 --local specWarnPyroBlast							= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
 
 --local timerSinseekerCD							= mod:NewAITimer(49, 335114, nil, nil, nil, 3)
-local timerBlindingRageCD							= mod:NewNextCountTimer(200, 420525, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerBlindingRage								= mod:NewBuffActiveTimer(15, 420525, nil, nil, nil, 5)
-local timerBarrelingChargeCD						= mod:NewCDCountTimer(11.8, 420948, 100, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Tank focused, but soaked by everyone so it's on for everyone
-local timerAgonizingClawsCD							= mod:NewCDCountTimer(6, 421022, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBlindingRageCD							= mod:NewNextCountTimer(200, 420525, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Слепая ярость
+local timerBlindingRage								= mod:NewBuffActiveTimer(15, 420525, nil, nil, nil, 5) --Слепая ярость
+local timerBarrelingChargeCD						= mod:NewCDCountTimer(11.8, 420948, 100, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пробивной рывок (Рывок) Tank focused, but soaked by everyone so it's on for everyone
+local timerAgonizingClawsCD							= mod:NewCDCountTimer(6, 421022, DBM_COMMON_L.FRONTAL.." (%s)", "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мучительные когти (Фронталка)
 --Aerwynn
 local Aerwynn = DBM:EJ_GetSectionInfo(27301)
 mod:AddTimerLine(Aerwynn)
-local warnRelentlessBarrage							= mod:NewSpellAnnounce(420937, 4)--You done fucked up
-local warnNoxiousBlossom							= mod:NewCountAnnounce(420671, 3)
+local warnNoxiousBlossom							= mod:NewCountAnnounce(420671, 3) --Ядовитый цветок
 local warnPoisonousJavelin							= mod:NewTargetCountAnnounce(420858, 3, nil, nil, nil) --Отравленное копье , nil, nil, nil, nil, nil, nil, true
 
-local specWarnConstrictingThicket					= mod:NewSpecialWarningCount(421292, nil, nil, nil, 2, 2)
+local specWarnRelentlessBarrage						= mod:NewSpecialWarningSpell(420937, nil, nil, nil, 3, 4) --Неослабевающий шквал (Ты прошляпался)
+local specWarnConstrictingThicket					= mod:NewSpecialWarningCount(421292, nil, nil, nil, 2, 2) --Давящие заросли
 local specWarnPoisonousJavelin						= mod:NewSpecialWarningMoveAway(420858, nil, nil, nil, 1, 2) --Отравленное копье
 
-local timerConstrictingThicketCD					= mod:NewNextCountTimer(11.8, 421292, nil, nil, nil, 2)
-local timerConstrictingThicket						= mod:NewBuffActiveTimer(15, 421292, nil, nil, nil, 5)
-local timerNoxiousBlossomCD							= mod:NewCDCountTimer(21, 420671, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3)
+local timerConstrictingThicketCD					= mod:NewNextCountTimer(11.8, 421292, nil, nil, nil, 2, nil, nil, nil, 1, 5) --Давящие заросли
+local timerConstrictingThicket						= mod:NewBuffActiveTimer(15, 421292, nil, nil, nil, 5) --Давящие заросли
+local timerNoxiousBlossomCD							= mod:NewCDCountTimer(21, 420671, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Ядовитый цветок
 local timerPoisonousJavelinCD						= mod:NewCDCountTimer(25, 420858, nil, nil, nil, 3, nil, DBM_COMMON_L.POISON_ICON) --Отравленное копье
 
 --Pip
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27302))
-local warnCaptivatingFinale							= mod:NewTargetNoFilterAnnounce(421032, 4)--You done fucked up
-local warnPolymorphBomb								= mod:NewIncomingCountAnnounce(418720, 2)
+local warnCaptivatingFinale							= mod:NewTargetNoFilterAnnounce(421032, 4) --Захватывающий финал You done fucked up
+local warnPolymorphBomb								= mod:NewIncomingCountAnnounce(418720, 2) --Превращающая бомба
 --local warnPolymorphBombTargets						= mod:NewTargetCountAnnounce(418720, 3, nil, nil, nil, nil, nil, nil, true)--Blizzard finally fixed RBW detection, but maybe they'll unprivate in season 4?
-local warnSongFaded									= mod:NewFadesAnnounce(421029, 1)
+local warnSongFaded									= mod:NewFadesAnnounce(421029, 1) --Песня дракона
 
-local specWarnSongoftheDragon						= mod:NewSpecialWarningMoveTo(421029, nil, nil, nil, 2, 2)
-local specWarnCaptivatingFinale						= mod:NewSpecialWarningYou(421032, nil, nil, nil, 1, 2)
-local specWarnPolymorphBomb							= mod:NewSpecialWarningYou(418720, nil, 118, nil, 1, 2)
-local specWarnEmeraldWinds							= mod:NewSpecialWarningCount(421024, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13)
+local specWarnSongoftheDragon						= mod:NewSpecialWarningMoveTo(421029, nil, nil, nil, 4, 4) --Песня дракона
+local specWarnCaptivatingFinale						= mod:NewSpecialWarningYou(421032, nil, nil, nil, 1, 2) --Захватывающий финал
+local specWarnPolymorphBomb							= mod:NewSpecialWarningYou(418720, nil, 118, nil, 1, 2) --Превращающая бомба (Превращение)
+local specWarnEmeraldWinds							= mod:NewSpecialWarningCount(421024, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 13) --Изумрудные ветра (Отталкивание)
 
-local timerSongoftheDragonCD						= mod:NewNextCountTimer(200, 421029, nil, nil, nil, 2)
-local timerSongoftheDragon							= mod:NewBuffActiveTimer(20, 421029, nil, nil, nil, 5)
-local timerPolymorphBombCD							= mod:NewCDCountTimer(18.9, 418720, L.Ducks, nil, nil, 3)--Ducks already has count in mod localization
-local timerEmeraldWindsCD							= mod:NewCDCountTimer(11.8, 421024, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2)
+local timerSongoftheDragonCD						= mod:NewNextCountTimer(200, 421029, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Песня дракона
+local timerSongoftheDragon							= mod:NewBuffActiveTimer(20, 421029, nil, nil, nil, 5) --Песня дракона
+local timerPolymorphBombCD							= mod:NewCDCountTimer(18.9, 418720, L.Ducks, nil, nil, 3) --Превращающая бомба (Утки) Ducks already has count in mod localization
+local timerEmeraldWindsCD							= mod:NewCDCountTimer(11.8, 421024, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Изумрудные ветра (Отталкивание)
 
 local yellBarrelingCharge							= mod:NewShortYell(420948, 100, nil, nil, "YELL") --Пробивной рывок (Рывок)
 local yellBarrelingChargeFades						= mod:NewShortFadesYell(420948, nil, nil, nil, "YELL") --Пробивной рывок (Рывок)
@@ -331,7 +331,8 @@ function mod:SPELL_CAST_START(args)
 		--Timers that specifically reset on constricting begin
 --		timerBarrelingChargeCD:Restart(3, self.vb.chargeCount+1)--Done somewhere else to start earlier, but this technically where it happens
 	elseif spellId == 420937 then
-		warnRelentlessBarrage:Show()
+		specWarnRelentlessBarrage:Show()
+		specWarnRelentlessBarrage:Play("enrage")
 	elseif spellId == 420671 then
 		self.vb.blossomCount = self.vb.blossomCount + 1
 		warnNoxiousBlossom:Show(self.vb.blossomCount)
@@ -462,7 +463,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 425114 then
-		warnUrsineRage:Show()
+		specWarnUrsineRage:Show()
+		specWarnUrsineRage:Play("enrage")
 	elseif spellId == 421298 then
 		timerConstrictingThicket:Start()
 	elseif spellId == 418755 then--Weakened Defenses

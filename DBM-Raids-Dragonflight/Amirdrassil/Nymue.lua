@@ -69,6 +69,7 @@ local warnFullBloom									= mod:NewCountAnnounce(426855, 2) --Полный ц�
 local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false) --Веерное цветение
 local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35) --Пробуждающее истребление
 
+local specWarnFullBloom								= mod:NewSpecialWarningSwitchCount(426855, nil, nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Полный цвет (Адды)
 local specWarnWakingDecimation						= mod:NewSpecialWarningSpell(428471, nil, 363533, nil, 3, 4) --Пробуждающее истребление (Мощный взрыв)
 local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 
@@ -272,6 +273,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
+		specWarnFullBloom:Show(self.vb.bloomCount)
+		specWarnFullBloom:Play("bigmob")
 	end
 end
 

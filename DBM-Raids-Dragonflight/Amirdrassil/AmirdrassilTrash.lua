@@ -34,7 +34,7 @@ local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
-local timerLumberingSlamCD					= mod:NewCDNPTimer(20, 429180, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerLumberingSlamCD					= mod:NewCDNPTimer(15, 429180, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerChargedStompCD					= mod:NewCDNPTimer(14.6, 425149, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Мощный взрыв) 29.2
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewCastTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) How long it's active and when not to come up
@@ -152,7 +152,7 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 210172 then --Закали-исполин
 		timerChargedStompCD:Stop(args.destGUID)
-	elseif cid == 210518 or cid == 210518 then --Хранитель круговорота
+	elseif cid == 214075 or cid == 210518 then --Хранитель круговорота
 		timerLumberingSlamCD:Stop(args.destGUID)
 	end
 end
