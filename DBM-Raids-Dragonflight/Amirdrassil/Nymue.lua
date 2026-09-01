@@ -69,7 +69,7 @@ local warnFullBloom									= mod:NewCountAnnounce(426855, 2) --Полный ц�
 local warnRadialFlourish							= mod:NewCountAnnounce(422721, 2, nil, false) --Веерное цветение
 local warnWakingDecimation							= mod:NewCastAnnounce(428471, 4, 35) --Пробуждающее истребление
 
-local specWarnFullBloom								= mod:NewSpecialWarningSwitchCount(426855, nil, nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Полный цвет (Адды)
+local specWarnFullBloom								= mod:NewSpecialWarningSwitchCount(426855, "-Healer", nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Полный цвет (Большой адд)
 local specWarnWakingDecimation						= mod:NewSpecialWarningSpell(428471, nil, 363533, nil, 3, 4) --Пробуждающее истребление (Мощный взрыв)
 local specWarnLumberingSlam							= mod:NewSpecialWarningDodge(429108, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 
