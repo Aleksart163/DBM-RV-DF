@@ -127,8 +127,8 @@ local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 425
 local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)
 local warnApocalypseRoar							= mod:NewCountAnnounce(422837, 2, nil, nil, 140459) --Апокалиптический рык (Рык)
 
-local specWarnApocalypseRoar						= mod:NewSpecialWarningDefensive(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
-local specWarnApocalypseRoar2						= mod:NewSpecialWarningSpell(422837, nil, nil, DBM_COMMON_L.USEITEM, 3, 4) --Апокалиптический рык (Используй предмет)
+local specWarnApocalypseRoar						= mod:NewSpecialWarningDefensive(422837, nil, 140459, nil, 3, 13) --Апокалиптический рык (Рык)
+local specWarnApocalypseRoar2						= mod:NewSpecialWarningSpell(422837, nil, nil, DBM_COMMON_L.USEITEM, 3, 13) --Апокалиптический рык (Используй предмет)
 local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
 local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
 
