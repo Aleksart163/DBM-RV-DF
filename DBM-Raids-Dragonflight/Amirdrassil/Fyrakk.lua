@@ -125,8 +125,10 @@ local warnBloom										= mod:NewYouAnnounce(423717, 1)
 local warnInfernalMaw								= mod:NewStackAnnounce(425492, 3, nil, "Tank|Healer") --Пасть Преисподней
 local warnEternalFirestorm							= mod:NewCountAnnounce(422935, 4, nil, nil, 425530) --Вечная огненная буря (Огненное торнадо)
 local warnEternalFirestormSwirl						= mod:NewCountAnnounce(402736, 3, nil, nil, 143413)
+local warnApocalypseRoar							= mod:NewCountAnnounce(422837, 2, nil, nil, 140459) --Апокалиптический рык (Рык)
 
-local specWarnApocalypseRoar						= mod:NewSpecialWarningCount(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
+local specWarnApocalypseRoar						= mod:NewSpecialWarningDefensive(422837, nil, 140459, nil, 2, 13) --Апокалиптический рык (Рык)
+local specWarnApocalypseRoar2						= mod:NewSpecialWarningSpell(422837, nil, nil, DBM_COMMON_L.USEITEM, 3, 4) --Апокалиптический рык (Используй предмет)
 local specWarnInfernalMaw							= mod:NewSpecialWarningDefensive(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
 local specWarnInfernalMawTaunt						= mod:NewSpecialWarningTaunt(425492, nil, nil, nil, 1, 2) --Пасть Преисподней
 
@@ -515,8 +517,14 @@ function mod:SPELL_CAST_START(args)
 		timerFlamefallCast:Start()
 	elseif spellId == 422837 then
 		self.vb.roarCount = self.vb.roarCount + 1
-		specWarnApocalypseRoar:Show(self.vb.roarCount)
-		specWarnApocalypseRoar:Play("pushbackincoming")
+		warnApocalypseRoar:Show(self.vb.roarCount)
+		if ExtraActionBarFrame:IsShown() then
+			specWarnApocalypseRoar2:Show()
+			specWarnApocalypseRoar2:Play("useitem")
+		else
+			specWarnApocalypseRoar:Show()
+			specWarnApocalypseRoar:Play("findshelter")
+		end
 		timerApocalypseroarCD:Start(self:IsMythic() and 46 or 40.9, self.vb.roarCount+1)
 		timerApocalypseroar:Start()
 		if self:IsMythic() then
