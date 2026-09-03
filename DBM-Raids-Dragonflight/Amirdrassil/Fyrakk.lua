@@ -15,9 +15,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 419506 420422 417455 417431 412761 428963 428400 428971 428968 428965 419123 422837 410223 425492 422518 419144",
 	"SPELL_CAST_SUCCESS 430441 422935 422524 426368 417455",
-	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922 423601",
+	"SPELL_AURA_APPLIED 417807 417443 429866 423717 425494 422517 429903 429906 421922",
 	"SPELL_AURA_APPLIED_DOSE 417807 417443 429866 425494",
-	"SPELL_AURA_REMOVED 419144 421922 423601",
+	"SPELL_AURA_REMOVED 419144 421922",
 	"SPELL_PERIODIC_DAMAGE 419504 425483",
 	"SPELL_PERIODIC_MISSED 419504 425483",
 	"CHAT_MSG_MONSTER_YELL",
@@ -139,7 +139,7 @@ local timerEternalFirestormCD						= mod:NewCDCountTimer(41, 422935, 80066, nil,
 local timerEternalFirestormSwirlCD					= mod:NewCDCountTimer(41, 402736, 37641, nil, nil, 3) --Парящие угли (Вихрь)
 local timerCorruptedSeedsCD							= mod:NewCDCountTimer(41, 430048, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 
-mod:AddInfoFrameOption(423601, true) --Семя Амирдрассила
+--mod:AddInfoFrameOption(423601, true) --Семя Амирдрассила
 mod:AddPrivateAuraSoundOption(423601, true, 423601, 1) --Семя Амирдрассила
 mod:AddPrivateAuraSoundOption(430048, true, 430048, 1) --Оскверненное семя
 mod:AddPrivateAuraSoundOption(425525, true, 422935, 4) --Вечная огненная буря
@@ -699,10 +699,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(366548))
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
 		end
-		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 на боссе)", 2)
-	elseif spellId == 423601 then
+--[[	elseif spellId == 423601 then --Не логируется, возможно нужен другой id
 	--	self:UpdateDebuffList()
-		DBM:Debug("Check Murchal proshlyap (Аура цветка на игроке)", 2)
+		DBM:Debug("Check Murchal proshlyap (Аура цветка на игроке)", 2)]]
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -740,10 +739,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
-		DBM:Debug("Check Murchal proshlyap (Аура щитов 1 спала с босса)", 2)
-	elseif spellId == 423601 then
-	--	self:UpdateDebuffList()
-		DBM:Debug("Check Murchal proshlyap (Аура цветка спала с игрока)", 2)
 	end
 end
 --mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED

@@ -87,8 +87,8 @@ local allTimers = {
 	[421616] = {29.9, 20.0, 40.0, 10.0, 10.0, 10.0, 10.0, 30.0, 10.0, 10.0, 10.0, 10.0, 40.0, 20.0}
 }
 
-local proshlyapationScorchtailCrashHeroicTimers = {20, 19.9, 20, 32.2, 10, 7.3, 7.3, 7.3, 32.2, 7.3, 8, 9.9, 7.3, 26.9, 17.3, 20, 20} --По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
-local proshlyapationScorchtailCrashNormalTimers = {19.9, 19.9, 20, 31.2, 10, 7.4, 7.2, 7.2, 32.2, 7.2, 7.2, 10, 8.3, 27, 16.4, 20, 20}
+local proshlyapationScorchtailCrashHeroicTimers = {20, 19.9, 20, 32.2, 10, 7.3, 7.3, 7.3, 32.2, 7.3, 8, 9.9, 7.3, 26.9, 17.3, 20, 20} --Удар хвостом (Под героик и обычку +- норм, возможно в мифе другие таймеры)
+--По инфе с офы {19.9, 20, 20, 30, 7.5, 7.4, 7.4, 7.3, 27.5, 7.4, 7.5, 7.5, 7.4, 27, 17.4, 20}
 
 function mod:DisgorgeTarget(targetname, uId)
 	if not targetname then return end
@@ -169,11 +169,7 @@ function mod:SPELL_SUMMON(args)
 		specWarnScorchtailCrash:Show(self.vb.tailCount)
 		specWarnScorchtailCrash:Play("watchstep")
 		local timer
-		if self:IsHard() then
-			timer = proshlyapationScorchtailCrashHeroicTimers[self.vb.tailCount+1]
-		else
-			timer = proshlyapationScorchtailCrashNormalTimers[self.vb.tailCount+1]
-		end
+		timer = proshlyapationScorchtailCrashHeroicTimers[self.vb.tailCount+1]
 		timerScorchtailCrashCD:Start(timer, self.vb.tailCount+1)
 	end
 end

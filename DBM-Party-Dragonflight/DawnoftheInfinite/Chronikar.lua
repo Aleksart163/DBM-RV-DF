@@ -6,7 +6,7 @@ mod.statTypes = "normal,heroic,mythic,challenge"--No Follower dungeon
 mod:SetRevision("20260630000000")
 mod:SetCreatureID(198995)
 mod:SetEncounterID(2666)
---mod:SetUsedIcons(1, 2, 3)
+mod:SetUsedIcons(8)
 mod:SetHotfixNoticeRev(20260714000000)
 mod:SetMinSyncRevision(20260714000000)
 mod.respawnTime = 29
@@ -16,8 +16,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 413105 413013 401421",
-	"SPELL_AURA_APPLIED 413142",
-	"SPELL_AURA_REMOVED 413013 413142"
+	"SPELL_AURA_APPLIED 413142 413041",
+	"SPELL_AURA_REMOVED 413013 413142 413041"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED"
 )
@@ -36,7 +36,7 @@ local specWarnChronoShear					= mod:NewSpecialWarningDefensive(413013, nil, nil,
 local specWarnSandStomp						= mod:NewSpecialWarningMoveAwayCount(401421, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Песчаный топот
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(407147, nil, nil, nil, 1, 8)
 
-local timerEonShatterCD						= mod:NewCDTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок)
+local timerEonShatterCD						= mod:NewCDCountTimer(19.4, 413142, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Раскол эонов (Прыжок)
 local timerEonResidue						= mod:NewCastCountTimer("d7.5", 403486, DBM_COMMON_L.GROUPSOAKS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON) --Осадок эонов (Поглощение)
 local timerChronoShearCD					= mod:NewCDCountTimer(47, 413013, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Темпоральное иссечение
 local timerSandStompCD						= mod:NewCDCountTimer(19.4, 401421, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3) --Песчаный топот (Лужи)
@@ -46,32 +46,57 @@ local yellChronoShear						= mod:NewYell(413013, nil, nil, nil, "YELL") --Тем
 local yellEonShatter						= mod:NewYell(413142, 47482, nil, nil, "YELL") --Раскол эонов (Прыжок)
 local yellEonShatterFades					= mod:NewShortFadesYell(413142, nil, nil, nil, "YELL") --Раскол эонов (Прыжок)
 
+mod:AddSetIconOption("SetIconOnShearedLifespan", 413041, true, 0, {8}) --Иссеченная жизнь
+
+mod.vb.comboCount = 0
 mod.vb.shatterCount = 0
 mod.vb.shatterSet = 0
 mod.vb.shearCount = 0
 mod.vb.stompCount = 0
 
+local proshlyapationEonTimers = {17.9, 48.3, 46.3}
 local proshlyaptionSandStompTimers = {7.1, 32.4, 17, 31.2, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17, 33.5, 17} --Первые 5 таймеров точные
 
 function mod:OnCombatStart(delay)
+	self.vb.comboCount = 0
 	self.vb.shatterCount = 0
 	self.vb.shatterSet = 0
 	self.vb.shearCount = 0
 	self.vb.stompCount = 0
 	timerSandStompCD:Start(7.1-delay, 1) --7.1
-	timerEonShatterCD:Start(17.9-delay) --17.9
+	timerEonShatterCD:Start(17.9-delay, 1) --17.9
 	timerChronoShearCD:Start(49, 1) --Было отличное кд
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 413105 then
-		--18, 53.5, 51.5
-		if self:AntiSpam(15, 1) then
+		self.vb.comboCount = self.vb.comboCount + 1
+		self.vb.shatterCount = self.vb.shatterCount + 1
+		if self.vb.comboCount == 1 then
+			self.vb.shatterSet = self.vb.shatterSet + 1
+			local timer
+			--17.9, 48.3, 46.3
+			timer = proshlyapationEonTimers[self.vb.shatterSet+1] or 48.5 --Пока тестовое время
+			timerEonShatterCD:Start(timer, self.vb.shatterSet+1)
+		end
+		if self:IsMythic() then
+			timerEonResidue:Start(nil, self.vb.shatterCount)
+		end
+		if self.vb.shatterCount == 1 then
+			specWarnEonShatter:Show(self.vb.shatterSet.." - "..self.vb.shatterCount)
+			specWarnEonShatter:Play("watchstep")
+		else--Cast 2
+			warnEonShatter:Show(self.vb.shatterSet.." - "..self.vb.shatterCount)
+		end
+		if self.vb.comboCount == 2 then
+			self.vb.comboCount = 0
+			self.vb.shatterCount = 0
+		end
+--[[		if self:AntiSpam(15, 1) then --Прошлая версия с офы, немного кривая из-за местных разрабов
 			self.vb.shatterSet = self.vb.shatterSet + 1
 			self.vb.shatterCount = 0
-			--17.9, 48.3, 47.3
-			timerEonShatterCD:Start(47.3, self.vb.shatterSet+1) --По инфе с офы 52
+			timerEonShatterCD:Start(47, self.vb.shatterSet+1)
 		end
 		self.vb.shatterCount = self.vb.shatterCount + 1
 		if self:IsMythic() then
@@ -85,7 +110,7 @@ function mod:SPELL_CAST_START(args)
 			--if self.vb.shatterCount == 2 then
 			--	timerEonShatterCD:Start(42)
 			--end
-		end
+		end]]
 	elseif spellId == 413013 then
 		self.vb.shearCount = self.vb.shearCount + 1
 		if self:IsTanking("player", "boss1", nil, true) then
@@ -119,6 +144,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellEonShatter:Yell()
 			yellEonShatterFades:Countdown(spellId)
 		end
+	elseif spellId == 413041 then
+		if self.Options.SetIconOnShearedLifespan then
+			self:SetIcon(args.destName, 8)
+		end
 	end
 end
 
@@ -131,6 +160,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 413142 then
 		if args:IsPlayer() then
 			yellEonShatterFades:Cancel()
+		end
+	elseif spellId == 413041 then
+		if self.Options.SetIconOnShearedLifespan then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end
