@@ -49,7 +49,7 @@ if (wowToc >= 100200) then
 
 	local timerCombatStart								= mod:NewCombatTimer(7.9)
 	local timerBrushfireCD								= mod:NewNextTimer(13, 428746, DBM_COMMON_L.DAMAGEUP, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Локальное возгорание 15.4 For buff going back up on boss, DPS can time burst CDs
-	local timerColossalBlowCD							= mod:NewCDCountTimer(15.3, 169179, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON) --Колоссальный удар (Фронталка)
+	local timerColossalBlowCD							= mod:NewCDComboTimer(15.3, 169179, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Колоссальный удар (Фронталка)
 	local timerVerdantEruptionCD						= mod:NewCDCountTimer(54.5, 428823, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Изумрудное извержение (Большой моб)
 	local timerLumberingSwipeCD							= mod:NewCDNPTimer(11.8, 169929, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Удар деревьев (Фронталка)
 	local timerGenesis									= mod:NewCastTimer(14, 169613, DBM_COMMON_L.ADDS, nil, nil, 1) --Сотворение (Адды)
@@ -65,7 +65,7 @@ if (wowToc >= 100200) then
 		self.vb.frontalCount = 0
 		self.vb.eruptionCount = 0
 		self.vb.GenesisCount = 0
-		timerColossalBlowCD:Start(2.4-delay, 1)
+		timerColossalBlowCD:Start(2.4-delay, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
 		timerBrushfireCD:Start(4-delay)
 		timerVerdantEruptionCD:Start(22.9-delay, 1)
 		timerGenesisCD:Start(40-delay, 1)
@@ -79,14 +79,17 @@ if (wowToc >= 100200) then
 				specWarnColossalBlow:Show()
 				specWarnColossalBlow:Play("shockwave")
 			end
-			timerColossalBlowCD:Start(nil, self.vb.frontalCount+1)
+			timerColossalBlowCD:Start(nil, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
 		elseif spellId == 169613 then --Сотворение (Адды)
 			self.vb.GenesisCount = self.vb.GenesisCount + 1
 			timerGenesis:Start()
 			timerGenesisCD:Start(nil, self.vb.GenesisCount+1)
-			if timerColossalBlowCD:GetRemaining(self.vb.frontalCount+1) < 10 then
-				timerColossalBlowCD:AddTime(4.5, self.vb.frontalCount+1)
+			if timerColossalBlowCD:GetRemaining() < 10 then
+				timerColossalBlowCD:AddTime(4.5, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
 			end
+--			if timerColossalBlowCD:GetRemaining(self.vb.frontalCount+1) < 10 then
+--				timerColossalBlowCD:AddTime(4.5, self.vb.frontalCount+1)
+--			end
 		elseif spellId == 428823 then
 			self.vb.eruptionCount = self.vb.eruptionCount + 1
 			specWarnVerdantEruption:Show(self.vb.eruptionCount)

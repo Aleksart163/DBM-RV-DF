@@ -65,7 +65,7 @@ mod.vb.reclaimCount = 0
 mod.vb.windsCount = 0--Reused for necrofrost
 mod.vb.fireBreathCount = 0
 
-local proshlyapationNecrofrostTimers = {29, 40, 17, 42.5} --Первые 3 таймеров точные
+local proshlyapationNecrofrostTimers = {28, 40, 14.7, 42.5} --Первые 3 таймеров точные
 
 function mod:OnCombatStart(delay)
 	self.vb.corrosiveCount = 0
@@ -243,7 +243,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Starting timers here better
 		timerCorrosiveInfusionCD:Start(14.5, 1) --Выглядит норм
 		timerIncineratingBlightbreathCD:Start(25, 1) --было 22.8
-		timerNecrofrostCD:Start(27.5, 1) --было 31.4 
+		timerNecrofrostCD:Start(28, 1) --было 31.4 
 		timerBlightReclamationCD:Start(20.7, 1) --Выглядит норм (Было 64)
 		DBM:Debug("Murchal proshlyap (Начался бой с Дажак и Лозкелет (Фаза 3))", 2)
 	end
