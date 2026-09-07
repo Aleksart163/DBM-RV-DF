@@ -48,7 +48,7 @@ local specWarnMarkedforTorment						= mod:NewSpecialWarningSoonCount(422776, nil
 local specWarnMarkedforTorment2						= mod:NewSpecialWarningCount(422776, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Метка мучений (АоЕ)
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2) --Промокшие клинки
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
-local specWarnBlisteringSpear2						= mod:NewSpecialWarningYouPos(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
+local specWarnBlisteringSpear2						= mod:NewSpecialWarningYouPos(414888, nil, 369351, nil, 4, 2) --Обжигающее копье (Копье)
 local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2) --Обжигающие муки (Цепи)
 local specWarnTwistingBlade							= mod:NewSpecialWarningDodge(416996, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Танцующий клинок (Фронталка)
 local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2) --Гибельное разрушение
@@ -71,7 +71,7 @@ local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, 
 local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3) --Остановка сердца
 local berserkTimer									= mod:NewBerserkTimer(600)
 
-local yellBlisteringSpear							= mod:NewShortPosYell(414888, nil, nil, nil, "YELL") --Обжигающее копье (Копьё)
+local yellBlisteringSpear							= mod:NewShortPosYell(414888, 369351, nil, nil, "YELL") --Обжигающее копье (Копьё)
 local yellBlisteringSpearFades						= mod:NewIconFadesYell(414888, nil, nil, nil, "YELL") --Обжигающее копье (Копьё)
 local yellBlisteringTorment							= mod:NewShortYell(414770, 184656, nil, nil, "YELL") --Обжигающие муки (Цепи)
 local yellSmashingViscera							= mod:NewShortYell(424456, 47482, nil, nil, "YELL") --Крушащие внутренности (Прыжок)
@@ -228,8 +228,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self:IsMythic() then
 			if args:IsPlayer() then
-				specWarnBlisteringSpear2:Show(self:IconNumToTexture(icon))
-				specWarnBlisteringSpear2:Play("mm"..icon)
+				if icon == 1 or icon == 2 then
+					specWarnBlisteringSpear2:Show(DBM_COMMON_L.LEFT)
+					specWarnBlisteringSpear2:Play("mm"..icon)
+					DBM:Debug("CheckMurchalProshlyap (icon = "..icon..")", 2)
+				elseif icon == 3 or icon == 4 then
+					specWarnBlisteringSpear2:Show(DBM_COMMON_L.RIGHT)
+					specWarnBlisteringSpear2:Play("mm"..icon)
+					DBM:Debug("CheckMurchalProshlyap (icon = "..icon..")", 2)
+				elseif icon == 5 or icon == 6 then
+					specWarnBlisteringSpear2:Show(DBM_COMMON_L.CENTER)
+					specWarnBlisteringSpear2:Play("mm"..icon)
+					DBM:Debug("CheckMurchalProshlyap (icon = "..icon..")", 2)
+				end
 				yellBlisteringSpear:Yell(icon, icon)
 				yellBlisteringSpearFades:Countdown(spellId, nil, icon)
 			end

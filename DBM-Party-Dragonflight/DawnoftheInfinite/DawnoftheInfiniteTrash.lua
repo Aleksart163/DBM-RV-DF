@@ -123,7 +123,7 @@ local timerVolatileMortarCD					= mod:NewCDNPTimer(28, 407205, DBM_COMMON_L.BOMB
 local timerDeployGoblinSappersCD			= mod:NewCDNPTimer(30.3, 407535, nil, nil, nil, 5)--Poor data
 local timerBronzeExhalationCD				= mod:NewCDNPTimer(17.6, 419351, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Бронзовый выдох (Фронталка)
 local timerFishBoltVolleyCD					= mod:NewCDNPTimer(8, 411300, DBM_COMMON_L.AOEDAMAGE, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Рыбный залп (АоЕ)
-local timerRP								= mod:NewRPTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 1, 5)
+local timerRP								= mod:NewRPTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 
 local yellVolatileMortar					= mod:NewYell(407205, DBM_COMMON_L.BOMBING, nil, nil, "YELL") --Нестабильное орудие (Обстрел)
 local yellVolatileMortarFades				= mod:NewShortFadesYell(407205, nil, nil, nil, "YELL") --Нестабильное орудие (Обстрел)
