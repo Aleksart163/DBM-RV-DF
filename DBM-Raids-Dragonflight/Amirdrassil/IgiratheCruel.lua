@@ -397,15 +397,15 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self.vb.useHeartStopperBackup = true
 		warnUmbralDestructionSoon:Show()
 		warnHeartstopperSoon:Show()
-		timerHeartStopperCD:Start(21.2, 1)
-		timerUmbralDestructionCD:Start(25.2, 1)
+		timerHeartStopperCD:Start(16.1, 1) --21.2
+		timerUmbralDestructionCD:Start(20.1, 1) --25.2
 	elseif spellId == 425283 then --Стойка с топором и мечом
 		self.vb.smashingCount = 0
 		self.vb.umbralCount = 0
 		warnSmashingVisceraSoon:Show()
 		warnUmbralDestructionSoon:Show()
-		timerUmbralDestructionCD:Start(18.8, 1)
-		timerSmashingVisceraCD:Start(25.3, 1)
+		timerUmbralDestructionCD:Start(13.7, 1) --18.8
+		timerSmashingVisceraCD:Start(20.2, 1) --25.3
 	elseif spellId == 414357 then --Стойка с мечом и ножом
 		self.vb.smashingCount = 0
 		self.vb.heartCount = 0
