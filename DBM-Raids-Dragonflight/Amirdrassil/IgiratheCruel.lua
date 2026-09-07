@@ -45,7 +45,8 @@ local warnFleshMortification						= mod:NewYouAnnounce(419462, 4) --Омертв
 --local warnSmashingViscera							= mod:NewTargetNoFilterAnnounce(424456, 3)--Re-add if it gets put back in combat log
 
 local specWarnMarkedforTorment						= mod:NewSpecialWarningSoonCount(422776, nil, 234406, nil, 2, 2) --Метка мучений (Мучения)
-local specWarnMarkedforTorment2						= mod:NewSpecialWarningCount(422776, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Метка мучений (АоЕ)
+local specWarnMarkedforTorment2						= mod:NewSpecialWarningDodgeCount(422776, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Метка мучений (АоЕ)
+--local specWarnMarkedforTorment3						= mod:NewSpecialWarningCount(422776, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Метка мучений (АоЕ)
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2) --Промокшие клинки
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
 local specWarnBlisteringSpear2						= mod:NewSpecialWarningMoveTo(414888, nil, 369351, nil, 4, 2) --Обжигающее копье (Копье)
@@ -65,6 +66,7 @@ local timerTwistingBladeCD							= mod:NewCDCountTimer(20.6, 416996, DBM_COMMON_
 
 local timerIntermission								= mod:NewIntermissionTimer(20, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 local timerMarkedforTormentCD						= mod:NewCDCountTimer(49, 422776, 234406, nil, nil, 6, nil, nil, nil, 3, 5) --Метка мучений (Мучения)
+local timerMarkedforTorment							= mod:NewCDComboTimer(60, 422776, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, nil) --Метка мучений (Отталкивание)
 --Torments
 local timerUmbralDestructionCD						= mod:NewCDCountTimer(49, 416048, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5) --Теневое разрушение (Разделение урона)
 local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Крушащие внутренности (Прыжок)
@@ -98,7 +100,6 @@ mod.vb.smashingCount = 0
 mod.vb.useHeartStopperBackup = false
 local tormentOverTime = 0
 local playerHearted = false
-local proshlyapen = DBM:GetSpellName(415623) --остановка сердца
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -113,12 +114,14 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		timerBlisteringSpearCD:Start(4.5-delay, 1)
 		timerTwistingBladeCD:Start(15.4-delay, 1)
-		timerMarkedforTormentCD:Start(45.8-delay, 1)
+		timerMarkedforTorment:Start(45.8-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+		timerMarkedforTormentCD:Start(50.5-delay, 1) --
 		berserkTimer:Start(420-delay)--430 if a specific weapon combo is done 3rd
 	else
 		timerBlisteringSpearCD:Start(10.6-delay, 1)
 		timerTwistingBladeCD:Start(4.5-delay, 1)
-		timerMarkedforTormentCD:Start(44.7-delay, 1)
+		timerMarkedforTorment:Start(44.7-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+		timerMarkedforTormentCD:Start(47.4-delay, 1) --
 		berserkTimer:Start(600-delay)
 	end
 end
@@ -296,21 +299,25 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVitalRupture:Play("targetyou")
 		end
 	elseif spellId == 422961 then --Метка мучений (Старт каста)
-		if self:IsMythic() then
+--[[		if self:IsMythic() then --Сломано разрабами сервера, АоЕ нету
 			specWarnMarkedforTorment2:Show(self.vb.tormentCount)
 			specWarnMarkedforTorment2:Play("aesoon")
-		end
+		end]]
+		specWarnMarkedforTorment2:Schedule(4, self.vb.tormentCount)
+		specWarnMarkedforTorment2:ScheduleVoice(4, "aesoon")
 		tormentOverTime = GetTime() + 20--Expected duration
 		timerIntermission:Start()
 		--Timers started in applied instead of removed, so they don't need adjusting later in LFR due to overtime
 		if self:IsHard() and self.vb.tormentCount >= 4 then
 --			timerTwistingBladeCD:Start(self:IsMythic() and 138.8 or 30.9, self.vb.TwistingTotal+1)--Mythic twisted not seen yet
 			timerBlisteringSpearCD:Start(38.8, self.vb.spearTotal+1)
+			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 71, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --Примерные таймеры
 			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 74, self.vb.tormentCount+1)
 		else
 			timerBlisteringSpearCD:Start(30, self.vb.spearTotal+1) --34 норм под геру
-			timerTwistingBladeCD:Start(self:IsMythic() and 114.1 or 97.7, self.vb.TwistingTotal+1)
-			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 133.8, self.vb.tormentCount+1)
+			timerTwistingBladeCD:Start(self:IsMythic() and 110.2 or 93.8, self.vb.TwistingTotal+1) --114.1 or 97.7
+			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 129.9, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 133.8, self.vb.tormentCount+1) --
 		end
 	end
 end
