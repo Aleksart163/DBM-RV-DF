@@ -98,6 +98,7 @@ mod.vb.smashingCount = 0
 mod.vb.useHeartStopperBackup = false
 local tormentOverTime = 0
 local playerHearted = false
+local proshlyapen = DBM:GetSpellName(415623) --остановка сердца
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)

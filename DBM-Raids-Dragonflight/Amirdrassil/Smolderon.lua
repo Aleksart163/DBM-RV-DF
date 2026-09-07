@@ -113,7 +113,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 421343 then
+	if spellId == 421343 then --Клеймо проклятия
 		self.vb.brandCount = self.vb.brandCount + 1
 		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", overheated)
 		if self:IsTanking("player", "boss1", nil, true) then
