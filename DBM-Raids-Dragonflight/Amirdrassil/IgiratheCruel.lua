@@ -412,7 +412,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self.vb.heartCount = 0
 		warnSmashingVisceraSoon:Show()
 		warnHeartstopperSoon:Show()
-		timerHeartStopperCD:Start(18.8, 1)
-		timerSmashingVisceraCD:Start(22.8, 1)
+		--Пока таймеры от балды, но должны подойти, если разрабы сервере везде -5 сек сделали
+		timerHeartStopperCD:Start(13.7, 1) --18.8
+		timerSmashingVisceraCD:Start(17.7, 1) --22.8
 	end
 end
