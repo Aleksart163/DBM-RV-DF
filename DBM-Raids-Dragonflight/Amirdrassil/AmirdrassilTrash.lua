@@ -8,7 +8,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 425062 425149 425995 429180 428023",
 	"SPELL_CAST_SUCCESS 429180",
-	"SPELL_AURA_APPLIED 428765 425300 425388 425381 428077",
+	"SPELL_AURA_APPLIED 428765 425300 425388 425381 428077 429226",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 428765 425300 425388 428077",
 	"CHAT_MSG_MONSTER_YELL",
@@ -22,6 +22,7 @@ local warnShadowflameBomb					= mod:NewTargetNoFilterAnnounce(425300, 3, nil, ni
 local warnInfernoHeart						= mod:NewTargetNoFilterAnnounce(425388, 3) --Сердце Преисподней
 local warnShadowchargedSlam					= mod:NewCastAnnounce(425062, 3, nil, nil, "Melee") --Заряженный Тьмой удар
 
+local specWarnBlessingDream					= mod:NewSpecialWarningSpell(429226, nil, 407638, nil, 1, 2) --Благословение Изумрудного Сна
 local specWarnDreamsWrath					= mod:NewSpecialWarningDodge(428023, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Гнев Сна (Фронталка)
 local specWarnLumberingSlam					= mod:NewSpecialWarningDodge(429180, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Грузный удар (Фронталка)
 local specWarnDreamWalk						= mod:NewSpecialWarningDispel(428077, "RemoveMagic", nil, nil, 1, 2) --Хождение во сне
@@ -125,10 +126,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDreamWalk:CombinedShow(0.5, args.destName)
 			specWarnDreamWalk:Play("helpdispel")
 		end
+	elseif spellId == 429226 then
+		if args:IsPlayer() and self:AntiSpam(3, "BlessingDream") then
+			specWarnBlessingDream:Show()
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
-
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 428765 then

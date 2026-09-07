@@ -70,7 +70,7 @@ function mod:RottenExpulsionTarget(targetname)
 		warnRottenExpulsion:Show(targetname)
 	end
 	if self.Options.SetIconOnRottenExpulsion then
-		self:SetIcon(targetname, 8, 3)
+		self:SetIcon(targetname, 8, 4)
 	end
 end
 
@@ -101,8 +101,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 264694 then --Волна гнили (Обстрел)
 		self.vb.rottenCount = self.vb.rottenCount + 1
-		--5, 29.2, 20.2, 23.1, 20.2 старое
-		--5, 14.6, 24.4, 14.6, 27.3 новое
+		--5, 29.2, 20.2, 23.1, 20.2 по инфе с офы
+		--5, 14.6, 24.4, 14.6, 27.3 по инфе разрабов сервера
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "RottenExpulsionTarget", 0.1, 6)
 		local timer
 		if self.vb.rottenCount % 2 == 0 then

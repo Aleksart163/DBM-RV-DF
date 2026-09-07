@@ -196,6 +196,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnWakingNightmare:Show(DBM_COMMON_L.ALLY)
 			specWarnWakingNightmare:Play("gathershare")
 			yellWakingNightmare:Yell()
+			yellWakingNightmareFades:Cancel()
 			yellWakingNightmareFades:Countdown(spellId)
 		else
 			warnWakingNightmare:Show(args.destName)

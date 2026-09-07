@@ -147,6 +147,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnGuile:Play("watchstep")
 		specWarnGuile:ScheduleVoice(1.5, "keepmove")
 		timerGuile:Start()
+		timerDarkBlastCD:Start(5, self.vb.blastCount+1)
 	elseif spellId == 202019 then
 		self.vb.shadowboltCount = self.vb.shadowboltCount + 1
 		warnShadowBoltVolley:Show()
@@ -201,10 +202,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 199193 then
 		specWarnGuileEnded:Show()
 		specWarnGuileEnded:Play("safenow")
-		--2 примерных таймера, разрабы вполне могли их поломать
-		timerGuileCD:Start(63.8, self.vb.guileCount+1)
-		warnGuile:Schedule(58.8)
-		warnGuile:ScheduleVoice(58.8, "specialsoon")
+		timerGuileCD:Start(65, self.vb.guileCount+1)
+		warnGuile:Schedule(60)
+		warnGuile:ScheduleVoice(60, "specialsoon")
 		--Должны быть норм таймеры после 1 хитроумия, дальше хз
 		timerCloudCD:Start(19.4, self.vb.cloudCount+1)
 		timerSwarmCD:Start(15.5, self.vb.swarmCount+1)

@@ -402,7 +402,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 412063 and self:AntiSpam(3, 2) then
 		specWarnTimerip:Show()
 		specWarnTimerip:Play("watchstep")
-	elseif spellId == 415554 and args:IsDestTypePlayer() then --Темпоральный взрыв
+	elseif spellId == 415554 then --Темпоральный взрыв
 		if args:IsPlayer() then
 			yellChronoburst:Yell()
 			yellChronoburstFades:Countdown(spellId)
@@ -454,7 +454,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellVolatileMortarFades:Cancel()
 		end
-	elseif spellId == 415769 then
+	elseif spellId == 415554 then
 		if args:IsPlayer() then
 			yellChronoburstFades:Cancel()
 		end

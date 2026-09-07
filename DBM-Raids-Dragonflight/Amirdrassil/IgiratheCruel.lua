@@ -34,7 +34,7 @@ mod:RegisterEventsInCombat(
 --TODO, spears 13 is long by 2.3?
 --https://www.warcraftlogs.com/reports/N2k1xpg9rVqRDyQZ#fight=11&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20414425%20or%20ability.id%20%3D%20416996%20or%20ability.id%20%3D%20422776%20or%20ability.id%20%3D%20419048%20or%20ability.id%20%3D%20416048%20or%20ability.id%20%3D%20418531%20or%20ability.id%20%3D%20415624)%20and%20type%20%3D%20%22begincast%22%0A%20or%20ability.id%20%3D%20424456%20and%20type%20%3D%20%22cast%22%0A%20or%20ability.id%20%3D%20415020%20or%20ability.id%20%3D%20415094%20or%20ability.id%20%3D%20415090%20or%20ability.id%20%3D%20425282%20or%20ability.id%20%3D%20425283%20or%20ability.id%20%3D%20414357%0A%20or%20ability.name%20%3D%20%22Heart%20Stopper%22&view=events
 local warnDrenchedBlades							= mod:NewStackAnnounce(414340, 2, nil, "Tank|Healer") --Промокшие клинки
-local warnBlisteringSpear							= mod:NewTargetCountAnnounce(414888, 3, nil, nil, 282481, nil, nil, nil, true) --Обжигающее копье (Копья)
+local warnBlisteringSpear							= mod:NewTargetNoFilterAnnounce(414888, 3, nil, nil, 282481) --Обжигающее копье (Копья)
 local warnGatheringTorment							= mod:NewYouAnnounce(414367, 4) --Сбор мучений
 --Torments
 local warnSmashingVisceraSoon						= mod:NewSoonAnnounce(424456, 2, nil, nil, 47482) --Крушащие внутренности (Прыжок) Sword Stance
@@ -48,12 +48,13 @@ local specWarnMarkedforTorment						= mod:NewSpecialWarningSoonCount(422776, nil
 local specWarnMarkedforTorment2						= mod:NewSpecialWarningCount(422776, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Метка мучений (АоЕ)
 local specWarnDrenchedBlades						= mod:NewSpecialWarningTaunt(414340, nil, nil, nil, 1, 2) --Промокшие клинки
 local specWarnBlisteringSpear						= mod:NewSpecialWarningYou(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
+local specWarnBlisteringSpear2						= mod:NewSpecialWarningYouPos(414888, nil, 369351, nil, 1, 2) --Обжигающее копье (Копье)
 local specWarnBlisteringTorment						= mod:NewSpecialWarningYou(414770, nil, 184656, nil, 1, 2) --Обжигающие муки (Цепи)
 local specWarnTwistingBlade							= mod:NewSpecialWarningDodge(416996, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Танцующий клинок (Фронталка)
 local specWarnRuinousEnd							= mod:NewSpecialWarningSpell(419048, nil, nil, nil, 3, 2) --Гибельное разрушение
 --Torments
 local specWarnUmbralDestruction						= mod:NewSpecialWarningCount(416048, nil, nil, DBM_COMMON_L.GROUPSOAK, 2, 14) --Теневое разрушение (Разделение урона)
-local specWarnSmashingViscera						= mod:NewSpecialWarningYou(424456, nil, 47482, nil, 1, 2) --Крушащие внутренности (Прыжок) Not in combat log
+local specWarnSmashingViscera						= mod:NewSpecialWarningYou(424456, nil, 47482, nil, 4, 2) --Крушащие внутренности (Прыжок) Not in combat log
 local specWarnHeartStopper							= mod:NewSpecialWarningYou(415623, nil, nil, nil, 1, 2) --Остановка сердца
 local specWarnHeartStopperTaunt						= mod:NewSpecialWarningTaunt(415623, nil, nil, nil, 1, 2) --Остановка сердца
 local specWarnVitalRupture							= mod:NewSpecialWarningYou(426056, nil, nil, nil, 1, 2) --Разрыв органов
@@ -123,7 +124,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 414425 then
+	if spellId == 414425 then --Обжигающее копье
 		self.vb.spearCount = self.vb.spearCount + 1
 		self.vb.spearTotal = self.vb.spearTotal + 1
 		self.vb.spearIcon = 1
@@ -151,7 +152,7 @@ function mod:SPELL_CAST_START(args)
 		elseif self.vb.TwistingCount == 1 then
 			timerTwistingBladeCD:Start(20.6, self.vb.TwistingTotal+1)
 		end
-	elseif spellId == 422776 then
+	elseif spellId == 422776 then --Метка мучений
 		self.vb.tormentCount = self.vb.tormentCount + 1
 		self.vb.useHeartStopperBackup = false
 		self:SetStage(self.vb.tormentCount)--Matching BW behavior which is kinda meh, but WA parity is needed
@@ -220,18 +221,27 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-	elseif spellId == 414888 then
+	elseif spellId == 414888 then --Обжигающее копье
 		local icon = self.vb.spearIcon
 		if self.Options.SetIconOnBlisteringSpear then
 			self:SetIcon(args.destName, icon)
 		end
-		if args:IsPlayer() then
-			specWarnBlisteringSpear:Show()
-			specWarnBlisteringSpear:Play("spear")
-			yellBlisteringSpear:Yell(icon, icon)
-			yellBlisteringSpearFades:Countdown(spellId, nil, icon)
+		if self:IsMythic() then
+			if args:IsPlayer() then
+				specWarnBlisteringSpear2:Show(self:IconNumToTexture(icon))
+				specWarnBlisteringSpear2:Play("mm"..icon)
+				yellBlisteringSpear:Yell(icon, icon)
+				yellBlisteringSpearFades:Countdown(spellId, nil, icon)
+			end
+		else
+			if args:IsPlayer() then
+				specWarnBlisteringSpear:Show()
+				specWarnBlisteringSpear:Play("spear")
+				yellBlisteringSpear:Yell(icon, icon)
+				yellBlisteringSpearFades:Countdown(spellId, nil, icon)
+			end
 		end
-		warnBlisteringSpear:CombinedShow(0.5, self.vb.spearTotal, args.destName)
+		warnBlisteringSpear:CombinedShow(0.5, args.destName)
 		self.vb.spearIcon = self.vb.spearIcon + 1
 	elseif spellId == 414367 and args:IsPlayer() then
 		warnGatheringTorment:Show()
@@ -273,7 +283,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVitalRupture:Show()
 			specWarnVitalRupture:Play("targetyou")
 		end
-	elseif spellId == 422961 then--Torment Beginning
+	elseif spellId == 422961 then --Метка мучений (Старт каста)
 		if self:IsMythic() then
 			specWarnMarkedforTorment2:Show()
 			specWarnMarkedforTorment2:Play("aesoon")
@@ -286,7 +296,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerBlisteringSpearCD:Start(38.8, self.vb.spearTotal+1)
 			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 74, self.vb.tormentCount+1)
 		else
-			timerBlisteringSpearCD:Start(34, self.vb.spearTotal+1)
+			timerBlisteringSpearCD:Start(30, self.vb.spearTotal+1) --34 норм под геру
 			timerTwistingBladeCD:Start(self:IsMythic() and 114.1 or 97.7, self.vb.TwistingTotal+1)
 			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 133.8, self.vb.tormentCount+1)
 		end
@@ -347,27 +357,30 @@ end
 --<217.25 22:07:58> [CLEU] SPELL_AURA_REMOVED#Creature-0-4251-2549-21526-200926-000057D47F#Igira the Cruel#Creature-0-4251-2549-21526-207999-000057D47F#Flesh Mortification#422961#Marked for Torment#BUFF#nil",
 --"<222.27 22:08:03> [UNIT_SPELLCAST_SUCCEEDED] Igira the Cruel(34.2%-0.0%){Target:??} -Axe Sword Stance- [[boss1:Cast-3-4251-2549-21526-425283-001757D62E:425283]]",
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	--Non Mythic specific weapon handling
-	if spellId == 415020 then--Sword Stance
-		self.vb.smashingCount = 0
-		warnSmashingVisceraSoon:Show()
-		local initialTimer = self:IsLFR() and 24.7 or 19.9
-		local adjustedTimer = self:IsLFR() and (initialTimer - tormentOverTime) or initialTimer
-		timerSmashingVisceraCD:Start(adjustedTimer, 1)
-	elseif spellId == 415094 then--Knife Stance
-		self.vb.heartCount = 0
-		warnHeartstopperSoon:Show()
-		local initialTimer = self:IsLFR() and 23.9 or 19
-		local adjustedTimer = self:IsLFR() and (initialTimer - tormentOverTime) or initialTimer
-		timerHeartStopperCD:Start(adjustedTimer, 1)
-	elseif spellId == 415090 then--Axe Stance
+	--Обычка и героик
+	if spellId == 415090 then --Стойка с топором (Разделение урона)
 		self.vb.umbralCount = 0
 		warnUmbralDestructionSoon:Show()
-		local initialTimer = self:IsLFR() and 23.7 or 18.8
+	--	local initialTimer = self:IsLFR() and 23.7 or 18.8
+		local initialTimer = self:IsLFR() and 23.7 or 13.7 --Хороший таймер под героик и обычку
 		local adjustedTimer = self:IsLFR() and (initialTimer - tormentOverTime) or initialTimer
 		timerUmbralDestructionCD:Start(adjustedTimer, 1)
-	--Mythic specific weapon handling
-	elseif spellId == 425282 then--Axe Knife Stance
+	elseif spellId == 415020 then --Стойка с мечом (Прыжок)
+		self.vb.smashingCount = 0
+		warnSmashingVisceraSoon:Show()
+	--	local initialTimer = self:IsLFR() and 24.7 or 19.9
+		local initialTimer = self:IsLFR() and 24.7 or 14.9 --Хороший таймер под героик и обычку
+		local adjustedTimer = self:IsLFR() and (initialTimer - tormentOverTime) or initialTimer
+		timerSmashingVisceraCD:Start(adjustedTimer, 1)
+	elseif spellId == 415094 then --Стойка с ножом (Остановка сердца)
+		self.vb.heartCount = 0
+		warnHeartstopperSoon:Show()
+	--	local initialTimer = self:IsLFR() and 23.9 or 19
+		local initialTimer = self:IsLFR() and 23.9 or 14 --Примерный таймер (т.к. у других -5 сек, возможно тут тоже)
+		local adjustedTimer = self:IsLFR() and (initialTimer - tormentOverTime) or initialTimer
+		timerHeartStopperCD:Start(adjustedTimer, 1)
+	--Мифик сложность--
+	elseif spellId == 425282 then --Стойка с топором и ножом
 		self.vb.umbralCount = 0
 		self.vb.heartCount = 0
 		self.vb.useHeartStopperBackup = true
@@ -375,14 +388,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		warnHeartstopperSoon:Show()
 		timerHeartStopperCD:Start(21.2, 1)
 		timerUmbralDestructionCD:Start(25.2, 1)
-	elseif spellId == 425283 then--Axe Sword Stance
+	elseif spellId == 425283 then --Стойка с топором и мечом
 		self.vb.smashingCount = 0
 		self.vb.umbralCount = 0
 		warnSmashingVisceraSoon:Show()
 		warnUmbralDestructionSoon:Show()
 		timerUmbralDestructionCD:Start(18.8, 1)
 		timerSmashingVisceraCD:Start(25.3, 1)
-	elseif spellId == 414357 then--Sword Knife Stance
+	elseif spellId == 414357 then --Стойка с мечом и ножом
 		self.vb.smashingCount = 0
 		self.vb.heartCount = 0
 		warnSmashingVisceraSoon:Show()
