@@ -296,7 +296,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 422961 then --Метка мучений (Старт каста)
 		if self:IsMythic() then
-			specWarnMarkedforTorment2:Show()
+			specWarnMarkedforTorment2:Show(self.vb.tormentCount)
 			specWarnMarkedforTorment2:Play("aesoon")
 		end
 		tormentOverTime = GetTime() + 20--Expected duration
