@@ -69,7 +69,7 @@ local timerMarkedforTormentCD						= mod:NewCDCountTimer(49, 422776, 234406, nil
 local timerMarkedforTorment							= mod:NewCDComboTimer(60, 422776, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, nil) --Метка мучений (Отталкивание)
 --Torments
 local timerUmbralDestructionCD						= mod:NewCDCountTimer(49, 416048, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5) --Теневое разрушение (Разделение урона)
-local timerUmbralDestructionCast					= mod:NewCastTimer(4.5, 416048, 240443, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Теневое разрушение (Взрыв)
+local timerUmbralDestructionCast					= mod:NewCastTimer(4.5, 416048, 240443, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4) --Теневое разрушение (Взрыв)
 local timerSmashingVisceraCD						= mod:NewCDCountTimer(49, 424456, 47482, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Крушащие внутренности (Прыжок)
 local timerHeartStopperCD							= mod:NewCDCountTimer(49, 415623, DBM_COMMON_L.HEALABSORBS.." (%s)", nil, nil, 3) --Остановка сердца
 local berserkTimer									= mod:NewBerserkTimer(600)
