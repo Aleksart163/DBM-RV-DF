@@ -116,7 +116,7 @@ function mod:OnCombatStart(delay)
 		timerBlisteringSpearCD:Start(4.5-delay, 1)
 		timerTwistingBladeCD:Start(15.4-delay, 1)
 		timerMarkedforTorment:Start(45.8-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
-		timerMarkedforTormentCD:Start(50.5-delay, 1) --
+		timerMarkedforTormentCD:Start(49.6-delay, 1) --
 		berserkTimer:Start(420-delay)--430 if a specific weapon combo is done 3rd
 	else
 		timerBlisteringSpearCD:Start(10.6-delay, 1)

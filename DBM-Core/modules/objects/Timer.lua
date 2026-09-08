@@ -177,10 +177,13 @@ function timerPrototype:Start(timer, ...)
 						if bar.timer > 0.2 then
 							local phaseText = self.mod.vb.phase and " (" .. SCENARIO_STAGE:format(self.mod.vb.phase) .. ")" or ""
 							if DBM.Options.BadTimerAlert and bar.timer > 1 then--If greater than 1 seconds off, report this out of debug mode to all users
-								DBM:AddMsg("Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining .. ". Please report this bug", nil, nil, nil, true)
-								DBM:FireEvent("DBM_Debug", "Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining .. ". Please report this bug", 2)
+							--	DBM:AddMsg("Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining .. ". Please report this bug", nil, nil, nil, true)
+							--	DBM:FireEvent("DBM_Debug", "Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining .. ". Please report this bug", 2)
+								DBM:AddMsg("Таймер " .. ttext .. phaseText .. " обновился до истечения времени. Оставшееся время составляет: " .. remaining .. ". Пожалуйста, сообщите об этой ошибке.", nil, nil, nil, true)
+								DBM:FireEvent("DBM_Debug", "Таймер " .. ttext .. phaseText .. " обновился до истечения времени. Оставшееся время составляет: " .. remaining .. ". Пожалуйста, сообщите об этой ошибке.", 2)
 							else
-								DBM:Debug("Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining, 2, true)
+							--	DBM:Debug("Timer " .. ttext .. phaseText .. " refreshed before expired. Remaining time is : " .. remaining, 2, true)
+								DBM:Debug("Таймер " .. ttext .. phaseText .. " обновился до истечения времени. Оставшееся время составляет: " .. remaining, 2, true)
 							end
 						end
 					end
