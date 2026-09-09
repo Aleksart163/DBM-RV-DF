@@ -35,10 +35,10 @@ local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
-local timerBlessingDreamCD					= mod:NewCDTimer(60, 429226, 407638, nil, nil, 7, nil, nil, nil, 3, 5) --Благословение Изумрудного Сна
+local timerBlessingDreamCD					= mod:NewCDTimer(30, 429226, 407638, nil, nil, 7, nil, nil, nil, 3, 5) --Благословение Изумрудного Сна
 local timerLumberingSlamCD					= mod:NewCDNPTimer(15, 429180, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerChargedStompCD					= mod:NewCDNPTimer(14.6, 425149, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Мощный взрыв) 29.2
-local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) CD for it starting after RP starts
+local timerFeatherBombCD					= mod:NewCDTimer(30, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5) --Перьевая бомба (Обстрел) CD for it starting after RP starts
 local timerFeatherBomb						= mod:NewCastTimer(6, 428765, DBM_COMMON_L.BOMBING, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) How long it's active and when not to come up
 
 local yellDreamWalk							= mod:NewYell(428077, nil, nil, nil, "YELL") --Хождение во сне
