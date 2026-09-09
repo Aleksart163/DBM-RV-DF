@@ -332,5 +332,6 @@ L:SetGeneralLocalization({
 })
 
 L:SetMiscLocalization({
-	FyrakkRP			= "You again. A pity I do not have time to eradicate you myself."
+	Fyrakk1RP = "You again. A pity I do not have time to eradicate you myself.",
+	Fyrakk2RP = "You again. A pity I do not have time to eradicate you myself."
 })

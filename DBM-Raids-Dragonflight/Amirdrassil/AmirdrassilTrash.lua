@@ -35,6 +35,7 @@ local specWarnFeatherBomb					= mod:NewSpecialWarningDodge(428765, nil, nil, DBM
 local specWarnTranquility					= mod:NewSpecialWarningInterrupt(425995, "HasInterrupt", nil, nil, 1, 2) --Спокойствие
 local specWarnBlazingPulse					= mod:NewSpecialWarningInterrupt(425381, "HasInterrupt", nil, nil, 1, 2) --Пламенный импульс
 
+local timerBlessingDreamCD					= mod:NewCDTimer(60, 429226, 407638, nil, nil, 7, nil, nil, nil, 3, 5) --Благословение Изумрудного Сна
 local timerLumberingSlamCD					= mod:NewCDNPTimer(15, 429180, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerChargedStompCD					= mod:NewCDNPTimer(14.6, 425149, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Заряженная поступь (Мощный взрыв) 29.2
 local timerFeatherBombCD					= mod:NewNextTimer(22.9, 428765, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Перьевая бомба (Обстрел) CD for it starting after RP starts
@@ -166,13 +167,17 @@ end
 --"<59.69 22:58:26> [CLEU] SPELL_AURA_APPLIED#Creature-0-3781-2549-28739-209090-000004F6AC#Tindral Sageswift#Creature-0-3781-2549-28739-209090-000004F6AC#Tindral Sageswift#428765#Feather Bomb#BUFF#nil", -- [33]
 --"<65.75 22:58:32> [CLEU] SPELL_AURA_REMOVED#Creature-0-3781-2549-28739-209090-000004F6AC#Tindral Sageswift#Creature-0-3781-2549-28739-209090-000004F6AC#Tindral Sageswift#428765#Feather Bomb#BUFF#nil", -- [44]
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.FyrakkRP or msg:find(L.FyrakkRP)) then
-		self:SendSync("DontDie")
+	if (msg == L.Fyrakk1RP or msg:find(L.Fyrakk1RP)) then
+		self:SendSync("RP1")
+	elseif (msg == L.Fyrakk2RP or msg:find(L.Fyrakk2RP)) then
+		self:SendSync("RP2")
 	end
 end
 
 function mod:OnSync(event, arg)
-	if event == "DontDie" and self:AntiSpam(10, 3) then
+	if event == "RP1" and self:AntiSpam(10, 3) then
 		timerFeatherBombCD:Start(22.9)
+	elseif event == "RP2" and self:AntiSpam(10, 3) then
+		timerBlessingDreamCD:Start(36.5)
 	end
 end
