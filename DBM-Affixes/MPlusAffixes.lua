@@ -57,8 +57,8 @@ local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Heal
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 local timerQuakingCD						= mod:NewCDTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, 269678, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, nil, nil, nil, true) --Запутывание (Оплетение)
-local timerAfflictedCD						= mod:NewCDTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, mod:IsHealer() and 3 or nil, 5) --Крик изнемогающей души (Призыв духов)
-local timerIncorporealCD					= mod:NewCDTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Дестабилизация (Призыв духов)
+local timerAfflictedCD						= mod:NewNextTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, 3, 5) --Крик изнемогающей души (Призыв духов)
+local timerIncorporealCD					= mod:NewNextTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Дестабилизация (Призыв духов)
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
 local yellMarkLightning						= mod:NewFadesYell(396369, nil, nil, nil, "YELL") --Метка молнии
