@@ -86,6 +86,7 @@ mod:AddSetIconOption("SetIconOnBlisteringSpear", 414888, false, 0, {1, 2, 3, 4, 
 local blisteringMythicTimers = {14, 32.1, 35.1, 20.2}
 local blisteringHeroicTimers = {14, 23.0, 23.0, 22.5, 20.2}
 local blisteringEasyTimers = {14, 30.3, 38.9, 20.6}
+local heartStopper = DBM:GetSpellName(415623) --Остановка сердца
 
 mod.vb.spearCount = 0--used for sequencing
 mod.vb.spearTotal = 0--Used for timer text
@@ -166,8 +167,10 @@ function mod:SPELL_CAST_START(args)
 		specWarnRuinousEnd:Play("aesoon")
 	elseif spellId == 416048 then
 		self.vb.umbralCount = self.vb.umbralCount + 1
-		specWarnUmbralDestruction:Show(self.vb.umbralCount)
-		timerUmbralDestructionCast:Start()
+		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", heartStopper)
+		if not expireTime then
+			specWarnUmbralDestruction:Show(self.vb.umbralCount)
+		end
 		if self.vb.umbralCount == 1 then
 			if not playerHearted then--Didn't get hearts in last debuffs, give the share count (player can still determine if they soak or not)
 				specWarnUmbralDestruction:Play("shareone")
@@ -184,6 +187,7 @@ function mod:SPELL_CAST_START(args)
 				specWarnUmbralDestruction:Play("otherout")
 			end
 		end
+		timerUmbralDestructionCast:Start()
 	elseif spellId == 418531 then
 		self.vb.smashingCount = self.vb.smashingCount + 1
 		if self.vb.smashingCount == 1 then

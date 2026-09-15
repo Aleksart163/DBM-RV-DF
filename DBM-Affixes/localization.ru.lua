@@ -10,7 +10,12 @@ L:SetGeneralLocalization({
 	name =	"М+ аффиксы"
 })
 
+L:SetWarningLocalization{
+	warnSpiritsleft = "Духов осталось: %s"
+}
+
 L:SetOptionLocalization({
+	warnSpiritsleft = "Сообщать о количестве духов",
 	MurchalOchkenProshlyapen = "Отсчёт времени действия дебаффа $spell:396411"
 })
 

@@ -53,6 +53,7 @@ local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, 244
 local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, DBM_COMMON_L.POOLS, 2, 2) --Лавовые гейзеры (Лужи)
 
 local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Клеймо проклятия (Разделение урона)
+local timerBrandofDamnationCast						= mod:NewCastTimer(3, 421343, 185824, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Клеймо проклятия (Взрыв)
 local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, 174716, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Пылающий ожог (Бомба)
 local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, 244473, nil, nil, 3) --Перегрев (Возгорание)
 local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3, nil, nil, nil, 2, 5) --Лавовые гейзеры (Лужи)
@@ -131,6 +132,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.brandCount < 8 and self.vb.brandCount % 2 == 1 then--Other timers started in phase change event
 			timerBrandofDamnationCD:Start(nil, self.vb.brandCount+1)--29.9
 		end
+		timerBrandofDamnationCast:Start()
 	elseif spellId == 422691 then
 		self.vb.geyserCount = self.vb.geyserCount + 1
 		specWarnLavaGeysers:Show(self.vb.geyserCount)

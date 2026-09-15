@@ -11,7 +11,10 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 240446 409492 408805",
 	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364",
 	"SPELL_AURA_APPLIED_DOSE 240559 209858 240443",
-	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556",
+	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556 409465 409472 409470",
+	--409472 Больная душа (болезнь)
+	--409465 Проклятая душа (проклятие)
+	--409470 Отравленная душа (яд)
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
@@ -31,6 +34,7 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
+local warnSpiritsleft						= mod:NewAnnounce("warnSpiritsleft", 2, 409492) --Количество духов
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -58,6 +62,7 @@ local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil
 local timerQuakingCD						= mod:NewCDTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, 269678, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, nil, nil, nil, true) --Запутывание (Оплетение)
 local timerAfflictedCD						= mod:NewNextTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, 3, 5) --Крик изнемогающей души (Призыв духов)
+local timerAfflicted						= mod:NewCastTimer(12, 409492, 322274, nil, nil, 7) --Крик изнемогающей души (Ослабление)
 local timerIncorporealCD					= mod:NewNextTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Дестабилизация (Призыв духов)
 
 local yellPrimalOverload					= mod:NewPosYell(396411, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL") --Изначальная перегрузка
@@ -85,6 +90,7 @@ local entangledDetected = false
 local MarkLightning = SpellLinks(396369) --Метка молнии
 local MarkWind = SpellLinks(396364) --Метка ветра
 
+mod.vb.totalSpiritsCount = 0
 mod.vb.murchalsProshlyapCount = 0
 mod.vb.mProshlyapCount = 0
 
@@ -118,6 +124,24 @@ end
 
 local function ProshlyapationOfMurchal(self)
 	self.vb.murchalsProshlyapCount = 0
+end
+
+local function StartCheckSpirits1(self)
+--	if self:AntiSpam(3, 3) then
+	warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+	timerAfflicted:Start()
+	DBM:AddMsg("Запущена тестовая версия проверки на духов. Впринципе, она работает идеально, если духов диспелить, а не прохиливать, т.к. исчезание духа никак не логируется.")
+--	end
+end
+
+local function StartCheckSpirits2(self)
+--	if self:AntiSpam(3, 3) then
+	warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+--	end
+end
+
+local function StopCheckSpirits(self)
+	self.vb.totalSpiritsCount = 0
 end
 
 local function checkEntangled(self) --Запутывание (Гнев деревьев)
@@ -229,19 +253,25 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 240446 and self:AntiSpam(3, "aff1") then
 		warnExplosion:Show()
-	elseif spellId == 409492 and self:AntiSpam(3, "aff2") then --Крик изнемогающей души
-		warnAfflictedCry:Show()
-		warnAfflictedCry:Play("helpspirit")
-		if not afflictedDetected then
-			afflictedDetected = true
+	elseif spellId == 409492 then --Крик изнемогающей души
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
+		if self:AntiSpam(5, "aff2") then
+			warnAfflictedCry:Show()
+			warnAfflictedCry:Play("helpspirit")
+			if not afflictedDetected then
+				afflictedDetected = true
+			end
+			afflictedCounting = true
+			timerAfflictedCD:Start()
+			self:Unschedule(checkForCombat)
+			self:Unschedule(checkAfflicted)
+			checkForCombat(self)
+			self:Schedule(0.5, StartCheckSpirits1, self)
+			self:Schedule(15, StopCheckSpirits, self)
+			self:Schedule(40, checkAfflicted, self)
 		end
-		--This one is interesting cause it runs every 30 seconds, sometimes skips a cast and goes 60, but also pauses out of combat
-		afflictedCounting = true
-		timerAfflictedCD:Start()
-		self:Unschedule(checkForCombat)
-		self:Unschedule(checkAfflicted)
-		checkForCombat(self)
-		self:Schedule(40, checkAfflicted, self)
+--		self:Schedule(0.5, StartCheckSpirits1, self)
+--		self:Schedule(15, StopCheckSpirits, self)
 	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
 		if unitId and UnitIsEnemy("player", unitId) then
@@ -324,21 +354,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(5, "spitefulFixate") then
 		specWarnSpitefulFixate:Show()
 		specWarnSpitefulFixate:Play("targetyou")
---	elseif spellId == 408556 and self:AntiSpam(20, "aff6") then --Запутывание (Гнев деревьев)
 	elseif spellId == 408556 then --Запутывание (Гнев деревьев)
---[[			specWarnEntangled:Show()
-			specWarnEntangled:Play("breakvine")
-			if not entangledDetected then
-				entangledDetected = true
-			end
-			--Entangled check runs every 30 seconds, and if conditions aren't met for it activating it skips and goes into next 30 second CD
-			--This checks if it was cast (by seeing if timer exists) if not, it starts next timer for next possible cast
-			entangledCounting = true
-			timerEntangledCD:Start()
-			self:Unschedule(checkForCombat)
-			self:Unschedule(checkEntangled)
-			checkForCombat(self)
-			self:Schedule(40, checkEntangled, self)]]
 		if self:AntiSpam(20, "aff6") then --вариант 2
 			if not entangledDetected then
 				entangledDetected = true
@@ -354,18 +370,22 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEntangled:Show()
 			specWarnEntangled:Play("breakvine")--breakvine
 		end
-	elseif spellId == 408801 and self:AntiSpam(25, "aff7") then --Бесплотность
-		if not incorpDetected then
-			incorpDetected = true
+	elseif spellId == 408801 then --Бесплотность
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
+		if self:AntiSpam(25, "aff7") then
+			if not incorpDetected then
+				incorpDetected = true
+			end
+			--This one is interesting cause it runs every 45 seconds, sometimes skips a cast and goes 90, but also pauses out of combat
+			incorporealCounting = true
+			timerIncorporealCD:Start()
+			self:Unschedule(checkForCombat)
+			self:Unschedule(checkIncorp)
+			checkForCombat(self)
+			self:Schedule(50, checkIncorp, self)
 		end
-		--This one is interesting cause it runs every 45 seconds, sometimes skips a cast and goes 90, but also pauses out of combat
-		incorporealCounting = true
-		timerIncorporealCD:Start()
-		self:Unschedule(checkForCombat)
-		self:Unschedule(checkIncorp)
-		checkForCombat(self)
-		self:Schedule(50, checkIncorp, self)
-		--35, 45, 50
+		self:Schedule(0.5, StartCheckSpirits2, self)
+		self:Schedule(20, StopCheckSpirits, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -419,6 +439,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			warnDestabalizeEnd:Show()
 		end
+	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount - 1
+		if self.vb.totalSpiritsCount == 0 then
+			warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+			timerAfflicted:Stop()
+		end
+		DBM:Debug("MP(Дух продиспелен)", 2)
 	end
 end
 
@@ -451,9 +478,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:CHALLENGE_MODE_COMPLETED()
-	timerAfflictedCD:Stop()
-	timerIncorporealCD:Stop()
-	timerEntangledCD:Stop()
+	self.vb.totalSpiritsCount = 0
 	overloadCounting = false --Изначальная перегрузка
 	overloadDetected = false --Изначальная перегрузка
 	afflictedCounting = false --Крик изнемогающей души (Призыв духов)
@@ -462,10 +487,14 @@ function mod:CHALLENGE_MODE_COMPLETED()
 	incorpDetected = false --Дестабилизация (Призыв духов)
 	entangledCounting = false --Запутывание (Гнев деревьев)
 	entangledDetected = false --Запутывание (Гнев деревьев)
+	timerAfflictedCD:Stop()
+	timerIncorporealCD:Stop()
+	timerEntangledCD:Stop()
 	self:Unschedule(checkForCombat)
 	self:Unschedule(checkAfflicted)
 	self:Unschedule(checkIncorp)
 	self:Unschedule(checkEntangled)
+	self:Unschedule(StopCheckSpirits)
 	DBM:Debug("Murchal proshlyap (Ключ закрыт)", 2)
 end
 mod.CHALLENGE_MODE_RESET = mod.CHALLENGE_MODE_COMPLETED

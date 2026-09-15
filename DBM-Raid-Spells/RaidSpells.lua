@@ -68,7 +68,7 @@ local warnDraconicDelicacies		= mod:NewTargetSourceAnnounce2(383063, 1) --Гор
 local warnPotionCauldronofPower		= mod:NewTargetSourceAnnounce2(371515, 1) --Котел с зельями мощи, 371519, 371521
 local warnPotionCauldronofPower2	= mod:NewTargetSourceAnnounce2(370672, 1) --Котел с зельями великой мощи, 406964, 406965
 
-local warnSoulstone					= mod:NewTargetNoFilterAnnounce(20707, 1) --Камень души
+local warnSoulstone					= mod:NewAnnounce("Rebirth", 1, 20707) --Камень души
 --рейд сейвы
 local warnRallyingCry				= mod:NewTargetSourceAnnounce2(97462, 1) --Ободряющий клич
 local warnPowerWordBarrier			= mod:NewTargetSourceAnnounce2(62618, 1) --Слово силы: Барьер
@@ -150,7 +150,8 @@ mod:AddBoolOption("YellOnSummoning", true)
 mod:AddBoolOption("YellOnToys", true) --игрушки
 --mod:AddBoolOption("AutoSpirit", false)
 
-local Rebirth = DBM:GetSpellName(20484) 
+local Soulstone = DBM:GetSpellName(20707)
+local Rebirth = DBM:GetSpellName(20484)
 local typeInstance = nil
 local DbmRV = "[DBM RV] "
 local prefix = "Питомец "
@@ -676,7 +677,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSoulstone:Show()
 			specWarnSoulstone:Play("targetyou")
 		else
-			warnSoulstone:Show(destName)
+			warnSoulstone:Show(sourceName, Soulstone, destName)
 		end
 	--[[	if self.Options.YellOnSoulstone then
 			prepareMessage(self, "premsg_Spells_soulstone", spellId, sourceName, destName)

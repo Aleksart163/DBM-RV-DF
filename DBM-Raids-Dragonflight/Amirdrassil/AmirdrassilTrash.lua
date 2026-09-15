@@ -178,6 +178,6 @@ function mod:OnSync(event, arg)
 	if event == "RP1" and self:AntiSpam(10, 3) then
 		timerFeatherBombCD:Start(22.9)
 	elseif event == "RP2" and self:AntiSpam(10, 3) then
-		timerBlessingDreamCD:Start(36.5)
+		timerBlessingDreamCD:Start(37.2)
 	end
 end

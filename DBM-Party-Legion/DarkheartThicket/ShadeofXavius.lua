@@ -193,10 +193,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 200243 then
 		if args:IsPlayer() then
+			yellWakingNightmareFades:Cancel()
 			specWarnWakingNightmare:Show(DBM_COMMON_L.ALLY)
 			specWarnWakingNightmare:Play("gathershare")
 			yellWakingNightmare:Yell()
-			yellWakingNightmareFades:Cancel()
 			yellWakingNightmareFades:Countdown(spellId)
 		else
 			warnWakingNightmare:Show(args.destName)
