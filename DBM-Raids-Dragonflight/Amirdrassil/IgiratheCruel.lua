@@ -252,14 +252,14 @@ function mod:SPELL_AURA_APPLIED(args)
 					DBM:Debug("CheckMurchalProshlyap (icon = "..icon..")", 2)
 				end
 				yellBlisteringSpear:Yell(icon, icon)
-				yellBlisteringSpearFades:Countdown(spellId, nil, icon)
+				yellBlisteringSpearFades:Countdown(4.3, nil, icon)
 			end
 		else
 			if args:IsPlayer() then
 				specWarnBlisteringSpear:Show()
 				specWarnBlisteringSpear:Play("spear")
 				yellBlisteringSpear:Yell(icon, icon)
-				yellBlisteringSpearFades:Countdown(spellId, nil, icon)
+				yellBlisteringSpearFades:Countdown(4.3, nil, icon)
 			end
 		end
 		warnBlisteringSpear:CombinedShow(0.5, args.destName)
