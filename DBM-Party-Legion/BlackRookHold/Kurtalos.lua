@@ -51,7 +51,7 @@ local warnGuile						= mod:NewPreWarnAnnounce(199193, 5, 1) --Хитроумие
 local specWarnSwarm					= mod:NewSpecialWarningDefensive(201733, nil, nil, nil, 3, 2) --Жалящий рой
 local specWarnGuile					= mod:NewSpecialWarningDodge(199193, nil, nil, nil, 2, 2) --Хитроумие повелителя ужаса
 local specWarnGuileEnded			= mod:NewSpecialWarningEnd(199193, nil, nil, nil, 1, 2) --Хитроумие повелителя ужаса
-local specWarnShadowBoltVolley		= mod:NewSpecialWarningDefensive(202019, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Залп стрел Тьмы (АоЕ)
+local specWarnShadowBoltVolley		= mod:NewSpecialWarningDefensive(202019, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 4) --Залп стрел Тьмы (АоЕ)
 local specWarnLegacyRavencrest		= mod:NewSpecialWarningYou(199368, nil, nil, DBM_COMMON_L.DAMAGEUP, 1, 2) --Наследие Гребня Ворона
 
 local timerLegacyRavencrestCD		= mod:NewCDTimer(27, 199368, DBM_COMMON_L.DAMAGEUP, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 5) --Наследие Гребня Ворона
