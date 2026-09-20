@@ -101,7 +101,7 @@ local function startProshlyapPhase1(self)
 	warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1))
 	warnPhase:Play("phasechange")
 	timerEyeBeamCD:Stop()
-	timerBrutalGlaiveCD:Start(6, 1)
+	timerBrutalGlaiveCD:Start(5.6, 1)
 	timerDarkRushCD:Start(12, 1)
 	timerVengefulShearCD:Start(13, 1) --
 	timerLeapCD:Start(103, 2)
