@@ -15,7 +15,8 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 414535 409456 409635 414184 414652",
+	"SPELL_CAST_START 414535 409456 409635 414184 414652 409261",
+	"SPELL_CAST_SUCCESS 409261",
 	"SPELL_AURA_APPLIED 409266 414376 410719 414293 409456 414178 409879",
 	"SPELL_AURA_REMOVED 409456 414177 410719 409879"
 --	"SPELL_PERIODIC_DAMAGE",
@@ -44,6 +45,7 @@ local specWarnPulvBreath						= mod:NewSpecialWarningDodge(409635, nil, nil, DBM
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(414376, nil, nil, nil, 1, 8) --Пронзенная земля
 
 local timerExtinctionBlastCD					= mod:NewCDCountTimer(19.4, 409261, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв (Бомба)
+local timerExtinctionBlastCast					= mod:NewCastTimer(5.5, 409261, 174716, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Истребляющий взрыв (Бомба)
 local timerStonecrackerBarrageCD				= mod:NewCDCountTimer(19.4, 414535, DBM_COMMON_L.GROUPSOAK.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON) --Камнекрушащий шквал
 local timerEarthSurgeCD							= mod:NewCDCountTimer(19.4, 409456, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON) --Земляной импульс
 local timerPulverizingExhalationCD				= mod:NewCDCountTimer(19.4, 409635, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дробящий выдох
@@ -95,6 +97,15 @@ function mod:SPELL_CAST_START(args)
 		timerPulverizingExhalationCD:Stop()
 		warnCataclysmicObliteration:Show()
 		timerCataclysmicObliteration:Start(spellId == 414652 and 6 or 30)
+	elseif spellId == 409261 then
+		timerExtinctionBlastCast:Start()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 409261 then
+		timerExtinctionBlastCast:Stop()
 	end
 end
 
