@@ -131,7 +131,7 @@ function mod:OnCombatStart(delay)
 		timerTacticalDestructionCD:Start(60.7-delay, 1)
 	elseif self:IsNormal() then--Validated
 		self.vb.expectedBombs = 2
-		timerDragonDeezTrapsCD:Start(15.7-delay, 1)
+		timerDragonDeezTrapsCD:Start(15.5-delay, 1) --15.7
 		timerAnimateGolemsCD:Start(35-delay, 1)
 		timerShrapnalBombCD:Start(46-delay, 1) --Бомбы
 		self:Schedule(46-delay, checkBombProshlyap, self) --Проверка бомб

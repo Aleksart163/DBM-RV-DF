@@ -649,7 +649,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnScouringEternity:ScheduleVoice(2, "watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
 		if timer then
-			timerScouringEternityCD:Start(timer)
+			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
 		end
 		self:SendSync("SupernovaCast")
 	elseif spellId == 403741 then --Космическое вознесение (Вознесение)
