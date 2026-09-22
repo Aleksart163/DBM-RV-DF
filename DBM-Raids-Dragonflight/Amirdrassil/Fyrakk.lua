@@ -55,7 +55,7 @@ local specWarnWildFire								= mod:NewSpecialWarningCount(420422, nil, nil, nil
 local specWarnDreamRend								= mod:NewSpecialWarningRunCount(417455, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 2) --Воздаяние Снов (Притягивание)
 local specWarnDreamRend2							= mod:NewSpecialWarningCount(417455, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Воздаяние Снов (АоЕ)
 local specWarnFyralathsBite							= mod:NewSpecialWarningDefensive(417431, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Укус Фир'алата (Фронталка)
-local specWarnFyralathsBite2						= mod:NewSpecialWarningDodge(417431, "-Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Укус Фир'алата (Фронталка)
+local specWarnFyralathsBite2						= mod:NewSpecialWarningDodge(417431, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Укус Фир'алата (Фронталка)
 local specWarnFyralathsMark							= mod:NewSpecialWarningTaunt(417443, nil, 37454, nil, 1, 2) --Метка Фир'алата (Укус)
 
 local timerDarkflameShadesCD						= mod:NewCDCountTimer(49, 430441, nil, false, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON) --Тени пламени Тьмы

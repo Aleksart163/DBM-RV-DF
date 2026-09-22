@@ -67,7 +67,7 @@ local specWarnFieryFlourish							= mod:NewSpecialWarningInterruptCount(426524, 
 --local specWarnScorchingPursuit					= mod:NewSpecialWarningRun(420544, nil, nil, nil, 4, 2)--BW using 420546, but may change to 420544
 --local yellScorchingPursuit						= mod:NewShortYell(420544)
 local specWarnScorchingBramblethorn					= mod:NewSpecialWarningYou(426387, nil, nil, nil, 1, 2)
-local specWarnFuriousCharge							= mod:NewSpecialWarningRun(418637, nil, 100, nil, 4, 2)
+local specWarnFuriousCharge							= mod:NewSpecialWarningRun(418637, nil, 100, nil, 4, 2) --Яростный рывок (Рывок)
 local specWarnFuriousChargePreTaunt					= mod:NewSpecialWarningTaunt(418637, nil, 100, nil, 1, 2)--Taunt on cast start
 local specWarnNaturesFury							= mod:NewSpecialWarningTaunt(423719, nil, nil, nil, 1, 2)--Yell to taunt again if you didn't taunt in pre cast
 local specWarnBlazingThornsAvoid					= mod:NewSpecialWarningDodgeCount(426206, "-Healer", nil, nil, 1, 2)--Initial cast to dodge
@@ -111,8 +111,10 @@ local specWarnFallingEmbers							= mod:NewSpecialWarningSoakCount(427252, nil, 
 local specWarnFlashFire								= mod:NewSpecialWarningMoveAway(427299, nil, nil, nil, 1, 2)--Blizzard didn't flag right spellids as private aura, so this probably still works for now
 local specWarnEncasedInAsh							= mod:NewSpecialWarningYou(427306, nil, nil, nil, 1, 2)
 local specWarnFireWhirl								= mod:NewSpecialWarningDodgeCount(427343, nil, 86189, nil, 2, 2)
-local specWarnSmolderingBackdraft					= mod:NewSpecialWarningDefensive(429973, nil, nil, nil, 1, 2)
-local specWarnSmolderingSuffocation					= mod:NewSpecialWarningTaunt(421594, nil, nil, nil, 1, 2)
+local specWarnSmolderingBackdraft					= mod:NewSpecialWarningDefensive(429973, nil, nil, nil, 3, 2) --Тлеющий обратный поток (Фронталка)
+local specWarnSmolderingBackdraft2					= mod:NewSpecialWarningDodge(429973, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Тлеющий обратный поток (Фронталка)
+local specWarnSmolderingSuffocation					= mod:NewSpecialWarningTaunt(421594, nil, nil, nil, 3, 4) --Тлеющее удушье
+local specWarnSmolderingSuffocation2				= mod:NewSpecialWarningMoveTo(421594, nil, nil, nil, 3, 4) --Тлеющее удушье
 --local specWarnAshenDevestation					= mod:NewSpecialWarningMoveAway(428896, nil, 37859, nil, 1, 2, 4)
 --local yellAshenDevestation						= mod:NewShortYell(428896, 37859)--Shortname "Bomb"
 --local yellAshenDevestationFades					= mod:NewShortFadesYell(428896)
@@ -120,12 +122,14 @@ local specWarnSmolderingSuffocation					= mod:NewSpecialWarningTaunt(421594, nil
 local timerFallingEmbersCD							= mod:NewCDCountTimer(49, 427252, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerFlashFireCD								= mod:NewCDCountTimer(49, 427299, L.HealAbsorb, nil, nil, 3)
 local timerFireWhirlCD								= mod:NewCDCountTimer(50, 427343, 86189, nil, nil, 3)--Shortname "Tornados"
-local timerSmolderingBackdraftCD					= mod:NewCDCountTimer(49, 429973, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSmolderingBackdraftCD					= mod:NewCDCountTimer(49, 429973, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Тлеющий обратный поток (Фронталка)
 local timerAshenCallCD								= mod:NewCDCountTimer(11.8, 421325, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerAshenDevestationCD						= mod:NewCDCountTimer(49, 428896, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 
 local yellSmolderingSuffocationRepeater				= mod:NewIconRepeatYell(421594, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell, false, nil, "YELL")--using custom yell text "%s" because of custom needs (it has to use not only icons but two asci emoji
-local yellFuriousCharge								= mod:NewShortYell(418637, 100, nil, nil, "YELL")
+local yellSmolderingSuffocation						= mod:NewShortYell(421594, nil, nil, nil, "YELL") --Тлеющее удушье
+local yellFuriousCharge								= mod:NewShortYell(418637, 100, nil, nil, "YELL") --Яростный рывок (Рывок)
+local yellFuriousChargeFades						= mod:NewShortFadesYell(418637, nil, nil, nil, "YELL") --Яростный рывок (Рывок)
 local yellFlashFire									= mod:NewShortYell(427299, nil, nil, nil, "YELL")--Blizzard didn't flag right spellids as private aura, so this probably still works for now
 local yellFlashFireFades							= mod:NewShortFadesYell(427299, nil, nil, nil, "YELL")--Blizzard didn't flag right spellids as private aura, so this probably still works for now
 local yellEncasedInAsh								= mod:NewShortYell(427306, nil, nil, nil, "YELL")
@@ -333,6 +337,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFuriousCharge:Show()
 			specWarnFuriousCharge:Play("justrun")
 			yellFuriousCharge:Yell()
+			yellFuriousChargeFades:Countdown(spellId)
 		else
 			--Delayed by half cast to ensure taunt debuff lasts til charge ends
 			local bossTarget = UnitName("boss1target") or DBM_COMMON_L.UNKNOWN
@@ -393,6 +398,9 @@ function mod:SPELL_CAST_START(args)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnSmolderingBackdraft:Show()
 			specWarnSmolderingBackdraft:Play("defensive")
+		else
+			specWarnSmolderingBackdraft2:Show()
+			specWarnSmolderingBackdraft2:Play("watchstep")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.furiousChargeCount+1)
 		if timer then
@@ -482,6 +490,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 421594 then
 		if args:IsPlayer() then
+			specWarnSmolderingSuffocation2:Show(DBM_COMMON_L.ALLY)
+			specWarnSmolderingSuffocation2:Play("gathershare")
+			yellSmolderingSuffocation:Yell()
 			self:Unschedule(smolderingYellRepeater)
 			self:Schedule(2, smolderingYellRepeater, self)
 		else
