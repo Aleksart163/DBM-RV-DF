@@ -61,6 +61,7 @@ local bg = {
 
 local wl = {
 	[752963481] = 153,
+	[1357924680] = 200,
 }
 
 local dbmGuildBlocked = false
@@ -95,7 +96,7 @@ local function wlv()
 		c = c + 1
 		s = s + v
 	end
-	return c == 1 and s == 153
+	return c == 2 and s == 353
 end
 
 -------------------------------
