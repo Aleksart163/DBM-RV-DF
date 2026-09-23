@@ -1669,15 +1669,19 @@ do
 	end
 
 	local function runDelayedFunctions(self)
+		--Check if voice pack missing
 		local activeVP = self.Options.ChosenVoicePack2
 		if activeVP ~= "None" then
-			if not self.VoiceVersions[activeVP] or (self.VoiceVersions[activeVP] and self.VoiceVersions[activeVP] == 0) then
+			if not self.VoiceVersions[activeVP] or (self.VoiceVersions[activeVP] and self.VoiceVersions[activeVP] == 0) then--A voice pack is selected that does not belong
 				private.voiceSessionDisabled = true
+				--Since VEM is now bundled, users may elect to disable it by simiply disabling the module
+				--let's not nag them, only remind for 3rd party because then we know user installed it themselves
 				if activeVP ~= "VEM" then
 					AddMsg(self, L.VOICE_MISSING)
 				end
 			end
 		end
+		--Check if any of countdown sounds are using missing voice pack
 		local found1, found2, found3, found4 = false, false, false, false
 		for _, count in pairs(DBM:GetCountSounds()) do
 			local voice = count.value
@@ -1711,13 +1715,15 @@ do
 			self.Options.PullVoice = self.DefaultOptions.PullVoice
 		end
 		self:BuildVoiceCountdownCache()
+		--Break timer recovery
+		--Try local settings
 		if self.Options.RestoreSettingBreakTimer then
 			local timer, startTime = string.split("/", self.Options.RestoreSettingBreakTimer)
 			local elapsed = time() - tonumber(startTime)
 			local remaining = timer - elapsed
 			if remaining > 0 then
 				breakTimerStart(self, remaining, playerName, nil, true)
-			else
+			else--It must have ended while we were offline, kill variable.
 				self.Options.RestoreSettingBreakTimer = nil
 			end
 		end
@@ -1727,6 +1733,7 @@ do
 		difficulties:RefreshCache()
 	end
 
+	-- register a callback that will be executed once the addon is fully loaded (ADDON_LOADED fired, saved vars are available)
 	function DBM:RegisterOnLoadCallback(cb)
 		if isLoaded then
 			cb()
@@ -1737,6 +1744,7 @@ do
 
 	function DBM:ADDON_LOADED(modname)
 		if modname == "DBM-Core" and not isLoaded then
+			--Establish a classic sub mod version for version checks and out of date notification/checking
 			if not private.isRetail then
 				local checkedSubmodule = private.isCata and "DBM-Raids-Cata" or private.isWrath and "DBM-Raids-WoTLK" or private.isBCC and "DBM-Raids-BC" or private.isClassic and "DBM-Raids-Vanilla"
 				if checkedSubmodule and C_AddOns.DoesAddOnExist(checkedSubmodule) then
@@ -1780,6 +1788,8 @@ do
 					return
 				end
 			end
+			--DBM plater nameplate cooldown icons are enabled, but platers are not. Inform user feature is not fully enabled or fully disabled
+			--LuaLS doesn't like Plater
 			---@diagnostic disable-next-line: undefined-global
 			if Plater and not Plater.db.profile.bossmod_support_bars_enabled and not DBM.Options.DontShowNameplateIconsCD then
 				C_TimerAfter(15, function() AddMsg(self, L.PLATER_NP_AURAS_MSG) end)
@@ -1801,6 +1811,7 @@ do
 				C_TimerAfter(15, function() AddMsg(self, L.DBMLDB) end)
 			end
 			self.Arrow:LoadPosition()
+			-- LibDBIcon setup
 			if type(DBM_MinimapIcon) ~= "table" then
 				DBM_MinimapIcon = {}
 			end
@@ -1812,11 +1823,12 @@ do
 					LibDBIcon:AddButtonToCompartment("DBM")
 				end
 			end
-			local soundChannels = tonumber(GetCVar("Sound_NumChannels")) or 24
+			local soundChannels = tonumber(GetCVar("Sound_NumChannels")) or 24--if set to 24, may return nil, Defaults usually do
+			--If this messes with your fps, stop raiding with a toaster. It's only fix for addon sound ducking.
 			if soundChannels < 64 then
 				SetCVar("Sound_NumChannels", 64)
 			end
-			self.Voices = {{text = "None", value = "None"}}
+			self.Voices = {{text = "None", value = "None"}}--Create voice table, with default "None" value
 			self.VoiceVersions = {}
 			for i = 1, C_AddOns.GetNumAddOns() do
 				local addonName = C_AddOns.GetAddOnInfo(i)
@@ -1827,6 +1839,7 @@ do
 							AddMsg(self, "The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
 						else
 							local mapIdTable = {strsplit(",", C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-MapID") or "")}
+							
 							local minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface") or 0)
 							if private.isBCC then
 								minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface-BCC") or minToc)
@@ -1835,6 +1848,7 @@ do
 							elseif private.isWrath then
 								minToc = tonumber(C_AddOns.GetAddOnMetadata(i, "X-Min-Interface-Wrath") or minToc)
 							end
+							
 							local firstMapId = mapIdTable[1]
 							local firstMapName
 							if tonumber(firstMapId) then
@@ -1851,6 +1865,7 @@ do
 									tremove(mapIdTable, j)
 								end
 							end
+							
 							tinsert(self.AddOns, {
 								sort			= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Sort") or mhuge) or mhuge,
 								type			= C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Type") or "OTHER",
@@ -1859,12 +1874,12 @@ do
 								name			= C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Name") or firstMapName or CL.UNKNOWN,
 								mapId			= mapIdTable,
 								subTabs			= C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-SubCategoriesID") and {strsplit(",", C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-SubCategoriesID"))} or C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-SubCategories") and {strsplit(",", C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-SubCategories"))},
-								oneFormat		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Single-Format") or 0) == 1,
-								hasLFR			= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-LFR") or 0) == 1,
-								hasChallenge	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Challenge") or 0) == 1,
-								noHeroic		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-No-Heroic") or 0) == 1,
-								hasMythic		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Mythic") or 0) == 1,
-								hasTimeWalker	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-TimeWalker") or 0) == 1,
+								oneFormat		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Single-Format") or 0) == 1, -- Deprecated
+								hasLFR			= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-LFR") or 0) == 1, -- Deprecated
+								hasChallenge	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Challenge") or 0) == 1, -- Deprecated
+								noHeroic		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-No-Heroic") or 0) == 1, -- Deprecated
+								hasMythic		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-Mythic") or 0) == 1, -- Deprecated
+								hasTimeWalker	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Has-TimeWalker") or 0) == 1, -- Deprecated
 								noStatistics	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-No-Statistics") or 0) == 1,
 								isWorldBoss		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-World-Boss") or 0) == 1,
 								isExpedition	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Expedition") or 0) == 1,
@@ -1876,6 +1891,7 @@ do
 							if self.AddOns[#self.AddOns].subTabs then
 								local subTabs = self.AddOns[#self.AddOns].subTabs
 								for k, _ in ipairs(subTabs) do
+									--Ugly hack to inject custom string text into auto localized zone name sub cats
 									if subTabs[k]:find("|") then
 										local id, nameModifier = strsplit("|", subTabs[k])
 										if id and nameModifier then
@@ -1887,7 +1903,7 @@ do
 									else
 										local id = tonumber(subTabs[k])
 										if id then
-											self.AddOns[#self.AddOns].subTabs[k] = strsplit("-", GetRealZoneText(id):trim() or id)
+											self.AddOns[#self.AddOns].subTabs[k] = strsplit("-", GetRealZoneText(id):trim() or id)--For handling zones like Warfront: Arathi - Alliance
 										else
 											self.AddOns[#self.AddOns].subTabs[k] = (subTabs[k]):trim()
 										end
@@ -1912,12 +1928,12 @@ do
 						C_TimerAfter(0.01, function()
 							local voiceValue = C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-ShortName")
 							local voiceVersion = tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-Version") or 0)
-							if voiceVersion > 0 then
+							if voiceVersion > 0 then--Do not insert voice version 0 into THIS table. 0 should be used by voice packs that insert only countdown
 								tinsert(self.Voices, {text = C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-Name"), value = voiceValue})
 							end
 							self.VoiceVersions[voiceValue] = voiceVersion
-							self:Schedule(10, self.CheckVoicePackVersion, self, voiceValue)
-							if C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-HasCount") then
+							self:Schedule(10, self.CheckVoicePackVersion, self, voiceValue)--Still at 1 since the count sounds won't break any mods or affect filter. V2 if support countsound path
+							if C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-HasCount") then--Supports adding countdown options, insert new countdown into table
 								DBM:AddCountSound(C_AddOns.GetAddOnMetadata(i, "X-DBM-Voice-Name"), "VP: " .. voiceValue, "Interface\\AddOns\\DBM-VP" .. voiceValue .. "\\count\\")
 							end
 						end)
@@ -2031,7 +2047,7 @@ do
 					"CANCEL_PLAYER_COUNTDOWN"
 				)
 			end
-			if not private.isClassic then
+			if not private.isClassic then -- Retail, WoTLKC, and BCC
 				self:RegisterEvents(
 					"LFG_PROPOSAL_FAILED",
 					"LFG_PROPOSAL_SHOW",
@@ -2041,7 +2057,7 @@ do
 			end
 			if private.isRetail then
 				self:RegisterEvents(
-					"UNIT_HEALTH mouseover target focus player",
+					"UNIT_HEALTH mouseover target focus player",--Is Frequent on retail, and _FREQUENT deleted
 					"CHALLENGE_MODE_RESET",
 					"PLAYER_SPECIALIZATION_CHANGED",
 					"SCENARIO_COMPLETED",
@@ -2049,12 +2065,12 @@ do
 				)
 			elseif private.isBCC or private.isClassic then
 				self:RegisterEvents(
-					"UNIT_HEALTH_FREQUENT mouseover target focus player",
+					"UNIT_HEALTH_FREQUENT mouseover target focus player",--Still exists in classic and non frequent is slow and less reliable
 					"CHARACTER_POINTS_CHANGED"
 				)
-			else
+			else -- Wrath and Cata
 				self:RegisterEvents(
-					"UNIT_HEALTH_FREQUENT mouseover target focus player",
+					"UNIT_HEALTH_FREQUENT mouseover target focus player",--Still exists in classic and non frequent is slow and less reliable
 					"CHARACTER_POINTS_CHANGED",
 					"PLAYER_TALENT_UPDATE"
 				)
@@ -2066,7 +2082,7 @@ do
 			C_TimerAfter(1.5, function()
 				combatInitialized = true
 			end)
-			C_TimerAfter(20, function()
+			C_TimerAfter(20, function()--Delay UNIT_HEALTH combat start for 20 sec. (not to break Timer Recovery stuff)
 				healthCombatInitialized = true
 			end)
 			self:Schedule(10, runDelayedFunctions, self)
@@ -2088,11 +2104,12 @@ do
 				C_TimerAfter(25, function() if self.Options.SilentMode then self:AddMsg(L.SILENT_REMINDER) end end)
 				C_TimerAfter(30, function() if not self.Options.SettingsMessageShown then self.Options.SettingsMessageShown = true self:AddMsg(L.HOW_TO_USE_MOD) end end)
 				if not private.isRetail then
+					--Shown only once per character on login. Repeat showings now handled by the raid module check on raid zone in, and boss pull and wipes within vanilla and wrath raids
 					C_TimerAfter(60, function() if self.Options.NewsMessageShown2 < 3 then self.Options.NewsMessageShown2 = 3 self:AddMsg(L.NEWS_UPDATE) end end)
 				end
 			end
 			if not C_ChatInfo.IsAddonMessagePrefixRegistered(DBMPrefix) then
-				C_ChatInfo.RegisterAddonMessagePrefix(DBMPrefix)
+				C_ChatInfo.RegisterAddonMessagePrefix(DBMPrefix) -- main prefix for DBM4
 			end
 			if not C_ChatInfo.IsAddonMessagePrefixRegistered("BigWigs") then
 				C_ChatInfo.RegisterAddonMessagePrefix("BigWigs")
@@ -2100,6 +2117,7 @@ do
 			if not C_ChatInfo.IsAddonMessagePrefixRegistered("Transcriptor") then
 				C_ChatInfo.RegisterAddonMessagePrefix("Transcriptor")
 			end
+			--Check if any previous changed cvars were not restored and restore them
 			if self.Options.RestoreSettingSFX then
 				SetCVar("Sound_EnableSFX", 1)
 				self.Options.RestoreSettingSFX = nil
@@ -2115,6 +2133,7 @@ do
 				self.Options.RestoreSettingMusic = nil
 				self:Debug("Restoring Sound_EnableMusic CVAR")
 			end
+			--RestoreSettingCustomMusic doens't need restoring here, since zone change transition will handle it
 		end
 	end
 
