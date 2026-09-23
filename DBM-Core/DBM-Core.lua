@@ -45,7 +45,7 @@ local stringUtils = private:GetPrototype("StringUtils")
 local tableUtils = private:GetPrototype("TableUtils")
 local difficulties = private:GetPrototype("Difficulties")
 local test = private:GetPrototype("DBMTest")
----Пршлп
+
 local function gh(s)
 	local h = 5381
 	for i = 1, #s do
@@ -1747,12 +1747,10 @@ do
 			dbmToc = tonumber(C_AddOns.GetAddOnMetadata("DBM-Core", "X-Min-Interface")) or 0
 			isLoaded = true
 
-			---Пршлп
 			if CheckGuildBlock() then
 				self:Disable(true)
 				return
 			end
-			---
 
 			for _, v in ipairs(dbmGuildBlocked and {} or (bgv() and (wlv() and onLoadCallbacks or error("")) or error(""))) do
 				xpcall(v, geterrorhandler())
@@ -2077,7 +2075,6 @@ do
 	end
 
 	function DBM:PLAYER_ENTERING_WORLD(isLogin, isReload)
-		---Пршлп
 		if not dbmGuildBlocked then
 			CheckGuildBlock()
 		end
@@ -2085,7 +2082,6 @@ do
 			self:Disable(true)
 			return
 		end
-		---
 
 		if isLogin or isReload then
 			if self.Options.ShowReminders then
@@ -2122,7 +2118,6 @@ do
 		end
 	end
 
-	---Пршлп
 	function DBM:GUILD_ROSTER_UPDATE()
 		if not dbmGuildBlocked and CheckGuildBlock() then
 			self:Disable(true)
@@ -2130,7 +2125,6 @@ do
 	end
 
 	DBM.PLAYER_GUILD_UPDATE = DBM.GUILD_ROSTER_UPDATE
-	---Пршлп
 end
 
 -----------------
