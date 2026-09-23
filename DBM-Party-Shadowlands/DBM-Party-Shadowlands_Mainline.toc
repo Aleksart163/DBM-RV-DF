@@ -27,6 +27,7 @@
 ## X-DBM-Mod-Sort: 302
 ## X-DBM-Mod-MapID: 2286, 2289, 2290, 2287, 2285, 2293, 2291, 2284, 2441
 ## X-DBM-Mod-MinCoreRevision: 20260923000000
+## X-DBM-Mod-MaxCoreRevision: 20260923000000
 ## X-DBM-Mod-MinExpansion: 8
 ## X-WoWI-ID: 24904
 ## Version: r142
