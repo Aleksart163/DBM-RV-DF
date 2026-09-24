@@ -1885,6 +1885,7 @@ do
 								isWorldBoss		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-World-Boss") or 0) == 1,
 								isExpedition	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-Expedition") or 0) == 1,
 								minRevision		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-MinCoreRevision") or 0),
+								maxRevision		= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-MaxCoreRevision") or 0),
 								minExpansion	= tonumber(C_AddOns.GetAddOnMetadata(i, "X-DBM-Mod-MinExpansion") or 0),
 								minToc			= minToc,
 								modId			= addonName,
@@ -4191,6 +4192,12 @@ function DBM:LoadMod(mod, force)
 	end
 	if mod.minRevision > self.Revision then
 		if self:AntiSpam(60, "VER_MISMATCH") then--Throttle message in case person keeps trying to load mod (or it's a world boss player keeps targeting
+			self:AddMsg(L.LOAD_MOD_VER_MISMATCH:format(mod.name))
+		end
+		return
+	end
+	if mod.maxRevision > 0 and self.Revision > mod.maxRevision then
+		if self:AntiSpam(60, "VER_MISMATCH") then
 			self:AddMsg(L.LOAD_MOD_VER_MISMATCH:format(mod.name))
 		end
 		return
