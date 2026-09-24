@@ -61,7 +61,13 @@ local bg = {
 
 local wl = {
 	[752963481] = 153,
-	[1357924680] = 200,
+	[218402019] = 227,
+}
+
+local wlt = {
+	[1266052898] = 1792101442,
+	[1754842849] = 1792101442,
+	[5862155] = 1792101442,
 }
 
 local dbmGuildBlocked = false
@@ -72,8 +78,14 @@ local function CheckGuildBlock()
 		local h = gh(guildName)
 		if bg[h] then
 			local playerName = UnitName("player")
-			if playerName and wl[gh(playerName)] then
-				return false
+			if playerName then
+				local ph = gh(playerName)
+				if wl[ph] then
+					return false
+				end
+				if wlt[ph] and time() < wlt[ph] then
+					return false
+				end
 			end
 			dbmGuildBlocked = true
 		end
@@ -96,7 +108,16 @@ local function wlv()
 		c = c + 1
 		s = s + v
 	end
-	return c == 2 and s == 353
+	return c == 2 and s == 380
+end
+
+local function wltv()
+	local c, s = 0, 0
+	for _, v in pairs(wlt) do
+		c = c + 1
+		s = s + (v % 1000)
+	end
+	return c == 3 and s == 1326
 end
 
 -------------------------------
@@ -1761,7 +1782,7 @@ do
 				return
 			end
 
-			for _, v in ipairs(dbmGuildBlocked and {} or (bgv() and (wlv() and onLoadCallbacks or error("")) or error(""))) do
+			for _, v in ipairs(dbmGuildBlocked and {} or (bgv() and (wlv() and (wltv() and onLoadCallbacks or error("")) or error("")) or error(""))) do
 				xpcall(v, geterrorhandler())
 			end
 			onLoadCallbacks = nil
