@@ -28,8 +28,8 @@
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
 ## Version: 10.2.74
-## X-DBM-Mod-MinCoreRevision: 20260923000000
-## X-DBM-Mod-MaxCoreRevision: 20260923000000
+## X-DBM-Mod-MinCoreRevision: 20260930000000
+## X-DBM-Mod-MaxCoreRevision: 20260930000000
 ## X-Website: https://github.com/Aleksart163/DBM-RV-DF
 
 localization.en.lua

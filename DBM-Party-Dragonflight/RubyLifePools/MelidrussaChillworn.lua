@@ -34,13 +34,15 @@ local warnIceBulwark							= mod:NewSpellAnnounce(372988, 4) --Ледяной б
 
 local specWarnFrozenSolid						= mod:NewSpecialWarningDispel(373022, "RemoveMagic", nil, nil, 3, 4) --Полная заморозка
 local specWarnPrimalChill						= mod:NewSpecialWarningStack(372682, nil, 4, nil, nil, 1, 6) --Древний холод
-local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2)
+local specWarnHailbombs							= mod:NewSpecialWarningDodge(396044, nil, nil, nil, 2, 2) --Взрывные градины
 local specWarnChillStorm						= mod:NewSpecialWarningMoveAway(372851, nil, nil, nil, 4, 4) --Ледяная буря
+local specWarnChillStorm2						= mod:NewSpecialWarningSpell(372851, nil, 363533, nil, 3, 4) --Ледяная буря (Мощный взрыв)
 local specWarnFrostOverload						= mod:NewSpecialWarningInterrupt(373680, "HasInterrupt", nil, 2, 1, 3, 4) --Ледяная перегрузка
 local specWarnAwakenWhelps						= mod:NewSpecialWarningSwitch(373046, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 2) --Пробуждение дракончиков (Адды)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372851, nil, nil, nil, 1, 8) --Ледяная буря
 
-local timerChillstormCD							= mod:NewCDTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Ледяная буря
+local timerChillstormCD							= mod:NewCDComboTimer(20, 372851, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ледяная буря (Притяжка+АоЕ)
+local timerChillstormCD2						= mod:NewCDTimer(9.5, 372851, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Ледяная буря (Мощный взрыв)
 local timerHailbombsCD							= mod:NewCDTimer(20, 396044, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Взрывные градины
 local timerFrostOverloadCD						= mod:NewCDTimer(10, 373680, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ледяная перегрузка
 
@@ -55,7 +57,7 @@ local chillStacks = {}
 function mod:OnCombatStart(delay)
 	table.wipe(chillStacks)
 	timerHailbombsCD:Start(4-delay) --
-	timerChillstormCD:Start(14.2-delay) --
+	timerChillstormCD:Start(14.2-delay, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(372682))
 		DBM.InfoFrame:Show(5, "table", chillStacks, 1)
@@ -72,7 +74,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 372851 then --Ледяная буря
-		timerChillstormCD:Start()
+		timerChillstormCD:Start(nil, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
+		specWarnChillStorm2:Schedule(7)
+		specWarnChillStorm2:ScheduleVoice(7, "defensive")
+		timerChillstormCD2:Start()
 	elseif spellId == 396044 then --Взрывные градины
 		specWarnHailbombs:Show()
 		specWarnHailbombs:Play("watchstep")
@@ -122,7 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnChillStorm:Show()
 			specWarnChillStorm:Play("runout")
 			yellChillstorm:Yell()
-			yellChillstormFades:Countdown(3.5, 2)--Debuff says 1sec but combat log shows 3.5 on M+ at least, not checked lower difficulties since harder to search on WCL
+			yellChillstormFades:Countdown(3.5, 3)--Debuff says 1sec but combat log shows 3.5 on M+ at least, not checked lower difficulties since harder to search on WCL
 		else
 			warnChillstorm:Show(args.destName)
 		end
@@ -143,7 +148,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 373680 then --Ледяная перегрузка (когда кикнули каст)
 		--True, at least in M+
 		timerHailbombsCD:Start(4)
-		timerChillstormCD:Start(14.2)
+		timerChillstormCD:Start(14.2, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
 	end
 end
 

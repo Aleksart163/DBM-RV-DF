@@ -9,8 +9,8 @@ mod.isTrashModBossFightAllowed = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 372087 391726 391723 373614 392395 372696 384194 392486 392394 392640 392451 372047 372735",
 	"SPELL_CAST_SUCCESS 385536 372743",
-	"SPELL_AURA_APPLIED 373693 392641 373972 391050",
---	"SPELL_AURA_APPLIED_DOSE",
+	"SPELL_AURA_APPLIED 373693 392641 373972 391050 392569",
+	"SPELL_AURA_APPLIED_DOSE 392569",
 	"SPELL_AURA_REMOVED 373693 391050",
 	"UNIT_DIED"
 )
@@ -23,38 +23,50 @@ mod:RegisterEvents(
 local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3) --Живая бомба
 local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3) --Громовые раскаты
 local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer") --Пылающая пасть
-local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Healer") --Ураган стали
+local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil) --Ураган стали
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4) --Огненная вспышка
 local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3) --Танец огня
 local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3) --Тектонический разлом
+local warnMoltenBlood						= mod:NewStackAnnounce(392569, 4, nil, nil, 2) --Расплавленная кровь
+
+--Мини-босс Драгхар Отрицатель
+local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, 100, nil, 2, 2) --Пылающий натиск (Рывок)
+local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
+--Громоголов
+local specWarnStormBreath					= mod:NewSpecialWarningDodge(391726, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание бури (Фронталка)
+local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, nil, 3, 2) --Громовая челюсть
+--Огнезев
+local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Огненное дыхание (Фронталка)
+local specWarnFireMaw						= mod:NewSpecialWarningDefensive(392394, nil, nil, nil, 3, 2) --Пылающая пасть
+local specWarnMoltenBlood					= mod:NewSpecialWarningDefensive(392569, "-Tank", nil, nil, 3, 2) --Расплавленная кровь (АоЕ)
 
 local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2) --Раскапывающий взрыв
-local specWarnSteelBarrage					= mod:NewSpecialWarningDefensive(372047, nil, nil, nil, 3, 4) --Ураган стали
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2) --Грозовой шторм
 local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2) --Пламя славы
 local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2) --Бушующий щит бури
 local specWarnLivingBomb					= mod:NewSpecialWarningMoveTo(373693, nil, nil, nil, 1, 2) --Живая бомба
-local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, nil, nil, 2, 2) --Пылающий натиск
-local specWarnStormBreath					= mod:NewSpecialWarningDodge(391726, nil, nil, nil, 2, 2) --Дыхание бури
-local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, nil, 2, 2) --Огненное дыхание
 local specWarnBurnout						= mod:NewSpecialWarningRun(373614, "Melee", nil, nil, 4, 2) --Выгорание
 local specWarnBurnout2						= mod:NewSpecialWarningDodge(373614, nil, nil, nil, 2, 2) --Выгорание
-local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, nil, 1, 2) --Громовая челюсть
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
 local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterrupt", nil, nil, 1, 2) --Тлеющая стрела
 local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterrupt", nil, nil, 1, 2) --Огненная вспышка
 
-local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
-local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
-local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, nil, nil, nil, 3) --Пылающий натиск
-local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, nil, nil, nil, 3) --Дыхание бури
+--Мини-босс Драгхар Отрицатель
+local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, 100, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пылающий натиск (Рывок)
+local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ураган стали
+--Громоголов
+local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури (Фронталка)
 local timerRollingThunderCD					= mod:NewCDNPTimer(21.8, 392641, nil, nil, nil, 3) --Громовые раскаты
 local timerThunderjawCD						= mod:NewCDNPTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Громовая челюсть
+--Огнезев
+local timerFlameBreathCD					= mod:NewCDNPTimer(15.7, 391723, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненное дыхание (Фронталка) (Пока примерный таймер)
+
+local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
+local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
 local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Грозовой шторм
 local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная вспышка
 local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Танец огня
-local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, nil, nil, nil, 5) --Тектонический разлом 17-21
+local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Тектонический разлом 17-21
 local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Бушующий щит бури
 local timerIcyShieldCD						= mod:NewCDNPTimer(21.9, 372743, nil, nil, nil, 5)--17-21
 
@@ -108,6 +120,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
 	elseif spellId == 391723 then
+		timerFlameBreathCD:Start(15.7, args.sourceGUID) --Примерное время
 		if self:AntiSpam(2, "FlameBreath") then
 			specWarnFlameBreath:Show()
 			specWarnFlameBreath:Play("breathsoon")
@@ -157,6 +170,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 392394 then
 		if self:AntiSpam(3, 5) then
 			warnFireMaw:Show()
+		end
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+			specWarnFireMaw:Show()
+			specWarnFireMaw:Play("carefly")
 		end
 	elseif spellId == 392640 then--Rolling Thunder
 		timerRollingThunderCD:Start(nil, args.sourceGUID)
@@ -210,9 +227,19 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 391050 then
 		specWarnTempestStormshield:Show()
 		specWarnTempestStormshield:Play("attackshield")
+	elseif spellId == 392569 then --Расплавленная кровь
+		local amount = args.amount or 1
+		if amount >= 5 and amount % 5 == 0 then
+			if args:IsPlayer() then
+				specWarnMoltenBlood:Show()
+				specWarnMoltenBlood:Play("defensive")
+			else
+				warnMoltenBlood:Show(args.destName, amount)
+			end
+		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
