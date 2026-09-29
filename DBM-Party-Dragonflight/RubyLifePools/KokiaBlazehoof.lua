@@ -29,34 +29,37 @@ mod:RegisterEventsInCombat(
  or (ability.id = 373017 or ability.id = 373087) and type = "begincast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnBurnout								= mod:NewCastAnnounce(373087, 4)
-local warnInferno								= mod:NewCastAnnounce(384823, 3)
-local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8)
-local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8)
+local warnBurnout								= mod:NewCastAnnounce(373087, 4) --Выгорание
+local warnInferno								= mod:NewCastAnnounce(384823, 3) --Преисподняя (АоЕ)
+local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8) --Пылающий валун
+local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8) --Ритуал подчинения огня
 
-local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 3, 2)
-local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
-local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitchCount(372863, nil, nil, nil, 1, 2)
+local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 3, 2) --Раскаленные удары
+local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 2, 2) --Пылающий валун
+local specWarnMoltenBoulder2					= mod:NewSpecialWarningRun(372107, nil, nil, nil, 4, 2) --Пылающий валун
+local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitchCount(372863, nil, nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Ритуал подчинения огня
 local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, 2, 1, 2)
 local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2) --Выгорание
 local specWarnBurnout2							= mod:NewSpecialWarningDodge(373087, nil, nil, nil, 2, 2) --Выгорание
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
 local timerBurnout								= mod:NewCastTimer(5, 373087, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Выгорание
-local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
-local timerMoltenBoulderCD						= mod:NewCDCountTimer(16.9, 372107, nil, nil, nil, 3)
-local timerRitualofBlazebindingCD				= mod:NewCDCountTimer(33.9, 372863, nil, nil, nil, 1)
+local timerSearingBlowsCD						= mod:NewCDTimer(32.7, 372858, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Раскаленные удары
+local timerMoltenBoulderCD						= mod:NewCDCountTimer(16.9, 372107, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пылающий валун
+local timerRitualofBlazebindingCD				= mod:NewCDCountTimer(33.9, 372863, DBM_COMMON_L.BIG_ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Ритуал подчинения огня
 
-local yellMoltenBoulder							= mod:NewYell(372107, nil, nil, nil, "YELL")
+local yellMoltenBoulder							= mod:NewYell(372107, nil, nil, nil, "YELL") --Пылающий валун
 
 local castsPerGUID = {}
 
 mod.vb.ritualCount = 0
 mod.vb.boulderCount = 0
 
-function mod:BoulderTarget(targetname)
+function mod:BoulderTarget(targetname) --Пылающий валун (Не факт, что работает. В 1-ом сезоне было сломано разрабами сервера)
 	if not targetname then return end
 	if targetname == UnitName("player") then
+		specWarnMoltenBoulder2:Show()
+		specWarnMoltenBoulder2:Play("justrun")
 		yellMoltenBoulder:Yell()
 	end
 end
