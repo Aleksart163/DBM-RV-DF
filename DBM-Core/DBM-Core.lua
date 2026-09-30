@@ -57,6 +57,7 @@ end
 local bg = {
 	[3062034165] = 245,
 	[2548271868] = 252,
+--	[999984220]  = 178,
 }
 
 local wl = {
@@ -88,6 +89,7 @@ local function CheckGuildBlock()
 				end
 			end
 			dbmGuildBlocked = true
+			private.dbmGuildBlocked = true
 		end
 	end
 	return dbmGuildBlocked
@@ -100,6 +102,7 @@ local function bgv()
 		s = s + v
 	end
 	return c == 2 and s == 497
+--	return c == 3 and s == 675
 end
 
 local function wlv()
@@ -7249,7 +7252,9 @@ do
 	end
 
 	function DBM:ForceDisableSpam()
-		if private.testBuild then
+		if private.dbmGuildBlocked then
+			DBM:AddMsg(L.UPDATEREMINDER_GUILDBLOCK)
+		elseif private.testBuild then
 			DBM:AddMsg(L.UPDATEREMINDER_DISABLETEST)
 		elseif dbmToc < private.wowTOC then
 			DBM:AddMsg(L.UPDATEREMINDER_MAJORPATCH)
