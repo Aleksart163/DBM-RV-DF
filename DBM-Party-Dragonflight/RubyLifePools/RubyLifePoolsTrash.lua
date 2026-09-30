@@ -230,12 +230,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 392569 then --Расплавленная кровь
 		local amount = args.amount or 1
 		if amount >= 5 and amount % 5 == 0 then
-			if args:IsPlayer() then
+			if not args:IsPlayer() then
 				specWarnMoltenBlood:Show()
 				specWarnMoltenBlood:Play("defensive")
-			else
-				warnMoltenBlood:Show(args.destName, amount)
 			end
+		else
+			warnMoltenBlood:Show(args.destName, amount)
 		end
 	end
 end
