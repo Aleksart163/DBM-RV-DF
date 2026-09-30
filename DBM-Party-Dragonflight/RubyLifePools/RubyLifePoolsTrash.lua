@@ -38,7 +38,7 @@ local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, 
 --Огнезев
 local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Огненное дыхание (Фронталка)
 local specWarnFireMaw						= mod:NewSpecialWarningDefensive(392394, nil, nil, nil, 3, 2) --Пылающая пасть
-local specWarnMoltenBlood					= mod:NewSpecialWarningDefensive(392569, "-Tank", nil, nil, 3, 2) --Расплавленная кровь (АоЕ)
+local specWarnMoltenBlood					= mod:NewSpecialWarningDefensive(392569, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Расплавленная кровь (АоЕ)
 
 local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2) --Раскапывающий взрыв
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2) --Грозовой шторм
