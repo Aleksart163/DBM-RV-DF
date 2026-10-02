@@ -31,7 +31,8 @@ mod:RegisterEvents(
 
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
-local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
+local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, false, 2, nil, 14) --Крик изнемогающей души
+--local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnSpiritsleft						= mod:NewAnnounce("warnSpiritsleft", 2, 409492) --Количество духов
@@ -266,11 +267,11 @@ function mod:SPELL_CAST_START(args)
 			self:Unschedule(checkForCombat)
 			self:Unschedule(checkAfflicted)
 			checkForCombat(self)
-			self:Schedule(0.5, StartCheckSpirits1, self)
+			self:Schedule(0.3, StartCheckSpirits1, self)
 			self:Schedule(15, StopCheckSpirits, self)
 			self:Schedule(40, checkAfflicted, self)
 		end
---		self:Schedule(0.5, StartCheckSpirits1, self)
+--		self:Schedule(0.3, StartCheckSpirits1, self)
 --		self:Schedule(15, StopCheckSpirits, self)
 	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
@@ -384,7 +385,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			checkForCombat(self)
 			self:Schedule(50, checkIncorp, self)
 		end
-		self:Schedule(0.5, StartCheckSpirits2, self)
+		self:Schedule(0.3, StartCheckSpirits2, self)
 		self:Schedule(20, StopCheckSpirits, self)
 	end
 end
