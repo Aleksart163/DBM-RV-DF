@@ -29,13 +29,13 @@ mod:RegisterEventsInCombat(
 --Kyrakka
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25365))
 local warnFlamespit								= mod:NewTargetNoFilterAnnounce(381605, 3) --Огненный плевок
-local warnInfernoCore							= mod:NewYouAnnounce(381862, 4)
+local warnInfernoCore							= mod:NewYouAnnounce(381862, 4) --Инфернальный плевок
 
-local specWarnInfernoCore						= mod:NewSpecialWarningMoveAway(381862, nil, nil, nil, 1, 2)
-local specWarnRoaringFirebreath					= mod:NewSpecialWarningDodge(381525, nil, nil, nil, 2, 2)
+local specWarnInfernoCore						= mod:NewSpecialWarningMoveAway(381862, nil, nil, nil, 4, 2) --Инфернальный плевок
+local specWarnRoaringFirebreath					= mod:NewSpecialWarningDodge(381525, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Ревущее огненное дыхание (Фронталка)
 
 local timerFlamespitCD							= mod:NewCDTimer(15.7, 381605, nil, nil, nil, 3) --Огненный плевок
-local timerRoaringFirebreathCD					= mod:NewCDTimer(18, 381525, nil, nil, nil, 3)
+local timerRoaringFirebreathCD					= mod:NewCDTimer(18, 381525, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 --Erkhart Stormvein
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25369))
 local warnWindsofChange							= mod:NewCountAnnounce(381517, 3, nil, nil, 227878)--Not actually a count timer, but has best localized text

@@ -41,7 +41,7 @@ local specWarnFireMaw						= mod:NewSpecialWarningDefensive(392394, nil, nil, ni
 local specWarnMoltenBlood					= mod:NewSpecialWarningDefensive(392569, "-Tank", nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Расплавленная кровь (АоЕ)
 
 local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2) --Раскапывающий взрыв
-local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2) --Грозовой шторм
+local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Грозовой шторм
 local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2) --Пламя славы
 local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2) --Бушующий щит бури
 local specWarnLivingBomb					= mod:NewSpecialWarningMoveTo(373693, nil, nil, nil, 1, 2) --Живая бомба
@@ -63,7 +63,7 @@ local timerFlameBreathCD					= mod:NewCDNPTimer(15.7, 391723, DBM_COMMON_L.FRONT
 
 local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
-local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Грозовой шторм
+local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Грозовой шторм
 local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная вспышка
 local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Танец огня
 local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Тектонический разлом 17-21
