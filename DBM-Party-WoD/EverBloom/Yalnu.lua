@@ -65,7 +65,7 @@ if (wowToc >= 100200) then
 		self.vb.frontalCount = 0
 		self.vb.eruptionCount = 0
 		self.vb.GenesisCount = 0
-		timerColossalBlowCD:Start(2.4-delay, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
+		timerColossalBlowCD:Start(2.4-delay, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE2)
 		timerBrushfireCD:Start(4-delay)
 		timerVerdantEruptionCD:Start(22.9-delay, 1)
 		timerGenesisCD:Start(40-delay, 1)
@@ -79,13 +79,13 @@ if (wowToc >= 100200) then
 				specWarnColossalBlow:Show()
 				specWarnColossalBlow:Play("shockwave")
 			end
-			timerColossalBlowCD:Start(nil, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
+			timerColossalBlowCD:Start(nil, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE2)
 		elseif spellId == 169613 then --Сотворение (Адды)
 			self.vb.GenesisCount = self.vb.GenesisCount + 1
 			timerGenesis:Start()
 			timerGenesisCD:Start(nil, self.vb.GenesisCount+1)
 			if timerColossalBlowCD:GetRemaining() < 10 then
-				timerColossalBlowCD:AddTime(4.5, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE)
+				timerColossalBlowCD:AddTime(4.5, DBM_COMMON_L.FRONTAL, DBM_COMMON_L.AOEDAMAGE2)
 			end
 --			if timerColossalBlowCD:GetRemaining(self.vb.frontalCount+1) < 10 then
 --				timerColossalBlowCD:AddTime(4.5, self.vb.frontalCount+1)

@@ -99,7 +99,7 @@ if (wowToc >= 100200) then
 			specWarnTerrifyingVision:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnTerrifyingVision:Play("breaklos")
 			timerTerrifyingVision:Start()
-			timerTerrifyingVisionCD:Start(nil, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.FEAR)
+			timerTerrifyingVisionCD:Start(nil, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.FEAR)
 		end
 	end
 
@@ -161,7 +161,7 @@ if (wowToc >= 100200) then
 			timerFlameShockCD:Stop()
 			specWarnEarthfury:Cancel()
 			specWarnEarthfury:CancelVoice()
-			timerTerrifyingVisionCD:Start(2.8, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.FEAR)
+			timerTerrifyingVisionCD:Start(2.8, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.FEAR)
 		end
 	end
 else

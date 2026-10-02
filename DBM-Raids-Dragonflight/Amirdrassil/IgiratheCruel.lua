@@ -116,13 +116,13 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		timerBlisteringSpearCD:Start(4.5-delay, 1)
 		timerTwistingBladeCD:Start(15.4-delay, 1)
-		timerMarkedforTorment:Start(45.8-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+		timerMarkedforTorment:Start(45.8-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE2) --
 		timerMarkedforTormentCD:Start(49.6-delay, 1) --
 		berserkTimer:Start(420-delay)--430 if a specific weapon combo is done 3rd
 	else
 		timerBlisteringSpearCD:Start(10.6-delay, 1)
 		timerTwistingBladeCD:Start(4.5-delay, 1)
-		timerMarkedforTorment:Start(44.7-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+		timerMarkedforTorment:Start(44.7-delay, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE2) --
 		timerMarkedforTormentCD:Start(47.4-delay, 1) --
 		berserkTimer:Start(600-delay)
 	end
@@ -317,12 +317,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsHard() and self.vb.tormentCount >= 4 then
 --			timerTwistingBladeCD:Start(self:IsMythic() and 138.8 or 30.9, self.vb.TwistingTotal+1)--Mythic twisted not seen yet
 			timerBlisteringSpearCD:Start(38.8, self.vb.spearTotal+1)
-			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 71, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --Примерные таймеры
+			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 71, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE2) --Примерные таймеры
 			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 74, self.vb.tormentCount+1)
 		else
 			timerBlisteringSpearCD:Start(30, self.vb.spearTotal+1) --34 норм под геру
 			timerTwistingBladeCD:Start(self:IsMythic() and 110.2 or 93.8, self.vb.TwistingTotal+1) --114.1 or 97.7
-			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 129.9, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE) --
+			timerMarkedforTorment:Start(self:IsMythic() and 134.3 or 129.9, DBM_COMMON_L.PUSHBACK, DBM_COMMON_L.AOEDAMAGE2) --
 			timerMarkedforTormentCD:Start(self:IsMythic() and 139.1 or 133.8, self.vb.tormentCount+1) --
 		end
 	end

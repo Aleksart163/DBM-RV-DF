@@ -57,7 +57,7 @@ local chillStacks = {}
 function mod:OnCombatStart(delay)
 	table.wipe(chillStacks)
 	timerHailbombsCD:Start(4-delay) --
-	timerChillstormCD:Start(14.2-delay, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
+	timerChillstormCD:Start(14.2-delay, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(372682))
 		DBM.InfoFrame:Show(5, "table", chillStacks, 1)
@@ -74,7 +74,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 372851 then --Ледяная буря
-		timerChillstormCD:Start(nil, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
+		timerChillstormCD:Start(nil, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2)
 		specWarnChillStorm2:Schedule(7)
 		specWarnChillStorm2:ScheduleVoice(7, "defensive")
 		timerChillstormCD2:Start()
@@ -148,7 +148,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 373680 then --Ледяная перегрузка (когда кикнули каст)
 		--True, at least in M+
 		timerHailbombsCD:Start(4)
-		timerChillstormCD:Start(14.2, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE)
+		timerChillstormCD:Start(14.2, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2)
 	end
 end
 

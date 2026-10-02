@@ -64,7 +64,7 @@ if (wowToc >= 100200) then
 		--Fire alone first time (fire + arcane for 4)
 		if self.vb.comboCount % 3 == 1 then
 			--Правильные тайминги Фаер + Фрост
-			timerCinderboltStormCD:Start(21.8, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING) --Фаер
+			timerCinderboltStormCD:Start(21.8, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.BOMBING) --Фаер
 			timerGlacialFusionCD:Start(21.8) --Фрост
 			--timerComboCD:Start(DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.ORBS)
 		--Frost + Previous (fire)
@@ -76,7 +76,7 @@ if (wowToc >= 100200) then
 		--Arcane + Previous (frost)
 		else
 			--Правильные тайминги Фаер + Аркан
-			timerCinderboltStormCD:Start(19.9, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING) --Фаер
+			timerCinderboltStormCD:Start(19.9, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.BOMBING) --Фаер
 			timerSpetialCompressionCD:Start(19.9, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB) --Аркан
 			--timerComboCD:Start(DBM_COMMON_L.AOEDAMAGE, grip)
 		end
@@ -85,7 +85,7 @@ if (wowToc >= 100200) then
 	function mod:OnCombatStart(delay)
 		self.vb.pullCount = 0
 		self.vb.comboCount = 0
-		timerCinderboltStormCD:Start(3, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING)
+		timerCinderboltStormCD:Start(3, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.BOMBING)
 		if not self:IsMythic() then--Mythic schedulers timers differently
 			timerGlacialFusionCD:Start(24.1)
 			timerSpetialCompressionCD:Start(43.7, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.BOMB)
@@ -149,7 +149,7 @@ if (wowToc >= 100200) then
 					comboHandler(self)
 				end
 			else
-				timerCinderboltStormCD:Start(60, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.BOMBING)
+				timerCinderboltStormCD:Start(60, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.BOMBING)
 			end
 		elseif spellId == 428082 then
 			specWarnGlacialFusion:Show()

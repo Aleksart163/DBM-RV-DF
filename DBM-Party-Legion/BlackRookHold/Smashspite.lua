@@ -65,7 +65,7 @@ function mod:OnCombatStart(delay)
 			DBM.InfoFrame:Show(5, "reverseplayerbaddebuffbyspellid", 224188)--Must match spellID to filter other debuffs out
 		end
 	end
-	timerStompCD:Start(18-delay, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.PUSHBACK)
+	timerStompCD:Start(18-delay, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.PUSHBACK)
 end
 
 function mod:OnCombatEnd()
@@ -82,7 +82,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnStomp:Play("carefly")
 		local timer
 		timer = proshlyapationStompTimers[self.vb.stompCount+1] or 23
-		timerStompCD:Start(timer, DBM_COMMON_L.AOEDAMAGE, DBM_COMMON_L.PUSHBACK)
+		timerStompCD:Start(timer, DBM_COMMON_L.AOEDAMAGE2, DBM_COMMON_L.PUSHBACK)
 	elseif spellId == 198245 and not superWarned then--fallback, only 0.7 seconds warning vs 1.2 if power 100 works, but better than naught.
 		superWarned = true
 		if self:IsTanking("player", "boss1", nil, true) then
