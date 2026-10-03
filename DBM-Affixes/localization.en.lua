@@ -10,11 +10,13 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization{
-	warnSpiritsleft = "Spirits remaining: %s"
+	warnSpiritsleft1	= "The amount of Spirits: %s",
+	warnSpiritsleft2	= "Spirits remaining: %s"
 }
 
 L:SetOptionLocalization({
-	warnSpiritsleft = "Show special announce about the number of spirits.",
+	warnSpiritsleft1	= "Show special announce about the number of spirits upon appearance",
+	warnSpiritsleft2	= "Show special announce about the number of spirits",
 	MurchalOchkenProshlyapen = "Show timer for $spell:396411 debuff"
 })
 

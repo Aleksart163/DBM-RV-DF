@@ -9,9 +9,9 @@ mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 240446 409492 408805",
-	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364",
+	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364 409492 408805",
 	"SPELL_AURA_APPLIED_DOSE 240559 209858 240443",
-	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556 409465 409472 409470",
+	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556 409465 409472 409470 409492",
 	--409472 Больная душа (болезнь)
 	--409465 Проклятая душа (проклятие)
 	--409470 Отравленная душа (яд)
@@ -20,6 +20,7 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL",
 --	"LOADING_SCREEN_DISABLED",
 	"CHALLENGE_MODE_COMPLETED",
+	"UNIT_HEALTH",
 	"CHALLENGE_MODE_RESET"
 )
 
@@ -31,14 +32,18 @@ mod:RegisterEvents(
 
 local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
-local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, false, 2, nil, 14) --Крик изнемогающей души
+--local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, false, 2, nil, 14) --Крик изнемогающей души
 --local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
-local warnSpiritsleft						= mod:NewAnnounce("warnSpiritsleft", 2, 409492) --Количество духов
+local warnAfflictedEnd						= mod:NewEndAnnounce(409492, 1, nil, nil, 322274) --Крик изнемогающей души (Ослабление)
+local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 2, 409492) --Количество духов при появлении
+local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 2, 408805) --Количество духов
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
+local specWarnAfflicted						= mod:NewSpecialWarningYou(409492, nil, 322274, nil, 1, 2) --Крик изнемогающей души (Ослабление)
+local specWarnDestabalize					= mod:NewSpecialWarningYou(408805, nil, 322274, nil, 1, 2) --Дестабилизация (Ослабление)
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, 96306, nil, 1, 2) --Злобное преследование (Преследование)
 local specWarnMarkLightning					= mod:NewSpecialWarningYou(396369, nil, nil, nil, 1, 2) --Метка молнии
 local specWarnMarkLightning2				= mod:NewSpecialWarningEnd(396369, nil, nil, nil, 1, 2) --Метка молнии
@@ -62,7 +67,7 @@ local timerNecroticWound					= mod:NewBuffActiveTimer(9, 209858, nil, "Tank|Heal
 local timerBurst							= mod:NewBuffActiveTimer(4, 240443, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON) --Взрыв
 local timerQuakingCD						= mod:NewCDTimer(20, 240447, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Землетрясение
 local timerEntangledCD						= mod:NewCDTimer(30, 408556, 269678, nil, nil, 7, nil, DBM_COMMON_L.DEADLY_ICON, nil, nil, nil, nil, nil, nil, true) --Запутывание (Оплетение)
-local timerAfflictedCD						= mod:NewNextTimer(30, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, 3, 5) --Крик изнемогающей души (Призыв духов)
+local timerAfflictedCD						= mod:NewNextTimer(29.8, 409492, 173254, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON, nil, 3, 5) --Крик изнемогающей души (Призыв духов)
 local timerAfflicted						= mod:NewCastTimer(12, 409492, 322274, nil, nil, 7) --Крик изнемогающей души (Ослабление)
 local timerIncorporealCD					= mod:NewNextTimer(45, 408805, 173254, nil, nil, 5, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 3, 5) --Дестабилизация (Призыв духов)
 
@@ -94,6 +99,7 @@ local MarkWind = SpellLinks(396364) --Метка ветра
 mod.vb.totalSpiritsCount = 0
 mod.vb.murchalsProshlyapCount = 0
 mod.vb.mProshlyapCount = 0
+mod.vb.savedSpirits = {}
 
 local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
 	self.vb.mProshlyapCount = self.vb.mProshlyapCount + 1
@@ -129,7 +135,7 @@ end
 
 local function StartCheckSpirits1(self)
 --	if self:AntiSpam(3, 3) then
-	warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+	warnSpiritsleft1:Show(self.vb.totalSpiritsCount)
 	timerAfflicted:Start()
 	DBM:AddMsg("Запущена тестовая версия проверки на духов. Впринципе, она работает идеально, если духов диспелить, а не прохиливать, т.к. исчезание духа никак не логируется.")
 --	end
@@ -137,7 +143,7 @@ end
 
 local function StartCheckSpirits2(self)
 --	if self:AntiSpam(3, 3) then
-	warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+	warnSpiritsleft1:Show(self.vb.totalSpiritsCount)
 --	end
 end
 
@@ -254,11 +260,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 240446 and self:AntiSpam(3, "aff1") then
 		warnExplosion:Show()
-	elseif spellId == 409492 then --Крик изнемогающей души
-		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
-		if self:AntiSpam(5, "aff2") then
-			warnAfflictedCry:Show()
-			warnAfflictedCry:Play("helpspirit")
+	elseif spellId == 409492 then --Крик изнемогающей души1
+		if self:AntiSpam(3, "aff2") then
+			self.vb.totalSpiritsCount = 0
+			self.vb.savedSpirits = {}
 			if not afflictedDetected then
 				afflictedDetected = true
 			end
@@ -266,17 +271,40 @@ function mod:SPELL_CAST_START(args)
 			timerAfflictedCD:Start()
 			self:Unschedule(checkForCombat)
 			self:Unschedule(checkAfflicted)
+			self:Unschedule(StartCheckSpirits1)
 			checkForCombat(self)
 			self:Schedule(0.3, StartCheckSpirits1, self)
+		--	self:Schedule(15, StopCheckSpirits, self)
+			self:Schedule(40, checkAfflicted, self)
+		end
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
+--		self:Schedule(0.3, StartCheckSpirits1, self)
+--		self:Schedule(15, StopCheckSpirits, self)
+--[[	elseif spellId == 409492 then --Крик изнемогающей души2
+		if self:AntiSpam(3, "aff2") then
+			self.vb.totalSpiritsCount = 0
+		--	warnAfflictedCry:Show()
+		--	warnAfflictedCry:Play("helpspirit")
+			if not afflictedDetected then
+				afflictedDetected = true
+			end
+			afflictedCounting = true
+			timerAfflictedCD:Start()
+			self:Unschedule(checkForCombat)
+			self:Unschedule(checkAfflicted)
+			self:Unschedule(StartCheckSpirits1)
+			checkForCombat(self)
+			self:Schedule(0.5, StartCheckSpirits1, self)
 			self:Schedule(15, StopCheckSpirits, self)
 			self:Schedule(40, checkAfflicted, self)
 		end
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
 --		self:Schedule(0.3, StartCheckSpirits1, self)
---		self:Schedule(15, StopCheckSpirits, self)
+--		self:Schedule(15, StopCheckSpirits, self)]]
 	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
 		if unitId and UnitIsEnemy("player", unitId) then
-			warnDestabalize:Show()
+		--	warnDestabalize:Show()
 		end
 	end
 end
@@ -371,9 +399,19 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEntangled:Show()
 			specWarnEntangled:Play("breakvine")--breakvine
 		end
+	elseif spellId == 409492 then --Дестабилизация (Ослабление)
+		if args:IsPlayer() then
+			specWarnDestabalize:Show()
+			specWarnDestabalize:Play("targetyou")
+		end
+	elseif spellId == 409492 then --Крик изнемогающей души (Ослабление)
+		if args:IsPlayer() then
+			specWarnAfflicted:Show()
+			specWarnAfflicted:Play("targetyou")
+		end
 	elseif spellId == 408801 then --Бесплотность
-		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
 		if self:AntiSpam(25, "aff7") then
+			self.vb.totalSpiritsCount = 0
 			if not incorpDetected then
 				incorpDetected = true
 			end
@@ -382,11 +420,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerIncorporealCD:Start()
 			self:Unschedule(checkForCombat)
 			self:Unschedule(checkIncorp)
+			self:Unschedule(StartCheckSpirits2)
 			checkForCombat(self)
 			self:Schedule(50, checkIncorp, self)
+			self:Schedule(0.5, StartCheckSpirits2, self)
 		end
-		self:Schedule(0.3, StartCheckSpirits2, self)
-		self:Schedule(20, StopCheckSpirits, self)
+		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
+	--	self:Schedule(20, StopCheckSpirits, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -436,17 +476,34 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.vb.murchalsProshlyapCount == 1 then
 			self:Schedule(0.1, stopProshlyapationOfMurchal, self)
 		end
-	elseif spellId == 408805 then
+	elseif spellId == 408805 then --Дестабилизация (Ослабление)
 		if args:IsPlayer() then
 			warnDestabalizeEnd:Show()
+			warnDestabalizeEnd:Play("end")
 		end
-	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then
-		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount - 1
-		if self.vb.totalSpiritsCount == 0 then
-			warnSpiritsleft:Show(self.vb.totalSpiritsCount)
-			timerAfflicted:Stop()
+	elseif spellId == 409492 then --Крик изнемогающей души (Ослабление)
+		if args:IsPlayer() then
+			warnAfflictedEnd:Show()
+			warnAfflictedEnd:Play("end")
+		end
+	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then --Диспел духов1
+		local guid = args.destGUID
+		if guid and not self.vb.savedSpirits[guid] then
+			self.vb.savedSpirits[guid] = true
+			self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
+			if self.vb.totalSpiritsCount == 0 then
+				warnSpiritsleft2:Show(self.vb.totalSpiritsCount)
+				timerAfflicted:Stop()
+			end
 		end
 		DBM:Debug("MP(Дух продиспелен)", 2)
+--[[	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then --Диспел духов2
+		self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
+		if self.vb.totalSpiritsCount == 0 then
+			warnSpiritsleft2:Show(self.vb.totalSpiritsCount)
+			timerAfflicted:Stop()
+		end
+		DBM:Debug("MP(Дух продиспелен)", 2)]]
 	end
 end
 
@@ -465,6 +522,37 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
+function mod:UNIT_HEALTH(uId)
+    if not uId:find("nameplate") then return end
+
+    local name = UnitName(uId)
+    if not name then return end
+
+    if not (name:find("Изнемогающая") or name:find("Afflicted")) then return end
+
+    local guid = UnitGUID(uId)
+    if not guid then return end
+
+    if self.vb.savedSpirits[guid] then return end
+
+    local hp = UnitHealth(uId)
+    local hpMax = UnitHealthMax(uId)
+
+    if hpMax <= 0 then return end
+
+    local percent = hp / hpMax
+
+    if percent >= 0.95 then
+        self.vb.savedSpirits[guid] = true
+        self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
+        if self.vb.totalSpiritsCount == 0 then
+            warnSpiritsleft2:Show(self.vb.totalSpiritsCount)
+            timerAfflicted:Stop()
+        end
+        DBM:Debug("MP(Дух исцелён до 95%+)", 2)
+    end
+end
+
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.AfRaszageth1 or msg == L.AfRaszageth2 then
 		self.vb.murchalsProshlyapCount = 3
@@ -479,23 +567,30 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:CHALLENGE_MODE_COMPLETED()
-	self.vb.totalSpiritsCount = 0
-	overloadCounting = false --Изначальная перегрузка
-	overloadDetected = false --Изначальная перегрузка
-	afflictedCounting = false --Крик изнемогающей души (Призыв духов)
-	afflictedDetected = false --Крик изнемогающей души (Призыв духов)
-	incorporealCounting = false --Дестабилизация (Призыв духов)
-	incorpDetected = false --Дестабилизация (Призыв духов)
-	entangledCounting = false --Запутывание (Гнев деревьев)
-	entangledDetected = false --Запутывание (Гнев деревьев)
-	timerAfflictedCD:Stop()
-	timerIncorporealCD:Stop()
-	timerEntangledCD:Stop()
-	self:Unschedule(checkForCombat)
-	self:Unschedule(checkAfflicted)
-	self:Unschedule(checkIncorp)
-	self:Unschedule(checkEntangled)
-	self:Unschedule(StopCheckSpirits)
-	DBM:Debug("Murchal proshlyap (Ключ закрыт)", 2)
+    self.vb.totalSpiritsCount = 0
+	self.vb.murchalsProshlyapCount = 0
+	self.vb.mProshlyapCount = 0
+    self.vb.savedSpirits = {}
+    overloadCounting = false
+    overloadDetected = false
+    afflictedCounting = false
+    afflictedDetected = false
+    incorporealCounting = false
+    incorpDetected = false
+    entangledCounting = false
+    entangledDetected = false
+	timerQuakingCD:Stop()
+    timerAfflicted:Stop()
+    timerAfflictedCD:Stop()
+    timerIncorporealCD:Stop()
+    timerEntangledCD:Stop()
+    self:Unschedule(checkForCombat)
+    self:Unschedule(checkAfflicted)
+    self:Unschedule(checkIncorp)
+    self:Unschedule(checkEntangled)
+    self:Unschedule(StopCheckSpirits)
+    self:Unschedule(StartCheckSpirits1)
+	self:Unschedule(StartCheckSpirits2)
+    DBM:Debug("Murchal proshlyap (Ключ закрыт)", 2)
 end
 mod.CHALLENGE_MODE_RESET = mod.CHALLENGE_MODE_COMPLETED

@@ -11,11 +11,13 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization{
-	warnSpiritsleft = "Духов осталось: %s"
+	warnSpiritsleft1	= "Количество духов: %s",
+	warnSpiritsleft2	= "Духов осталось: %s"
 }
 
 L:SetOptionLocalization({
-	warnSpiritsleft = "Сообщать о количестве духов",
+	warnSpiritsleft1	= "Сообщать о количестве духов при появлении",
+	warnSpiritsleft2	= "Сообщать о количестве духов",
 	MurchalOchkenProshlyapen = "Отсчёт времени действия дебаффа $spell:396411"
 })
 
