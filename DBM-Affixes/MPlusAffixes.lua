@@ -20,7 +20,8 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL",
 --	"LOADING_SCREEN_DISABLED",
 	"CHALLENGE_MODE_COMPLETED",
-	"UNIT_HEALTH",
+	"SPELL_HEAL",
+	"SPELL_PERIODIC_HEAL",
 	"CHALLENGE_MODE_RESET"
 )
 
@@ -100,6 +101,10 @@ mod.vb.totalSpiritsCount = 0
 mod.vb.murchalsProshlyapCount = 0
 mod.vb.mProshlyapCount = 0
 mod.vb.savedSpirits = {}
+
+function mod:OnCombatStart(delay)
+	self.vb.savedSpirits = {}
+end
 
 local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
 	self.vb.mProshlyapCount = self.vb.mProshlyapCount + 1
@@ -522,35 +527,38 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_HEALTH(uId)
-    if not uId:find("nameplate") then return end
+function mod:CheckSpiritHeal(args)
+    local guid = args.destGUID
+    if not guid or self.vb.savedSpirits[guid] then return end
 
-    local name = UnitName(uId)
-    if not name then return end
+    local npcId = DBM:GetCIDFromGUID(guid)
+    if npcId ~= 204773 then return end
 
-    if not (name:find("Изнемогающая") or name:find("Afflicted")) then return end
-
-    local guid = UnitGUID(uId)
-    if not guid then return end
-
-    if self.vb.savedSpirits[guid] then return end
-
-    local hp = UnitHealth(uId)
-    local hpMax = UnitHealthMax(uId)
-
-    if hpMax <= 0 then return end
-
-    local percent = hp / hpMax
-
-    if percent >= 0.95 then
-        self.vb.savedSpirits[guid] = true
-        self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
-        if self.vb.totalSpiritsCount == 0 then
-            warnSpiritsleft2:Show(self.vb.totalSpiritsCount)
-            timerAfflicted:Stop()
+    for i = 1, 40 do
+        local uId = "nameplate" .. i
+        if UnitGUID(uId) == guid then
+            local hp = UnitHealth(uId)
+            local hpMax = UnitHealthMax(uId)
+            if hpMax > 0 and hp / hpMax >= 0.95 then
+                self.vb.savedSpirits[guid] = true
+                self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
+                if self.vb.totalSpiritsCount == 0 then
+                    warnSpiritsleft:Show(self.vb.totalSpiritsCount)
+                    timerAfflicted:Stop()
+                end
+                DBM:Debug("MP(Дух исцелён до 95%+)", 2)
+            end
+            return
         end
-        DBM:Debug("MP(Дух исцелён до 95%+)", 2)
     end
+end
+
+function mod:SPELL_HEAL(args)
+    self:CheckSpiritHeal(args)
+end
+
+function mod:SPELL_PERIODIC_HEAL(args)
+    self:CheckSpiritHeal(args)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
