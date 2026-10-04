@@ -38,8 +38,8 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnAfflictedEnd						= mod:NewEndAnnounce(409492, 1, nil, nil, 322274) --Крик изнемогающей души (Ослабление)
-local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 2, 409492) --Количество духов при появлении
-local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 2, 408805) --Количество духов
+local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 1, 409492) --Количество духов при появлении
+local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 1, 408805) --Количество духов
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -101,10 +101,6 @@ mod.vb.totalSpiritsCount = 0
 mod.vb.murchalsProshlyapCount = 0
 mod.vb.mProshlyapCount = 0
 mod.vb.savedSpirits = {}
-
-function mod:OnCombatStart(delay)
-	self.vb.savedSpirits = {}
-end
 
 local function startProshlyapationOfMurchal(self) --Изначальная перегрузка
 	self.vb.mProshlyapCount = self.vb.mProshlyapCount + 1

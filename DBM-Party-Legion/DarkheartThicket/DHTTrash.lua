@@ -325,9 +325,9 @@ function mod:UNIT_DIED(args)
 		--"<18.14 01:20:55> [UNIT_SPELLCAST_SUCCEEDED] Oakheart(100.0%-0.0%){Target:??} -Cancel Deep Roots- [[focus:Cast-3-4223-1466-16781-165953-000103D947:165953]]", -- [68]
 		--"<21.41 01:20:59> [DBM_Debug] ENCOUNTER_START event fired: 1837 Oakheart 23 5#nil", -- [73]
 		self.vb.trashRemaining = self.vb.trashRemaining - 1
-		if self.vb.trashRemaining == 0 then
-			timerRP:Start(8)
-		end
+	--[[	if self.vb.trashRemaining == 0 then --Таймер лишний, босс запускается без него (спс разрабам сервера)
+	--		timerRP:Start(8)
+		end]]
 	elseif cid == 100531 then--bloodtainted-fury
 		timerBloodBombCD:Stop(args.destGUID)
 		timerBloodAssaultCD:Stop(args.destGUID)

@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnRoar						= mod:NewSpellAnnounce(199389, 2, nil, nil, 405332) --Сотрясающий землю рык (Сотрясающий рык)
-local warnRoar2						= mod:NewPreWarnAnnounce(199389, 5, 1, nil, nil, 405332) --Сотрясающий землю рык (Сотрясающий рык)
+local warnRoar2						= mod:NewPreWarnAnnounce(199389, 5, 2, nil, nil, 405332) --Сотрясающий землю рык (Сотрясающий рык)
 
 local specWarnDownDraft				= mod:NewSpecialWarningMoveTo(199345, nil, nil, DBM_COMMON_L.PUSHBACK, 4, 2) --Нисходящий поток (Отталкивание)
 local specWarnBreath				= mod:NewSpecialWarningDodge(191325, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание порчи (Фронталка)
