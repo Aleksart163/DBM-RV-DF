@@ -20,8 +20,6 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL",
 --	"LOADING_SCREEN_DISABLED",
 	"CHALLENGE_MODE_COMPLETED",
-	"SPELL_HEAL",
-	"SPELL_PERIODIC_HEAL",
 	"CHALLENGE_MODE_RESET"
 )
 
@@ -38,8 +36,8 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnAfflictedEnd						= mod:NewEndAnnounce(409492, 1, nil, nil, 322274) --Крик изнемогающей души (Ослабление)
-local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 1, 409492) --Количество духов при появлении
-local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 1, 408805) --Количество духов
+local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 2, 409492) --Количество духов при появлении
+local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 2, 408805) --Количество духов
 --
 local warnNecroticWound						= mod:NewStackAnnounce(209858, 3, nil, nil, 2) --Некротическая язва
 
@@ -522,40 +520,6 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:CheckSpiritHeal(args)
-    local guid = args.destGUID
-    if not guid or self.vb.savedSpirits[guid] then return end
-
-    local npcId = DBM:GetCIDFromGUID(guid)
-    if npcId ~= 204773 then return end
-
-    for i = 1, 40 do
-        local uId = "nameplate" .. i
-        if UnitGUID(uId) == guid then
-            local hp = UnitHealth(uId)
-            local hpMax = UnitHealthMax(uId)
-            if hpMax > 0 and hp / hpMax >= 0.95 then
-                self.vb.savedSpirits[guid] = true
-                self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
-                if self.vb.totalSpiritsCount == 0 then
-                    warnSpiritsleft:Show(self.vb.totalSpiritsCount)
-                    timerAfflicted:Stop()
-                end
-                DBM:Debug("MP(Дух исцелён до 95%+)", 2)
-            end
-            return
-        end
-    end
-end
-
-function mod:SPELL_HEAL(args)
-    self:CheckSpiritHeal(args)
-end
-
-function mod:SPELL_PERIODIC_HEAL(args)
-    self:CheckSpiritHeal(args)
-end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.AfRaszageth1 or msg == L.AfRaszageth2 then
