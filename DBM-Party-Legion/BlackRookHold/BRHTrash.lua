@@ -326,6 +326,6 @@ end
 
 function mod:OnSync(msg, targetname)
 	if msg == "MPP" and self:AntiSpam(10, "AmalgamSouls") then
-		timerRP:Start(18.5)
+		timerRP:Start(17)
 	end
 end

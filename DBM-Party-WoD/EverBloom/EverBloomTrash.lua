@@ -47,7 +47,7 @@ local specWarnPoisonClawsDispel					= mod:NewSpecialWarningDispel(169657, "Remov
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(169495, nil, 6726, nil, 1, 8) --Живые листья (Безмолвие)
 
 local timerRP									= mod:NewRPTimer(68)
-local timerEnragedGrowthCD						= mod:NewCDNPTimer(12.8, 165213, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Яростный рост CD from success or interrupt
+local timerEnragedGrowthCD						= mod:NewCDNPTimer(6.7, 165213, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Яростный рост CD from success or interrupt
 local timerChokingVinesCD						= mod:NewCDNPTimer(20, 164965, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Удушающие лианы 20.4
 local timerBoundingWhirlCD						= mod:NewCDNPTimer(14, 172578, 410234, nil, nil, 3) --Сдерживающий вихрь (Вихрь клинков) 16.5
 local timerPoisonousClawsCD						= mod:NewCDNPTimer(16.5, 169657, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Ядовитые когти

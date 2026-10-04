@@ -399,7 +399,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEntangled:Show()
 			specWarnEntangled:Play("breakvine")--breakvine
 		end
-	elseif spellId == 409492 then --Дестабилизация (Ослабление)
+	elseif spellId == 408805 then --Дестабилизация (Ослабление)
 		if args:IsPlayer() then
 			specWarnDestabalize:Show()
 			specWarnDestabalize:Play("targetyou")

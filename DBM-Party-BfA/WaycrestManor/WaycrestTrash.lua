@@ -87,7 +87,7 @@ local timerSoulVolleyCD				= mod:NewCDNPTimer(11, 263959, DBM_COMMON_L.BOMBING, 
 local timerWardingCandleCD			= mod:NewCDNPTimer(18.2, 263961, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Защитные свечи
 local timerRuinousoVolleyCD			= mod:NewCDNPTimer(17, 265876, DBM_COMMON_L.BOMBING, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerDreadMarkCD				= mod:NewCDNPTimer(18.2, 265880, 167180, nil, nil, 3) --Жуткая метка (Бомбы)
-local timerHorrificVisageCD			= mod:NewCDNPTimer(24, 264407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ужасающий лик
+local timerHorrificVisageCD			= mod:NewCDNPTimer(18, 264407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Ужасающий лик
 
 local yellDreadMark					= mod:NewYell(265880, 49685, nil, nil, "YELL") --Жуткая метка (Бомба)
 local yellDreadMarkFades			= mod:NewShortFadesYell(265880, nil, nil, nil, "YELL") --Жуткая метка (Бомба)

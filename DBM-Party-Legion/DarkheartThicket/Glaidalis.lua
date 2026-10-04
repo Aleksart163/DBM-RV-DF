@@ -93,7 +93,7 @@ function mod:OnCombatStart(delay)
 	self.vb.rampageCount = 0
 	self.vb.nightCount = 0
 	timerLeapCD:Start(5-delay, 1)
-	timerRampageCD:Start(12.2-delay, 1)
+	timerRampageCD:Start(13-delay, 1)
 	timerNightfallCD:Start(19.4-delay, 1)--19.4-25.5
 	if self.Options.NPAuraOnFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
