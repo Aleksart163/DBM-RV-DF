@@ -33,7 +33,7 @@ local warnChronoFaded								= mod:NewTargetNoFilterAnnounce(405696, 3) --Вре
 
 local specWarnUnwind								= mod:NewSpecialWarningDefensive(414303, "Tank", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Обращение вспять (Фронталка)
 local specWarnUnwind2								= mod:NewSpecialWarningDodge(414303, "-Tank", nil, DBM_COMMON_L.FRONTAL, 1, 2) --Обращение вспять (Фронталка)
-local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 1, 2) --Временное затухание
+local specWarnChronofaded							= mod:NewSpecialWarningMoveTo(405696, nil, nil, nil, 4, 2) --Временное затухание
 local specWarnFragmentsofTime						= mod:NewSpecialWarningDodgeCount(405431, nil, nil, nil, 2, 2) --Фрагменты времени
 --local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
