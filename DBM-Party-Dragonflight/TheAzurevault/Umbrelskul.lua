@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2508, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20260630000000")
+mod:SetRevision("20260929000000")
 mod:SetCreatureID(186738)
 mod:SetEncounterID(2584)
-mod:SetHotfixNoticeRev(20260714000000)
---mod:SetMinSyncRevision(20260714000000)
+mod:SetHotfixNoticeRev(20260930000000)
+--mod:SetMinSyncRevision(20260930000000)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -31,7 +31,7 @@ local warnArcaneEruption						= mod:NewCountAnnounce(385075, 3) --Чародей
 
 local specWarnDragonStrike						= mod:NewSpecialWarningDefensive(384978, nil, nil, nil, 3, 4) --Удар дракона
 local specWarnDragonStrikeDebuff				= mod:NewSpecialWarningDispel(384978, "RemoveMagic", nil, nil, 3, 2) --Удар дракона
-local specWarnCrystallineRoar					= mod:NewSpecialWarningDodge(384699, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Кристаллический рев
+local specWarnCrystallineRoar					= mod:NewSpecialWarningDodge(384699, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Кристаллический рев (Фронталка)
 local specWarnUnleashedDestruction				= mod:NewSpecialWarningSpell(385399, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Высвобожденное разрушение (Отталкивание)
 
 local timerDragonStrikeCD						= mod:NewCDTimer(7.3, 384978, nil, "Tank|Healer|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)--Удар дракона 7.3-24, probably delayed by CLEU events I couldn't see

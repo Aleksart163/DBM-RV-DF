@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheNokhudOffensiveTrash", "DBM-Party-Dragonflight", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20260630000000")
+mod:SetRevision("20260930000000")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
@@ -26,44 +26,45 @@ mod:RegisterEvents(
 local warnThunderClap						= mod:NewCastAnnounce(386028, 4) --Удар грома
 local warnTotemicOverload					= mod:NewCastAnnounce(387145, 3) --Тотемная перегрузка
 local warnChantoftheDead					= mod:NewCastAnnounce(387614, 3) --Песнопения мертвых
-local warnTempest							= mod:NewCastAnnounce(373395, 4)
-local warnDeathBoltVolley					= mod:NewCastAnnounce(387411, 3)
-local warnBloodcurdlingShout				= mod:NewCastAnnounce(373395, 3)
-local warnRallytheClan						= mod:NewCastAnnounce(383823, 4, nil, nil, nil, nil, nil, 3)--Has to be stunned/disrupted
-local warnDisruptiveShout					= mod:NewCastAnnounce(384365, 3)
-local warnStormsurge						= mod:NewCastAnnounce(386694, 3)
-local warnThunderstrike						= mod:NewCastAnnounce(387125, 3, nil, nil, "Tank")
-local warnDesecratingRoar					= mod:NewCastAnnounce(387440, 4, nil, nil, nil, nil, nil, 3)--Has to be stunned/disrupted
+local warnTempest							= mod:NewCastAnnounce(386024, 4) --Буря
+local warnDeathBoltVolley					= mod:NewCastAnnounce(387411, 3, nil, nil, nil, 200343) --Залп стрел смерти (Залп стрел)
+local warnBloodcurdlingShout				= mod:NewCastAnnounce(373395, 3, nil, nil, nil, 68950) --Кровожадный вопль
+local warnRallytheClan						= mod:NewCastAnnounce(383823, 4, nil, nil, nil, nil, nil, 3) --Клич клана Has to be stunned/disrupted
+local warnDisruptiveShout					= mod:NewCastAnnounce(384365, 3) --Прерывающий крик
+local warnStormsurge						= mod:NewCastAnnounce(386694, 3) --Энергия бури
+local warnThunderstrike						= mod:NewCastAnnounce(387125, 3, nil, nil, "Tank") --Громовой удар
+local warnDesecratingRoar					= mod:NewCastAnnounce(387440, 4, nil, nil, nil, nil, nil, 3) --Оскверняющий рык Has to be stunned/disrupted
 
 local specWarnThunderClap					= mod:NewSpecialWarningDodge(386028, "Melee", nil, nil, 2, 2) --Удар грома
-local specWarnShatterSoul					= mod:NewSpecialWarningMoveTo(395035, nil, nil, nil, 1, 2)
-local specWarnChainLightning				= mod:NewSpecialWarningMoveAway(387127, nil, nil, nil, 1, 2)
-local specWarnHuntPrey						= mod:NewSpecialWarningYou(334610, nil, nil, nil, 1, 2)--This might throw duplicate spell alert in debug, that's cause it is in fact used in necrotic wake too
-local specWarnWarStomp						= mod:NewSpecialWarningDodge(384336, nil, nil, nil, 2, 2)
-local specWarnBroadStomp					= mod:NewSpecialWarningDodge(382233, nil, nil, nil, 2, 2)
-local specWarnRottingWind					= mod:NewSpecialWarningDodge(387629, nil, nil, nil, 2, 2)
-local specWarnRainofArrows					= mod:NewSpecialWarningDodge(384476, nil, nil, nil, 2, 2)
+local specWarnShatterSoul					= mod:NewSpecialWarningMoveTo(395035, nil, nil, nil, 1, 2) --Раскалывание души
+local specWarnChainLightning				= mod:NewSpecialWarningMoveAway(387127, nil, nil, nil, 4, 2) --Цепная молния
+local specWarnHuntPrey						= mod:NewSpecialWarningYou(334610, nil, 96306, nil, 4, 2) --Преследование добычи (Преследование) This might throw duplicate spell alert in debug, that's cause it is in fact used in necrotic wake too
+local specWarnWarStomp						= mod:NewSpecialWarningDodge(384336, nil, nil, nil, 2, 2) --Громовая поступь
+local specWarnBroadStomp					= mod:NewSpecialWarningDodge(382233, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Широкий топот (Фронталка)
+local specWarnRottingWind					= mod:NewSpecialWarningDodge(387629, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Ветер гнили (Фронталка)
+local specWarnRainofArrows					= mod:NewSpecialWarningDodge(384476, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Град стрел
 --local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
-local specWarnStormshield					= mod:NewSpecialWarningDispel(386223, "MagicDispeller", nil, nil, 1, 2)
-local specWarnTempest						= mod:NewSpecialWarningInterrupt(386024, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDeathBoltVolley				= mod:NewSpecialWarningInterrupt(387411, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "HasInterrupt", nil, nil, 1, 2)
-local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2)
+local specWarnStormshield					= mod:NewSpecialWarningDispel(386223, "MagicDispeller", nil, nil, 3, 2) --Щит бури
+local specWarnTempest						= mod:NewSpecialWarningInterrupt(386024, "HasInterrupt", nil, DBM_COMMON_L.AOEDAMAGE, 1, 2) --Буря (АоЕ)
+local specWarnDeathBoltVolley				= mod:NewSpecialWarningInterrupt(387411, "HasInterrupt", 200343, nil, 1, 2) --Залп стрел смерти (Залп стрел)
+local specWarnBloodcurdlingShout			= mod:NewSpecialWarningInterrupt(373395, "HasInterrupt", 68950, nil, 1, 2) --Кровожадный вопль (Страх)
+local specWarnDisruptiveShout				= mod:NewSpecialWarningInterrupt(384365, "HasInterrupt", nil, nil, 1, 2) --Прерывающий крик
 local specWarnStormbolt						= mod:NewSpecialWarningInterrupt(386012, "HasInterrupt", nil, nil, 1, 2) --Грозовой удар
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(386912, nil, nil, nil, 1, 8) --Туча энергии бури
 
 local timerThunderClapCD					= mod:NewCDNPTimer(19.5, 386028, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Удар грома
-local timerRallytheClanCD					= mod:NewCDNPTimer(20, 383823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Клич клана 20-23
-local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3) --Громовая поступь
-local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
+local timerRallytheClanCD					= mod:NewCDNPTimer(20, 383823, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Клич клана 20-23
+local timerWarStompCD						= mod:NewCDNPTimer(15.7, 384336, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Громовая поступь
+local timerChantoftheDeadCD					= mod:NewCDNPTimer(23, 387614, nil, nil, nil, 2, nil, DBM_COMMON_L.ENRAGE_ICON..DBM_COMMON_L.DEADLY_ICON) --Песнопения мертвых
 local timerDisruptingShoutCD				= mod:NewCDNPTimer(21.8, 384365, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Прерывающий крик 20-30ish
-local timerTempestCD						= mod:NewCDNPTimer(20, 386024, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря20-25
+local timerDisruptingShoutCast				= mod:NewCastTimer(4, 384365, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Прерывающий крик
+local timerTempestCD						= mod:NewCDNPTimer(20, 386024, DBM_COMMON_L.AOEDAMAGE2, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Буря (АоЕ) 20-25
 local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющий рык
-local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел смерти
-local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровожадный вопль
+local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, 200343, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел смерти (Залп стрел)
+local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, 68950, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровожадный вопль (Страх)
 
-local yellChainLightning					= mod:NewYell(387127, nil, nil, nil, "YELL")
+local yellChainLightning					= mod:NewYell(387127, nil, nil, nil, "YELL") --Цепная молния
 
 --local playerName = UnitName("player")
 
@@ -125,6 +126,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 384365 then
 		timerDisruptingShoutCD:Start(nil, args.sourceGUID)
+		timerDisruptingShoutCast:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn384365interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDisruptiveShout:Show(args.sourceName)
 			specWarnDisruptiveShout:Play("kickcast")
@@ -201,8 +203,10 @@ function mod:UNIT_DIED(args)
 	elseif cid == 191847 then--Nokhud Plainstomper
 		timerWarStompCD:Stop(args.destGUID)
 		timerDisruptingShoutCD:Stop(args.destGUID)
+		timerDisruptingShoutCast:Stop(args.destGUID)
 	elseif cid == 192800 then--Nokhud Lancemaster
 		timerDisruptingShoutCD:Stop(args.destGUID)
+		timerDisruptingShoutCast:Stop(args.destGUID)
 	elseif cid == 194894 then--Primalist Stormspeaker
 		timerTempestCD:Stop(args.destGUID)
 	elseif cid == 195878 then--Uthel Beastcaller
