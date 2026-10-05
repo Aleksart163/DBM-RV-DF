@@ -12,9 +12,6 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 408801 408556 350209 226512 226510 240447 240559 209858 240443 396369 396364 409492 408805",
 	"SPELL_AURA_APPLIED_DOSE 240559 209858 240443",
 	"SPELL_AURA_REMOVED 226510 240447 240559 240443 396369 396364 408805 408556 409465 409472 409470 409492",
-	--409472 Больная душа (болезнь)
-	--409465 Проклятая душа (проклятие)
-	--409470 Отравленная душа (яд)
 	"SPELL_PERIODIC_DAMAGE 226512 240559",
 	"SPELL_PERIODIC_MISSED 226512 240559",
 	"CHAT_MSG_MONSTER_YELL",
@@ -33,9 +30,9 @@ local warnExplosion							= mod:NewCastAnnounce(240446, 4) --Взрыв
 --local warnIncorporeal						= mod:NewCastAnnounce(408801, 4) --Бесплотность
 --local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, false, 2, nil, 14) --Крик изнемогающей души
 --local warnAfflictedCry						= mod:NewCastAnnounce(409492, 2, nil, nil, "Healer|RemoveMagic|RemoveCurse|RemoveDisease|RemovePoison", 2, nil, 14) --Крик изнемогающей души
-local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
-local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
+--local warnDestabalize						= mod:NewCastAnnounce(408805, 2, nil, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnAfflictedEnd						= mod:NewEndAnnounce(409492, 1, nil, nil, 322274) --Крик изнемогающей души (Ослабление)
+local warnDestabalizeEnd					= mod:NewEndAnnounce(408805, 1, nil, nil, 322274) --Дестабилизация (Ослабление)
 local warnSpiritsleft1						= mod:NewAnnounce("warnSpiritsleft1", 2, 409492) --Количество духов при появлении
 local warnSpiritsleft2						= mod:NewAnnounce("warnSpiritsleft2", 2, 408805) --Количество духов
 --
@@ -136,7 +133,7 @@ local function StartCheckSpirits1(self)
 --	if self:AntiSpam(3, 3) then
 	warnSpiritsleft1:Show(self.vb.totalSpiritsCount)
 	timerAfflicted:Start()
-	DBM:AddMsg("Запущена тестовая версия проверки на духов. Впринципе, она работает идеально, если духов диспелить, а не прохиливать, т.к. исчезание духа никак не логируется.")
+	DBM:AddMsg("Запущена проверка на духов. Впринципе, она работает идеально, если духов диспелить, а не прохиливать, т.к. исчезание духа никак не логируется.")
 --	end
 end
 
@@ -302,9 +299,9 @@ function mod:SPELL_CAST_START(args)
 --		self:Schedule(15, StopCheckSpirits, self)]]
 	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
-		if unitId and UnitIsEnemy("player", unitId) then
-		--	warnDestabalize:Show()
-		end
+	--[[	if unitId and UnitIsEnemy("player", unitId) then
+			warnDestabalize:Show()
+		end]]
 	end
 end
 
