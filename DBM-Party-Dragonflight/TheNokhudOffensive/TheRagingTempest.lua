@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnEnergySurge							= mod:NewSpellAnnounce(384686, 3, nil, "Tank|MagicDispeller") --Волна энергии
-local warnSurgeBoss								= mod:NewStackAnnounce(394875, 4)
+local warnSurgeBoss								= mod:NewStackAnnounce(394875, 4) --Прилив мощи
 
 local specWarnElectricalStorm					= mod:NewSpecialWarningCount(384620, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Электрическая буря (АоЕ)
 local specWarnLightingStrike					= mod:NewSpecialWarningMoveAway(384316, nil, nil, nil, 2, 2) --Удар молнии
@@ -34,8 +34,8 @@ local specWarnEnergySurge						= mod:NewSpecialWarningDispel(384686, "MagicDispe
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(386916, nil, nil, nil, 1, 8)
 
 local timerLightingStrikeCD						= mod:NewCDTimer(20.2, 384316, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Удар молнии
-local timerElectricStormCD						= mod:NewCDTimer(77.9, 384620, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Электрическая буря (АоЕ) 60-61+3sec cast
-local timerElectricStorm						= mod:NewCastTimer(18, 384620, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Электрическая буря
+local timerElectricStormCD						= mod:NewCDCountTimer(77.9, 384620, DBM_COMMON_L.AOEDAMAGE2.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Электрическая буря (АоЕ) 60-61+3sec cast
+local timerElectricStorm						= mod:NewCastTimer(18, 384620, DBM_COMMON_L.AOEDAMAGE2, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Электрическая буря
 local timerEnergySurgeCD						= mod:NewCDTimer(16.5, 384686, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON) --Волна энергии
 
 local yellLightningStrike						= mod:NewShortFadesYell(384185, nil, nil, nil, "YELL") --Удар молнии
@@ -61,7 +61,7 @@ function mod:OnCombatStart(delay)
 	self.vb.stormCount = 0
 	timerEnergySurgeCD:Start(7-delay) --
 	timerLightingStrikeCD:Start(11-delay) --
-	timerElectricStormCD:Start(30.7-delay) --
+	timerElectricStormCD:Start(30.7-delay, 1) --
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(382628))
 		DBM.InfoFrame:Show(5, "playerdebuffremaining", 382628)
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.stormCount = self.vb.stormCount + 1
 		specWarnElectricalStorm:Show(self.vb.stormCount)
 		specWarnElectricalStorm:Play("aesoon")
-		timerElectricStormCD:Start()
+		timerElectricStormCD:Start(self.vb.stormCount+1)
 		timerElectricStorm:Start()
 		timerLightingStrikeCD:Start(18.2)
 		timerEnergySurgeCD:Start(20.4)
@@ -124,7 +124,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnSurgeBoss:Show(args.destName, args.amount or 1)
 	elseif spellId == 384185 then
 		if args:IsPlayer() then
-			yellLightningStrike:Countdown(spellId)
+			yellLightningStrike:Countdown(spellId, 3)
 		end
 	end
 end
