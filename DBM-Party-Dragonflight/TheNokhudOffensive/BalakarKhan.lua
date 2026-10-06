@@ -32,12 +32,13 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: Balakar's Might
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25185))
-local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Tank|Healer") --Яростный удар
+local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Healer") --Яростный удар
 local warnIronSpear								= mod:NewTargetNoFilterAnnounce(376634, 2) --Железное копье
 
 local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2) --Железное копье
 local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2) --Дрожь земли
-local specWarnRendingStrike						= mod:NewSpecialWarningDefensive(375937, nil, nil, nil, 3, 4) --Разрывающий удар
+local specWarnRendingStrike						= mod:NewSpecialWarningSpell(375937, nil, nil, nil, 1, 2) --Разрывающий удар
+local specWarnSavageStrike						= mod:NewSpecialWarningDefensive(375929, nil, nil, nil, 3, 4) --Яростный удар
 
 local timerIronSpearCD							= mod:NewCDTimer(37, 376634, nil, nil, nil, 7) --Железное копье Need more data
 local timerUpheavalCD							= mod:NewCDTimer(37, 375943, nil, nil, nil, 3) --Дрожь земли Need data at all
@@ -53,17 +54,18 @@ local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInter
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25187))
 local warnPhase									= mod:NewPhaseAnnounce(2, 2)
 local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2) --Заряженное копье
-local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Tank|Healer")
+local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Healer") --Громовой удар
 
 local specWarnStaticSpear						= mod:NewSpecialWarningMoveAway(376864, nil, nil, nil, 3, 2) --Заряженное копье
 local specWarnCracklingUpheaval					= mod:NewSpecialWarningDodge(376892, nil, nil, nil, 2, 2) --Трескучий сдвиг
 local specWarnConductiveStrike					= mod:NewSpecialWarningDefensive(376827, nil, nil, nil, 3, 4) --Проводящий удар
 local specWarnConductiveStrikeDispel			= mod:NewSpecialWarningDispel(376827, "RemoveMagic", nil, nil, 3, 4) --Проводящий удар
+local specWarnThunderStrike						= mod:NewSpecialWarningDefensive(376829, nil, nil, nil, 3, 4) --Громовой удар
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(376899, nil, nil, nil, 1, 8) --Трескучее облако
 
 local timerStaticSpearCD						= mod:NewCDTimer(39, 376864, nil, nil, nil, 7) --Заряженное копье
 local timerCracklingUpheavalCD					= mod:NewCDTimer(38.3, 376892, nil, nil, nil, 3) --Трескучий сдвиг
-local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Проводящий удар CD used for both Condutive and Thunder
+local timerConductiveStrikeCD					= mod:NewCDCountTimer(17, 376827, nil, "Tank|RemoveMagic", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Проводящий удар CD used for both Condutive and Thunder
 
 local yellIronSpear								= mod:NewYell(376634, nil, nil, nil, "YELL") --Железное копье
 local yellIronSpearFades						= mod:NewShortFadesYell(376634, nil, nil, nil, "YELL") --Железное копье
@@ -72,6 +74,9 @@ local yellStaticSpear							= mod:NewYell(376864, nil, nil, nil, "YELL") --За�
 local yellStaticSpearFades						= mod:NewShortFadesYell(376864, nil, nil, nil, "YELL") --Заряженное копье
 
 mod:AddSetIconOption("SetIconOnConductiveStrike", 376827, true, 0, {8})
+
+local rendingStrike = DBM:GetSpellName(375937) --Разрывающий удар
+local conductiveStrike = DBM:GetSpellName(376827) --Проводящий удар
 
 mod.vb.addsLeft = 0
 mod.vb.comboCount = 0
@@ -129,8 +134,18 @@ function mod:SPELL_CAST_START(args)
 		timerConductiveStrikeCD:Start(timer, self.vb.comboCount+1)
 	elseif spellId == 375929 then
 		warnSavageStrike:Show()
+		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", rendingStrike)
+		if expireTime then
+			specWarnSavageStrike:Show()
+			specWarnSavageStrike:Play("defensive")
+		end
 	elseif spellId == 376829 then
 		warnThunderStrike:Show()
+		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", conductiveStrike)
+		if expireTime then
+			specWarnThunderStrike:Show()
+			specWarnThunderStrike:Play("defensive")
+		end
 	elseif spellId == 376727 then--Boss casting Siphon Power
 		self:SetStage(1.5)
 		timerIronSpearCD:Stop()

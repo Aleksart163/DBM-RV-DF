@@ -24,9 +24,7 @@ mod:RegisterEventsInCombat(
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
  or type = "interrupt"
 --]]
---General
-local timerRP									= mod:NewRPTimer(27.4)
---Teera
+--Тиира
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25552))
 local warnRepel									= mod:NewCastAnnounce(386547, 3, nil, nil, nil, nil, nil, 2) --Отпор
 local warnSpiritLeap							= mod:NewSpellAnnounce(385434, 3) --Прыжок духа
@@ -34,24 +32,25 @@ local warnGaleArrow								= mod:NewCountAnnounce(382670, 3) --Ураганна�
 
 local specWarnRepel								= mod:NewSpecialWarningSpell(386547, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 4) --Отпор (Отталкивание)
 local specWarnGaleArrow							= mod:NewSpecialWarningDefensive(382670, nil, nil, nil, 3, 4) --Ураганная стрела
-local specWarnGaleArrow2						= mod:NewSpecialWarningDodge(382670, nil, nil, nil, 2, 4) --Ураганная стрела
+local specWarnGaleArrow2						= mod:NewSpecialWarningMoveTo(382670, nil, nil, nil, 4, 4) --Ураганная стрела
 local specWarnGuardianWind						= mod:NewSpecialWarningInterrupt(384808, "HasInterrupt", nil, nil, 1, 2) --Оберегающий ветер
 
 local timerGaleArrowCD							= mod:NewCDCountTimer(57.4, 382670, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Ураганная стрела
-local timerRepelCD								= mod:NewCDCountTimer(60, 386547, DBM_COMMON_L.PUSHBACK, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 5) --Отпор (Отталкивание)
+local timerGaleArrowCast						= mod:NewCastTimer(4, 382670, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4) --Ураганная стрела
+local timerRepelCD								= mod:NewCDCountTimer(60, 386547, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 5) --Отпор (Отталкивание)
 local timerSpiritLeapCD							= mod:NewCDTimer(20.4, 385434, nil, nil, nil, 3) --Прыжок духа 20-38.4 (if guardian wind isn't interrupted this can get delayed by repel recast)
 
---Maruuk
+--Маруук
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25546))
-
 local specWarnEarthsplitter						= mod:NewSpecialWarningDodge(385339, nil, nil, nil, 2, 2) --Раскол земли
-local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, nil, nil, nil, 4, 2) --Отпугивающий рык
-local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, nil, nil, nil, 2, 2) --Отпугивающий рык
-local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 3, 4) --Свирепый удар
+local specWarnFrightfulRoar						= mod:NewSpecialWarningRun(386063, nil, 68950, nil, 4, 2) --Отпугивающий рык (Страх)
+local specWarnFrightfulRoar2					= mod:NewSpecialWarningDodge(386063, nil, 68950, nil, 2, 2) --Отпугивающий рык (Страх)
+local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil, nil, 3, 2) --Свирепый удар
 
 local timerEarthSplitterCD						= mod:NewCDCountTimer(60, 385339, nil, nil, nil, 7) --Раскол земли Off by default since it should always be cast immediately after Repel)
-local timerFrightfulRoarCD						= mod:NewCDTimer(30.4, 386063, nil, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
+local timerFrightfulRoarCD						= mod:NewCDTimer(30.4, 386063, 68950, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
 local timerBrutalizeCD							= mod:NewCDTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Свирепый удар Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
+local timerRP									= mod:NewRPTimer(27.4)
 
 local yellBrutalize								= mod:NewShortYell(382836, nil, nil, nil, "YELL") --Свирепый удар
 
@@ -109,9 +108,9 @@ local function scanBosses(self, delay)
 end
 
 local function startProshlyapationsOfMurchal(self)
-	if self:AntiSpam(2, "GaleArrow") then
-		specWarnGaleArrow2:Show()
-		specWarnGaleArrow2:Play("watchstep")
+	if self:AntiSpam(2, "GaleArrow2") then
+		specWarnGaleArrow2:Show(DBM_COMMON_L.ALLY)
+		specWarnGaleArrow2:Play("gathershare")
 	end
 end
 
@@ -141,11 +140,12 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 382670 then --Ураганная стрела
 		self.vb.galeCount = self.vb.galeCount + 1
 		warnGaleArrow:Show(self.vb.galeCount)
-		self:Schedule(0.5, startProshlyapationsOfMurchal, self)
+		self:Schedule(0.1, startProshlyapationsOfMurchal, self)
 		local timer = self:GetFromTimersTable(allProshlyapationsOfMurchal, false, false, spellId, self.vb.galeCount+1) or 60.5
 		if timer then
 			timerGaleArrowCD:Start(timer, self.vb.galeCount+1, args.sourceGUID)
 		end
+		timerGaleArrowCast:Start()
 	elseif spellId == 386063 then --Отпугивающий рык
 		self.vb.roarCount = self.vb.roarCount + 1
 		if self:IsMelee() then
@@ -204,9 +204,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
 	elseif spellId == 392151 then --Ураганная стрела
-		if args:IsPlayer() and self:AntiSpam(2, "GaleArrow") then
-			specWarnGaleArrow:Show()
-			specWarnGaleArrow:Play("defensive")
+		if args:IsPlayer() then
+			specWarnGaleArrow:Schedule(2)
+			specWarnGaleArrow:ScheduleVoice(2, "defensive")
 		end
 	end
 end
