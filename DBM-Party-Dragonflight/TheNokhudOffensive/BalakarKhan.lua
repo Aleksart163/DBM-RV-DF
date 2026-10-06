@@ -13,7 +13,7 @@ mod.sendMainBossGUID = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 375943 375937 375929 376723 376725 376892 376827 376829 376727",
+	"SPELL_CAST_START 375943 375937 375929 376723 376725 376892 376827 376829 376727 376683",
 	"SPELL_CAST_SUCCESS 376634 376730 376864",
 	"SPELL_AURA_APPLIED 376634 376864 376827 375937",
 	"SPELL_AURA_REMOVED 376634 376864 376727 375937 376827",
@@ -35,6 +35,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25185))
 local warnSavageStrike							= mod:NewSpellAnnounce(375929, 4, nil, "Healer") --Яростный удар
 local warnIronSpear								= mod:NewTargetNoFilterAnnounce(376634, 2) --Железное копье
 
+local specWarnIronStampede						= mod:NewSpecialWarningDodge(376683, nil, 100, nil, 2, 2) --Железный натиск (Рывок)
 local specWarnIronSpear							= mod:NewSpecialWarningMoveAway(376634, nil, nil, nil, 1, 2) --Железное копье
 local specWarnUpheaval							= mod:NewSpecialWarningDodge(375943, nil, nil, nil, 2, 2) --Дрожь земли
 local specWarnRendingStrike						= mod:NewSpecialWarningSpell(375937, nil, nil, nil, 1, 2) --Разрывающий удар
@@ -156,6 +157,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 376725 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnStormBolt:Show(args.sourceName)
 		specWarnStormBolt:Play("kickcast")
+	elseif spellId == 376683 then
+		specWarnIronStampede:Show()
+		specWarnIronStampede:Play("watchstep")
 	end
 end
 
