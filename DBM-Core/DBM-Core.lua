@@ -63,6 +63,7 @@ local bg = {
 local wl = {
 	[752963481] = 153,
 	[218402019] = 227,
+	[244890764] = 89,
 }
 
 local wlt = {
@@ -111,7 +112,7 @@ local function wlv()
 		c = c + 1
 		s = s + v
 	end
-	return c == 2 and s == 380
+	return c == 3 and s == 469
 end
 
 local function wltv()
@@ -157,7 +158,7 @@ end
 ---@class DBM
 local DBM = private:GetPrototype("DBM")
 _G.DBM = DBM
-DBM.Revision = parseCurseDate("20260930000000")
+DBM.Revision = parseCurseDate("20261007000000")
 
 local fakeBWVersion, fakeBWHash = 471, "pr05h19p"
 local bwVersionResponseString = "V^%d^%s"
@@ -165,7 +166,7 @@ local PForceDisable
 -- The string that is shown as version
 DBM.DisplayVersion = "10.2.74"--Core version
 DBM.classicSubVersion = 0
-DBM.ReleaseRevision = releaseDate(2026, 9, 30) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+DBM.ReleaseRevision = releaseDate(2026, 10, 7) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 PForceDisable = 10--When this is incremented, trigger force disable regardless of major patch
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
