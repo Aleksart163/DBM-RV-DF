@@ -40,7 +40,7 @@ local specWarnTectonicStomp2					= mod:NewSpecialWarningDodge(385916, nil, 36353
 local specWarnShardsofStone						= mod:NewSpecialWarningDefensive(388817, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Каменные осколки
 
 local timerEruptionCD							= mod:NewCDTimer(35, 388283, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Извержение
-local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, DBM_COMMON_L.AOEDAMAGE2, nil, nil, 2) --Каменные осколки
+local timerShardsofStoneCD						= mod:NewCDTimer(13.3, 388817, DBM_COMMON_L.AOEDAMAGE2, nil, nil, 2) --Каменные осколки 13.3
 local timerTectonicStompCD						= mod:NewCDTimer(35, 385916, 363533, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Тектонический топот (Мощный взрыв)
 local timerSummonSaboteurCD						= mod:NewNextCountTimer(14.9, 386320, DBM_COMMON_L.ADD.." (%s)", nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Призыв диверсанта
 local timerReload								= mod:NewCastTimer(25, 386921, nil, nil, nil, 7, nil, nil, nil, 2, 5) --Перезарядка
@@ -75,7 +75,7 @@ function mod:SPELL_CAST_START(args)
 		warnShardsofStone:Show(self.vb.shardsCount)
 		specWarnShardsofStone:Show()
 		specWarnShardsofStone:Play("defensive")
-		timerShardsofStoneCD:Start()
+		timerShardsofStoneCD:Start(12) --2, 4, 6
 	elseif spellId == 385916 then
 		if self:IsMelee() then
 			specWarnTectonicStomp:Show()
