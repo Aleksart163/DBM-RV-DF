@@ -65,6 +65,7 @@ local wl = {
 	[218402019] = 227,
 	[244890764] = 89,
 	[1666052236] = 100,
+	[2564872592] = 100,
 }
 
 local wlt = {
@@ -113,7 +114,7 @@ local function wlv()
 		c = c + 1
 		s = s + v
 	end
-	return c == 4 and s == 569
+	return c == 5 and s == 669
 end
 
 local function wltv()
