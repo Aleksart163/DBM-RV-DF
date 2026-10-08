@@ -34,7 +34,7 @@ mod:RegisterEvents(
 local warnHealingTouch							= mod:NewCastAnnounce(396640, 2, nil, nil, nil, 283628) --Целительное прикосновение (Исцеление)
 local warnLasherToxin							= mod:NewStackAnnounce(389033, 2, nil, "Tank|Healer|RemoveDisease") --Токсин плеточника
 
-local specWarnAbundance							= mod:NewSpecialWarningSoak(396721, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Изобилие
+local specWarnAbundance							= mod:NewSpecialWarningSpell(396721, nil, nil, DBM_COMMON_L.GROUPSOAK, 3, 2) --Изобилие
 local specWarnGerminate							= mod:NewSpecialWarningDodge(388796, nil, nil, DBM_COMMON_L.BOMBING, 2, 2) --Прорастание
 local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 10, nil, nil, 1, 6) --Токсин плеточника
 local specWarnBurstForth						= mod:NewSpecialWarningSpell(388923, nil, nil, nil, 2, 2) --Взрывной рост
