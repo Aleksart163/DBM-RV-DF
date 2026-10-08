@@ -68,7 +68,7 @@ local allProshlyapationsOfMurchal = {
 	--Прыжок духа
 	[385434] = {5.4, 22.4, 21.1, 20.3, 18.5, 21.1, 20.3, 19.2, 21, 20.7, 17.7, 21.1, 21.4, 17.8, 21.3, 20.5},
 	--Ураганная стрела
-	[382670] = {16.1, 60.6, 60.8, 59.9},
+	[382670] = {16.1, 58.6, 60.8, 59.9}, --16.1, 60.6, 60.8, 59.9
 	--Отпор
 	[386547] = {56.7, 60.8, 60.8},
 	--Отпугивающий рык
@@ -94,14 +94,14 @@ local function scanBosses(self, delay)
 		if UnitExists(unitID) then
 			local cid = self:GetUnitCreatureId(unitID)
 			local bossGUID = UnitGUID(unitID)
-			if cid == 186339 then--Terra
+			if cid == 186339 then--Тиира
 				timerSpiritLeapCD:Start(5.4-delay, 1, bossGUID) --
 				timerGaleArrowCD:Start(16.1-delay, 1, bossGUID) --
-				timerRepelCD:Start(56.7-delay, 1, bossGUID) --
-			else--Maruuk
+				timerRepelCD:Start(55-delay, 1, bossGUID) -- 56.7
+			else--Маруук
 				timerFrightfulRoarCD:Start(4.5-delay, 1, bossGUID) --
 				timerBrutalizeCD:Start(12.5-delay, 1, bossGUID) --
-				timerEarthSplitterCD:Start(59-delay, 1, bossGUID) --
+				timerEarthSplitterCD:Start(57.1-delay, 1, bossGUID) -- 59
 			end
 		end
 	end

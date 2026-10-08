@@ -13,10 +13,12 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 388923 388623 396640 388544",
+	"SPELL_CAST_SUCCESS 396640",
 	"SPELL_AURA_APPLIED 388796 389033",
 	"SPELL_AURA_APPLIED_DOSE 389033",
 	"SPELL_AURA_REMOVED 389033",
 	"SPELL_AURA_REMOVED_DOSE 389033",
+	"SPELL_INTERRUPT",
 	"UNIT_DIED"
 )
 mod:RegisterEvents(
@@ -84,15 +86,14 @@ function mod:SPELL_CAST_START(args)
 		--The other possible timer explanation
 		--timerBarkbreakerCD:Start(6, self.vb.barkCount+1)
 		--timerGerminateCD:Start(15.7, self.vb.germinateCount+1)
-	elseif spellId == 388623 then
+	elseif spellId == 388623 then --Ответвление
 		specWarnBranchOut:Show()
 		specWarnBranchOut:Play("watchstep")
 		specWarnBranchOut:ScheduleVoice(2.5, "bigmob")
 		timerBranchOutCD:Start()
-		timerHealingTouchCD:Start(5)--Add guid not known yet here, so it'll assign first timer to boss1 :\
-	elseif spellId == 396640 then
-		timerHealingTouchCD:Start(nil, args.sourceGUID)
-		if self.Options.SpecWarn396640interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		timerHealingTouchCD:Start(6)--Add guid not known yet here, so it'll assign first timer to boss1 :\
+	elseif spellId == 396640 then --Целительное прикосновение (Исцеление)
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnHealingTouch:Show(args.sourceName)
 			specWarnHealingTouch:Play("kickcast")
 		else
@@ -105,6 +106,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnBarkbreaker:Show()
 			specWarnBarkbreaker:Play("defensive")
 		end
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 396640 then
+		timerHealingTouchCD:Start(9.5, args.sourceGUID)
 	end
 end
 
@@ -152,6 +160,12 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(toxinStacks, 0.2)
 		end
+	end
+end
+
+function mod:SPELL_INTERRUPT(args)
+	if type(args.extraSpellId) == "number" and args.extraSpellId == 396640 then
+		timerHealingTouchCD:Start(9.8, args.sourceGUID)
 	end
 end
 

@@ -82,7 +82,7 @@ function mod:OnCombatStart(delay)
 	self.vb.fissureCount = 0
 	timerArcaneOrbsCD:Start(2.1-delay, 1)
 	timerArcaneExpulsionCD:Start(12.1-delay)
-	timerManaBombsCD:Start(23.9-delay, 1)
+	timerManaBombsCD:Start(23-delay, 1) --
 	timerArcaneFissureCD:Start(40.7-delay, 1)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(391977))
@@ -98,7 +98,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 388537 then
+	if spellId == 388537 then --Магический разлом
 		self.vb.fissureCount = self.vb.fissureCount + 1
 		specWarnArcaneFissure:Show()
 		specWarnArcaneFissure:Play("aesoon")
@@ -106,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 		--Add 3.5 to existing manabomb and expulsion timers (Working Theory, need longer logs/larger sample)
 		--It seems to hold so far though, and if they are also energy based it would make sense since he doesn't gain energy for 3 seccond cast
 		--Of course if they are energy based, it also means the timers need to be corrected by SPELL_ENERGIZE as well :\
-		timerManaBombsCD:AddTime(3.5, self.vb.manaCount+1)
+	--	timerManaBombsCD:AddTime(3.5, self.vb.manaCount+1) --проверяется, но скорее всего лишнее
 		timerArcaneExpulsionCD:AddTime(3.5)
 	elseif spellId == 386173 then
 		--23.9, 26.7, 23, 26.7, 23

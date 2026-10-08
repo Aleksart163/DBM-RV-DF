@@ -39,7 +39,7 @@ local specWarnBlackDragonflight					= mod:NewSpecialWarning("BlackDragonflight",
 local specWarnExpelIntruders					= mod:NewSpecialWarningRun(377912, nil, nil, nil, 4, 2)
 local specWarnDetonateSeeds						= mod:NewSpecialWarningDodge(390915, nil, nil, nil, 2, 2) --Детонирующие семена
 local specWarnDeadlyWinds						= mod:NewSpecialWarningDodge(378003, nil, nil, nil, 2, 2) --Смертоносный ветер
-local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, nil, 2, 2) --Дыхание разлома
+local specWarnRiftbreath						= mod:NewSpecialWarningDodge(388976, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Дыхание разлома
 local specWarnGust								= mod:NewSpecialWarningDodge(377383, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Порыв
 local specWarnViciousAmbush						= mod:NewSpecialWarningYou(388984, nil, nil, nil, 1, 2) --Жестокая засада You warning not move away, because some strategies involve actually baiting charge into melee instead of out
 local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, 174716, nil, 2, 2) --Астральная бомба (Бомба)
@@ -56,7 +56,7 @@ local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil,
 local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3) --Жестокая засада
 local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
 local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, 174716, nil, nil, 3) --Астральная бомба (Бомба) These mob packs are heavily stunned and CD can be delayed by stuns
-local timerVicousLungeCD						= mod:NewCDNPTimer(11.4, 389054, nil, nil, nil, 3)
+local timerVicousLungeCD						= mod:NewCDNPTimer(10, 389054, nil, nil, nil, 3) --Жестокий рывок 11.4
 
 local yellGust									= mod:NewYell(377383, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Порыв
 local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL") --Жестокая засада
