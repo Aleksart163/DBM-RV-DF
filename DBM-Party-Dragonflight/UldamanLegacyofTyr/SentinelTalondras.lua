@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 372719 372600 372623 372701",
 	"SPELL_CAST_SUCCESS 372718",
 	"SPELL_AURA_APPLIED 382071 372718 372719 372600",
-	"SPELL_AURA_REMOVED 382071 372600 372719",
+	"SPELL_AURA_REMOVED 382071 372600 372719 372718",
 	"UNIT_POWER_UPDATE"
 )
 
@@ -49,6 +49,7 @@ local timerEarthenShardsCD						= mod:NewCDTimer(16, 372718, nil, nil, nil, 3, n
 local yellResonatingOrb							= mod:NewShortPosYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
 local yellResonatingOrbFades					= mod:NewIconFadesYell(382071, nil, nil, nil, "YELL") --Резонирующая сфера
 local yellEarthenShards							= mod:NewYell(372718, nil, nil, nil, "YELL") --Земляные осколки
+local yellEarthenShardsFades					= mod:NewShortFadesYell(372718, nil, nil, nil, "YELL") --Земляные осколки
 
 mod:AddSetIconOption("SetIconOnOrb", 382071, true, 0, {1, 2, 3}) --Резонирующая сфера
 mod:AddSetIconOption("SetIconOnEarthenShards", 372718, true, 0, {8}) --Земляные осколки
@@ -132,6 +133,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEarthenShards:Show()
 			specWarnEarthenShards:Play("defensive")
 			yellEarthenShards:Yell()
+			yellEarthenShardsFades:Countdown(spellId)
 		else
 			warnEarthenShards:Show(args.destName)
 			specWarnEarthenShards2:Show(args.destName)
@@ -180,6 +182,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 372719 then --Титаническое усиление спало
 		warnTitanicEmpowermentOver:Show()
+	elseif spellId == 372718 then
+		if args:IsPlayer() then
+			yellEarthenShardsFades:Cancel()
+		end
 	end
 end
 

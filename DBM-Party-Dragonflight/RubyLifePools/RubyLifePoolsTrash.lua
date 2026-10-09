@@ -55,7 +55,7 @@ local specWarnFlashfire						= mod:NewSpecialWarningInterrupt(392451, "HasInterr
 local timerBlazingRushCD					= mod:NewCDNPTimer(17, 372087, 100, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Пылающий натиск (Рывок)
 local timerSteelBarrageCD					= mod:NewCDNPTimer(17, 372047, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Ураган стали
 --Громоголов
-local timerStormBreathCD					= mod:NewCDNPTimer(15.7, 391726, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури (Фронталка)
+local timerStormBreathCD					= mod:NewCDNPTimer(14.5, 391726, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Дыхание бури (Фронталка) 15.7
 local timerRollingThunderCD					= mod:NewCDNPTimer(21.8, 392641, nil, nil, nil, 3) --Громовые раскаты
 local timerThunderjawCD						= mod:NewCDNPTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Громовая челюсть
 --Огнезев
@@ -65,10 +65,10 @@ local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DB
 local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
 local timerLightningStormCD					= mod:NewCDNPTimer(20.6, 392486, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Грозовой шторм
 local timerFlashfireCD						= mod:NewCDNPTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Огненная вспышка
-local timerFlameDanceCD						= mod:NewCDNPTimer(26.6, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Танец огня
+local timerFlameDanceCD						= mod:NewCDNPTimer(18, 385536, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Танец огня 26.6
 local timerTectonicSlamCD					= mod:NewCDNPTimer(17, 372735, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2) --Тектонический разлом 17-21
 local timerTempestStormshieldCD				= mod:NewCDNPTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON) --Бушующий щит бури
-local timerIcyShieldCD						= mod:NewCDNPTimer(21.9, 372743, nil, nil, nil, 5)--17-21
+local timerIcyShieldCD						= mod:NewCDNPTimer(18, 372743, nil, nil, nil, 5) --Ледяной щит 21.9
 
 local yellSteelBarrage						= mod:NewYell(372047, nil, nil, nil, "YELL") --Ураган стали
 local yellLivingBomb						= mod:NewYell(373693, nil, nil, nil, "YELL") --Живая бомба
@@ -113,7 +113,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerBlazingRushCD:Start(17, args.sourceGUID)
 	elseif spellId == 391726 then
-		timerStormBreathCD:Start(15.7, args.sourceGUID)
+		timerStormBreathCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(2, "StormBreath") then
 			specWarnStormBreath:Show()
 			specWarnStormBreath:Play("breathsoon")
@@ -158,10 +158,12 @@ function mod:SPELL_CAST_START(args)
 		specWarnCinderbolt:Play("kickcast")
 	elseif spellId == 392486 then
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		if cid == 197535 then
-			timerLightningStormCD:Start(21.8, args.sourceGUID)
-		else
-			timerLightningStormCD:Start(20.6, args.sourceGUID)
+		if cid == 197535 then --Верховная чаротворица Ривати
+			timerLightningStormCD:Start(20, args.sourceGUID) --21.8
+			DBM:Debug("CMP (id 197535)", 2)
+		else --Чаротворица бури
+			timerLightningStormCD:Start(17, args.sourceGUID) --20.6
+			DBM:Debug("CMP (id 198047)", 2)
 		end
 		if self:AntiSpam(3, 4) then
 			specWarnLightningStorm:Show()
