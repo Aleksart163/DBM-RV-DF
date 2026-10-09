@@ -37,7 +37,7 @@ local warnDecaySpray							= mod:NewSpellAnnounce(376811, 2) --Разлагаю�
 --local warnInfectiousSpit						= mod:NewStackAnnounce(377864, 2, nil, "Healer|RemoveDisease")
 
 local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, 181295, nil, 3, 8) --Частичное переваривание (Переваривание)
-local specWarnPartiallyDigestedStack			= mod:NewSpecialWarningStack(383875, nil, 1, 181295, nil, 3, 2) --Частичное переваривание (Переваривание)
+local specWarnPartiallyDigestedStack			= mod:NewSpecialWarningStack(383875, nil, 1, 181295, nil, 1, 4) --Частичное переваривание (Переваривание)
 local specWarnStarvingFrenzy					= mod:NewSpecialWarningSpell(390968, nil, 156861, nil, 3, 4) --Иссушающее бешенство (Бешенство)
 local specWarnDecaySpray						= mod:NewSpecialWarningDodge(376811, nil, nil, nil, 2, 2) --Разлагающие брызги
 local specWarnDecaySpray2						= mod:NewSpecialWarningSwitch(376811, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 4) --Разлагающие брызги (Адды)
