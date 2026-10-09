@@ -17,6 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 376811",
 	"SPELL_SUMMON 376797",
 	"SPELL_AURA_APPLIED 377222 378022 390968 383875",--377864
+	"SPELL_AURA_APPLIED_DOSE 383875",
 	"SPELL_AURA_REMOVED 377222 378022",
 	"SPELL_PERIODIC_DAMAGE 378054",
 	"SPELL_PERIODIC_MISSED 378054"
@@ -35,7 +36,8 @@ local warnConsume								= mod:NewTargetNoFilterAnnounce(377222, 4) --Погло
 local warnDecaySpray							= mod:NewSpellAnnounce(376811, 2) --Разлагающие брызги
 --local warnInfectiousSpit						= mod:NewStackAnnounce(377864, 2, nil, "Healer|RemoveDisease")
 
-local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, nil, nil, 3, 8) --Частичное переваривание
+local specWarnPartiallyDigested					= mod:NewSpecialWarningYou(383875, nil, 181295, nil, 3, 8) --Частичное переваривание (Переваривание)
+local specWarnPartiallyDigestedStack			= mod:NewSpecialWarningStack(383875, nil, 1, 181295, nil, 3, 2) --Частичное переваривание (Переваривание)
 local specWarnStarvingFrenzy					= mod:NewSpecialWarningSpell(390968, nil, 156861, nil, 3, 4) --Иссушающее бешенство (Бешенство)
 local specWarnDecaySpray						= mod:NewSpecialWarningDodge(376811, nil, nil, nil, 2, 2) --Разлагающие брызги
 local specWarnDecaySpray2						= mod:NewSpecialWarningSwitch(376811, "-Healer", nil, DBM_COMMON_L.ADDS, 1, 4) --Разлагающие брызги (Адды)
@@ -111,8 +113,11 @@ function mod:SPELL_CAST_START(args)
 			if self:IsTank() and not DBM:UnitDebuff("player", partiallyDigested) then
 				specWarnGraspingVines2:Show(DBM_COMMON_L.BOSS)
 				specWarnGraspingVines2:Play("movetoboss")
-				specWarnGraspingVines3:Schedule(3.5)
-				specWarnGraspingVines3:ScheduleVoice(3.5, "defensive")
+				specWarnGraspingVines3:Schedule(3)
+				specWarnGraspingVines3:ScheduleVoice(3, "defensive")
+			elseif self:IsTank() and DBM:UnitDebuff("player", partiallyDigested) then
+				specWarnPartiallyDigested:Show()
+				specWarnPartiallyDigested:Play("stackhigh")
 			else
 				specWarnGraspingVines:Show()
 				specWarnGraspingVines:Play("justrun")
@@ -128,11 +133,6 @@ function mod:SPELL_CAST_START(args)
 		--Timer restarts
 --		timerInfectiousSpitCD:Start(10.2)--No longer exists at all?
 --		timerDecaySprayCD:Start(33.2)--No longer restarts here
-	elseif spellId == 383875 then --Частичное переваривание
-		if args:IsPlayer() then
-			specWarnPartiallyDigested:Show()
-			specWarnPartiallyDigested:Play("targetyou")
-		end
 	end
 end
 
@@ -167,6 +167,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 390968 then --Иссушающее бешенство
 		specWarnStarvingFrenzy:Show()
 		specWarnStarvingFrenzy:Play("enrage")
+	elseif spellId == 383875 then --Частичное переваривание
+		local amount = args.amount or 1
+		if args:IsPlayer() then
+			if amount >= 1 then
+				specWarnPartiallyDigestedStack:Show(amount)
+				specWarnPartiallyDigestedStack:Play("stackhigh")
+			end
+		end
 --	elseif spellId == 377864 then
 --		local amount = args.amount or 1
 --		if amount % 2 == 0 then
@@ -174,6 +182,7 @@ function mod:SPELL_AURA_APPLIED(args)
 --		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
