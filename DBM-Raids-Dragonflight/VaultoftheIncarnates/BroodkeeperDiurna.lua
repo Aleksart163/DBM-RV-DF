@@ -55,7 +55,7 @@ local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil,
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2) --Смертельное ранение
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8) --Статическое поле
 
-local timerPhaseCD								= mod:NewStageTimer(300)
+local timerPhaseCD								= mod:NewStageCountTimer(300, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 380175, L.staff, nil, nil, 5) --Великий посох хранительницы стаи Shared CD ability?
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1) --Ускоренная инкубация Shared CD ability?
 local timerWildfireCD							= mod:NewCDCountTimer(21.4, 375871, nil, nil, nil, 3) --Дикий огонь 21.4-28
@@ -78,7 +78,7 @@ local warnIonizingCharge						= mod:NewTargetAnnounce(375630, 3) --Ионизи�
 local specWarnPrimalistReinforcements			= mod:NewSpecialWarningAddsCount(257554, "-Healer", 245546, nil, 1, 2)
 local specWarnIceBarrage						= mod:NewSpecialWarningInterruptCount(375716, "HasInterrupt", nil, nil, 1, 2) --Ледяной обстрел
 local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, false, nil, 2, 1, 2, 3) --Удар из-под земли Spammy as all hell, should never be on by default
-local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 2, 2) --Подземные толчки
+local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Подземные толчки (Фронталка)
 local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil, nil, 1, 2, 3) --Разрывающий укус
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2) --Ионизирующий заряд
@@ -86,7 +86,7 @@ local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, ni
 local timerPrimalistReinforcementsCD			= mod:NewTimer(60, "timerMurchalProshlyapator", 257554, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 1, 5) --Прошляп Мурчаля
 --local timerPrimalistReinforcementsCD			= mod:NewCDTimer(60, 257554, 245546, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
 local timerBurrowingStrikeCD					= mod:NewCDNPTimer(8.1, 376272, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON) --Удар из-под земли
-local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, nil, nil, nil, 3) --Подземные толчки
+local timerTremorsCD							= mod:NewCDNPTimer(11, 376257, DBM_COMMON_L.FRONTAL, nil, nil, 3) --Подземные толчки (Фронталка)
 local timerCauterizingFlashflamesCD				= mod:NewCDNPTimer(11.7, 375485, nil, "MagicDispeller", nil, 5) --Быстрое прижигающее пламя
 local timerFlameSentryCD						= mod:NewCDNPTimer(10.4, 375575, nil, nil, nil, 3) --Огненный часовой
 local timerRendingBiteCD						= mod:NewCDNPTimer(11, 375475, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEROIC_ICON) --Разрывающий укус
@@ -322,18 +322,18 @@ function mod:OnCombatStart(delay)
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self:IsMythic() then
-		timerPhaseCD:Start(-delay)
+		timerPhaseCD:Start(-delay, 2)
 		self.vb.murchalProshlyapEggsCount = 32
 		timerStormFissureCD:Start(28-delay)
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Right)
 	elseif self:IsHeroic() then
-		timerPhaseCD:Start(-delay)
+		timerPhaseCD:Start(-delay, 2)
 		self.vb.murchalProshlyapEggsCount = 28
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)
 	else
-		timerPhaseCD:Start(301.5-delay)
+		timerPhaseCD:Start(301.5-delay, 2)
 		self.vb.murchalProshlyapEggsCount = 24
 		self:Schedule(33, startProshlyapationOfMurchal, self)
 		timerPrimalistReinforcementsCD:Start(33, L.Middle)

@@ -49,14 +49,14 @@ local warnFrostbreathArachnid					= mod:NewSpellAnnounce(-24899, 2) --Хладо
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
 local specWarnEnvelopingWebs					= mod:NewSpecialWarningYou(372082, nil, nil, nil, 1, 6) --Опутывающие сети
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 2, nil, nil, 1, 6)
-local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(139496, nil, 373405, nil, 4, 12) --Взрыв паутины
+local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(139496, nil, nil, DBM_COMMON_L.ATTRACTION, 4, 12) --Паутина (Взрыв паутины) (Притягивание)
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
 local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2) --Мерзлое дыхание
 
 local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, nil, 3) --Леденящий взрыв
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3) --Опутывающие сети
-local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 5) --Взрыв паутины 36.9-67.6
-local timerGossamerBurst						= mod:NewCastTimer(4, 139496, 373405, nil, nil, 7, nil, nil, nil, 1, 3) --Взрыв паутины 
+local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 139496, DBM_COMMON_L.ATTRACTION.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Паутина (Взрыв паутины) (Притягивание) 36.9-67.6
+local timerGossamerBurst						= mod:NewCastTimer(4, 139496, DBM_COMMON_L.ATTRACTION, nil, nil, 7, nil, nil, nil, 1, 3) --Паутина (Взрыв паутины) (Притягивание)
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1) --Призыв паучков
 local timerFrostbreathArachnidCD				= mod:NewCDTimer(98.9, 332313, -24899, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 3, 5) --Хладодыщащий арахнид
 local timerFreezingBreathCD						= mod:NewCDTimer(14.5, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Мерзлое дыхание
@@ -75,10 +75,11 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
 local warnSuffocatinWebs							= mod:NewTargetNoFilterAnnounce(373048, 3) --Удушающие тенета
 
 local specWarnSuffocatingWebs						= mod:NewSpecialWarningYouPos(373048, nil, nil, nil, 1, 6) --Удушающие тенета
-local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, nil, 2, 12) --Отталкивающий взрыв
+local specWarnRepellingBurst						= mod:NewSpecialWarningSpell(371983, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 12) --Отталкивающий взрыв
 
 local timerSuffocatingWebsCD						= mod:NewCDCountTimer(38.8, 373048, nil, nil, nil, 3) --Удушающие тенета 38-46
-local timerRepellingBurstCD							= mod:NewCDCountTimer(33.9, 371983, nil, nil, nil, 7, nil, nil, nil, 1, 5) --Отталкивающий взрыв
+local timerRepellingBurstCD							= mod:NewCDCountTimer(33.9, 371983, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 5) --Отталкивающий взрыв (Отталкивание)
+local timerRepellingBurstCast						= mod:NewCastTimer(4, 371983, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 7, nil, nil, nil, 1, 3) --Отталкивающий взрыв (Отталкивание)
 
 local yellSuffocatingWebs							= mod:NewShortPosYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
 local yellSuffocatingWebsFades						= mod:NewIconFadesYell(373048, nil, nil, nil, "YELL") --Удушающие тенета
