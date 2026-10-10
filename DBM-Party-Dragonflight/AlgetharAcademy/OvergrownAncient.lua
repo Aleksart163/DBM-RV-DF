@@ -39,13 +39,14 @@ local specWarnGerminate							= mod:NewSpecialWarningDodge(388796, nil, nil, DBM
 local specWarnLasherToxin						= mod:NewSpecialWarningStack(389033, nil, 10, nil, nil, 1, 6) --Токсин плеточника
 local specWarnBurstForth						= mod:NewSpecialWarningSpell(388923, nil, nil, nil, 2, 2) --Взрывной рост
 local specWarnBranchOut							= mod:NewSpecialWarningDodge(388623, nil, nil, nil, 2, 2) --Ответвление
+local specWarnBranchOut2						= mod:NewSpecialWarningSwitch(388623, "Dps", nil, DBM_COMMON_L.BIG_ADD, 1, 2) --Ответвление (Большой моб)
 local specWarnBarkbreaker						= mod:NewSpecialWarningDefensive(388544, nil, nil, nil, 3, 4) --Пробивание коры
 local specWarnHealingTouch						= mod:NewSpecialWarningInterrupt(396640, "HasInterrupt", 283628, nil, 1, 2) --Целительное прикосновение (Исцеление)
 
 local timerRP									= mod:NewRPTimer(17)
 local timerGerminateCD							= mod:NewCDCountTimer(29.1, 388796, DBM_COMMON_L.BOMBING, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Прорастание
 local timerBurstForthCD							= mod:NewCDTimer(58.2, 388923, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON) --Взрывной рост Assumed it's on same cycle as branch out, CD not confirmed
-local timerBranchOutCD							= mod:NewCDTimer(58.2, 388623, DBM_COMMON_L.BIG_ADD, nil, nil, 1) --Ответвление (Большой моб)
+local timerBranchOutCD							= mod:NewCDTimer(58.2, 388623, DBM_COMMON_L.BIG_ADD, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) --Ответвление (Большой моб)
 local timerHealingTouchCD						= mod:NewCDTimer(12, 396640, 283628, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Целительное прикосновение (Исцеление) First cast only, after that it's iffy
 local timerBarkbreakerCD						= mod:NewCDCountTimer(27.9, 388544, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON) --Пробивание коры
 
@@ -89,7 +90,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 388623 then --Ответвление
 		specWarnBranchOut:Show()
 		specWarnBranchOut:Play("watchstep")
-		specWarnBranchOut:ScheduleVoice(2.5, "bigmob")
+		specWarnBranchOut2:Schedule(2.5)
+		specWarnBranchOut2:ScheduleVoice(2.5, "bigmob")
 		timerBranchOutCD:Start()
 		timerHealingTouchCD:Start(6)--Add guid not known yet here, so it'll assign first timer to boss1 :\
 	elseif spellId == 396640 then --Целительное прикосновение (Исцеление)
