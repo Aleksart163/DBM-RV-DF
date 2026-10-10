@@ -143,10 +143,6 @@ local function StartCheckSpirits2(self)
 --	end
 end
 
-local function StopCheckSpirits(self)
-	self.vb.totalSpiritsCount = 0
-end
-
 local function checkEntangled(self) --Запутывание (Гнев деревьев)
 	if timerEntangledCD:GetRemaining() > 0 then
 		--Timer exists, do nothing
@@ -270,33 +266,9 @@ function mod:SPELL_CAST_START(args)
 			self:Unschedule(StartCheckSpirits1)
 			checkForCombat(self)
 			self:Schedule(0.3, StartCheckSpirits1, self)
-		--	self:Schedule(15, StopCheckSpirits, self)
 			self:Schedule(40, checkAfflicted, self)
 		end
 		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
---		self:Schedule(0.3, StartCheckSpirits1, self)
---		self:Schedule(15, StopCheckSpirits, self)
---[[	elseif spellId == 409492 then --Крик изнемогающей души2
-		if self:AntiSpam(3, "aff2") then
-			self.vb.totalSpiritsCount = 0
-		--	warnAfflictedCry:Show()
-		--	warnAfflictedCry:Play("helpspirit")
-			if not afflictedDetected then
-				afflictedDetected = true
-			end
-			afflictedCounting = true
-			timerAfflictedCD:Start()
-			self:Unschedule(checkForCombat)
-			self:Unschedule(checkAfflicted)
-			self:Unschedule(StartCheckSpirits1)
-			checkForCombat(self)
-			self:Schedule(0.5, StartCheckSpirits1, self)
-			self:Schedule(15, StopCheckSpirits, self)
-			self:Schedule(40, checkAfflicted, self)
-		end
-		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
---		self:Schedule(0.3, StartCheckSpirits1, self)
---		self:Schedule(15, StopCheckSpirits, self)]]
 	elseif spellId == 408805 and self:AntiSpam(2, "aff3") then --Дестабилизация (Ослабление)
 		local unitId = self:GetUnitIdFromGUID(args.sourceGUID)
 	--[[	if unitId and UnitIsEnemy("player", unitId) then
@@ -422,7 +394,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Schedule(0.5, StartCheckSpirits2, self)
 		end
 		self.vb.totalSpiritsCount = self.vb.totalSpiritsCount + 1
-	--	self:Schedule(20, StopCheckSpirits, self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -482,7 +453,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			warnAfflictedEnd:Show()
 			warnAfflictedEnd:Play("end")
 		end
-	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then --Диспел духов1
+	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then --Диспел духов
 		local guid = args.destGUID
 		if guid and not self.vb.savedSpirits[guid] then
 			self.vb.savedSpirits[guid] = true
@@ -493,13 +464,6 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 		DBM:Debug("MP(Дух продиспелен)", 2)
---[[	elseif spellId == 409465 or spellId == 409472 or spellId == 409470 then --Диспел духов2
-		self.vb.totalSpiritsCount = math.max(0, self.vb.totalSpiritsCount - 1)
-		if self.vb.totalSpiritsCount == 0 then
-			warnSpiritsleft2:Show(self.vb.totalSpiritsCount)
-			timerAfflicted:Stop()
-		end
-		DBM:Debug("MP(Дух продиспелен)", 2)]]
 	end
 end
 

@@ -57,7 +57,7 @@ local chillStacks = {}
 function mod:OnCombatStart(delay)
 	table.wipe(chillStacks)
 	timerHailbombsCD:Start(4-delay) --
-	timerChillstormCD:Start(14.2-delay, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2)
+	timerChillstormCD:Start(14-delay, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2) --
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellName(372682))
 		DBM.InfoFrame:Show(5, "table", chillStacks, 1)
@@ -148,7 +148,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 373680 then --Ледяная перегрузка (когда кикнули каст)
 		--True, at least in M+
 		timerHailbombsCD:Start(4)
-		timerChillstormCD:Start(14.2, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2)
+		timerChillstormCD:Start(14, DBM_COMMON_L.ATTRACTION, DBM_COMMON_L.AOEDAMAGE2) --
 	end
 end
 
