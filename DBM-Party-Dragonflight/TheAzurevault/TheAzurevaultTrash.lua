@@ -39,7 +39,7 @@ local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинстве�
 local warnSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
 local warnWakingBane2						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
 
-local specWarnArcaneFury					= mod:NewSpecialWarningDispel(389686, nil, nil, nil, 3, 2) --Чародейское неистовство
+local specWarnArcaneFury					= mod:NewSpecialWarningDispel(389686, "MagicDispeller", nil, nil, 3, 2) --Чародейское неистовство
 local specWarnPiercingShards				= mod:NewSpecialWarningDodge(370764, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Острые осколки (Фронталка)
 local specWarnPiercingShards2				= mod:NewSpecialWarningYou(370764, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Острые осколки (Фронталка)
 local specWarnBestialRoar					= mod:NewSpecialWarningDodge(396991, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Звериный рык (АоЕ)
