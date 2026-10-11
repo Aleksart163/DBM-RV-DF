@@ -30,17 +30,17 @@ mod:RegisterEventsInCombat(
 --local specWarnInfusedStrikes					= mod:NewSpecialWarningStack(361966, nil, 8, nil, nil, 1, 6)
 local warnIcyDevastator							= mod:NewTargetNoFilterAnnounce(387151, 3) --Морозный опустошитель
 
-local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2)
+local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2) --Ледяная бомба
 local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 4, 2) --Морозный опустошитель
 local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Абсолютный нуль
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(387150, nil, nil, nil, 1, 8)
 
-local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3)--15-24 (mod should account for two  mechanics that cause these delays)
+local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3) --Ледяная бомба 15-24 (mod should account for two  mechanics that cause these delays)
 local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3) --Морозный опустошитель
 local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Абсолютный нуль
 local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, nil, nil, 1, 5) --Абсолютный нуль
 
-local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL")
+local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL") --Ледяная бомба
 local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
 
 mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
@@ -88,11 +88,12 @@ function mod:SPELL_CAST_START(args)
 			DBM:Debug("timerFrostBombCD extended by: "..extend, 2)
 			timerFrostBombCD:Update(elapsed, total+extend)
 		end
-	elseif spellId == 388008 then
+	elseif spellId == 388008 then --Абсолютный нуль
 		specWarAbsoluteZero:Show(vaultRuin)
 		specWarAbsoluteZero:Play("findshelter")
 		timerAbsoluteZero:Start()
 		timerAbsoluteZeroCD:Start()
+		timerIcyDevastatorCD:Stop()
 		timerFrostBombCD:Start(14)
 		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 24.6 or 23.2)
 	end

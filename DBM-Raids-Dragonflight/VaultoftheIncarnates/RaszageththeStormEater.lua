@@ -45,7 +45,7 @@ local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, n
 
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(388115, nil, nil, nil, 1, 8)
 
-local timerPhaseCD								= mod:NewStageTimer(30)
+local timerPhaseCD								= mod:NewStageCountTimer(30, nil, nil, nil, nil, 6, nil, nil, nil, 3, 5)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 --Фаза 1
@@ -574,9 +574,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.SetBreathToBait then
 			timerLightningDevastationCD:Start(self:IsMythic() and 11.3 or 11.7, 1)
 		else
-			timerLightningDevastationCD:Start(self:IsMythic() and 12.8 or 13.2, 1)
+			timerLightningDevastationCD:Start(self:IsMythic() and 12.8 or 13, 1) --13.2
 		end
-		timerPhaseCD:Start(self:IsMythic() and 93.3 or 100)
+		timerPhaseCD:Start(self:IsMythic() and 93.3 or 100, 2)
 	elseif spellId == 381249 and self:GetStage(1.5) then--Pre stage 2 trigger (Electric Scales)
 		self:SetStage(2)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -604,7 +604,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerTempestWingCD:Start(43.5, 1)
 			timerFulminatingChargeCD:Start(52.5, 1)
 			timerVolatileCurrentCD:Start(self:IsHeroic() and 65.5 or 68.5, 1)--Only difference on heroic
-			timerPhaseCD:Start(self:IsHeroic() and 193 or 211)
+			timerPhaseCD:Start(self:IsHeroic() and 193 or 211, 2.5)
 		end
 	elseif spellId == 390463 then--Second Intermission Ends Storm Nova
 		self:SetStage(3)
@@ -654,9 +654,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 
 		timerLightningStrikeCD:Start(4.8)
 		if self.Options.SetBreathToBait then
-			timerLightningDevastationCD:Start(22.8, 1)
+			timerLightningDevastationCD:Start(26.2, 1) --22.8
 		else
-			timerLightningDevastationCD:Start(24.3, 1)
+			timerLightningDevastationCD:Start(26.2, 1) --24.3
 		end
 	end
 end
@@ -981,7 +981,6 @@ function mod:OnSync(msg)
 		timerTempestWingCD:Stop()
 		timerFulminatingChargeCD:Stop()
 		timerVolatileCurrentCD:Stop()
-		timerLightningDevastationCD:Start(26.2, 1)
 	elseif msg == "OchkenShlyapen4" then --Конец 2 фазы
 		MurchalProshlyap = false
 		timerStormBreakCD:Stop()
