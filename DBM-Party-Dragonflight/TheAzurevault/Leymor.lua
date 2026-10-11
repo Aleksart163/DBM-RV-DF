@@ -26,24 +26,26 @@ mod:RegisterEventsInCombat(
  or ability.id =  374720 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
-local warnLeylineSprouts						= mod:NewCountAnnounce(374364, 3)
+local warnLeylineSprouts						= mod:NewCountAnnounce(374364, 3) --Силовые ростки
 
-local specWarnExplosiveEruption					= mod:NewSpecialWarningYou(374567, nil, nil, nil, 1, 2)
-local specWarnConsumingStomp					= mod:NewSpecialWarningSpell(374720, nil, nil, nil, 2, 2)
-local specWarnEruptingFissure					= mod:NewSpecialWarningDodge(386660, nil, nil, nil, 2, 2)
-local specWarnInfusedStrike						= mod:NewSpecialWarningDefensive(374789, nil, nil, nil, 3, 4)
+local specWarnExplosiveEruption					= mod:NewSpecialWarningYou(374567, nil, nil, nil, 1, 2) --Взрывное клеймо
+local specWarnExplosiveEruption2				= mod:NewSpecialWarningSpell(374567, nil, nil, DBM_COMMON_L.PUSHBACK, 1, 2) --Взрывное клеймо (Отталкивание)
+local specWarnConsumingStomp					= mod:NewSpecialWarningDefensive(374720, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 2) --Поглощающий топот (АоЕ)
+local specWarnEruptingFissure					= mod:NewSpecialWarningDodge(386660, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Извергающаяся трещина (Фронталка)
+local specWarnEruptingFissure2					= mod:NewSpecialWarningDefensive(386660, nil, nil, DBM_COMMON_L.FRONTAL, 3, 2) --Извергающаяся трещина (Фронталка)
+local specWarnInfusedStrike						= mod:NewSpecialWarningDefensive(374789, nil, nil, nil, 3, 4) --Усиленный удар
 
-local timerLeylineSproutsCD						= mod:NewCDCountTimer(47.4, 374364, nil, nil, nil, 3)
-local timerExplosiveEruptionCD					= mod:NewCDCountTimer(47.4, 374567, nil, nil, nil, 3)
-local timerConsumingStompCD						= mod:NewCDCountTimer(47.4, 374720, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerEruptingFissureCD					= mod:NewCDCountTimer(47.4, 386660, nil, nil, nil, 3)
-local timerInfusedStrikeCD						= mod:NewCDCountTimer(47.4, 374789, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerLeylineSproutsCD						= mod:NewCDCountTimer(47.4, 374364, nil, nil, nil, 3) --Силовые ростки
+local timerExplosiveEruptionCD					= mod:NewCDCountTimer(47.4, 374567, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 3) --Взрывное клеймо (Отталкивание)
+local timerConsumingStompCD						= mod:NewCDCountTimer(47.4, 374720, DBM_COMMON_L.AOEDAMAGE2.." (%s)", nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Поглощающий топот (АоЕ)
+local timerEruptingFissureCD					= mod:NewCDCountTimer(47.4, 386660, DBM_COMMON_L.FRONTAL.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Извергающаяся трещина (Фронталка)
+local timerInfusedStrikeCD						= mod:NewCDCountTimer(47.4, 374789, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Усиленный удар
 
-local yellExplosiveEruption						= mod:NewShortPosYell(374567, nil, nil, nil, "YELL")
-local yellExplosiveEruptionFades				= mod:NewIconFadesYell(374567, nil, nil, nil, "YELL")
-local yellEruptingFissure						= mod:NewYell(386660, nil, nil, nil, "YELL")
+local yellExplosiveEruption						= mod:NewShortPosYell(374567, nil, nil, nil, "YELL") --Взрывное клеймо
+local yellExplosiveEruptionFades				= mod:NewIconFadesYell(374567, nil, nil, nil, "YELL") --Взрывное клеймо
+local yellEruptingFissure						= mod:NewYell(386660, DBM_COMMON_L.FRONTAL, nil, nil, "YELL")
 
-mod:AddSetIconOption("SetIconOnExplosiveEruption", 374567, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnExplosiveEruption", 374567, true, 0, {1, 2, 3}) --Взрывное клеймо
 
 mod.vb.DebuffIcon = 1
 mod.vb.leylineCount = 0
@@ -55,6 +57,8 @@ mod.vb.strikeCount = 0
 function mod:EruptionTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
+		specWarnEruptingFissure2:Show()
+		specWarnEruptingFissure2:Play("defensive")
 		yellEruptingFissure:Yell()
 	end
 end
@@ -90,6 +94,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 374567 then
 		self.vb.DebuffIcon = 1
 		self.vb.explosiveCount = self.vb.explosiveCount + 1
+		specWarnExplosiveEruption2:Show()
+		specWarnExplosiveEruption2:Play("pushbackincoming")
 		timerExplosiveEruptionCD:Start(nil, self.vb.explosiveCount+1)
 	elseif spellId == 386660 then
 		self.vb.fissureCount = self.vb.fissureCount + 1
@@ -109,7 +115,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 374720 then
 		self.vb.stompCount  = self.vb.stompCount  + 1
 		specWarnConsumingStomp:Show()
-		specWarnConsumingStomp:Play("aesoon")
+		specWarnConsumingStomp:Play("defensive")
 		timerConsumingStompCD:Start(nil, self.vb.stompCount+1)
 	end
 end
