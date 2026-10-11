@@ -10,8 +10,8 @@ mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991 389804 374885 375652 391118",
-	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136 389686",
-	"SPELL_AURA_APPLIED 371007 395492 375596 374778 386549",
+	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136",
+	"SPELL_AURA_APPLIED 371007 395492 375596 374778 386549 389686",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
 --	"SPELL_AURA_REMOVED 339525",
 	"UNIT_DIED",
@@ -33,13 +33,12 @@ local warnShoulderSlam						= mod:NewCastAnnounce(391136, 2) --Удар плеч
 --local warnBestialRoar						= mod:NewCastAnnounce(396991, 3) --Звериный рык
 local warnSplinteringShards					= mod:NewTargetAnnounce(371007, 2) --Крошащиеся осколки
 local warScornfulHaste						= mod:NewTargetNoFilterAnnounce(395492, 2)
-local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
+local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2, nil, nil, 118) --Беспорядочный рост (Превращение)
 local warnArcaneBash						= mod:NewCastAnnounce(387067, 3) --Оглушение тайной магией
 local warnMysticVapors						= mod:NewCastAnnounce(387564, 4) --Таинственные испарения
 local warnSpellfrostBreath					= mod:NewTargetNoFilterAnnounce(391118, 4) --Дыхание магического льда
 local warnWakingBane2						= mod:NewTargetNoFilterAnnounce(386549, 4) --Изгнание в сон
 
-local specWarnArcaneFury					= mod:NewSpecialWarningDispel(389686, "MagicDispeller", nil, nil, 3, 2) --Чародейское неистовство
 local specWarnPiercingShards				= mod:NewSpecialWarningDodge(370764, nil, nil, DBM_COMMON_L.FRONTAL, 2, 2) --Острые осколки (Фронталка)
 local specWarnPiercingShards2				= mod:NewSpecialWarningYou(370764, nil, nil, DBM_COMMON_L.FRONTAL, 1, 2) --Острые осколки (Фронталка)
 local specWarnBestialRoar					= mod:NewSpecialWarningDodge(396991, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Звериный рык (АоЕ)
@@ -57,13 +56,14 @@ local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInter
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2) --Таинственные испарения
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2) --Изгнание в сон
 local specWarnHeavyTome						= mod:NewSpecialWarningInterrupt(389804, "HasInterrupt", nil, nil, 1, 2) --Тяжелый фолиант
-local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
+local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2) --Сверкающая чешуя
+local specWarnArcaneFury					= mod:NewSpecialWarningDispel(389686, "MagicDispeller", nil, nil, 3, 2) --Чародейское неистовство
 
 local timerIcyBindingsCD					= mod:NewCDNPTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.DEADLY_ICON) --Ледяные путы
 local timerWakingBaneCD						= mod:NewCDNPTimer(18.2, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Изгнание в сон
 local timerMysticVaporsCD					= mod:NewCDNPTimer(12.3, 387564, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Таинственные испарения
 local timerHeavyTomeCD						= mod:NewCDNPTimer(10.1, 389804, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Тяжелый фолиант
-local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerErraticGrowthCD					= mod:NewCDNPTimer(21.5, 375596, 118, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON) --Беспорядочный рост (Превращение)
 local timerShoulderSlamCD					= mod:NewCDNPTimer(10.9, 391136, 100, nil, nil, 3) --Удар плечом (Рывок)
 local timerArcaneBashCD						= mod:NewCDNPTimer(17.5, 387067, nil, "Melee", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Оглушение тайной магией
 local timerNullStompCD						= mod:NewCDNPTimer(8.1, 386526, nil, nil, nil, 3)
@@ -74,7 +74,7 @@ local timerWildEruptionCD					= mod:NewCDNPTimer(12.1, 375652, nil, nil, nil, 3)
 
 local yellSpellfrostBreath					= mod:NewYell(391118, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Дыхание магического льда (Фронталка)
 local yellSplinteringShards					= mod:NewYell(371007, nil, nil, nil, "YELL") --Крошащиеся осколки
-local yellErraticGrowth						= mod:NewYell(375596, nil, nil, nil, "YELL")
+local yellErraticGrowth						= mod:NewYell(375596, 118, nil, nil, "YELL") --Беспорядочный рост (Превращение)
 local yellWakingBane						= mod:NewYell(386549, nil, nil, nil, "YELL") --Изгнание в сон
 local yellShoulderSlam						= mod:NewYell(391136, 100, nil, nil, "YELL") --Удар плечом (Рывок)
 local yellPiercingShards					= mod:NewYell(370764, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Острые осколки (Фронталка)
@@ -222,8 +222,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerErraticGrowthCD:Start(21.5, args.sourceGUID)
 	elseif spellId == 391136 then
 		timerShoulderSlamCD:Start(8.9, args.sourceGUID)
-	elseif spellId == 389686 then
-		specWarnArcaneFury:Show()
+	elseif spellId == 389686 and self:AntiSpam(3, 3) then
+		specWarnArcaneFury:Show(DBM_COMMON_L.ADDS)
 		specWarnArcaneFury:Play("helpdispel")
 	end
 end
@@ -249,11 +249,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then --Сверкающая чешуя
 		specWarnBrilliantScales:Show(args.destName)
 		specWarnBrilliantScales:Play("helpdispel")
+	elseif spellId == 389686 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
+		specWarnArcaneFury:Show(DBM_COMMON_L.ADDS)
+		specWarnArcaneFury:Play("helpdispel")
 	elseif spellId == 386549 then --Изгнание в сон
 		if args:IsPlayer() then
 			yellWakingBane:Yell()
 		else
-			warnWakingBane2:CombinedShow(1, args.destName)
+			warnWakingBane2:CombinedShow(0.7, args.destName)
 		end
 	end
 end
@@ -297,18 +300,6 @@ function mod:UNIT_DIED(args)
 	end
 end
 
---[[
-56056 Book 1
-56057 book 1 return
-56247 book 2
-56379 book 2 return
-56248 book 3
-56378 book 3 return
-56250 book 4
-107756 book 4 return
-56251 book 5
-? Book 5 return
---]]
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
