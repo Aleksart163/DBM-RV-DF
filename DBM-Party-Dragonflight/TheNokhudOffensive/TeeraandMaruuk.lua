@@ -17,6 +17,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 392198",
 	"UNIT_DIED"
 )
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
 
 --[[
 (ability.id = 382670 or ability.id = 386063 or ability.id = 385339 or ability.id = 386547 or ability.id = 385434 or ability.id = 382836) and type = "begincast"
@@ -239,8 +242,15 @@ end
 --"<88.73 21:00:17> [CHAT_MSG_MONSTER_YELL] Necromancers? On our sacred grounds?#Teera###Gravelord Monkh##0#0##0#1388#nil#0#false#false#false#false", -- [468]
 --"<94.47 21:00:23> [CHAT_MSG_MONSTER_YELL] This is what has become of our legacy?#Maruuk###Gravelord Monkh##0#0##0#1389#nil#0#false#false#false#false", -- [473]
 --"<95.30 21:00:24> [DBM_Debug] ENCOUNTER_START event fired: 2581 Teera and Maruuk 1 5#nil", -- [474]
-function mod:OnSync(msg)
-	if msg == "TeeraRP" and self:AntiSpam(10, 9) then--Sync sent from trash mod since trash mod is already monitoring out of combat CLEU events
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.TeeraRP or msg:find(L.TeeraRP)) then
+		self:SendSync("TeeraRP")
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "TeeraRP" and self:AntiSpam(10, 2) then
 		timerRP:Start()
 	end
 end

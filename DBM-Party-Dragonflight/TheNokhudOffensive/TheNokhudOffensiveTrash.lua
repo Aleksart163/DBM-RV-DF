@@ -190,8 +190,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 386223 and args:IsDestTypeHostile() and self:AntiSpam(3, 3) then
 		specWarnStormshield:Show(args.destName)
 		specWarnStormshield:Play("helpdispel")
-	elseif spellId == 345561 and self:AntiSpam(5, 8) then--Life Link
-		teeramod:SendSync("TeeraRP")
+--	elseif spellId == 345561 and self:AntiSpam(5, 8) then--Life Link (Сломано разрабами сервера)
+--		teeramod:SendSync("TeeraRP")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

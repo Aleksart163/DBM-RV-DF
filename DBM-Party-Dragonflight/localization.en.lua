@@ -89,7 +89,11 @@ L:SetGeneralLocalization({
 -----------------------
 -- Teera and Maruuk --
 -----------------------
---L= DBM:GetModLocalization(2478)
+L= DBM:GetModLocalization(2478)
+
+L:SetMiscLocalization({
+	TeeraRP		= "Why has our rest been disturbed?"
+})
 
 -----------------------
 -- Balakar Khan --
