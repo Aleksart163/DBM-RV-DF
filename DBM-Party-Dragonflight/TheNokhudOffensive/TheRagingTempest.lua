@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.stormCount = self.vb.stormCount + 1
 		specWarnElectricalStorm:Show(self.vb.stormCount)
 		specWarnElectricalStorm:Play("aesoon")
-		timerElectricStormCD:Start(self.vb.stormCount+1)
+		timerElectricStormCD:Start(nil, self.vb.stormCount+1)
 		timerElectricStorm:Start()
 		timerLightingStrikeCD:Start(18.2)
 		timerEnergySurgeCD:Start(20.4)
