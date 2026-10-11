@@ -52,6 +52,7 @@ local specWarnCrystallineRupture			= mod:NewSpecialWarningDodge(370766, nil, nil
 local specWarnWildEruption					= mod:NewSpecialWarningDodge(375652, nil, nil, nil, 2, 2)
 local specWarnArcaneBash					= mod:NewSpecialWarningDodge(387067, nil, nil, nil, 2, 2) --Оглушение тайной магией
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 4, 2) --Крошащиеся осколки
+local specWarnErraticGrowth					= mod:NewSpecialWarningInterrupt(375596, "HasInterrupt", nil, nil, 1, 2) --Беспорядочный рост (Превращение)
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2) --Ледяные путы
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2) --Таинственные испарения
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2) --Изгнание в сон
@@ -220,11 +221,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnWildEruption:Play("watchstep")
 	elseif spellId == 375596 then
 		timerErraticGrowthCD:Start(21.5, args.sourceGUID)
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) and self:AntiSpam(2, spellId) then then
+			specWarnErraticGrowth:Show(args.sourceName)
+			specWarnErraticGrowth:Play("kickcast")
+		end
 	elseif spellId == 391136 then
 		timerShoulderSlamCD:Start(8.9, args.sourceGUID)
-	elseif spellId == 389686 and self:AntiSpam(3, 3) then
-		specWarnArcaneFury:Show(DBM_COMMON_L.ADDS)
-		specWarnArcaneFury:Play("helpdispel")
 	end
 end
 
@@ -249,7 +251,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then --Сверкающая чешуя
 		specWarnBrilliantScales:Show(args.destName)
 		specWarnBrilliantScales:Play("helpdispel")
-	elseif spellId == 389686 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
+	elseif spellId == 389686 and not args:IsDestTypePlayer() and self:AntiSpam(7, 3) then
 		specWarnArcaneFury:Show(DBM_COMMON_L.ADDS)
 		specWarnArcaneFury:Play("helpdispel")
 	elseif spellId == 386549 then --Изгнание в сон
