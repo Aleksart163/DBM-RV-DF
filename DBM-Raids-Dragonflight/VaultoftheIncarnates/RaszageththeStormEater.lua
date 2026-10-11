@@ -14,9 +14,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 377612 388643 377658 377594 385065 385553 397382 397468 387261 385574 389870 385068 395885 386410 382434 390463",
 	"SPELL_CAST_SUCCESS 381615 396037 399713 181089 381249 378829 382434 390463",
-	"SPELL_AURA_APPLIED 381615 388631 395906 388115 396037 385541 397382 397387 388691 391990 394574 394576 391991 394579 394575 394582 391993 394584 377467 395929 391285 399713 391281 389214 389878 394583 391402",
+	"SPELL_AURA_APPLIED 381615 388631 395906 388115 396037 385541 397382 397387 388691 391990 394574 394576 391991 394579 394575 394582 391993 394584 377467 395929 391285 399713 391281 389214 389878 394583 391402 388431",
 	"SPELL_AURA_APPLIED_DOSE 389878",
-	"SPELL_AURA_REMOVED 381615 396037 385541 397382 397387 388691 377467 399713 391990 394574 394576 391991 394579 394575 394584",
+	"SPELL_AURA_REMOVED 381615 396037 385541 397382 397387 388691 377467 399713 391990 394574 394576 391991 394579 394575 394584 388431",
 	"SPELL_PERIODIC_DAMAGE 395929",
 	"SPELL_PERIODIC_MISSED 395929",
 	"UNIT_DIED",
@@ -48,37 +48,39 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(388115, nil, nil, nil, 1, 
 local timerPhaseCD								= mod:NewStageTimer(30)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
---Stage One: The Winds of Change
+--Фаза 1
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25244))
-local warnStaticCharge							= mod:NewTargetNoFilterAnnounce(381615, 3)
+local warnStaticCharge							= mod:NewTargetNoFilterAnnounce(381615, 3, nil, nil, 167180) --Статический разряд (Бомбы)
 
-local specWarnHurricaneWing						= mod:NewSpecialWarningMoveTo(377612, nil, nil, nil, 4, 13) --Ураганное крыло
-local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 37859, nil, 1, 2) --Статический разряд (Бомбардировка)
+local specWarnHurricaneWing						= mod:NewSpecialWarningMoveTo(377612, nil, nil, DBM_COMMON_L.PUSHBACK, 4, 13) --Ураганное крыло
+local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 174716, nil, 1, 2) --Статический разряд (Бомба)
 local specWarnVolatileCurrent					= mod:NewSpecialWarningMoveAwayCount(388643, nil, 384738, nil, 2, 2) --Нестабильный поток (Искры)
 local specWarnElectrifiedJaws					= mod:NewSpecialWarningDefensive(395906, nil, nil, nil, 3, 2) --Электрические челюсти
 local specWarnElectrifiedJawsOther				= mod:NewSpecialWarningTaunt(395906, nil, nil, nil, 1, 2) --Электрические челюсти
 local specWarnLightingBreath					= mod:NewSpecialWarningDodgeCount(377594, nil, 18357, nil, 2, 2) --Грозовое дыхание (Дыхание)
+local specWarnRuinousShroud						= mod:NewSpecialWarningReflect(388431, nil, 263572, nil, 1, 2) --Разрушительный покров (Неуязвимость)
+local specWarnRuinousShroud2					= mod:NewSpecialWarningEnd(388431, nil, 263572, nil, 1, 2) --Разрушительный покров (Неуязвимость)
 
-local timerHurricaneWingCD						= mod:NewCDCountTimer(35, 377612, nil, nil, nil, 2) --Ураганное крыло
-local timerHurricaneWing						= mod:NewCastTimer(6, 377612, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Ураганное крыло
+local timerHurricaneWingCD						= mod:NewCDCountTimer(35, 377612, DBM_COMMON_L.PUSHBACK.." (%s)", nil, nil, 2) --Ураганное крыло
+local timerHurricaneWingCast					= mod:NewCastTimer(6, 377612, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Ураганное крыло
 local timerStaticChargeCD						= mod:NewCDCountTimer(35, 381615, 167180, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Статический разряд (Бомбы)
-local timerStaticCharge							= mod:NewCastTimer(35, 381615, 167180, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Статический разряд (Бомбы)
+local timerStaticCharge							= mod:NewCastTimer(35, 381615, 185824, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.DEADLY_ICON) --Статический разряд (Взрыв)
 local timerVolatileCurrentCD					= mod:NewCDCountTimer(47, 388643, 384738, nil, nil, 7) --Нестабильный поток (Искры)
 local timerElectrifiedJawsCD					= mod:NewCDCountTimer(25, 395906, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Электрические челюсти
 local timerLightningBreathCD					= mod:NewCDCountTimer(35, 377594, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Грозовое дыхание (Дыхание)
 
-mod:AddSetIconOption("SetIconOnStaticCharge", 381615, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnStaticCharge", 381615, true, 0, {1, 2, 3}) --Статический разряд
 --Intermission: The Primalist Strike
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25683))
 --Raszageth
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25402))
 local warnLightningDevastation					= mod:NewCountAnnounce(385065, 3, nil, nil, 125030) --Опустошающая молния (Глубокий вдох)
 
-local specWarnStormNova							= mod:NewSpecialWarningSpell(382434, nil, nil, nil, 2, 2) --Взрыв бури
+local specWarnStormNova							= mod:NewSpecialWarningSpell(382434, nil, nil, DBM_COMMON_L.PUSHBACK, 2, 2) --Взрыв бури (Отталкивание)
 local specWarnLightningDevastation				= mod:NewSpecialWarningDodgeCount(385065, nil, 125030, nil, 3, 2) --Опустошающая молния (Глубокий вдох)
 
-local timerStormNovaCD							= mod:NewCDTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Взрыв бури
-local timerStormNova							= mod:NewCastTimer(5, 382434, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Взрыв бури
+local timerStormNovaCD							= mod:NewCDTimer(5, 382434, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Взрыв бури (Отталкивание)
+local timerStormNova							= mod:NewCastTimer(5, 382434, DBM_COMMON_L.PUSHBACK, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Взрыв бури (Отталкивание)
 local timerLightningDevastationCD				= mod:NewCDCountTimer(13.3, 385065, 125030, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3) --Опустошающая молния (Глубокий вдох)
 
 mod:AddBoolOption("SetBreathToBait", false)
@@ -101,7 +103,7 @@ local timerFlameShieldCD						= mod:NewCDSourceTimer(35, 397387, nil, nil, nil, 
 mod:AddSetIconOption("SetIconOnShatteringShroud2", 397382, false, 0, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnAscension", 385541)
 mod:AddNamePlateOption("NPAuraOnFlameShield", 397387)
---Stage Two: Surging Power
+--Фаза 2
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25312))
 local warnStormsurge						= mod:NewEndAnnounce(387261, 1) --Энергия бури
 local warnInversion							= mod:NewTargetNoFilterAnnounce(394584, 4) --Инверсия
@@ -137,7 +139,7 @@ local specWarnBallLightning					= mod:NewSpecialWarningDodge(385068, nil, nil, n
 local timerLightningStrikeCD				= mod:NewCDTimer(31.6, 376126, nil, nil, nil, 3)
 local timerStormBreakCD						= mod:NewCDCountTimer(23.1, 389870, 7794, nil, nil, 3)
 local timerBallLightningCD					= mod:NewCDCountTimer(23.1, 385068, nil, nil, nil, 3)
---Stage Three: Storm Incarnate
+--Фаза 3
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25477))
 local warnMagneticCharge					= mod:NewTargetNoFilterAnnounce(399713, 4)
 
@@ -423,7 +425,7 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerHurricaneWingCD:Start(timer, self.vb.energyCount+1)
 		end
-		timerHurricaneWing:Start()
+		timerHurricaneWingCast:Start()
 	elseif spellId == 388643 then
 		self.vb.currentCount = self.vb.currentCount + 1
 		specWarnVolatileCurrent:Show(self.vb.currentCount)
@@ -816,6 +818,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 389878 then
 		warnFuse:Cancel()
 		warnFuse:Schedule(2, args.destName, args.amount or 1)
+	elseif spellId == 388431 then --Разрушительный покров
+		specWarnRuinousShroud:Show(args.destName)
+		specWarnRuinousShroud:Play("stopattack")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -872,6 +877,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:Unschedule(yellRepeater)
 			playerPolarity = nil
 		end
+	elseif spellId == 388431 then --Разрушительный покров
+		specWarnRuinousShroud2:Show()
+		specWarnRuinousShroud2:Play("end")
 	end
 end
 
@@ -959,6 +967,8 @@ function mod:OnSync(msg)
 		timerVolatileCurrentCD:Stop()
 		timerElectrifiedJawsCD:Stop()
 		timerLightningBreathCD:Stop()
+		timerHurricaneWingCD:Stop()
+		timerHurricaneWingCast:Stop()
 	elseif msg == "OchkenShlyapen2" then --Конец 1.5 фазы
 		timerPhaseCD:Stop()
 		timerLightningDevastationCD:Stop()
