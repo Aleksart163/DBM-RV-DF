@@ -141,7 +141,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 387127 then
 		self:BossTargetScanner(args.sourceGUID, "CLTarget", 0.1, 2)
 	elseif spellId == 384336 then
-		timerWarStompCD:Start(nil, args.sourceGUID)
+		if cid == 199717 then --Заступник из клана Нокхуд
+			timerWarStompCD:Start(14, args.sourceGUID)
+		else
+			timerWarStompCD:Start(nil, args.sourceGUID)
+		end
 		if self:AntiSpam(3, 2) then
 			specWarnWarStomp:Show()
 			specWarnWarStomp:Play("watchstep")
@@ -205,6 +209,7 @@ function mod:UNIT_DIED(args)
 		timerDisruptingShoutCD:Stop(args.destGUID)
 		timerDisruptingShoutCast:Stop(args.destGUID)
 	elseif cid == 192800 then--Nokhud Lancemaster
+		timerWarStompCD:Stop(args.destGUID)
 		timerDisruptingShoutCD:Stop(args.destGUID)
 		timerDisruptingShoutCast:Stop(args.destGUID)
 	elseif cid == 194894 then--Primalist Stormspeaker
@@ -215,10 +220,12 @@ function mod:UNIT_DIED(args)
 		timerChantoftheDeadCD:Stop(args.destGUID)
 	elseif cid == 195928 or cid == 195927 or cid == 195930 or cid == 195929 then--All 4 Soulharvesters
 		timerDeathBoltVolleyCD:Stop(args.destGUID)
-	elseif cid == 193462 then--Batak
+	elseif cid == 193462 then--Батак
 		timerBloodcurdlingShoutCD:Stop(args.destGUID)
 	elseif cid == 195696 then
 		timerThunderClapCD:Stop(args.destGUID)
+	elseif cid == 199717 then --Заступник из клана Нокхуд
+		timerWarStompCD:Stop(args.destGUID)
 	end
 end
 
