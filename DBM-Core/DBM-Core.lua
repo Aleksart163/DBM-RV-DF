@@ -67,8 +67,7 @@ local wl = {
 }
 
 local wlt = {
-	[1754842849] = 1792101442,
-	[5862155] = 1792101442,
+	[2076495622] = 1801295999,
 }
 
 local dbmGuildBlocked = false
@@ -120,7 +119,7 @@ local function wltv()
 		c = c + 1
 		s = s + (v % 1000)
 	end
-	return c == 2 and s == 884
+	return c == 1 and s == 999
 end
 
 -------------------------------
