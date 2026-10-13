@@ -221,7 +221,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnWildEruption:Play("watchstep")
 	elseif spellId == 375596 then
 		timerErraticGrowthCD:Start(21.5, args.sourceGUID)
-		if self:CheckInterruptFilter(args.sourceGUID, false, true) and self:AntiSpam(2, spellId) then then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) and self:AntiSpam(2, spellId) then
 			specWarnErraticGrowth:Show(args.sourceName)
 			specWarnErraticGrowth:Play("kickcast")
 		end
