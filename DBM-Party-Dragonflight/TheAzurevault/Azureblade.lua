@@ -32,7 +32,7 @@ local warnDraconicImageLeft						= mod:NewAnnounce("warnDraconicImage", 2, 38422
 
 local specWarnUnstableMagic						= mod:NewSpecialWarningDodge(389855, nil, nil, DBM_COMMON_L.BOMBING, 2, 4) --Нестабильная магия (Обстрел)
 local specWarnArcaneCleave						= mod:NewSpecialWarningDefensive(372222, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Удар тайной магии
-local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "MeleeDps", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Удар тайной магии
+local specWarnArcaneCleave2						= mod:NewSpecialWarningDodge(372222, "Melee", nil, DBM_COMMON_L.FRONTAL, 2, 2) --Удар тайной магии
 local specWarnAncientOrb						= mod:NewSpecialWarningDodge(385578, nil, nil, nil, 2, 2) --Древняя сфера
 local specWarnOverwhelmingEnergy				= mod:NewSpecialWarningSpell(384132, nil, nil, nil, 2, 2) --Переполняющая энергия
 local specWarnIllusionaryBolt					= mod:NewSpecialWarningInterrupt(373932, "HasInterrupt", nil, nil, 1, 2)
