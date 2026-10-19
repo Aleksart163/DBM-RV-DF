@@ -249,7 +249,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:OnSync(msg, targetname)
+function mod:OnSync(msg)
 	if msg == "TeeraRP" and self:AntiSpam(10, 2) then
 		timerRP:Start()
 	end
