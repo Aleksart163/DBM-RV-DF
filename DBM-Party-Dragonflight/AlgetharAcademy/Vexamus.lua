@@ -39,6 +39,7 @@ local warnManaBombs								= mod:NewTargetNoFilterAnnounce(386181, 3, nil, nil, 
 local warnArcaneExpulsion						= mod:NewTargetNoFilterAnnounce(385958, 4) --Волна тайной магии (Фронталка)
 
 local specWarnArcaneFissure						= mod:NewSpecialWarningDefensive(388537, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Магический разлом (АоЕ)
+local specWarnArcaneFissure2					= mod:NewSpecialWarningRun(388537, nil, nil, DBM_COMMON_L.BOMBING, 4, 2) --Магический разлом (Обстрел)
 local specWarnManaBomb							= mod:NewSpecialWarningMoveAway(386181, nil, 174716, nil, 1, 2) --Мана-бомбы (Бомба)
 local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, DBM_COMMON_L.FRONTAL, 3, 4) --Волна тайной магии (Фронталка)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8) --Оскверненная мана
@@ -137,6 +138,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 --			timerArcaneOrbsCD:Start(23.6, self.vb.orbCount+1)
 --		end
 	elseif spellId == 388537 then
+		specWarnArcaneFissure2:Show()
+		specWarnArcaneFissure2:Play("justrun")
 		timerArcaneFissureCD:Start(nil, self.vb.fissureCount+1)
 	end
 end

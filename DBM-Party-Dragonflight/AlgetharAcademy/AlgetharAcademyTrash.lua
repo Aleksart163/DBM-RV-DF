@@ -147,7 +147,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 390915 and self:AntiSpam(3, 2) then
+	if spellId == 390915 and self:AntiSpam(5, 2) then
 		specWarnDetonateSeeds:Show()
 		specWarnDetonateSeeds:Play("watchstep")
 	elseif spellId == 388984 then

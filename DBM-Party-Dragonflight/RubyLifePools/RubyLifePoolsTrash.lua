@@ -59,7 +59,7 @@ local timerStormBreathCD					= mod:NewCDNPTimer(14.5, 391726, DBM_COMMON_L.FRONT
 local timerRollingThunderCD					= mod:NewCDNPTimer(21.8, 392641, nil, nil, nil, 3) --Громовые раскаты
 local timerThunderjawCD						= mod:NewCDNPTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) --Громовая челюсть
 --Огнезев
-local timerFlameBreathCD					= mod:NewCDNPTimer(15.7, 391723, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненное дыхание (Фронталка) (Пока примерный таймер)
+local timerFlameBreathCD					= mod:NewCDNPTimer(14.5, 391723, DBM_COMMON_L.FRONTAL, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Огненное дыхание (Фронталка)
 
 local timerBurnout							= mod:NewCastTimer(5, 373614, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 5)
 local timerExcavatingBlastCD				= mod:NewCDNPTimer(8, 372696, nil, nil, nil, 3) --Раскапывающий взрыв
@@ -120,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	--	self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
 	elseif spellId == 391723 then
-		timerFlameBreathCD:Start(15.7, args.sourceGUID) --Примерное время
+		timerFlameBreathCD:Start(nil, args.sourceGUID) --Примерное время
 		if self:AntiSpam(2, "FlameBreath") then
 			specWarnFlameBreath:Show()
 			specWarnFlameBreath:Play("breathsoon")

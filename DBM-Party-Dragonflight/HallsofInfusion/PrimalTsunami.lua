@@ -48,7 +48,7 @@ local warnSubmergedEnded						= mod:NewEndAnnounce(387585, 2) --Погружен
 
 local specWarnInundate2							= mod:NewSpecialWarningInterrupt(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 2, 4) --Затопление
 
-local timerInundate2CD							= mod:NewCDNPTimer(10, 388882, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Затопление
+local timerInundate2CD							= mod:NewCDNPTimer(5.8, 388882, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Затопление
 
 --local timerSubmergedCD							= mod:NewCDTimer(30, 387585, nil, nil, nil, 6, nil, nil, nil, 2, 5) --Погружение
 
@@ -101,11 +101,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 388882 then --Затопление
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
 		if (cid == 198994 or cid == 196043) then
-			if self:AntiSpam(3, "Inundate") then
+			if self:AntiSpam(5, "Inundate") then
 				specWarnInundate2:Show(args.sourceName)
 				specWarnInundate2:Play("crowdcontrol")
 			end
-			timerInundate2CD:Start(6.3, args.sourceGUID)
+			timerInundate2CD:Start(nil, args.sourceGUID)
 		end
 	end
 end

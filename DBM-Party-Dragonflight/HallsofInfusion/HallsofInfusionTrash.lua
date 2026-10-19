@@ -38,7 +38,7 @@ local warnAqueousBarrier					= mod:NewCastAnnounce(377402, 4)
 local warnRefreshingTides					= mod:NewCastAnnounce(376171, 3) --Освежающие волны
 local warnCheapShot							= mod:NewTargetNoFilterAnnounce(374615, 4) --Подлый трюк
 local warnMoltenSubduction					= mod:NewTargetNoFilterAnnounce(374724, 3) --Раскаленная субдукция
-local warnThunderstrike						= mod:NewTargetAnnounce(437719, 2)
+local warnThunderstrike						= mod:NewTargetAnnounce(437717, 2)
 
 local specWarnRumblingEarth					= mod:NewSpecialWarningDodge(408388, nil, nil, nil, 2, 2) --Сотрясение земли
 local specWarnInundate						= mod:NewSpecialWarningMoveTo(388882, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 4) --Затопление
@@ -47,10 +47,10 @@ local specWarnOceanicBreath					= mod:NewSpecialWarningDodge(375351, nil, 18357,
 local specWarnGustingBreath					= mod:NewSpecialWarningDodge(375348, nil, 18357, nil, 2, 2) --Сметающее дыхание (Дыхание)
 local specWarnTectonicBreath				= mod:NewSpecialWarningDodge(375327, nil, 18357, nil, 2, 2) --Тектоническое дыхание (Дыхание)
 local specWarnDazzle						= mod:NewSpecialWarningDodge(374563, nil, nil, nil, 2, 2) --Блеск
-local specWarnFlashFlood					= mod:NewSpecialWarningDodge(390290, nil, nil, nil, 3, 2) --Стремительные волны
+local specWarnFlashFlood					= mod:NewSpecialWarningDodge(390290, nil, 64584, nil, 3, 2) --Стремительные волны (Большой взрыв)
 local specWarnThunderstorm					= mod:NewSpecialWarningYou(385141, nil, nil, nil, 1, 2) --Гром и молния
 local specWarnCreepingMold					= mod:NewSpecialWarningYou(391613, nil, nil, nil, 2, 2)
-local specWarnThunderstrike					= mod:NewSpecialWarningMoveAway(437719, nil, nil, nil, 1, 2)
+local specWarnThunderstrike					= mod:NewSpecialWarningMoveAway(437717, nil, nil, nil, 1, 2)
 local specWarnCreepingMoldDispel			= mod:NewSpecialWarningDispel(391613, "RemoveDisease", nil, nil, 1, 2)
 local specWarnBindingWinds					= mod:NewSpecialWarningDispel(391610, "RemoveMagic", nil, nil, 1, 2)
 local specWarnBoilingRage					= mod:NewSpecialWarningDispel(377384, "RemoveEnrage", nil, nil, 1, 2)
@@ -78,12 +78,12 @@ local timerGustingBreathCD					= mod:NewCDNPTimer(19.3, 375348, 18357, nil, nil,
 local timerTectonicBreathCD					= mod:NewCDNPTimer(18.1, 375327, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) --Тектоническое дыхание (Дыхание)
 local timerThunderstormCD					= mod:NewCDNPTimer(19.4, 385141, nil, nil, nil, 3) --Гром и молния
 local timerAqueousBarrierCD					= mod:NewCDNPTimer(17.3, 377402, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Водяная преграда
-local timerFlashFloodCD						= mod:NewCDNPTimer(23, 390290, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Стремительные волны
+local timerFlashFloodCD						= mod:NewCDNPTimer(23, 390290, 64584, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON) --Стремительные волны
 local timerRefreshingTidesCD				= mod:NewCDNPTimer(25, 376171, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Освежающие волны
 --local timerThunderstrikeCD					= mod:NewCDNPTimer(19.4, 437719, nil, nil, nil, 3)
 
 local yellCheapShot							= mod:NewYell(374615, nil, nil, nil, "YELL") --Подлый трюк
-local yellThunderstrike						= mod:NewYell(437719, nil, nil, nil, "YELL") --Громовой удар
+local yellThunderstrike						= mod:NewYell(437717, nil, nil, nil, "YELL") --Громовой удар
 local yellThunderstorm						= mod:NewYell(385141, nil, nil, nil, "YELL") --Гром и молния
 
 mod:AddBoolOption("AGBuffs", true)

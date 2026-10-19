@@ -92,7 +92,7 @@ local function scanBosses(self, delay)
 			local cid = self:GetUnitCreatureId(unitID)
 			local bossGUID = UnitGUID(unitID)
 			if cid == 190484 then--Kyrakka
-				timerRoaringFirebreathCD:Start(1.1-delay, bossGUID)
+				timerRoaringFirebreathCD:Start(0.5-delay, bossGUID) --
 				timerFlamespitCD:Start(16.1-delay, bossGUID)--17-24?
 			else--Erkhart Stormvein
 				self.vb.mainGUID = bossGUID
