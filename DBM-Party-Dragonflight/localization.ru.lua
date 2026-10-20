@@ -90,11 +90,7 @@ L:SetGeneralLocalization({
 -----------------------
 -- Teera and Maruuk --
 -----------------------
-L= DBM:GetModLocalization(2478)
-
-L:SetMiscLocalization({
-	TeeraRP		= "Зачем вы потревожили наш покой?"
-})
+--L= DBM:GetModLocalization(2478)
 
 -----------------------
 -- Balakar Khan --
@@ -109,6 +105,10 @@ L = DBM:GetModLocalization("TheNokhudOffensiveTrash")
 
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Наступление клана Нокхуд"
+})
+
+L:SetMiscLocalization({
+	TeeraRP = "Зачем вы потревожили наш покой?"
 })
 
 L:SetMiscLocalization({

@@ -89,11 +89,7 @@ L:SetGeneralLocalization({
 -----------------------
 -- Teera and Maruuk --
 -----------------------
-L= DBM:GetModLocalization(2478)
-
-L:SetMiscLocalization({
-	TeeraRP		= "Why has our rest been disturbed?"
-})
+--L= DBM:GetModLocalization(2478)
 
 -----------------------
 -- Balakar Khan --
@@ -108,6 +104,10 @@ L = DBM:GetModLocalization("TheNokhudOffensiveTrash")
 
 L:SetGeneralLocalization({
 	name =	"Nokhud Offensive Trash"
+})
+
+L:SetMiscLocalization({
+	TeeraRP = "Why has our rest been disturbed?"
 })
 
 L:SetMiscLocalization({

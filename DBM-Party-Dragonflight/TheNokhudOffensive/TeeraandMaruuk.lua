@@ -17,9 +17,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 392198",
 	"UNIT_DIED"
 )
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
-)
 
 --[[
 (ability.id = 382670 or ability.id = 386063 or ability.id = 385339 or ability.id = 386547 or ability.id = 385434 or ability.id = 382836) and type = "begincast"
@@ -53,7 +50,6 @@ local specWarnBrutalize							= mod:NewSpecialWarningDefensive(382836, nil, nil,
 local timerEarthSplitterCD						= mod:NewCDCountTimer(60, 385339, nil, nil, nil, 7) --Раскол земли Off by default since it should always be cast immediately after Repel)
 local timerFrightfulRoarCD						= mod:NewCDTimer(30.4, 386063, 68950, nil, nil, 2, nil, DBM_COMMON_L.MAGIC_ICON) --Отпугивающий рык New timer unknown
 local timerBrutalizeCD							= mod:NewCDTimer(18.2, 382836, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON) --Свирепый удар Delayed a lot. Doesn't alternate or sequence leanly, it just spell queues in randomness
-local timerRP									= mod:NewRPTimer(27.4)
 
 local yellBrutalize								= mod:NewShortYell(382836, nil, nil, nil, "YELL") --Свирепый удар
 
@@ -242,15 +238,3 @@ end
 --"<88.73 21:00:17> [CHAT_MSG_MONSTER_YELL] Necromancers? On our sacred grounds?#Teera###Gravelord Monkh##0#0##0#1388#nil#0#false#false#false#false", -- [468]
 --"<94.47 21:00:23> [CHAT_MSG_MONSTER_YELL] This is what has become of our legacy?#Maruuk###Gravelord Monkh##0#0##0#1389#nil#0#false#false#false#false", -- [473]
 --"<95.30 21:00:24> [DBM_Debug] ENCOUNTER_START event fired: 2581 Teera and Maruuk 1 5#nil", -- [474]
-
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.TeeraRP or msg:find(L.TeeraRP)) then
-		self:SendSync("TeeraRP")
-	end
-end
-
-function mod:OnSync(msg)
-	if msg == "TeeraRP" and self:AntiSpam(10, 2) then
-		timerRP:Start()
-	end
-end

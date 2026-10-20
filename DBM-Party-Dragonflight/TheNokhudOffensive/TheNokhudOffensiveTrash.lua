@@ -14,6 +14,7 @@ mod:RegisterEvents(
 --	"SPELL_AURA_REMOVED 339525",
 	"SPELL_PERIODIC_DAMAGE 386912",
 	"SPELL_PERIODIC_MISSED 386912",
+	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
 
@@ -63,6 +64,7 @@ local timerTempestCD						= mod:NewCDNPTimer(20, 386024, DBM_COMMON_L.AOEDAMAGE2
 local timerDesecratingRoarCD				= mod:NewCDNPTimer(15.8, 387440, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Оскверняющий рык
 local timerDeathBoltVolleyCD				= mod:NewCDNPTimer(10.9, 387411, 200343, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Залп стрел смерти (Залп стрел)
 local timerBloodcurdlingShoutCD				= mod:NewCDNPTimer(19.1, 373395, 68950, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Кровожадный вопль (Страх)
+local timerRP								= mod:NewRPTimer(27)
 
 local yellChainLightning					= mod:NewYell(387127, nil, nil, nil, "YELL") --Цепная молния
 
@@ -194,8 +196,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 386223 and args:IsDestTypeHostile() and self:AntiSpam(3, 3) then
 		specWarnStormshield:Show(args.destName)
 		specWarnStormshield:Play("helpdispel")
---	elseif spellId == 345561 and self:AntiSpam(5, 8) then--Life Link (Сломано разрабами сервера)
+	elseif spellId == 345561 and self:AntiSpam(5, 8) then--Life Link (Сломано разрабами сервера)
 --		teeramod:SendSync("TeeraRP")
+		DBM:Debug("Check Murchal proshlyap 1", 2)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -236,3 +239,16 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.TeeraRP or msg:find(L.TeeraRP)) then
+		self:SendSync("RP1")
+		DBM:Debug("Check Murchal proshlyap 2", 2)
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "RP1" and self:AntiSpam(10, 2) then
+		timerRP:Start()
+	end
+end
