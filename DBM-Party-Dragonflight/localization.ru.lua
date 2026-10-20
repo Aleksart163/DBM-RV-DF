@@ -162,11 +162,7 @@ L:SetOptionLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
-L= DBM:GetModLocalization(2509)
-
-L:SetMiscLocalization({
-	VexRP		= "Кхе-кхе... Итак... давным-давно синие драконы случайно подвергли чародейский элементаль перегрузке, создав могучего Вексама, который сразу же принялся сеять разрушения!"
-})
+--L= DBM:GetModLocalization(2509)
 
 -----------------------
 -- Overgrown Ancient --
@@ -189,6 +185,10 @@ L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Академия Алгет'ар"
+})
+
+L:SetMiscLocalization({
+	VexRP = "Кхе-кхе... Итак... давным-давно синие драконы случайно подвергли чародейский элементаль перегрузке, создав могучего Вексама, который сразу же принялся сеять разрушения!"
 })
 
 L:SetWarningLocalization({

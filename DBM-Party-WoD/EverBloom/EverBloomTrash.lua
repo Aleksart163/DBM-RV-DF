@@ -40,7 +40,7 @@ local specWarnChokingVines						= mod:NewSpecialWarningInterrupt(164965, "HasInt
 local specWarnHealingWaters						= mod:NewSpecialWarningInterrupt(164887, "HasInterrupt", nil, nil, 1, 2) --Целительные воды
 local specWarnPyroblast							= mod:NewSpecialWarningInterrupt(169839, "HasInterrupt", nil, nil, 1, 2) --Огненная глыба
 local specWarnFrostbolt							= mod:NewSpecialWarningInterrupt(169840, false, nil, nil, 1, 2) --Ледяная стрела
-local specWarnChokingVinesDispel				= mod:NewSpecialWarningDispel(164965, "RemoveMagic", nil, nil, 1, 2) --Удушающие лианы
+local specWarnChokingVinesDispel				= mod:NewSpecialWarningDispel(164965, "RemoveMagic", 9179, nil, 1, 2) --Удушающие лианы (Оглушение)
 local specWarnVenomBurstDispel					= mod:NewSpecialWarningDispel(165123, "RemovePoison", nil, nil, 1, 2) --Взрыв яда
 --local specWarnDreadpetalToxinDispel				= mod:NewSpecialWarningDispel(164886, "RemovePoison", nil, nil, 1, 2)
 local specWarnPoisonClawsDispel					= mod:NewSpecialWarningDispel(169657, "RemovePoison", nil, nil, 1, 2) --Ядовитые когти
@@ -174,7 +174,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 164965 and args:IsDestTypePlayer() then --Удушающие лианы
 		if args:IsPlayer() then
 			yellChokingVines:Yell()
-		elseif self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
+		elseif self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) and not args:IsPlayer() then
 			specWarnChokingVinesDispel:Show(args.destName)
 			specWarnChokingVinesDispel:Play("helpdispel")
 		end

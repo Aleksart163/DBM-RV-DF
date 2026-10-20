@@ -124,10 +124,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.germinateCount = self.vb.germinateCount + 1
 		specWarnGerminate:Show()
 		specWarnGerminate:Play("watchstep")
+		--18.2, 33, 25
 		if self.vb.germinateCount % 2 == 0 then
 			timerGerminateCD:Start(25, self.vb.germinateCount+1)
 		else
-			timerGerminateCD:Start(33.6, self.vb.germinateCount+1)
+			timerGerminateCD:Start(33, self.vb.germinateCount+1) --33.6
 		end
 	elseif spellId == 389033 then
 		local amount = args.amount or 1

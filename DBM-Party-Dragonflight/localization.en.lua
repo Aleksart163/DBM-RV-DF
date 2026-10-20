@@ -161,12 +161,7 @@ L:SetOptionLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
-L= DBM:GetModLocalization(2509)
-
-L:SetMiscLocalization({
-	VexRP		= "Ah! Here we are! Ahem--long ago, members of the blue dragonflight accidentally overloaded an arcane elemental and created a powerful construct named Vexamus that quickly started to wreak havoc!"
-})
-
+--L= DBM:GetModLocalization(2509)
 
 -----------------------
 -- Overgrown Ancient --
@@ -189,6 +184,10 @@ L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
 	name =	"Algeth'ar Academy Trash"
+})
+
+L:SetMiscLocalization({
+	VexRP = "Ah! Here we are! Ahem--long ago, members of the blue dragonflight accidentally overloaded an arcane elemental and created a powerful construct named Vexamus that quickly started to wreak havoc!"
 })
 
 L:SetWarningLocalization({

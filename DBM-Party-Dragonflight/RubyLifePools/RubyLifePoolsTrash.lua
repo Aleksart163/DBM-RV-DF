@@ -27,7 +27,7 @@ local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil) --Ура�
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4) --Огненная вспышка
 local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3) --Танец огня
 local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3) --Тектонический разлом
-local warnMoltenBlood						= mod:NewStackAnnounce(392569, 4, nil, nil, 2) --Расплавленная кровь
+local warnMoltenBlood						= mod:NewStackAnnounce(392569, 4) --Расплавленная кровь
 
 --Мини-босс Драгхар Отрицатель
 local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, 100, nil, 2, 2) --Пылающий натиск (Рывок)
@@ -231,12 +231,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnTempestStormshield:Play("attackshield")
 	elseif spellId == 392569 then --Расплавленная кровь
 		local amount = args.amount or 1
-		if amount >= 5 and amount % 5 == 0 then
-			if not args:IsPlayer() then
-				specWarnMoltenBlood:Show()
-				specWarnMoltenBlood:Play("defensive")
-			end
-		else
+		if amount % 5 == 0 then
+			specWarnMoltenBlood:Show()
+			specWarnMoltenBlood:Play("defensive")
+		elseif amount % 2 == 0 then
 			warnMoltenBlood:Show(args.destName, amount)
 		end
 	end

@@ -144,9 +144,14 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(args.sourceGUID, "CLTarget", 0.1, 2)
 	elseif spellId == 384336 then
 		if cid == 199717 then --Заступник из клана Нокхуд
-			timerWarStompCD:Start(12.3, args.sourceGUID)
-		else
+			timerWarStompCD:Start(10.5, args.sourceGUID)
+			DBM:Debug("CMP 199717", 2)
+		elseif cid == 192800 then --Мастер копья из клана Нокхуд
 			timerWarStompCD:Start(nil, args.sourceGUID)
+			DBM:Debug("CMP 192800", 2)
+		elseif cid == 191847 then --Равнинный топотун из клана Нокхуд
+			timerWarStompCD:Start(nil, args.sourceGUID)
+			DBM:Debug("CMP 191847", 2)
 		end
 		if self:AntiSpam(3, 2) then
 			specWarnWarStomp:Show()

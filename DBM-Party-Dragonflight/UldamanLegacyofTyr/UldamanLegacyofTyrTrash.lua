@@ -244,20 +244,21 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnEarthenWard:Show(args.destName)
 		specWarnEarthenWard:Play("helpdispel")
 	elseif spellId == 369365 and args:IsDestTypePlayer() then --Проклятие камня
-		if self:CheckDispelFilter("curse") and self:AntiSpam(3, "CurseofStone") then
-			specWarnCurseofStone:Show(args.destName)
-			specWarnCurseofStone:Play("helpdispel")
-		end
-		if args:IsPlayer() then
-			yellCurseofStone:Yell()
+		local amount = args.amount or 1
+		if amount == 1 then
+			if args:IsPlayer() then
+				yellCurseofStone:Yell()
+			elseif self:CheckDispelFilter("curse") and self:AntiSpam(3, "CurseofStone") and not args:IsPlayer() then
+				specWarnCurseofStone:Show(args.destName)
+				specWarnCurseofStone:Play("helpdispel")
+			end
 		end
 	elseif spellId == 369366 and args:IsDestTypePlayer() then --В каменном плену
-		if self:CheckDispelFilter("curse") and self:AntiSpam(2, "TrappedinStone") then
-			specWarnTrappedinStone:Show(args.destName)
-			specWarnTrappedinStone:Play("helpdispel")
-		end
 		if args:IsPlayer() then
 			yellTrappedInStone:Yell()
+		elseif self:CheckDispelFilter("curse") and self:AntiSpam(2, "TrappedinStone") and not args:IsPlayer() then
+			specWarnTrappedinStone:Show(args.destName)
+			specWarnTrappedinStone:Play("helpdispel")
 		end
 	elseif spellId == 369419 then
 		local amount = args.amount or 1

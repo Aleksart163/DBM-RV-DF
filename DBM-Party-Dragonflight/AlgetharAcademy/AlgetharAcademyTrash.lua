@@ -11,8 +11,9 @@ mod.isTrashModBossFightAllowed = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 387910 377383 378003 388976 388863 377912 387843 388392 377389 396812 389054",
 	"SPELL_CAST_SUCCESS 390915 388984",
-	"SPELL_AURA_APPLIED 388984 387843 389516 389501 389536 389521 389512",
+	"SPELL_AURA_APPLIED 388984 387843 389516 389501 389536 389521 389512 388392",
 	"SPELL_AURA_REMOVED 387843",
+	"CHAT_MSG_MONSTER_SAY",
 	"UNIT_DIED",
 	"GOSSIP_SHOW"
 )
@@ -46,6 +47,7 @@ local specWarnAstralBomb						= mod:NewSpecialWarningMoveTo(387843, nil, 174716,
 local specWarnMonotonousLecture					= mod:NewSpecialWarningInterrupt(388392, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticBlast						= mod:NewSpecialWarningInterrupt(396812, "HasInterrupt", nil, nil, 1, 2) --Потусторонний взрыв
 local specWarnCalloftheFlock					= mod:NewSpecialWarningInterrupt(377389, "HasInterrupt", nil, nil, 1, 2) --Призыв стаи
+local specWarnMonotonousLectureDispel			= mod:NewSpecialWarningDispel(388392, "RemoveMagic", 9179, nil, 1, 2) --Монотонная лекция (Оглушение)
 
 local timerMonotonousLectureCD					= mod:NewCDNPTimer(15.8, 388392, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerMysticBlastCD						= mod:NewCDNPTimer(17, 396812, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON) --Потусторонний взрыв
@@ -57,7 +59,9 @@ local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 
 local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
 local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, 174716, nil, nil, 3) --Астральная бомба (Бомба) These mob packs are heavily stunned and CD can be delayed by stuns
 local timerVicousLungeCD						= mod:NewCDNPTimer(10, 389054, nil, nil, nil, 3) --Жестокий рывок 11.4
+local timerRP									= mod:NewRPTimer(19.8)
 
+local yellMonotonousLecture						= mod:NewYell(388392, 9179, nil, nil, "YELL") --Монотонная лекция (Оглушение)
 local yellGust									= mod:NewYell(377383, DBM_COMMON_L.FRONTAL, nil, nil, "YELL") --Порыв
 local yellnViciousAmbush						= mod:NewYell(388984, nil, nil, nil, "YELL") --Жестокая засада
 local yellAstralBomb							= mod:NewYell(387843, 174716, nil, nil, "YELL") --Астральная бомба (Бомба)
@@ -199,6 +203,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBronzeDragonflight:Show()
 			specWarnBronzeDragonflight:Play("targetyou")
 		end
+	elseif spellId == 388392 and args:IsDestTypePlayer() then --Монотонная лекция
+		if args:IsPlayer() then
+			yellMonotonousLecture:Yell()
+		elseif self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) and not args:IsPlayer() then
+			specWarnMonotonousLectureDispel:Show(args.destName)
+			specWarnMonotonousLectureDispel:Play("helpdispel")
+		end
 	end
 end
 
@@ -239,5 +250,18 @@ function mod:GOSSIP_SHOW()
 		if self.Options.AGBuffs and (gossipOptionID == 107065 or gossipOptionID == 107081 or gossipOptionID == 107082 or gossipOptionID == 107088 or gossipOptionID == 107083) then -- Buffs
 			self:SelectGossip(gossipOptionID)
 		end
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.VexRP or msg:find(L.VexRP)) then
+		self:SendSync("VexRP")
+		DBM:Debug("CMP (Фраза запуска босса)", 2)
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "VexRP" and self:AntiSpam(10, 2) then
+		timerRP:Start()
 	end
 end
