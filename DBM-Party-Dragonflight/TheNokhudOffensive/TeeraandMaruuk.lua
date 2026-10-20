@@ -68,14 +68,14 @@ local allProshlyapationsOfMurchal = {
 	[385434] = {5.4, 22.4, 21.1, 20.3, 18.5, 21.1, 20.3, 19.2, 21, 20.7, 17.7, 21.1, 21.4, 17.8, 21.3, 20.5},
 	--Ураганная стрела
 	[382670] = {16.1, 58.6, 59.7, 59.9}, --16.1, 60.6, 60.8, 59.9
-	--Отпор
-	[386547] = {55, 60.6, 59.7},
+	--Отпор (Отталкивание)
+	[386547] = {55, 59.8, 59.7},
 	--Отпугивающий рык
 	[386063] = {4.5, 19, 19, 26, 19.1, 19, 22.6, 19, 19, 22.8, 19, 19.1, 22.8, 19, 19, 22.6},
 	--Свирепый удар
 	[382836] = {12.5, 7.5, 7.7, 7.6, 11.3, 7.5, 22.3, 7.5, 7.7, 7.6, 11.3, 7.6, 18.9, 7.5, 7.7, 7.6, 11.3, 6.5, 19.2, 7.6, 7.6, 7.5, 11.4, 7.5, 19.3, 7.6, 7.5, 7.6, 11.3, 7.5},
 	--Раскол земли
-	[385339] = {57.1, 60.6, 59.7},
+	[385339] = {57.1, 59.8, 59.7},
 }
 
 function mod:BrutalizeTarget(targetname, uId)
@@ -238,3 +238,9 @@ end
 --"<88.73 21:00:17> [CHAT_MSG_MONSTER_YELL] Necromancers? On our sacred grounds?#Teera###Gravelord Monkh##0#0##0#1388#nil#0#false#false#false#false", -- [468]
 --"<94.47 21:00:23> [CHAT_MSG_MONSTER_YELL] This is what has become of our legacy?#Maruuk###Gravelord Monkh##0#0##0#1389#nil#0#false#false#false#false", -- [473]
 --"<95.30 21:00:24> [DBM_Debug] ENCOUNTER_START event fired: 2581 Teera and Maruuk 1 5#nil", -- [474]
+
+function mod:OnSync(msg)
+	if msg == "TeeraRP" and self:AntiSpam(10, 9) then
+		DBM:Debug("Check Murchal proshlyap (Синхронизация сработала)", 2)
+	end
+end

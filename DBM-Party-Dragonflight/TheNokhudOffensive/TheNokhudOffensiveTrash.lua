@@ -144,7 +144,7 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(args.sourceGUID, "CLTarget", 0.1, 2)
 	elseif spellId == 384336 then
 		if cid == 199717 then --Заступник из клана Нокхуд
-			timerWarStompCD:Start(14, args.sourceGUID)
+			timerWarStompCD:Start(12.3, args.sourceGUID)
 		else
 			timerWarStompCD:Start(nil, args.sourceGUID)
 		end
@@ -197,8 +197,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnStormshield:Show(args.destName)
 		specWarnStormshield:Play("helpdispel")
 	elseif spellId == 345561 and self:AntiSpam(5, 8) then--Life Link (Сломано разрабами сервера)
---		teeramod:SendSync("TeeraRP")
-		DBM:Debug("Check Murchal proshlyap 1", 2)
+		teeramod:SendSync("TeeraRP")
+		DBM:Debug("Check Murchal proshlyap (Аура наложилась)", 2)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -243,7 +243,6 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L.TeeraRP or msg:find(L.TeeraRP)) then
 		self:SendSync("RP1")
-		DBM:Debug("Check Murchal proshlyap 2", 2)
 	end
 end
 
