@@ -49,7 +49,6 @@ mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
 
 local vaultRuin = DBM:GetSpellName(388072)
 local absoluteZeroTimers = {25.5, 71.5}
-
 mod.vb.zeroCount = 0
 
 function mod:DevastatorTarget(targetname)
@@ -94,18 +93,18 @@ function mod:SPELL_CAST_START(args)
 			timerFrostBombCD:Update(elapsed, total+extend)
 		end
 	elseif spellId == 388008 then --Абсолютный нуль
-		self.vb.zeroCountt = self.vb.zeroCount + 1
+		self.vb.zeroCount = self.vb.zeroCount + 1
 		specWarAbsoluteZero:Show(vaultRuin)
 		specWarAbsoluteZero:Play("findshelter")
 		specWarAbsoluteZero2:Schedule(5)
 		specWarAbsoluteZero2:ScheduleVoice(5, "defensive")
-		local timer
-		timer = absoluteZeroTimers[self.vb.zeroCount+1] or 72.4
-		timerAbsoluteZeroCD:Start(timer, self.vb.zeroCount+1)
 		timerAbsoluteZero:Start()
 		timerIcyDevastatorCD:Stop()
 		timerFrostBombCD:Start(14)
 		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 24.6 or 23.2)
+		local timer
+		timer = absoluteZeroTimers[self.vb.zeroCount+1] or 72.4
+		timerAbsoluteZeroCD:Start(timer, self.vb.zeroCount+1)
 	end
 end
 
