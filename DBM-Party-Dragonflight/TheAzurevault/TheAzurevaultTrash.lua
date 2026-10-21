@@ -102,8 +102,6 @@ function mod:ShoulderSlamTarget(targetname, uId)
 			specWarnShoulderSlam:Show()
 			specWarnShoulderSlam:Play("targetyou")
 			yellShoulderSlam:Yell()
-		else
-			warnSpellfrostBreath:Show(targetname)
 		end
 	end
 end

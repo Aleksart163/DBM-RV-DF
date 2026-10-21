@@ -32,13 +32,14 @@ local warnIcyDevastator							= mod:NewTargetNoFilterAnnounce(387151, 3) --Мо�
 
 local specWarnFrostBomb							= mod:NewSpecialWarningMoveAway(386781, nil, nil, nil, 1, 2) --Ледяная бомба
 local specWarnIcyDevastator						= mod:NewSpecialWarningMoveAway(387151, nil, nil, nil, 4, 2) --Морозный опустошитель
-local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Абсолютный нуль
+local specWarAbsoluteZero						= mod:NewSpecialWarningMoveTo(388008, nil, nil, DBM_COMMON_L.AOEDAMAGE, 4, 2) --Абсолютный нуль
+local specWarAbsoluteZero2						= mod:NewSpecialWarningDefensive(388008, nil, nil, DBM_COMMON_L.AOEDAMAGE, 3, 2) --Абсолютный нуль
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(387150, nil, nil, nil, 1, 8)
 
 local timerFrostBombCD							= mod:NewCDTimer(15.3, 386781, nil, nil, nil, 3) --Ледяная бомба 15-24 (mod should account for two  mechanics that cause these delays)
 local timerIcyDevastatorCD						= mod:NewCDTimer(22.6, 387151, nil, nil, nil, 3) --Морозный опустошитель
 local timerAbsoluteZero							= mod:NewCastTimer(8, 388008, DBM_COMMON_L.AOEDAMAGE, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5) --Абсолютный нуль
-local timerAbsoluteZeroCD						= mod:NewCDTimer(72.4, 388008, DBM_COMMON_L.AOEDAMAGE, nil, nil, 7, nil, nil, nil, 1, 5) --Абсолютный нуль
+local timerAbsoluteZeroCD						= mod:NewCDCountTimer(72.4, 388008, DBM_COMMON_L.AOEDAMAGE2, nil, nil, 7, nil, nil, nil, 1, 5) --Абсолютный нуль
 
 local yellFrostBombFades						= mod:NewShortFadesYell(386781, nil, nil, nil, "YELL") --Ледяная бомба
 local yellIcyDevastator							= mod:NewYell(387151, nil, nil, nil, "YELL") --Морозный опустошитель
@@ -47,6 +48,9 @@ mod:AddRangeFrameOption(8, 387151) --Морозный опустошитель
 
 
 local vaultRuin = DBM:GetSpellName(388072)
+local absoluteZeroTimers = {25.5, 71.5}
+
+mod.vb.zeroCount = 0
 
 function mod:DevastatorTarget(targetname)
 	if not targetname then return end
@@ -60,9 +64,10 @@ function mod:DevastatorTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.zeroCount = 0
 	timerFrostBombCD:Start(3.6-delay)
 	timerIcyDevastatorCD:Start(15-delay) --Морозный опустошитель 14.7 now?
-	timerAbsoluteZeroCD:Start(25.5-delay) --Абсолютный нуль
+	timerAbsoluteZeroCD:Start(25.5-delay, 1) --Абсолютный нуль
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -89,10 +94,15 @@ function mod:SPELL_CAST_START(args)
 			timerFrostBombCD:Update(elapsed, total+extend)
 		end
 	elseif spellId == 388008 then --Абсолютный нуль
+		self.vb.zeroCountt = self.vb.zeroCount + 1
 		specWarAbsoluteZero:Show(vaultRuin)
 		specWarAbsoluteZero:Play("findshelter")
+		specWarAbsoluteZero2:Schedule(5)
+		specWarAbsoluteZero2:ScheduleVoice(5, "defensive")
+		local timer
+		timer = absoluteZeroTimers[self.vb.zeroCount+1] or 72.4
+		timerAbsoluteZeroCD:Start(timer, self.vb.zeroCount+1)
 		timerAbsoluteZero:Start()
-		timerAbsoluteZeroCD:Start()
 		timerIcyDevastatorCD:Stop()
 		timerFrostBombCD:Start(14)
 		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 24.6 or 23.2)

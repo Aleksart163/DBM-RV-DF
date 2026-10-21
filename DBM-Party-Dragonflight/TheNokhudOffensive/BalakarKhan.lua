@@ -53,7 +53,7 @@ local specWarnStormBolt							= mod:NewSpecialWarningInterrupt(376725, "HasInter
 
 --Stage Two: The Storm Unleashed
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25187))
-local warnPhase									= mod:NewPhaseAnnounce(2, 2)
+local warnPhase									= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnStaticSpear							= mod:NewTargetNoFilterAnnounce(376864, 2) --Заряженное копье
 local warnThunderStrike							= mod:NewSpellAnnounce(376829, 4, nil, "Healer") --Громовой удар
 
@@ -149,6 +149,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 376727 then--Boss casting Siphon Power
 		self:SetStage(1.5)
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
+		warnPhase:Play("phasechange")
 		timerIronSpearCD:Stop()
 		timerUpheavalCD:Stop()
 		timerRendingStrikeCD:Stop()
@@ -218,7 +220,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 376727 then
 		self:SetStage(2)
 		self.vb.comboCount = 0
-		warnPhase:Show()
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		timerConductiveStrikeCD:Start(8, 1)
 		timerStaticSpearCD:Start(18)
